@@ -1,0 +1,114 @@
+parameters:
+  azureDevOpsServiceConnection: ''
+  azureKeyvaultInstance: ''
+  containerRegistry: 'mapaerscontainerregistry'
+stages:
+  - stage: Build
+    dependsOn: []
+    jobs:
+      - job: Build
+        steps:                   
+          # NOTE: You need to specify 'persistCredentials:true' to allow your build agent to has access to git commands for pull/tag/push
+          # see https://docs.microsoft.com/en-us/azure/devops/pipelines/scripts/git-commands?view=azure-devops&tabs=yaml
+          - checkout: self
+            persistCredentials: true
+            clean: true
+          
+          # Auth to Azure Artifacts where the NuGet feed lives
+          - task: NuGetAuthenticate@0
+            displayName: 'NuGet Authenticate'
+            
+          - task: AzureKeyVault@1
+            condition: succeeded()
+            displayName: 'Link keyvault with Azure DevOps'
+            inputs:
+              azureSubscription: '${{ parameters.azureDevOpsServiceConnection }}'
+              keyVaultName: '${{ parameters.azureKeyvaultInstance }}'
+              secretsFilter: '*' # Options: editableOptions
+            continueOnError: false
+
+          - task: geeklearningio.gl-vsts-tasks-file-patch.json-patch-task.JsonPatch@3
+            condition: succeeded()
+            displayName: 'Set OPA Settings For Integration Tests'
+            inputs:
+              JsonWorkingDir: '$(Build.SourcesDirectory)/Test/Integration'
+              JsonTargetFilters: appsettings.json
+              JsonPatchContent: |
+                = /OpaSettings/UserName => "ersuser"
+                = /OpaSettings/UserSecret => "$(OPASettings--UserSecret)"               
+              OutputPatchFile: true
+              ProduceJson5: true
+              FailIfNoPatchApplied: true
+            continueOnError: false
+            
+          - task: DotNetCoreCLI@2
+            displayName: Run All Tests
+            inputs:
+              command: test
+              arguments: '--logger:"console;verbosity=detailed"'
+              projects: '**/*.Tests.csproj'
+              workingDirectory: $(Build.SourcesDirectory)/Test
+            
+          - task: Docker@2
+            condition: succeeded()
+            displayName: Build an image
+            inputs:
+              command: build
+              dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+              containerRegistry:  ${{ parameters.containerRegistry }}
+              repository: 'eceapi'
+              tags: |
+                $(Build.BuildNumber)
+                latest
+              arguments:  --build-arg buildno=$(Build.BuildNumber) --build-arg ERSNUGETFEED_ACCESSTOKEN=$(System.AccessToken)
+
+          - task: PublishTestResults@2
+            condition: always()
+            displayName: Publish test results
+            inputs:
+              testResultsFormat: 'VSTest'
+              testResultsFiles: '**/*.trx'
+              searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
+              publishRunAttachments: true
+              failTaskOnFailedTests: true
+
+          - task: Docker@2
+            condition: succeeded()
+            displayName: Push an image
+            inputs:
+              command: push
+              repository: 'eceapi'
+              containerRegistry:  ${{ parameters.containerRegistry }}
+              ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+                tags: |
+                  $(Build.BuildNumber)
+                  latest
+              ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+                tags: |
+                  $(Build.BuildNumber)
+
+          # tag the current branch with the version number
+          - task: PowerShell@2
+            condition: succeeded()
+            displayName: 'Tag the build'
+            inputs:
+              targetType: 'inline'
+              script: |
+                git tag '$(Build.BuildNumber)'
+                Write-Host "Successfully created tag $(Build.BuildNumber)"
+
+          # push created tag to origin
+          # NOTE: you need to set 'persistCredentials: true' in the checkout task. Otherwise git will fail with error code 1.
+          # NOTE: You cannot run both "git tag xyz" AND "git push --task" in the same powershell command. If you do, git will fail with error code 1
+          # NOTE: IF you get an error from this git command, make sure, that your build user has the required permissions!
+          #       In our case, the build agent needs the additional permissions for "bypass policies when pushing" and "bypass policies when completing pull requests"
+          #       because we have a custom policy in place. (See: https://opti-q.visualstudio.com/<your_project_name>/_settings/repositories)
+          - task: PowerShell@2
+            condition: succeeded()
+            displayName: 'Push tags'
+            inputs:
+              targetType: 'inline'
+              script: |
+                git push --tags
+                Write-Host "Successfully pushed tag $(Build.BuildNumber) to origin"
+

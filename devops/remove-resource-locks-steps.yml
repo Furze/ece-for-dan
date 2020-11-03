@@ -1,0 +1,35 @@
+parameters:
+  environmentPrefix: ''
+  environmentSuffix: '' 
+  environmentName: ''
+  environmentNumber: ''
+  applicationName: ''
+  azureDevOpsServiceConnection: ''
+
+steps:
+    - task: onlyutkarsh.utkarsh-utility-tasks.azure-lock-unlock-task.azure-lock-unlock@1
+      displayName: 'Remove Master Azure Resource Lock'
+      inputs:
+        azureSubscription: '${{ parameters.azureDevOpsServiceConnection }}'
+        resourceGroupName: '${{ parameters.environmentPrefix }}-ERS-${{ parameters.environmentSuffix }}-MASTER'
+        action: Remove
+        lockType: CanNotDelete
+        lockName: Delete
+    - task: onlyutkarsh.utkarsh-utility-tasks.azure-lock-unlock-task.azure-lock-unlock@1
+      displayName: 'Remove Common Azure Resource Lock'
+      inputs:
+        azureSubscription: '${{ parameters.azureDevOpsServiceConnection }}'
+        resourceGroupName: '${{ parameters.environmentPrefix }}-ERS-${{ parameters.environmentName }}-${{ parameters.environmentNumber }}-COMMON'
+        action: Remove
+        lockType: CanNotDelete
+        lockName: Delete
+      continueOnError: false      
+    - task: onlyutkarsh.utkarsh-utility-tasks.azure-lock-unlock-task.azure-lock-unlock@1
+      displayName: 'Remove Azure Resource Lock'
+      inputs:
+        azureSubscription: '${{ parameters.azureDevOpsServiceConnection }}'
+        resourceGroupName: '${{ parameters.environmentPrefix }}-ERS-${{ parameters.environmentName }}-${{ parameters.environmentNumber }}-${{ parameters.applicationName }}'
+        action: Remove
+        lockType: CanNotDelete
+        lockName: Delete
+      continueOnError: false
