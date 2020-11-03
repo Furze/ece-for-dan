@@ -1,0 +1,145 @@
+parameters:
+  environmentPrefix: ''
+  environmentSuffix: ''
+  environmentName: ''
+  environmentNumber: ''
+  applicationName: 'ece'
+  azureDevOpsServiceConnection: ''
+  azureKeyvaultInstance: ''
+  imageTag: '$(Build.BuildNumber)'
+  releaseStageDescriptor: ''
+  containerRegistry: ''
+  stageDependencies: '' # List that overrides dependencies for the stage as oppossed to just previous stage
+  runTerraformApply: true
+  runTerraformDestroy: false
+  terraformVersion: 'latest'
+  decomDate: ''
+
+stages:
+  - stage: "Release_to_${{ parameters.environmentName }}_${{ parameters.environmentnumber }}${{ parameters.releaseStageDescriptor }}"
+    condition: succeeded()
+    ${{ if parameters.stageDependencies }}:
+      dependsOn: ${{ parameters.stageDependencies }} # Allow this to run concurrently with other release stages
+    variables:
+      appResourceGroup: "${{ upper( format('{0}-ERS-{1}-{2}-{3}', parameters.environmentPrefix, parameters.environmentName, parameters.environmentNumber, parameters.applicationName )) }}"
+      appName: "${{ lower( format('{0}ers{1}{2}{3}', parameters.environmentPrefix, parameters.environmentName, parameters.environmentNumber, parameters.applicationName )) }}"
+      dockerImageName: "${{ parameters.containerRegistry }}.azurecr.io/${{ parameters.applicationName }}api"
+    jobs: 
+      - deployment: "release${{ parameters.releaseStageDescriptor }}"
+        dependsOn: []
+        condition: succeeded()
+        pool:
+          vmImage: "ubuntu-latest"
+        displayName: "Release application ${{ parameters.releaseStageDescriptor }}"
+        environment: '${{ parameters.environmentName }}${{ parameters.environmentNumber }}'
+        timeoutInMinutes: 0 # set to 0 which means it can run for maximum
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: Docker@2
+                  displayName: Login to ACR
+                  inputs:
+                    command: login
+                    containerRegistry: "${{ parameters.containerRegistry }}"
+
+                - script: |
+                    docker pull "$(dockerImageName):${{ parameters.imageTag }}"                      
+                    gitCheckoutTag=`docker inspect --format '{{  index .Config.Labels "com.visualstudio.moeedunz.image.build.sourceversion"}}' $(dockerImageName):${{ parameters.imageTag }}`
+                    imageBuildNumber=`docker inspect --format '{{  index .Config.Labels "com.visualstudio.moeedunz.image.build.buildnumber"}}' $(dockerImageName):${{ parameters.imageTag }}`
+                  
+                    echo "Image Build Number: $imageBuildNumber"
+                    echo "Image Commit Hash: $gitCheckoutTag"
+                    echo "##vso[task.setvariable variable=imageBuildNumber]$imageBuildNumber"
+                    echo "##vso[task.setvariable variable=gitCheckoutTag]$gitCheckoutTag"
+                  condition: succeeded()
+                  displayName: "Extract metadata from image"
+                  failOnStderr: true
+
+                - template: remove-resource-locks-steps.yml
+                  parameters:
+                    environmentPrefix: '${{ parameters.environmentPrefix }}'
+                    environmentSuffix: '${{ parameters.environmentSuffix }}'
+                    environmentName: '${{ parameters.environmentName }}'
+                    environmentNumber: '${{ parameters.environmentNumber }}'
+                    applicationName: '${{ parameters.applicationName }}'
+                    azureDevOpsServiceConnection: '${{ parameters.azureDevOpsServiceConnection }}'
+
+                - template: terraform-deploy-steps.yml
+                  parameters:
+                    environmentPrefix: '${{ parameters.environmentPrefix }}'
+                    environmentSuffix: '${{ parameters.environmentSuffix }}'
+                    environmentName: '${{ parameters.environmentName }}'
+                    environmentNumber: '${{ parameters.environmentNumber }}'
+                    applicationName: '${{ parameters.applicationName }}'
+                    releaseStageDescriptor: '${{ parameters.releaseStageDescriptor }}'
+                    gitCheckoutTag: '$(gitCheckoutTag)'
+                    azureDevOpsServiceConnection: '${{ parameters.azureDevOpsServiceConnection }}'
+                    runTerraformApply: '${{ parameters.runTerraformApply }}'
+                    runTerraformDestroy: '${{ parameters.runTerraformDestroy }}'
+                    terraformVersion: '${{ parameters.terraformVersion }}'
+                    decomDate: '${{ parameters.decomDate }}'
+
+                # Continue with post-terraform tasks if we are releasing normally (ie. not a destroy)         
+                - ${{ if eq(parameters.runTerraformApply, true) }}:
+                  - task: AzureKeyVault@1
+                    condition: succeeded()
+                    displayName: "Link keyvault with Azure DevOps"
+                    inputs:
+                      azureSubscription: "${{ parameters.azureDevOpsServiceConnection }}"
+                      keyVaultName: "${{ parameters.azureKeyvaultInstance }}"
+                      secretsFilter: "*" # Options: editableOptions
+                    continueOnError: false
+
+
+                  - script: |
+                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(SCHOOLS-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
+                      docker run \
+                      -e MartenSettings__ConnectionString="$connectionString" \
+                      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+                      -c 'cd /cli && chmod +x CLI && ./CLI migrate -md /cli/migrations'
+                      if [[ $? -ne 0 ]] ; then
+                          exit 1
+                      fi
+                    condition: succeeded()
+                    displayName: "Upgrade DB"
+                    failOnStderr: false
+
+                  - script: |
+                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(SCHOOLS-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
+                      docker run \
+                      -e MartenSettings__ConnectionString="$connectionString" \
+                      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+                      -c 'cd /cli && chmod +x CLI && ./CLI migrate-reference-data'
+                      if [[ $? -ne 0 ]] ; then
+                          exit 1
+                      fi
+                    condition: succeeded()
+                    displayName: "Upgrade DB for reference data"
+                    failOnStderr: false
+
+                  - script: |
+                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(SCHOOLS-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
+                      docker run \
+                      -e MartenSettings__ConnectionString="$connectionString" \
+                      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+                      -c 'cd /cli && chmod +x CLI && ./CLI migrate -md /cli/ReconciliationViews'
+                      if [[ $? -ne 0 ]] ; then
+                          exit 1
+                      fi
+                    condition: succeeded()
+                    displayName: "Apply reconciliation views"
+                    failOnStderr: false
+                                
+                  - template: container-deployment-steps.yml
+                    parameters:
+                      environmentName: '${{ parameters.environmentName }}'
+                      environmentnumber: '${{ parameters.environmentNumber }}'
+                      azureDevOpsServiceConnection: ${{ parameters.azureDevOpsServiceConnection }}
+                      containerRegistry: '${{ parameters.containerRegistry }}.azurecr.io'
+                      appResourceGroup: '$(appResourceGroup)'
+                      imageRepository: '${{ parameters.applicationName }}api'
+                      appName: '$(appName)'
+                      dockerImageName: '$(dockerImageName)'
+                      imageTag: '${{ parameters.imageTag }}'
+                      imageBuildNumber: '$(imageBuildNumber)'

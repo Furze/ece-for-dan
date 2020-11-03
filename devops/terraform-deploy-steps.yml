@@ -1,0 +1,190 @@
+parameters:
+  environmentPrefix: ''
+  environmentSuffix: ''
+  environmentName: ''
+  environmentNumber: ''
+  applicationName: ''
+  releaseStageDescriptor: ''
+  gitCheckoutTag: ''
+  azureDevOpsServiceConnection: ''
+  runTerraformDestroy: false
+  runTerraformApply: true
+  terraformVersion: 'latest'
+  decomDate: ''
+       
+steps:
+- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+  - checkout: self
+    persistCredentials: true
+    clean: true  
+
+- ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+  - checkout: ece-api
+    clean: true
+    
+  - task: PowerShell@2
+    condition: succeeded()
+    displayName: 'Checkout build tag'
+    inputs:
+      workingDirectory: "$(System.DefaultWorkingDirectory)/ece-api"
+      targetType: 'inline'
+      script: |
+        git checkout ${{ parameters.gitCheckoutTag }}           
+
+- pwsh: |
+    $stateResourceGroup = "${{ parameters.environmentPrefix }}-ERS-${{ parameters.environmentSuffix }}-TFSTATE".ToUpper()
+    $stateStorageAccount = ($stateResourceGroup -replace "\W","").ToLower()
+    $stateContainer = "tfstate-${{ parameters.environmentName }}-${{ parameters.environmentNumber }}".ToLower()
+
+    $actiongroup_resource_group = "${{ parameters.environmentPrefix }}-ERS-${{ parameters.environmentSuffix }}-MASTER".ToUpper()
+    $actiongroup_name = "${{ parameters.environmentSuffix }}".ToUpper() + "-ActionGroup"
+    
+    Write-Output "##vso[task.setvariable variable=actiongroup_resource_group]$actiongroup_resource_group"
+    Write-Output "Set variable [actiongroup_resource_group] to [$actiongroup_resource_group]"
+
+    Write-Output "##vso[task.setvariable variable=actiongroup_name]$actiongroup_name"
+    Write-Output "Set variable [actiongroup_name] to [$actiongroup_name]"
+      
+    Write-Output "##vso[task.setvariable variable=stateResourceGroup]$stateResourceGroup"
+    Write-Output "Set variable [stateResourceGroup] to [$stateResourceGroup]"
+
+    Write-Output "##vso[task.setvariable variable=stateStorageAccount]$stateStorageAccount"
+    Write-Output "Set variable [stateStorageAccount] to [$stateStorageAccount]"
+
+    Write-Output "##vso[task.setvariable variable=stateContainer]$stateContainer"
+    Write-Output "Set variable [stateContainer] to [$stateContainer]"
+  continueOnError: false
+  displayName: 'Initialise Variables'
+
+# Terraform environment common/shared infrastructure resources
+# Note: The following checkout is crucial to keep working paths working correctly.
+# If we only have 1 checkout, the checkout goes into $(System.DefaultWorkingDirectory)
+# directly instead of $(System.DefaultWorkingDirectory)/reponame
+- checkout: environment-shared-infra
+  clean: true 
+
+- template: devops/terraform-lint.yml@environment-shared-infra
+  parameters:
+    terraformVersion: '${{ parameters.terraformVersion }}'
+    terraformDir: $(System.DefaultWorkingDirectory)/schools-api/devops/terraform
+
+- template: devops/terraform-deploy-steps.yml@environment-shared-infra
+  parameters:
+    environmentPrefix: '${{ parameters.environmentPrefix }}'
+    environmentSuffix: '${{ parameters.environmentSuffix }}'
+    environmentName: '${{ parameters.environmentName }}'
+    environmentNumber: '${{ parameters.environmentNumber }}'
+    azureDevOpsServiceConnection: '${{ parameters.azureDevOpsServiceConnection }}'
+    terraformVersion: '${{ parameters.terraformVersion }}'
+
+- ${{ if eq(parameters.runTerraformDestroy, true) }}:
+  - task: AzureCLI@2
+    condition: succeeded()
+    displayName: 'Terraform destroy ECE App'
+    inputs:
+      azureSubscription: "${{ parameters.azureDevOpsServiceConnection }}"
+      scriptType: pscore
+      scriptLocation: inlineScript
+      addSpnToEnvironment: true
+      workingDirectory: "$(System.DefaultWorkingDirectory)/ece-api/devops/terraform"
+      inlineScript: |
+        $backendConfig = @"
+        terraform {
+          backend "azurerm" {
+            resource_group_name  = "$(stateResourceGroup)"
+            storage_account_name = "$(stateStorageAccount)"
+            container_name       = "$(stateContainer)"
+            key                  = "${{ parameters.applicationname }}"
+          }
+        }
+        "@
+
+        # Override the backend.tf in the repository before applying to a real environment
+        $backendConfig | Out-File "backend_override.tf" -Encoding utf8 -Force
+        cat "backend_override.tf"
+
+        $subscriptionId = (az account show --query id).Replace("`"","")
+        $dockerCommandBase = "docker run -e ARM_CLIENT_ID=$env:servicePrincipalId -e ARM_CLIENT_SECRET=$env:servicePrincipalKey -e ARM_SUBSCRIPTION_ID=$subscriptionId -e ARM_TENANT_ID=$env:tenantId -v $(PWD):/workspace -w /workspace hashicorp/terraform:${{ parameters.terraformVersion }}"
+        Invoke-Expression ("$dockerCommandBase init")
+        Invoke-Expression ("$dockerCommandBase validate")
+
+        # Delete the postgresql database *SERVER* so that terraform doesn't fail on existing connections
+        # TODO: Alternatively, update the CLI to be able to sever/revoke all connections to the database prior to destroy?
+        $pgDbResourceGroupName = "${{ parameters.environmentPrefix }}-ERS-${{ parameters.environmentName }}-${{ parameters.environmentNumber }}-${{ parameters.applicationName }}".ToUpper()  
+        $pgDbResourceName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentNumber }}psql${{ parameters.applicationName }}".ToLower()
+        $dbServerFound = az postgres server list -g $pgDbResourceGroupName --query "[?name=='$pgDbResourceName'].name"
+        if ($dbServerFound) {
+          Write-Output "Deleting database server $pgDbResourceName from $pgDbResourceGroupName.."
+          az postgres server delete -g $pgDbResourceGroupName -n $pgDbResourceName --yes
+        }
+
+        $tfArgs = "-var='environment=${{ parameters.environmentName }}-${{ parameters.environmentNumber }}' -var='environment_prefix=${{ parameters.environmentPrefix }}' -var='environment_suffix=${{ parameters.environmentSuffix }}' -var='actiongroup_name=$(actiongroup_name)' -var='actiongroup_resource_group=$(actiongroup_resource_group)'"
+        Invoke-Expression ("$dockerCommandBase destroy $tfArgs -auto-approve")
+        if ($LASTEXITCODE -ne 0) {
+          Write-Output "Error destroying resources."
+          exit 1
+        }
+
+        # Post terraform destroy cleanup or additional steps
+        # Purge secrets from AKV otherwise they get recovered as is and are out of sync with new random string
+        # TODO: This could probably be done better with tags if terraform tags the secret (once standards are agreed)
+        $keyvaultName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentNumber }}secrets".ToLower()
+        $appSqlSecretName = "${{ parameters.applicationName }}-sqlpassword".ToLower()
+        Write-Output "Looking for deleted secret $appSqlSecretName in $keyvaultName.."
+        $deletedSecretFound = az keyvault secret list-deleted --vault-name $keyvaultName --query "[?name=='$appSqlSecretName'].name" | ConvertFrom-JSON
+        if ($deletedSecretFound) {
+          Write-Output "Purging secret $appSqlSecretName from $keyvaultName.."
+          az keyvault secret purge --subscription $subscriptionId --vault-name $keyvaultName --name $appSqlSecretName
+        }
+    continueOnError: false
+    
+- ${{ if eq(parameters.runTerraformApply, true) }}:
+  - task: AzureCLI@2
+    condition: succeeded()
+    displayName: 'Generate Plan and Apply for ECE App'
+    inputs:
+      azureSubscription: "${{ parameters.azureDevOpsServiceConnection }}"
+      scriptType: pscore
+      scriptLocation: inlineScript
+      addSpnToEnvironment: true
+      workingDirectory: "$(System.DefaultWorkingDirectory)/ece-api/devops/terraform"
+      inlineScript: |
+        $backendConfig = @"
+        terraform {
+          backend "azurerm" {
+            resource_group_name  = "$(stateResourceGroup)"
+            storage_account_name = "$(stateStorageAccount)"
+            container_name       = "$(stateContainer)"
+            key                  = "${{ parameters.applicationname }}"
+          }
+        }
+        "@
+                          
+        # Override the backend.tf in the repository before applying to a real environment
+        $backendConfig | Out-File "backend_override.tf" -Encoding utf8 -Force
+        cat "backend_override.tf"
+
+        $subscriptionId = (az account show --query id -o tsv)
+        $dockerCommandBase = "docker run -e ARM_CLIENT_ID=$env:servicePrincipalId -e ARM_CLIENT_SECRET=$env:servicePrincipalKey -e ARM_SUBSCRIPTION_ID=$subscriptionId -e ARM_TENANT_ID=$env:tenantId -v $(PWD):/workspace -w /workspace hashicorp/terraform:${{ parameters.terraformVersion }}"
+        Invoke-Expression ("$dockerCommandBase init")
+        Invoke-Expression ("$dockerCommandBase validate")
+
+        $terraformApplied = 'No'
+        
+        # The below will output the plan (if any changes/additions or removals) while having anything matching the regex pattern with "***"
+        (Invoke-Expression ("$dockerCommandBase plan -detailed-exitcode -out=plan -var='environment=${{ parameters.environmentName }}-${{ parameters.environmentNumber }}' -var='environment_prefix=${{ parameters.environmentPrefix }}' -var='environment_suffix=${{ parameters.environmentSuffix }}' -var='actiongroup_name=$(actiongroup_name)' -var='actiongroup_resource_group=$(actiongroup_resource_group)' -var='decom_date=${{ parameters.decomDate }}'")) -replace "((.*)(docker|password|username|secret|key)([^=]+)= ).*", '$1"***"'
+        if ($LASTEXITCODE -eq 0){
+          Write-Output "No change to infrastructure, skipping 'Apply'."
+        }elseif($LASTEXITCODE -eq 1){
+          Write-Host "##vso[task.logissue type=error]Error occurred running terraform plan."
+          exit 1
+        }else{
+          Write-Output "Plan has changes, running 'Apply'."
+          Invoke-Expression ("$dockerCommandBase apply 'plan'")
+          if($LASTEXITCODE -eq 1){
+            Write-Host "##vso[task.logissue type=error]Error occurred running terraform apply."
+            exit 1
+          }
+          $terraformApplied = 'Yes'
+        }
+    continueOnError: false
