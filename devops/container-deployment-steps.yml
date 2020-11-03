@@ -1,0 +1,73 @@
+parameters:
+  environmentName: ''
+  environmentnumber: ''
+  azureDevOpsServiceConnection: ''
+  containerRegistry: ''
+  appResourceGroup: ''
+  imageRepository: ''
+  appName: ''
+  dockerImageName: ''
+  imageTag: ''
+  imageBuildNumber: ''
+  healthCheckPath: '/health'
+
+steps:
+- task: AzureCLI@2
+  condition: succeeded()
+  displayName: 'Set environment tag on image'
+  inputs:
+    scriptType: bash
+    scriptLocation: 'inlineScript'
+    azureSubscription: ${{ parameters.azureDevOpsServiceConnection }}
+    failOnStandardError: true
+    inlineScript: |
+      docker pull "${{ parameters.dockerImageName }}:${{ parameters.imageTag }}"
+      docker tag "${{ parameters.dockerImageName }}:${{ parameters.imageTag }}" "${{ parameters.dockerImageName }}:latest-${{ parameters.environmentName }}${{ parameters.environmentnumber }}"
+      docker push "${{ parameters.dockerImageName }}:latest-${{ parameters.environmentName }}${{ parameters.environmentnumber }}"
+
+- bash: |
+    export TZ="Pacific/Auckland" 
+    currentDateTime="$(date '+%a %d %b %Y %T %Z')"
+    echo "Release timestamp: $currentDateTime"
+    echo "##vso[task.setvariable variable=currentDateTime]$currentDateTime"
+  displayName: 'Get current timestamp'
+
+- task: AzureRMWebAppDeployment@4
+  displayName: 'Deploy latest-${{ parameters.environmentName }}-${{ parameters.environmentNumber }} to App Service' 
+  name: WebAppDeployment
+  inputs:
+    appType: webAppContainer
+    ConnectedServiceName: ${{ parameters.azureDevOpsServiceConnection }}
+    WebAppName: ${{ parameters.appName }}
+    ResourceGroupName: ${{ parameters.appResourceGroup }}
+    DockerNamespace: ${{ parameters.containerRegistry }}
+    DockerRepository: ${{ parameters.imageRepository }}
+    DockerImageTag: latest-${{ parameters.environmentName }}${{ parameters.environmentnumber }}
+    AppSettings: -ReleaseDate "$(currentDateTime)"
+
+- pwsh: |
+    Write-Output "WebApp URL: $(WebAppDeployment.AppServiceApplicationUrl)"
+    $healthCheckURL =  "$(WebAppDeployment.AppServiceApplicationUrl)${{ parameters.healthCheckPath }}"
+    # Simple WebApp Readiness Check
+    # Wait 5 minute(s) for this to be ready
+    $timeout = new-timespan -Minutes 5
+    $sw = [diagnostics.stopwatch]::StartNew()
+    while ($sw.elapsed -lt $timeout){
+      try {
+        $result = Invoke-RestMethod -Method 'GET' -Uri $healthCheckURL
+        if ( ($result.status -eq "Healthy") -And ($result.healthy.EntryAssemblyVersion -eq $env:webAppVersion) ) {
+          Write-Output "Successfully deployed: $($result.healthy.EntryAssemblyVersion)"
+          exit 0
+        }
+      }
+      catch {
+        Write-Output "Exception calling healthcheck URL: $healthCheckURL"
+      }
+      start-sleep -seconds 10
+    }
+    Write-Output "Timed out waiting for successful deployment: $($result.healthy.EntryAssemblyVersion); expected: $env:webAppVersion"
+    exit 1
+  displayName: Checking for successful deployment
+  continueOnError: false
+  env:
+    webAppVersion: ${{ parameters.imageBuildNumber }}

@@ -1,0 +1,87 @@
+parameters:
+  azureDevOpsServiceConnection: ''
+  azureKeyvaultInstance: ''
+stages:
+  - stage: QualityGate
+    variables:
+        serviceConnection: 'DevOps-MOEEDUNZ-ERS-EDU-MOE-ERS-TESTDEV-01'
+        keyvault: mataersdev00secrets
+    condition: or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.Reason'], 'Schedule'))
+    dependsOn: []
+    jobs:
+      - job: Quality_Checks
+        steps:
+
+        # Auth to Azure Artifcats where the NuGet feed lives
+        - task: NuGetAuthenticate@0
+          displayName: 'NuGet Authenticate'
+        
+        - task: SonarQubePrepare@4
+          continueOnError: true
+          displayName: 'Prepare analysis on SonarQube'
+          inputs:
+            SonarQube: 'SonarQube-ERS'
+            projectKey: ERS-ece-api
+            projectName: ERS-ece-api
+            extraProperties: 'sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml' 
+            
+        - task: DotNetCoreCLI@2
+          continueOnError: true
+          displayName: 'Build for Quality checks'
+          inputs:
+            command: build
+            projects: '**/ECE.sln'
+            
+        - task: AzureKeyVault@1
+          condition: succeeded()
+          displayName: 'Link keyvault with Azure DevOps'
+          inputs:
+            azureSubscription: '${{ parameters.azureDevOpsServiceConnection }}'
+            keyVaultName: '${{ parameters.azureKeyvaultInstance }}'
+            secretsFilter: '*' # Options: editableOptions
+          continueOnError: false
+
+        - task: geeklearningio.gl-vsts-tasks-file-patch.json-patch-task.JsonPatch@3
+          condition: succeeded()
+          displayName: 'Set OPA Settings For Integration Tests'
+          inputs:
+            JsonWorkingDir: '$(Build.SourcesDirectory)/Integration.Tests'
+            JsonTargetFilters: appsettings.json
+            JsonPatchContent: |
+              = /OpaSettings/UserName => "ersuser"
+              = /OpaSettings/UserSecret => "$(OPASettings--UserSecret)"               
+            OutputPatchFile: true
+            ProduceJson5: true
+            FailIfNoPatchApplied: true
+          continueOnError: false
+
+        - task: DotNetCoreCLI@2
+          displayName: Run All Tests
+          inputs:
+            command: test
+            arguments: '--collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover'
+            projects: '**/Schools.sln'
+        
+        # - task: AzureKeyVault@1
+        #   condition: succeeded()
+        #   displayName: 'Link keyvault with Azure DevOps'
+        #   inputs:
+        #     azureSubscription: "${{ variables.serviceConnection }}"
+        #     keyVaultName: "${{ variables.keyvault }}"
+        #     secretsFilter: '*' # Options: editableOptions
+        #   continueOnError: false
+
+        # - script: 'curl -LJO https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar'
+        #   displayName: 'Download Whitesource Agent'
+ 
+        # - script: 'java -jar wss-unified-agent.jar -c ./devops/whitesource.config -apiKey "$(WhitesourceAPIKey)" -product ERS -project schools-api -d .'
+        #   displayName: 'Run Whitesource Scan'
+
+        - task: SonarQubeAnalyze@4
+          continueOnError: true
+          displayName: 'Run Code Analysis'
+
+        - task: SonarQubePublish@4
+          continueOnError: true
+          displayName: 'Publish Quality Gate Result'
+        
