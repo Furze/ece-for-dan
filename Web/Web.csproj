@@ -39,6 +39,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.9" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.9" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Templating" Version="3.1.4" />
         <PackageReference Include="Moe.Library.Cqrs" Version="1.0.0.101" />
