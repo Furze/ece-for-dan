@@ -1,0 +1,9 @@
+﻿using System.Collections.Generic;
+
+namespace MoE.ECE.Domain.Services.Opa
+{
+    public class OpaResponse<T>
+    {
+        public IEnumerable<T> Cases { get; set; } = new List<T>();
+    }
+}

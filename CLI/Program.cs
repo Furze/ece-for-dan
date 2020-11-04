@@ -1,12 +1,9 @@
-﻿using System;
-
-namespace MoE.ECE.CLI
+﻿namespace MoE.ECE.CLI
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
         }
     }
 }
