@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using MoE.ECE.Domain.Exceptions;
 
 namespace MoE.ECE.Domain.Infrastructure
 {
@@ -23,7 +23,7 @@ namespace MoE.ECE.Domain.Infrastructure
                 var password = _configuration.GetValue<string>(ECESqlPassword);
                 
                 if (password == null)
-                    throw new Exception($"Key {ECESqlPassword} has not been set in key vault.");
+                    throw new ECEApplicationException($"Key {ECESqlPassword} has not been set in key vault.");
 
                 connectionString = connectionString.Replace(PasswordToken, password);
             }
