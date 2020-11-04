@@ -25,6 +25,10 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework
 
         public DbSet<EceLicencingDetailDateRangedParameter> EceLicencingDetailDateRangedParameters { get; set; } = null!;
 
+        public DbSet<LookupType> LookupTypes { get; set; } = null!;
+
+        public DbSet<Lookup> Lookups { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             _configurations.ToList().ForEach(c => c.ApplyConfiguration(modelBuilder));
