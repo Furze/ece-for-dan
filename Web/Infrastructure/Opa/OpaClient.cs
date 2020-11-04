@@ -79,7 +79,25 @@ namespace MoE.ECE.Web.Infrastructure.Opa
                 }
             }
 
-            throw new ApplicationException($"Received a {response.StatusCode} response from OPA.");
+            var opaResponseBody = "";
+            try
+            {
+                opaResponseBody = await response.Content.ReadAsStringAsync();
+            }
+            catch 
+            {
+                // NOOP
+            }
+            
+            var applicationException = new ApplicationException($"Received a {response.StatusCode} response from OPA.");
+            _logger.LogError("OPA request error", new
+            {
+                ResponseStatus = response.StatusCode, 
+                ResponseBody = opaResponseBody,
+                Request = request
+            }, applicationException);
+            
+            throw applicationException;
         }
     }
 }
