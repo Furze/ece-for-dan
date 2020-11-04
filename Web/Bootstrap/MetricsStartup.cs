@@ -24,10 +24,10 @@ namespace MoE.ECE.Web.Bootstrap
             var connectionStrings = Configuration.BindFor<ConnectionStrings>();
             
             var health = AppMetricsHealth.CreateDefaultBuilder()
-                .HealthChecks.RegisterFromAssembly(services) // configure options and add health checks
-                .HealthChecks.AddAzureServiceBusTopicConnectivityCheck(
-                    $"Service Bus '{Constants.Topic.ECE}' Topic Connectivity Check",
-                    connectionStrings.ServiceBus, Constants.Topic.ECE, TimeSpan.FromMinutes(10))
+                // .HealthChecks.RegisterFromAssembly(services) // configure options and add health checks
+                // .HealthChecks.AddAzureServiceBusTopicConnectivityCheck(
+                //     $"Service Bus '{Constants.Topic.ECE}' Topic Connectivity Check",
+                //     connectionStrings.ServiceBus, Constants.Topic.ECE, TimeSpan.FromMinutes(10))
                 .BuildAndAddTo(services);
             
             services.AddHealth(health);
