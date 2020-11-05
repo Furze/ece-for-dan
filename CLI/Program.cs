@@ -1,8 +1,10 @@
-﻿namespace MoE.ECE.CLI
+﻿using System.Threading.Tasks;
+
+namespace MoE.ECE.CLI
 {
-    internal class Program
+    public class Program
     {
-        private static void Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
         }
     }
