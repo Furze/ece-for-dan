@@ -14,7 +14,6 @@ using MoE.ECE.Domain.Integration;
 using MoE.ECE.Domain.Services.Opa;
 using Moe.ECE.Events.Integration;
 using MoE.ECE.Web.Infrastructure;
-using MoE.ECE.Web.Infrastructure.Opa;
 using Moe.Library.Cqrs;
 using Serilog;
 using Serilog.Events;
@@ -46,34 +45,18 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         private static Dictionary<string, string> InMemoryConfiguration => new Dictionary<string, string>
         {
             {
-              "OidcSettings:Authority", "https://fakeidentity"  
-            },
-            {
-                "ConnectionStrings:ServiceBus",
-                "Endpoint=sb://ers-stu.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=ih0IjGUxb/0G1aSrKOWHh2ttUYPGw6kn2wFSn1lA7iw="
-            },
-            {
                 "MartenSettings:ConnectionString", _connectionString
-            },
-            {
-                "MartenSettings:AutoCreate", "None"
-            },
-            {
-                "OpaSettings:AuthorisationUrl", "https://moe-opa-test.custhelp.com/opa-hub/api/auth"
-            },
-            {
-                "OpaSettings:RuleBaseUrl", "https://moe-opa-test.custhelp.com/determinations-server/batch/12.2.7/policy-models/{rulebase}_DT2/assessor/"
             }
         };
 
-        private IHost CreateHost()
+        private static IHost CreateHost()
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(LogEventLevel.Verbose)
                 .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
-                .Enrich.WithProperty("Environment", "Integration Test")
+                .Enrich.WithProperty("Environment", "ECE Integration Test")
                 .WriteTo.Seq("http://localhost:5341")
                 .WriteTo.Console()
                 .CreateLogger();

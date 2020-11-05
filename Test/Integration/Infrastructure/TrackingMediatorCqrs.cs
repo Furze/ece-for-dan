@@ -39,6 +39,11 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             return _cqrsImplementation.QueryAsync(query, cancellationToken);
         }
 
+        public Task ExecuteAsync<TCommand>(CancellationToken cancellationToken = new CancellationToken()) where TCommand : ICommand, new()
+        {
+            return _cqrsImplementation.ExecuteAsync<TCommand>(cancellationToken);
+        }
+
         public Task ExecuteAsync(ICommand command, CancellationToken cancellationToken = default)
         {
             return _cqrsImplementation.ExecuteAsync(command, cancellationToken);
