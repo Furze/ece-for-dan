@@ -20,7 +20,7 @@ namespace MoE.ECE.Web.Controllers
     [Authorize]
     [Produces(MediaTypeNames.Application.Json)]
     [ApiController]
-    [Route("api/rs7")]
+    [Route("api/" + Rs7.ResourceName)]
     [ApiConventionType(typeof(ApiConventions))]
     public class Rs7Controller : ControllerBase
     {
