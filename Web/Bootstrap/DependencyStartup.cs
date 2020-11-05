@@ -8,6 +8,7 @@ using MoE.ECE.Domain.Infrastructure;
 using MoE.ECE.Domain.Integration;
 using MoE.ECE.Web.Infrastructure;
 using MoE.ECE.Web.Infrastructure.Authorisation;
+using MoE.ECE.Web.Infrastructure.ServiceBus;
 using MoE.ECE.Web.Infrastructure.Validation;
 using Moe.Library.Cqrs;
 
