@@ -1,7 +1,9 @@
-﻿using App.Metrics.Health;
+﻿using System;
+using App.Metrics.Health;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
+using Moe.ECE.Events.Integration;
 using MoE.ECE.Web.Infrastructure.Extensions;
 using MoE.ECE.Web.Infrastructure.Settings;
 
@@ -22,10 +24,10 @@ namespace MoE.ECE.Web.Bootstrap
             var connectionStrings = Configuration.BindFor<ConnectionStrings>();
             
             var health = AppMetricsHealth.CreateDefaultBuilder()
-                // .HealthChecks.RegisterFromAssembly(services) // configure options and add health checks
-                // .HealthChecks.AddAzureServiceBusTopicConnectivityCheck(
-                //     $"Service Bus '{Constants.Topic.ECE}' Topic Connectivity Check",
-                //     connectionStrings.ServiceBus, Constants.Topic.ECE, TimeSpan.FromMinutes(10))
+                .HealthChecks.RegisterFromAssembly(services) // configure options and add health checks
+                .HealthChecks.AddAzureServiceBusTopicConnectivityCheck(
+                    $"Service Bus '{Constants.Topic.ECE}' Topic Connectivity Check",
+                    connectionStrings.ServiceBus, Constants.Topic.ECE, TimeSpan.FromMinutes(10))
                 .BuildAndAddTo(services);
             
             services.AddHealth(health);
