@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using IdentityModel;
 using Microsoft.AspNetCore.Http;
-using MoE.ECE.Domain.Abstractions;
+using MoE.ECE.Domain.Infrastructure.Abstractions;
 
 namespace MoE.ECE.Web.Infrastructure.Authorisation
 {

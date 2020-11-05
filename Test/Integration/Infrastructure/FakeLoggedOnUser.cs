@@ -1,4 +1,4 @@
-﻿using MoE.ECE.Domain.Abstractions;
+﻿using MoE.ECE.Domain.Infrastructure.Abstractions;
 
 namespace MoE.ECE.Integration.Tests.Infrastructure
 {

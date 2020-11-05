@@ -5,7 +5,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using MoE.ECE.Domain.Services.Opa;
+using MoE.ECE.Domain.Infrastructure.Services.Opa;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
