@@ -45,7 +45,7 @@ stages:
           condition: succeeded()
           displayName: 'Set OPA Settings For Integration Tests'
           inputs:
-            JsonWorkingDir: '$(Build.SourcesDirectory)/Integration.Tests'
+            JsonWorkingDir: '$(Build.SourcesDirectory)/Test/Integration'
             JsonTargetFilters: appsettings.json
             JsonPatchContent: |
               = /OpaSettings/UserName => "ersuser"

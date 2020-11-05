@@ -1,12 +1,11 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 
 namespace MoE.ECE.CLI
 {
-    internal class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
         }
     }
 }
