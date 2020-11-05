@@ -8,8 +8,19 @@
 
     <ItemGroup>
       <PackageReference Include="EFCore.NamingConventions" Version="1.1.0" />
+      <PackageReference Include="Marten" Version="3.13.2" />
+      <PackageReference Include="Microsoft.ApplicationInsights" Version="2.15.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
+      <PackageReference Include="Npgsql" Version="4.1.5" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Events.Integration\Events.Integration.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Services\Opa" />
     </ItemGroup>
 
 </Project>
