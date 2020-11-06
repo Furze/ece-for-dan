@@ -215,6 +215,7 @@ resource "azurerm_app_service" "app" {
     linux_fx_version  = "DOCKER"
     ftps_state        = "Disabled"
     health_check_path = "/health"
+    http2_enabled     = true
   }
   tags = local.tags
   lifecycle {
