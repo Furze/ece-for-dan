@@ -100,7 +100,13 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         {
             return TestState.A_domain_event_should_be_fired<TDomainEvent>();
         }
-
+        
+        protected void A_domain_event_should_not_be_fired<TDomainEvent>()
+            where TDomainEvent : class, IDomainEvent
+        {
+            TestState.A_domain_event_should_not_be_fired<TDomainEvent>();
+        }
+        
         protected TIntegrationEvent An_integration_event_should_be_fired<TIntegrationEvent>()
             where TIntegrationEvent : class, IIntegrationEvent
         {
