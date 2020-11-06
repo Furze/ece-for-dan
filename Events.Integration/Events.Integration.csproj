@@ -7,7 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Google.Apis.Core" Version="1.49.0" />
+      <PackageReference Include="Google.Protobuf" Version="3.13.0" />
       <PackageReference Include="MediatR" Version="9.0.0" />
+      <PackageReference Include="NodaTime.Serialization.Protobuf" Version="2.0.0" />
     </ItemGroup>
 
 </Project>
