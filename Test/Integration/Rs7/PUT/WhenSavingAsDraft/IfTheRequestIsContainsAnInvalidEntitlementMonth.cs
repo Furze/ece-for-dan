@@ -1,4 +1,8 @@
-﻿using MoE.ECE.Integration.Tests.Infrastructure;
+﻿using System.Linq;
+using Bard;
+using MoE.ECE.Domain.Read.Model.Rs7;
+using MoE.ECE.Integration.Tests.Chapter;
+using MoE.ECE.Integration.Tests.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -6,11 +10,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
 {
     public class IfTheRequestIsContainsAnInvalidEntitlementMonth : SpeedyIntegrationTestBase
     {
-        public IfTheRequestIsContainsAnInvalidEntitlementMonth(
-            RunOnceBeforeAllTests testSetUp,
-            ITestOutputHelper output,
-            TestState testState)
-            : base(testSetUp, output, testState)
+        public IfTheRequestIsContainsAnInvalidEntitlementMonth(RunOnceBeforeAllTests testSetUp,
+            ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output,
+            testState)
         {
         }
 
@@ -18,9 +20,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
 
         protected override void Arrange()
         {
-            If
+            Given
                 .A_rs7_has_been_created()
-                .UseResult(created => Rs7 = created);
+                .GetResult(created => Rs7 = created.Rs7Created);
         }
 
         private Rs7Model Rs7
@@ -33,33 +35,35 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheMonthIsInvalidThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7 = Command.SaveAsDraft(Rs7, rs7 => 
+            var updateRs7 = ModelBuilder.SaveAsDraft(Rs7, rs7 =>
             {
-                rs7.EntitlementMonths.First().MonthNumber = 6;
+                if (rs7.EntitlementMonths != null)
+                    rs7.EntitlementMonths.First().MonthNumber = 6;
             });
 
             // Act
-            Api.Put($"{Url}/{Rs7.Id}", updateRs7);
+            When.Put($"{Url}/{Rs7.Id}", updateRs7);
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .WithErrorCode("1030");
         }
-        
+
         [Fact]
         public void IfTheYearIsInvalidThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7 = Command.SaveAsDraft(Rs7, rs7 => 
+            var updateRs7 = ModelBuilder.SaveAsDraft(Rs7, rs7 =>
             {
-                rs7.EntitlementMonths.First().Year = 2021;
+                if (rs7.EntitlementMonths != null)
+                    rs7.EntitlementMonths.First().Year = 2021;
             });
 
             // Act
-            Api.Put($"{Url}/{Rs7.Id}", updateRs7);
+            When.Put($"{Url}/{Rs7.Id}", updateRs7);
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .WithErrorCode("1030");

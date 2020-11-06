@@ -1,4 +1,11 @@
-﻿using MoE.ECE.Integration.Tests.Infrastructure;
+﻿using Bard;
+using MoE.ECE.Domain.Command.Rs7;
+using MoE.ECE.Domain.Event;
+using MoE.ECE.Domain.Exceptions;
+using MoE.ECE.Domain.Model.ValueObject;
+using MoE.ECE.Domain.Read.Model.Rs7;
+using MoE.ECE.Integration.Tests.Chapter;
+using MoE.ECE.Integration.Tests.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -6,23 +13,20 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 {
     public class IfTheRequestRollStatusIsNew : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
-        public IfTheRequestRollStatusIsNew(
-            RunOnceBeforeAllTests testSetUp,
-            ITestOutputHelper output,
-            TestState testState)
-            : base(testSetUp, output, testState)
+        public IfTheRequestRollStatusIsNew(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
 
+        private const string Url = "api/rs7";
+
         protected override void Arrange()
         {
-            If
+            Given
                 .A_rs7_has_been_created()
-                .UseResult(result => Rs7Model = result);
+                .GetResult(result => Rs7Model = result.Rs7Created);
 
-            UpdateRs7Command = Command.UpdateRs7(Rs7Model, rs7 => rs7.RollStatus = RollStatus.ExternalNew);
+            UpdateRs7Command = ModelBuilder.UpdateRs7(Rs7Model, rs7 => rs7.RollStatus = RollStatus.ExternalNew);
         }
 
         private Rs7Model Rs7Model
@@ -40,19 +44,19 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         protected override void Act()
         {
             // Act
-            Api.Put($"{Url}/{Rs7Model.Id}", UpdateRs7Command);
+            When.Put($"{Url}/{Rs7Model.Id}", UpdateRs7Command);
         }
 
         [Fact]
         public void ThenADomainEventShouldNotBePublished()
         {
-            Then.A_domain_event_should_not_be_fired<Domain.Event.Rs7Updated>();
+            A_domain_event_should_not_be_fired<Rs7Updated>();
         }
 
         [Fact]
         public void ThenTheResponseShouldBeABadRequest()
         {
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .WithErrorCode(ErrorCode.InvalidUpdateRs7StatusNew);

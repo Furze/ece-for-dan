@@ -1,4 +1,8 @@
-﻿using MoE.ECE.Integration.Tests.Infrastructure;
+﻿using System.Linq;
+using Bard;
+using MoE.ECE.Domain.Read.Model.Rs7;
+using MoE.ECE.Integration.Tests.Chapter;
+using MoE.ECE.Integration.Tests.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -6,11 +10,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenSubmittingForApproval
 {
     public class IfTheRequestIsContainsAnInvalidEntitlementMonth : SpeedyIntegrationTestBase
     {
-        public IfTheRequestIsContainsAnInvalidEntitlementMonth(
-            RunOnceBeforeAllTests testSetUp,
-            ITestOutputHelper output,
-            TestState testState)
-            : base(testSetUp, output, testState)
+        public IfTheRequestIsContainsAnInvalidEntitlementMonth(RunOnceBeforeAllTests testSetUp,
+            ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output,
+            testState)
         {
         }
 
@@ -18,9 +20,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenSubmittingForApproval
 
         protected override void Arrange()
         {
-            If
+            Given
                 .A_rs7_has_been_created()
-                .UseResult(created => Rs7 = created);
+                .GetResult(created => Rs7 = created.Rs7Created);
         }
 
         private Rs7Model Rs7
@@ -33,33 +35,35 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenSubmittingForApproval
         public void IfTheMonthIsInvalidThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var submitForApproval = Command.SubmitRs7ForApproval(Rs7, command => 
+            var submitForApproval = ModelBuilder.SubmitRs7ForApproval(Rs7, command =>
             {
-                command.EntitlementMonths.First().MonthNumber = 6;
+                if (command.EntitlementMonths != null)
+                    command.EntitlementMonths.First().MonthNumber = 6;
             });
 
             // Act
-            Api.Post($"{Url}/{Rs7.Id}/submissions-for-approval", submitForApproval);
+            When.Post($"{Url}/{Rs7.Id}/submissions-for-approval", submitForApproval);
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .WithErrorCode("1030");
         }
-        
+
         [Fact]
         public void IfTheYearIsInvalidThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var submitForApproval = Command.SubmitRs7ForApproval(Rs7, command => 
+            var submitForApproval = ModelBuilder.SubmitRs7ForApproval(Rs7, command =>
             {
-                command.EntitlementMonths.First().Year = 2021;
+                if (command.EntitlementMonths != null)
+                    command.EntitlementMonths.First().Year = 2021;
             });
 
             // Act
-            Api.Post($"{Url}/{Rs7.Id}/submissions-for-approval", submitForApproval);
+            When.Post($"{Url}/{Rs7.Id}/submissions-for-approval", submitForApproval);
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .WithErrorCode("1030");

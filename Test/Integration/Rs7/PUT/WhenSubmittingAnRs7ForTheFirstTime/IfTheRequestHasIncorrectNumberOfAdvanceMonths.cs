@@ -1,4 +1,8 @@
 ﻿using System.Linq;
+using Bard;
+using MoE.ECE.Domain.Command.Rs7;
+using MoE.ECE.Domain.Read.Model.Rs7;
+using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
@@ -7,11 +11,8 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 {
     public class IfTheRequestHasIncorrectNumberOfAdvanceMonths : SpeedyIntegrationTestBase
     {
-        public IfTheRequestHasIncorrectNumberOfAdvanceMonths(
-            RunOnceBeforeAllTests testSetUp,
-            ITestOutputHelper output,
-            TestState testState)
-            : base(testSetUp, output, testState)
+        public IfTheRequestHasIncorrectNumberOfAdvanceMonths(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
 
@@ -19,9 +20,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 
         protected override void Arrange()
         {
-            If
+            Given
                 .A_rs7_has_been_created()
-                .UseResult(created => Rs7 = created);
+                .GetResult(created => Rs7 = created.Rs7Created);
         }
 
         private Rs7Model Rs7
@@ -29,11 +30,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
             get => TestData.Rs7Model;
             set => TestData.Rs7Model = value;
         }
-        
+
         protected override void Act()
         {
             // Act
-            Api.Put($"{Url}/{Rs7.Id}", Command.UpdateRs7(Rs7, rs7 =>
+            When.Put($"{Url}/{Rs7.Id}", ModelBuilder.UpdateRs7(Rs7, rs7 =>
             {
                 rs7.AdvanceMonths = Enumerable.Range(6, 3)
                     .Select(month => new Rs7AdvanceMonthModel
@@ -46,7 +47,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         [Fact]
         public void ThenTheResponseShouldBeAHttp400()
         {
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .ForProperty<UpdateRs7>(rs7 => rs7.AdvanceMonths)

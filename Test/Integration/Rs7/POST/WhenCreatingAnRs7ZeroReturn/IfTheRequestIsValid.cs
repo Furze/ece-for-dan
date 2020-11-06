@@ -1,6 +1,4 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using MoE.ECE.CLI.Data;
 using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Model.ValueObject;
@@ -9,13 +7,17 @@ using MoE.ECE.Integration.Tests.Infrastructure;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
-using IntegrationEvents = MoE.Rolls.Domain.Integration.Events;
-using ModelBuilder = MoE.ECE.Integration.Tests.Infrastructure.ModelBuilder;
+using Rs7Updated = Events.Integration.Protobuf.Roll.Rs7Updated;
 
 namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
 {
     public class IfTheRequestIsValid : SpeedyIntegrationTestBase
     {
+        public IfTheRequestIsValid(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
+        {
+        }
+
         private const string Url = "api/rs7";
         private readonly int _organisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId;
 
@@ -30,15 +32,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
         }
 
         private Rs7ZeroReturnCreated DomainEvent => A_domain_event_should_be_fired<Rs7ZeroReturnCreated>();
-        private IntegrationEvents.Rs7.Rs7Updated IntegrationEvent => An_integration_event_should_be_fired<IntegrationEvents.Rs7.Rs7Updated>();
-
-        [Fact]
-        public void ThenAnIntegrationEventShouldBePublished()
-        {
-            IntegrationEvent.ShouldNotBeNull();
-
-            IntegrationEvent.Id.ShouldNotBe(0);
-        }
+        private Rs7Updated IntegrationEvent => An_integration_event_should_be_fired<Rs7Updated>();
 
         [Fact]
         public void ThenADomainEventShouldBePublished()
@@ -49,21 +43,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
         }
 
         [Fact]
-        public void ThenDomainEventShouldHaveRollStatusInternalReadyForReview()
+        public void ThenAnIntegrationEventShouldBePublished()
         {
-            DomainEvent.RollStatus.ShouldBe(RollStatus.InternalReadyForReview);
-        }
+            IntegrationEvent.ShouldNotBeNull();
 
-        [Fact]
-        public void ThenDomainEventShouldHaveAReceivedDate()
-        {
-            DomainEvent.ReceivedDate.ShouldNotBeNull();
-        }
-
-        [Fact]
-        public void ThenDomainEventShouldBeZeroReturn()
-        {
-            DomainEvent.IsZeroReturn.ShouldBe(true);
+            IntegrationEvent.Id.ShouldNotBe(0);
         }
 
         [Fact]
@@ -73,15 +57,21 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
         }
 
         [Fact]
-        public void ThenDomainEventShouldHaveCorrectFundingPeriod()
+        public void ThenDomainEventShouldBeZeroReturn()
         {
-            DomainEvent.FundingPeriod.ShouldBe(FundingPeriodMonth.July);
+            DomainEvent.IsZeroReturn.ShouldBe(true);
         }
 
         [Fact]
-        public void ThenDomainEventShouldHaveCorrectFundingYear()
+        public void ThenDomainEventShouldHaveAReceivedDate()
         {
-            DomainEvent.FundingYear.ShouldBe(2021);
+            DomainEvent.ReceivedDate.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void ThenDomainEventShouldHaveCorrectFundingPeriod()
+        {
+            DomainEvent.FundingPeriod.ShouldBe(FundingPeriodMonth.July);
         }
 
         [Fact]
@@ -91,9 +81,21 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
         }
 
         [Fact]
+        public void ThenDomainEventShouldHaveCorrectFundingYear()
+        {
+            DomainEvent.FundingYear.ShouldBe(2021);
+        }
+
+        [Fact]
         public void ThenDomainEventShouldHaveCorrectOrganisation()
         {
             DomainEvent.OrganisationId.ShouldBe(_organisationId);
+        }
+
+        [Fact]
+        public void ThenDomainEventShouldHaveRollStatusInternalReadyForReview()
+        {
+            DomainEvent.RollStatus.ShouldBe(RollStatus.InternalReadyForReview);
         }
 
         [Fact]
@@ -107,10 +109,6 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
         public void ThenResponseShouldBe201()
         {
             Then.Response.ShouldBe.Created<CreatedAtActionResult>();
-        }
-
-        public IfTheRequestIsValid(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
-        {
         }
     }
 }

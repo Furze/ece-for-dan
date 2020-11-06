@@ -28,5 +28,15 @@ namespace MoE.ECE.Integration.Tests.Chapter
                 })
                 .ProceedToChapter<Rs7UpdatedChapter>();
         }
+
+        public EndChapter<ECEStoryData> rs7_submitted_for_approval()
+        {
+            return When(context =>
+            {
+                var submitForApproval = ModelBuilder.SubmitRs7ForApproval(context.StoryData.Rs7Created);
+
+                context.CqrsExecute(submitForApproval);
+            }).End();
+        }
     }
 }

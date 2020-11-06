@@ -1,29 +1,34 @@
-﻿using MoE.ECE.Integration.Tests.Infrastructure;
+﻿using System.Linq;
+using Bard;
+using MoE.ECE.Domain.Command.Rs7;
+using MoE.ECE.Domain.Event;
+using MoE.ECE.Domain.Model.ValueObject;
+using MoE.ECE.Domain.Read.Model.Rs7;
+using MoE.ECE.Integration.Tests.Chapter;
+using MoE.ECE.Integration.Tests.Infrastructure;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
-using Rs7Updated = MoE.Rolls.Domain.Integration.Events.Rs7.Rs7Updated;
 
 namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 {
     public class IfTheRequestIsValidAndSubmittingFromNew : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
-        public IfTheRequestIsValidAndSubmittingFromNew(
-            RunOnceBeforeAllTests testSetUp,
-            ITestOutputHelper output,
-            TestState testState)
-            : base(testSetUp, output, testState)
+        public IfTheRequestIsValidAndSubmittingFromNew(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
 
+        private const string Url = "api/rs7";
+
         protected override void Arrange()
         {
-            If
+            Given
                 .A_rs7_has_been_created()
-                .UseResult(result => Rs7Model = result);
+                .GetResult(result => Rs7Model = result.Rs7Created);
 
-            UpdateRs7Command = Command.UpdateRs7(Rs7Model, rs7 => rs7.RollStatus = RollStatus.InternalReadyForReview);
+            UpdateRs7Command =
+                ModelBuilder.UpdateRs7(Rs7Model, rs7 => rs7.RollStatus = RollStatus.InternalReadyForReview);
         }
 
         private Rs7Model Rs7Model
@@ -41,15 +46,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         protected override void Act()
         {
             // Act
-            Api.Put($"{Url}/{Rs7Model.Id}", UpdateRs7Command);
+            When.Put($"{Url}/{Rs7Model.Id}", UpdateRs7Command);
         }
 
         [Fact]
         public void ThenADomainEventShouldBePublishedWithRs7Data()
         {
             // Assert
-            var domainEvent = Then
-                .A_domain_event_should_be_fired<Domain.Event.Rs7Updated>();
+            var domainEvent = A_domain_event_should_be_fired<Rs7Updated>();
 
             domainEvent.Id.ShouldNotBe(0);
             domainEvent.BusinessEntityId.ShouldNotBeNull();
@@ -58,53 +62,53 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         }
 
         [Fact]
+        public void ThenADomainEventShouldPublishAdvanceMonths()
+        {
+            // Assert
+            var domainEvent = A_domain_event_should_be_fired<Rs7Updated>();
+
+            domainEvent.AdvanceMonths.ShouldNotBeNull();
+            domainEvent.AdvanceMonths?.ElementAt(0).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
+            domainEvent.AdvanceMonths?.ElementAt(1).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
+            domainEvent.AdvanceMonths?.ElementAt(2).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
+            domainEvent.AdvanceMonths?.ElementAt(3).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
+
+            domainEvent.AdvanceMonths?.ElementAt(0).Sessional.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(0).ParentLed.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(1).Sessional.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(1).ParentLed.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(2).Sessional.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(2).ParentLed.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(3).Sessional.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(3).ParentLed.GetValueOrDefault().ShouldBe(0);
+        }
+
+        [Fact]
         public void ThenADomainEventShouldUpdateTheCurrentRevision()
         {
             // Assert
-            var domainEvent = Then
-                .A_domain_event_should_be_fired<Domain.Event.Rs7Updated>();
+            var domainEvent = A_domain_event_should_be_fired<Rs7Updated>();
 
             domainEvent.RevisionId.ShouldNotBe(0);
             domainEvent.RevisionNumber.ShouldBe(1);
             domainEvent.RevisionDate.ShouldNotBeNull();
 
-            domainEvent.AdvanceMonths.Count().ShouldBe(4);
+            domainEvent.AdvanceMonths.ShouldNotBeNull();
+            domainEvent.AdvanceMonths?.Count().ShouldBe(4);
 
-            domainEvent.EntitlementMonths.Count().ShouldBe(4);
+            domainEvent.EntitlementMonths.ShouldNotBeNull();
+            domainEvent.EntitlementMonths?.Count().ShouldBe(4);
 
             domainEvent.IsAttested.ShouldBe(true);
-        }
-
-        [Fact]
-        public void ThenADomainEventShouldPublishAdvanceMonths()
-        {
-            // Assert
-            var domainEvent = Then
-                .A_domain_event_should_be_fired<Domain.Event.Rs7Updated>();
-
-            domainEvent.AdvanceMonths.ElementAt(0).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
-            domainEvent.AdvanceMonths.ElementAt(1).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
-            domainEvent.AdvanceMonths.ElementAt(2).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
-            domainEvent.AdvanceMonths.ElementAt(3).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
-            
-            domainEvent.AdvanceMonths.ElementAt(0).Sessional.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(0).ParentLed.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(1).Sessional.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(1).ParentLed.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(2).Sessional.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(2).ParentLed.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(3).Sessional.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(3).ParentLed.GetValueOrDefault().ShouldBe(0);
         }
 
         [Fact]
         public void ThenAnIntegrationEventShouldBePublished()
         {
             // Assert
-            var integrationEvent = Then
-                .An_integration_event_should_be_fired<Rs7Updated>();
+            var integrationEvent = An_integration_event_should_be_fired<Events.Integration.Protobuf.Roll.Rs7Updated>();
 
-            integrationEvent.RollStatus.ShouldBe(RollStatus.InternalReadyForReview);
+            integrationEvent.RollStatus.ShouldBe(Events.Integration.Protobuf.Roll.RollStatus.InternalReadyForReview);
             integrationEvent.RevisionNumber.ShouldBe(1);
             integrationEvent.RevisionDate.ShouldNotBeNull();
         }
@@ -112,7 +116,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         [Fact]
         public void ThenTheResponseShouldBeAHttp204()
         {
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .NoContent();
         }

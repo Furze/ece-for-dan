@@ -1,19 +1,23 @@
-﻿using Xunit;
+﻿using Bard;
+using MoE.ECE.Domain.Command.Rs7;
+using MoE.ECE.Domain.Event;
+using MoE.ECE.Domain.Model.ReferenceData;
+using MoE.ECE.Domain.Model.ValueObject;
+using MoE.ECE.Integration.Tests.Chapter;
+using MoE.ECE.Integration.Tests.Infrastructure;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 {
-    public class TheAttestedProperty : IntegrationTestBase
+    public class TheAttestedProperty : IntegrationTestBase<ECEStoryBook, ECEStoryData>
     {
-        public TheAttestedProperty(
-            RunOnceBeforeAllTests testSetUp,
-            ITestOutputHelper output,
-            TestState testState)
-            : base(testSetUp, output, testState)
+        private const string Url = "api/rs7";
+
+        public TheAttestedProperty(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
-
-        private const string Url = "api/rs7";
 
         [Theory]
         [InlineData(OrganisationType.CasualEducationAndCare)]
@@ -24,18 +28,18 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
             // Arrange 
             var rs7Created = new Rs7Created();
 
-            If
+            Given
                 .An_rs7_has_been_created_for_an_organisation_type(organisationType)
-                .UseResult(created => rs7Created = created);
+                .GetResult(created => rs7Created = created.Rs7Created);
 
             // Act
-            Api.Put($"{Url}/{rs7Created.Id}", Command.UpdateRs7(rs7Created, rs7 => 
+            When.Put($"{Url}/{rs7Created.Id}", ModelBuilder.UpdateRs7(rs7Created, rs7 =>
             {
                 rs7.RollStatus = RollStatus.InternalReadyForReview;
-                rs7.IsAttested = null; 
+                rs7.IsAttested = null;
             }));
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .ForProperty<UpdateRs7>(rs7 => rs7.IsAttested)
@@ -43,7 +47,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         }
 
         /// <summary>
-        /// JIRA ERST-11196 validator incorrectly checking that the field is true rather than not null!!
+        ///     JIRA ERST-11196 validator incorrectly checking that the field is true rather than not null!!
         /// </summary>
         /// <param name="organisationType"></param>
         [Theory]
@@ -55,19 +59,19 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
             // Arrange 
             var rs7Created = new Rs7Created();
 
-            If
+            Given
                 .An_rs7_has_been_created_for_an_organisation_type(organisationType)
-                .UseResult(created => rs7Created = created);
+                .GetResult(created => rs7Created = created.Rs7Created);
 
             // Act
-            Api.Put($"{Url}/{rs7Created.Id}", Command.UpdateRs7(rs7Created, rs7 =>
+            When.Put($"{Url}/{rs7Created.Id}", ModelBuilder.UpdateRs7(rs7Created, rs7 =>
             {
                 rs7.RollStatus = RollStatus.InternalReadyForReview;
                 rs7.IsAttested = false;
                 ClearAllDay(rs7);
             }));
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .NoContent();
         }
@@ -75,10 +79,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         private static void ClearAllDay(UpdateRs7 rs7)
         {
             if (rs7.AdvanceMonths == null) return;
-            foreach (var rs7AdvanceMonthModel in rs7.AdvanceMonths)
-            {
-                rs7AdvanceMonthModel.AllDay = null;
-            }
+            foreach (var rs7AdvanceMonthModel in rs7.AdvanceMonths) rs7AdvanceMonthModel.AllDay = null;
         }
 
         [Theory]
@@ -91,11 +92,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
             // Arrange 
             var rs7Created = new Rs7Created();
 
-            If
+            Given
                 .An_rs7_has_been_created_for_an_organisation_type(organisationType)
-                .UseResult(created => rs7Created = created);
+                .GetResult(created => rs7Created = created.Rs7Created);
 
-            var command = Command.UpdateRs7(rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(rs7Created, rs7 =>
             {
                 rs7.RollStatus = RollStatus.InternalReadyForReview;
                 rs7.IsAttested = null;
@@ -103,9 +104,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
             });
 
             // Act
-            Api.Put($"{Url}/{rs7Created.Id}", command);
+            When.Put($"{Url}/{rs7Created.Id}", command);
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .NoContent();
         }

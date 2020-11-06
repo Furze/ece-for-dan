@@ -1,3 +1,8 @@
+using Bard;
+using MoE.ECE.Domain.Command.Rs7;
+using MoE.ECE.Domain.Event;
+using MoE.ECE.Domain.Read.Model.Rs7;
+using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
@@ -6,15 +11,12 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 {
     public class TheDeclaration : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
-        public TheDeclaration(
-            RunOnceBeforeAllTests testSetUp,
-            ITestOutputHelper output,
-            TestState testState)
-            : base(testSetUp, output, testState)
+        protected TheDeclaration(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
+
+        private const string Url = "When/rs7";
 
         private Rs7Created Rs7Created
         {
@@ -24,140 +26,29 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 
         protected override void Arrange()
         {
-            If
+            Given
                 .A_rs7_has_been_created()
-                .UseResult(created => Rs7Created = created);
+                .GetResult(created => Rs7Created = created.Rs7Created);
         }
 
-        [Fact]
-        public void IsRequired()
+        private static string GenerateString(int length)
         {
-            // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 => rs7.Declaration = null);
-
-            // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
-
-            Then.TheResponse
-                .ShouldBe
-                .BadRequest
-                .ForProperty<UpdateRs7>(rs7 => rs7.Declaration)
-                .WithMessage("'Declaration' must not be empty.");
-        }
-
-        [Fact]
-        public void FullNameIsRequired()
-        {
-            // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 =>
-            {
-                if (rs7.Declaration != null)
-                    rs7.Declaration.FullName = null;
-            });
-
-            // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
-
-            Then.TheResponse
-                .ShouldBe
-                .BadRequest
-                .ForProperty<DeclarationModel>(model => model.FullName);
-        }
-
-        [Fact]
-        public void FullNameCannotBeAnEmptyString()
-        {
-            // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 =>
-            {
-                if (rs7.Declaration != null)
-                    rs7.Declaration.FullName = string.Empty;
-            });
-
-            // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
-
-            Then.TheResponse
-                .ShouldBe
-                .BadRequest
-                .ForProperty<DeclarationModel>(model => model.FullName);
-        }
-
-        [Fact]
-        public void FullNameCannotBeLessThanTwoCharacters()
-        {
-            // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 =>
-            {
-                if (rs7.Declaration != null)
-                    rs7.Declaration.FullName = "T";
-            });
-
-            // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
-
-            Then.TheResponse
-                .ShouldBe
-                .BadRequest
-                .ForProperty<DeclarationModel>(model => model.FullName);
-        }
-
-        [Fact]
-        public void FullNameCannotBeMoreThan150Characters()
-        {
-            // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 =>
-            {
-                if (rs7.Declaration != null)
-                    rs7.Declaration.FullName = GenerateString(151);
-            });
-
-            // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
-
-            Then.TheResponse
-                .ShouldBe
-                .BadRequest
-                .ForProperty<DeclarationModel>(model => model.FullName);
-        }
-
-        [Fact]
-        public void ContactPhoneIsRequired()
-        {
-            // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 =>
-            {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.ContactPhone = null;
-                }
-            });
-
-            // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
-
-            Then.TheResponse
-                .ShouldBe
-                .BadRequest
-                .ForProperty<DeclarationModel>(model => model.ContactPhone);
+            return new string('x', length);
         }
 
         [Fact]
         public void ContactPhoneCannotBeAnEmptyString()
         {
             // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.ContactPhone = string.Empty;
-                }
+                if (rs7.Declaration != null) rs7.Declaration.ContactPhone = string.Empty;
             });
 
             // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Created.Id}", command);
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .ForProperty<DeclarationModel>(model => model.ContactPhone);
@@ -167,18 +58,15 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ContactPhoneCannotBeLessThanTwoCharacters()
         {
             // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.ContactPhone = "T";
-                }
+                if (rs7.Declaration != null) rs7.Declaration.ContactPhone = "T";
             });
 
             // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Created.Id}", command);
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .ForProperty<DeclarationModel>(model => model.ContactPhone);
@@ -188,60 +76,161 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ContactPhoneCannotBeMoreThan50Characters()
         {
             // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.ContactPhone = GenerateString(51);
-                }
+                if (rs7.Declaration != null) rs7.Declaration.ContactPhone = GenerateString(51);
             });
 
             // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Created.Id}", command);
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .ForProperty<DeclarationModel>(model => model.ContactPhone);
         }
 
         [Fact]
-        public void RoleIsRequired()
+        public void ContactPhoneIsRequired()
         {
             // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.Role = null;
-                }
+                if (rs7.Declaration != null) rs7.Declaration.ContactPhone = null;
             });
 
             // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Created.Id}", command);
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
-                .ForProperty<DeclarationModel>(model => model.Role);
+                .ForProperty<DeclarationModel>(model => model.ContactPhone);
+        }
+
+        [Fact]
+        public void FullNameCannotBeAnEmptyString()
+        {
+            // Arrange
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            {
+                if (rs7.Declaration != null)
+                    rs7.Declaration.FullName = string.Empty;
+            });
+
+            // Act
+            When.Put($"{Url}/{Rs7Created.Id}", command);
+
+            Then.Response
+                .ShouldBe
+                .BadRequest
+                .ForProperty<DeclarationModel>(model => model.FullName);
+        }
+
+        [Fact]
+        public void FullNameCannotBeLessThanTwoCharacters()
+        {
+            // Arrange
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            {
+                if (rs7.Declaration != null)
+                    rs7.Declaration.FullName = "T";
+            });
+
+            // Act
+            When.Put($"{Url}/{Rs7Created.Id}", command);
+
+            Then.Response
+                .ShouldBe
+                .BadRequest
+                .ForProperty<DeclarationModel>(model => model.FullName);
+        }
+
+        [Fact]
+        public void FullNameCannotBeMoreThan150Characters()
+        {
+            // Arrange
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            {
+                if (rs7.Declaration != null)
+                    rs7.Declaration.FullName = GenerateString(151);
+            });
+
+            // Act
+            When.Put($"{Url}/{Rs7Created.Id}", command);
+
+            Then.Response
+                .ShouldBe
+                .BadRequest
+                .ForProperty<DeclarationModel>(model => model.FullName);
+        }
+
+        [Fact]
+        public void FullNameIsRequired()
+        {
+            // Arrange
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            {
+                if (rs7.Declaration != null)
+                    rs7.Declaration.FullName = null;
+            });
+
+            // Act
+            When.Put($"{Url}/{Rs7Created.Id}", command);
+
+            Then.Response
+                .ShouldBe
+                .BadRequest
+                .ForProperty<DeclarationModel>(model => model.FullName);
+        }
+
+        [Fact]
+        public void IsDeclaredTrueIsRequired()
+        {
+            // Arrange
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            {
+                if (rs7.Declaration != null) rs7.Declaration.IsDeclaredTrue = null;
+            });
+
+            // Act
+            When.Put($"{Url}/{Rs7Created.Id}", command);
+
+            Then.Response
+                .ShouldBe
+                .BadRequest
+                .ForProperty<DeclarationModel>(model => model.IsDeclaredTrue);
+        }
+
+        [Fact]
+        public void IsRequired()
+        {
+            // Arrange
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 => rs7.Declaration = null);
+
+            // Act
+            When.Put($"{Url}/{Rs7Created.Id}", command);
+
+            Then.Response
+                .ShouldBe
+                .BadRequest
+                .ForProperty<UpdateRs7>(rs7 => rs7.Declaration)
+                .WithMessage("'Declaration' must not be empty.");
         }
 
         [Fact]
         public void RoleCannotBeAnEmptyString()
         {
             // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.Role = string.Empty;
-                }
+                if (rs7.Declaration != null) rs7.Declaration.Role = string.Empty;
             });
 
             // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Created.Id}", command);
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .ForProperty<DeclarationModel>(model => model.Role);
@@ -251,18 +240,15 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void RoleCannotBeLessThanTwoCharacters()
         {
             // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.Role = "T";
-                }
+                if (rs7.Declaration != null) rs7.Declaration.Role = "T";
             });
 
             // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Created.Id}", command);
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .ForProperty<DeclarationModel>(model => model.Role);
@@ -272,47 +258,36 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void RoleCannotBeMoreThan100Characters()
         {
             // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.Role = GenerateString(101);
-                }
+                if (rs7.Declaration != null) rs7.Declaration.Role = GenerateString(101);
             });
 
             // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Created.Id}", command);
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .ForProperty<DeclarationModel>(model => model.Role);
         }
 
         [Fact]
-        public void IsDeclaredTrueIsRequired()
+        public void RoleIsRequired()
         {
             // Arrange
-            var command = Command.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.IsDeclaredTrue = null;
-                }
+                if (rs7.Declaration != null) rs7.Declaration.Role = null;
             });
 
             // Act
-            Api.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Created.Id}", command);
 
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
-                .ForProperty<DeclarationModel>(model => model.IsDeclaredTrue);
-        }
-
-        private static string GenerateString(int length)
-        {
-            return new string('x', length);
+                .ForProperty<DeclarationModel>(model => model.Role);
         }
     }
 }

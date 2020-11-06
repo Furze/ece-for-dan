@@ -1,29 +1,30 @@
-﻿using MoE.ECE.Integration.Tests.Infrastructure;
+﻿using System.Linq;
+using Bard;
+using MoE.ECE.Domain.Event;
+using MoE.ECE.Domain.Model.ValueObject;
+using MoE.ECE.Domain.Read.Model.Rs7;
+using MoE.ECE.Integration.Tests.Chapter;
+using MoE.ECE.Integration.Tests.Infrastructure;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
-using Rs7Updated = MoE.Rolls.Domain.Integration.Events.Rs7.Rs7Updated;
 
 namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenSubmittingForApproval
 {
     public class IfTheRequestIsValid : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
-        public IfTheRequestIsValid(
-            RunOnceBeforeAllTests testSetUp,
-            ITestOutputHelper output,
-            TestState testState)
-            : base(testSetUp, output, testState)
+        public IfTheRequestIsValid(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
 
+        private const string Url = "api/rs7";
+
         protected override void Arrange()
         {
-            If
+            Given
                 .A_rs7_has_been_created()
-                .UseResult(result => Rs7Model = result);
-
-            SubmitRs7ForApproval = Command.SubmitRs7ForApproval(Rs7Model);
+                .GetResult(result => Rs7Model = result.Rs7Created);
         }
 
         private Rs7Model Rs7Model
@@ -32,24 +33,19 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenSubmittingForApproval
             set => TestData.Rs7Model = value;
         }
 
-        private SubmitRs7ForApproval SubmitRs7ForApproval
-        {
-            get => TestData.SubmitRs7ForApproval;
-            set => TestData.SubmitRs7ForApproval = value;
-        }
-
         protected override void Act()
         {
+            var command = ModelBuilder.SubmitRs7ForApproval(Rs7Model);
+
             // Act
-            Api.Post($"{Url}/{Rs7Model.Id}/submissions-for-approval", SubmitRs7ForApproval);
+            When.Post($"{Url}/{Rs7Model.Id}/submissions-for-approval", command);
         }
 
         [Fact]
         public void ThenADomainEventShouldBePublishedWithRs7Data()
         {
             // Assert
-            var domainEvent = Then
-                .A_domain_event_should_be_fired<Domain.Event.Rs7SubmittedForApproval>();
+            var domainEvent = A_domain_event_should_be_fired<Rs7SubmittedForApproval>();
 
             domainEvent.Id.ShouldNotBe(0);
             domainEvent.BusinessEntityId.ShouldNotBeNull();
@@ -61,8 +57,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenSubmittingForApproval
         public void ThenADomainEventShouldNotUpdateTheCurrentRevision()
         {
             // Assert
-            var domainEvent = Then
-                .A_domain_event_should_be_fired<Domain.Event.Rs7SubmittedForApproval>();
+            var domainEvent = A_domain_event_should_be_fired<Rs7SubmittedForApproval>();
 
             domainEvent.RevisionNumber.ShouldBe(1);
             domainEvent.RevisionId.ShouldNotBe(0);
@@ -73,49 +68,47 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenSubmittingForApproval
         public void ThenADomainEventShouldPublishAdvanceMonths()
         {
             // Assert
-            var domainEvent = Then
-                .A_domain_event_should_be_fired<Domain.Event.Rs7SubmittedForApproval>();
+            var domainEvent = A_domain_event_should_be_fired<Rs7SubmittedForApproval>();
 
-            domainEvent.AdvanceMonths.ElementAt(0).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
-            domainEvent.AdvanceMonths.ElementAt(1).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
-            domainEvent.AdvanceMonths.ElementAt(2).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
-            domainEvent.AdvanceMonths.ElementAt(3).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
-            
-            domainEvent.AdvanceMonths.ElementAt(0).Sessional.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(0).ParentLed.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(1).Sessional.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(1).ParentLed.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(2).Sessional.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(2).ParentLed.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(3).Sessional.GetValueOrDefault().ShouldBe(0);
-            domainEvent.AdvanceMonths.ElementAt(3).ParentLed.GetValueOrDefault().ShouldBe(0);
-        }
+            domainEvent.AdvanceMonths?.ElementAt(0).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
+            domainEvent.AdvanceMonths?.ElementAt(1).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
+            domainEvent.AdvanceMonths?.ElementAt(2).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
+            domainEvent.AdvanceMonths?.ElementAt(3).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
 
-        [Fact]
-        public void ThenDomainEventShouldHaveSourceInternal()
-        {
-            var domainEvent = Then
-                .A_domain_event_should_be_fired<Domain.Event.Rs7SubmittedForApproval>();
-
-            domainEvent.Source.ShouldBe(Source.Internal);
+            domainEvent.AdvanceMonths?.ElementAt(0).Sessional.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(0).ParentLed.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(1).Sessional.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(1).ParentLed.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(2).Sessional.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(2).ParentLed.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(3).Sessional.GetValueOrDefault().ShouldBe(0);
+            domainEvent.AdvanceMonths?.ElementAt(3).ParentLed.GetValueOrDefault().ShouldBe(0);
         }
 
         [Fact]
         public void ThenAnIntegrationEventShouldBePublished()
         {
             // Assert
-            var integrationEvent = Then
-                .An_integration_event_should_be_fired<Rs7Updated>();
+            var integrationEvent = An_integration_event_should_be_fired<Events.Integration.Protobuf.Roll.Rs7Updated>();
 
-            integrationEvent.RollStatus.ShouldBe(RollStatus.ExternalSubmittedForApproval);
+            integrationEvent.RollStatus.ShouldBe(Events.Integration.Protobuf.Roll.RollStatus
+                .ExternalSubmittedForApproval);
             integrationEvent.RevisionNumber.ShouldNotBe(0);
             integrationEvent.RevisionDate.ShouldNotBeNull();
         }
 
         [Fact]
+        public void ThenDomainEventShouldHaveSourceInternal()
+        {
+            var domainEvent = A_domain_event_should_be_fired<Rs7SubmittedForApproval>();
+
+            domainEvent.Source.ShouldBe(Source.Internal);
+        }
+
+        [Fact]
         public void ThenTheResponseShouldBeAHttp204()
         {
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .NoContent();
         }

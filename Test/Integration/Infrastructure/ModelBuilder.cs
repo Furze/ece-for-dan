@@ -70,7 +70,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             return command;
         }
 
-        public SaveAsDraft SaveAsDraft(Rs7Model rs7Model, Action<SaveAsDraft>? applyCustomSetup = null)
+        public static SaveAsDraft SaveAsDraft(Rs7Model rs7Model, Action<SaveAsDraft>? applyCustomSetup = null)
         {
             // We need to clone because the underlying Rs7Model that was created is shared across multiple
             // tests and we get tests failures.
