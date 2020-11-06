@@ -106,7 +106,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
         [Fact]
         public void ThenResponseShouldBe201()
         {
-            Then.TheResponse.ShouldBe.Created<CreatedAtActionResult>();
+            Then.Response.ShouldBe.Created<CreatedAtActionResult>();
         }
 
         public IfTheRequestIsValid(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)

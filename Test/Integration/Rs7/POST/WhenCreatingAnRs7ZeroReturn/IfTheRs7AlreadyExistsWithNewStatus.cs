@@ -1,19 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Bard;
+using Microsoft.AspNetCore.Mvc;
+using MoE.ECE.CLI.Data;
+using MoE.ECE.Domain.Event;
+using MoE.ECE.Domain.Model.ValueObject;
+using MoE.ECE.Integration.Tests.Chapter;
+using MoE.ECE.Integration.Tests.Infrastructure;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
+using ModelBuilder = MoE.ECE.Integration.Tests.Infrastructure.ModelBuilder;
 
 namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
 {
-    public class IfTheRs7AlreadyExistsWithNewStatus : IntegrationTestBase
+    public class IfTheRs7AlreadyExistsWithNewStatus : IntegrationTestBase<ECEStoryBook, ECEStoryData>
     {
-        public IfTheRs7AlreadyExistsWithNewStatus(
-            RunOnceBeforeAllTests testSetUp,
-            ITestOutputHelper output,
-            TestState testState)
-            : base(testSetUp, output, testState)
-        {
-        }
-
         private const string Url = "api/rs7";
         private readonly int _organisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId;
 
@@ -21,15 +21,15 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
 
         protected override void Arrange()
         {
-            If
+            Given
                 .A_rs7_has_been_created(setup => setup.OrganisationId = _organisationId)
-                .UseResult(result => _previouslyStartedNewRs7 = result);
+                .GetResult(result => _previouslyStartedNewRs7 = result.Rs7Created);
         }
 
         protected override void Act()
         {
-            Api.Post(Url,
-                Command.Rs7Model(rs7 =>
+            When.Post(Url,
+                ModelBuilder.Rs7Model(rs7 =>
                 {
                     rs7.IsZeroReturn = true;
                     rs7.OrganisationId = _previouslyStartedNewRs7.OrganisationId;
@@ -38,7 +38,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
                 }));
         }
 
-        private Rs7ZeroReturnCreated DomainEvent => Then.A_domain_event_should_be_fired<Rs7ZeroReturnCreated>();
+        private Rs7ZeroReturnCreated DomainEvent => A_domain_event_should_be_fired<Rs7ZeroReturnCreated>();
 
         [Fact]
         public void ThenDomainEventShouldBePublishedUsingThePreExistingId()
@@ -98,7 +98,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
         [Fact]
         public void ThenResponseShouldBe201()
         {
-            Then.TheResponse.ShouldBe.Created<CreatedAtActionResult>();
+            Then.Response.ShouldBe.Created<CreatedAtActionResult>();
+        }
+
+        public IfTheRs7AlreadyExistsWithNewStatus(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
+        {
         }
     }
 }

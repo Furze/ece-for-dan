@@ -46,7 +46,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             return command;
         }
        
-        public SubmitRs7ForApproval SubmitRs7ForApproval(Rs7Model rs7Model, Action<SubmitRs7ForApproval>? applyCustomSetup = null)
+        public static SubmitRs7ForApproval SubmitRs7ForApproval(Rs7Model rs7Model, Action<SubmitRs7ForApproval>? applyCustomSetup = null)
         {
             var clonedRs7Model = Clone(rs7Model);
             var command = new SubmitRs7ForApproval()
