@@ -60,7 +60,7 @@ stages:
           inputs:
             command: test
             arguments: '--collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover'
-            projects: '**/Schools.sln'
+            projects: '**/ECE.sln'
         
         # - task: AzureKeyVault@1
         #   condition: succeeded()
@@ -74,7 +74,7 @@ stages:
         # - script: 'curl -LJO https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar'
         #   displayName: 'Download Whitesource Agent'
  
-        # - script: 'java -jar wss-unified-agent.jar -c ./devops/whitesource.config -apiKey "$(WhitesourceAPIKey)" -product ERS -project schools-api -d .'
+        # - script: 'java -jar wss-unified-agent.jar -c ./devops/whitesource.config -apiKey "$(WhitesourceAPIKey)" -product ERS -project ece-api -d .'
         #   displayName: 'Run Whitesource Scan'
 
         - task: SonarQubeAnalyze@4

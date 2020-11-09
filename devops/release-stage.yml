@@ -92,21 +92,21 @@ stages:
                     continueOnError: false
 
 
-                  - script: |
-                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(SCHOOLS-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
-                      docker run \
-                      -e MartenSettings__ConnectionString="$connectionString" \
-                      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
-                      -c 'cd /cli && chmod +x CLI && ./CLI migrate -md /cli/migrations'
-                      if [[ $? -ne 0 ]] ; then
-                          exit 1
-                      fi
-                    condition: succeeded()
-                    displayName: "Upgrade DB"
-                    failOnStderr: false
+                  # - script: |
+                  #     connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(ece-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
+                  #     docker run \
+                  #     -e MartenSettings__ConnectionString="$connectionString" \
+                  #     --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+                  #     -c 'cd /cli && chmod +x CLI && ./CLI migrate -md /cli/migrations'
+                  #     if [[ $? -ne 0 ]] ; then
+                  #         exit 1
+                  #     fi
+                  #   condition: succeeded()
+                  #   displayName: "Upgrade DB"
+                  #   failOnStderr: false
 
                   - script: |
-                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(SCHOOLS-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
+                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(ece-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
                       docker run \
                       -e MartenSettings__ConnectionString="$connectionString" \
                       --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
@@ -118,18 +118,18 @@ stages:
                     displayName: "Upgrade DB for reference data"
                     failOnStderr: false
 
-                  - script: |
-                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(SCHOOLS-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
-                      docker run \
-                      -e MartenSettings__ConnectionString="$connectionString" \
-                      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
-                      -c 'cd /cli && chmod +x CLI && ./CLI migrate -md /cli/ReconciliationViews'
-                      if [[ $? -ne 0 ]] ; then
-                          exit 1
-                      fi
-                    condition: succeeded()
-                    displayName: "Apply reconciliation views"
-                    failOnStderr: false
+                  # - script: |
+                  #     connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(ece-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
+                  #     docker run \
+                  #     -e MartenSettings__ConnectionString="$connectionString" \
+                  #     --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+                  #     -c 'cd /cli && chmod +x CLI && ./CLI migrate -md /cli/ReconciliationViews'
+                  #     if [[ $? -ne 0 ]] ; then
+                  #         exit 1
+                  #     fi
+                  #   condition: succeeded()
+                  #   displayName: "Apply reconciliation views"
+                  #   failOnStderr: false
                                 
                   - template: container-deployment-steps.yml
                     parameters:
