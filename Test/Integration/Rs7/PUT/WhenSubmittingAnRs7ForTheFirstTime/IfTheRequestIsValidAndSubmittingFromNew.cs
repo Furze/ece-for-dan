@@ -25,7 +25,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         {
             Given
                 .A_rs7_has_been_created()
-                .GetResult(result => Rs7Model = result.Rs7Created);
+                .GetResult(result => Rs7Model = result.Rs7Model);
 
             UpdateRs7Command =
                 ModelBuilder.UpdateRs7(Rs7Model, rs7 => rs7.RollStatus = RollStatus.InternalReadyForReview);

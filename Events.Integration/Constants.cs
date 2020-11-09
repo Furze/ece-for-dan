@@ -12,5 +12,11 @@
         {
             public const string ECE = "ece";
         }
+        
+        public static class BusinessEntityTypes
+        {
+            public const string NotionalRoll = "NotionalRoll";
+            public const string Rs7 = "Rs7";
+        }
     }
 }

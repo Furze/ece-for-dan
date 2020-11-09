@@ -1,5 +1,6 @@
 ﻿using Bard;
 using MoE.ECE.Domain.Event;
+using MoE.ECE.Domain.Read.Model.Rs7;
 using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
 using Shouldly;
@@ -18,10 +19,10 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
 
         private const string Url = "api/rs7";
 
-        private Rs7Updated Rs7PreExistingNotNew
+        private Rs7Model Rs7Model
         {
-            get => TestData.Rs7Created;
-            set => TestData.Rs7Created = value;
+            get => TestData.Rs7Model;
+            set => TestData.Rs7Model = value;
         }
 
         protected override void Arrange()
@@ -29,7 +30,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
             Given
                 .A_rs7_has_been_created()
                 .And_the_rs7_has_been_saved_as_draft()
-                .GetResult(result => Rs7PreExistingNotNew = result.Rs7Updated);
+                .GetResult(storyData => Rs7Model = storyData.Rs7Model);
         }
 
         protected override void Act()
@@ -37,9 +38,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
             When.Post(Url,
                 ModelBuilder.Rs7Model(rs7 =>
                 {
-                    rs7.OrganisationId = Rs7PreExistingNotNew.OrganisationId;
-                    rs7.FundingPeriod = Rs7PreExistingNotNew.FundingPeriod;
-                    rs7.FundingPeriodYear = Rs7PreExistingNotNew.FundingPeriodYear;
+                    rs7.OrganisationId = Rs7Model.OrganisationId;
+                    rs7.FundingPeriod = Rs7Model.FundingPeriod;
+                    rs7.FundingPeriodYear = Rs7Model.FundingPeriodYear;
                 })
             );
         }
@@ -49,7 +50,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
         {
             A_domain_event_should_be_fired<Rs7Created>()
                 .Id
-                .ShouldBe(Rs7PreExistingNotNew.Id);
+                .ShouldBe(Rs7Model.Id);
             //The preExisting Id should be the only Rs7Created event fired
         }
 
@@ -61,7 +62,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
                 .ShouldBe
                 .BadRequest
                 .WithMessage(
-                    $"Rs7 for EceService ({Rs7PreExistingNotNew.OrganisationId}) with fundingPeriod {Rs7PreExistingNotNew.FundingPeriod} for year {Rs7PreExistingNotNew.FundingPeriodYear} already exists.");
+                    $"Rs7 for EceService ({Rs7Model.OrganisationId}) with fundingPeriod {Rs7Model.FundingPeriod} for year {Rs7Model.FundingPeriodYear} already exists.");
         }
     }
 }

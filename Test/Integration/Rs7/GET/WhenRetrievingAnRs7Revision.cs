@@ -1,4 +1,9 @@
-﻿using MoE.ECE.Integration.Tests.Infrastructure;
+﻿using System.Linq;
+using Bard;
+using MoE.ECE.Domain.Read.Model.Rs7;
+using MoE.ECE.Integration.Tests.Chapter;
+using MoE.ECE.Integration.Tests.Infrastructure;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -6,58 +11,65 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
 {
     public class WhenRetrievingAnRs7Revision : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
-        public WhenRetrievingAnRs7Revision(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState testState) : base(testSetUp, output, testState)
+        protected WhenRetrievingAnRs7Revision(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
 
+        private const string Url = "api/rs7";
+
         protected override void Arrange()
         {
-            If
+            Given
                 .A_rs7_has_been_created()
                 .An_rs7_is_ready_for_internal_ministry_review()
-                .UseResult(result => Rs7Updated = result);
+                .GetResult(storyData => Rs7Model = storyData.Rs7Model);
         }
 
         protected override void Act()
         {
-            Api.Get($"{Url}/{Rs7Updated.Id.ToString()}?revisionNumber=1");
+            When.Get($"{Url}/{Rs7Model.Id.ToString()}?revisionNumber=1");
         }
 
-        [Fact]
-        public void ThenTheResponseShouldBeOk()
+        private Rs7Model Rs7Model
         {
-            Then
-                .TheResponse
-                .ShouldBe
-                .Ok<Rs7Model>();
+            get => TestData.Rs7Model;
+            set => TestData.Rs7Model = value;
         }
 
         [Fact]
         public void ThenTheBusinessEntityIdShouldBePopulated()
         {
             Then
-                .TheResponse
+                .Response
                 .Content<Rs7Model>()
                 .BusinessEntityId
                 .ShouldNotBeNull();
         }
-        
+
         [Fact]
         public void ThenTheOrganisationIdShouldBePopulated()
         {
             Then
-                .TheResponse
+                .Response
                 .Content<Rs7Model>()
                 .OrganisationId
                 .ShouldNotBeNull();
         }
 
         [Fact]
+        public void ThenTheResponseShouldBeOk()
+        {
+            Then
+                .Response
+                .ShouldBe
+                .Ok<Rs7Model>();
+        }
+
+        [Fact]
         public void ThenTheRevisionShouldBePopulated()
         {
-            var rs7AndRevision = Then.TheResponse
+            var rs7AndRevision = Then.Response
                 .Content<Rs7Model>();
 
             rs7AndRevision.Id.ShouldBeGreaterThan(0); // Should be Rs7.Id, not Rs7Revision.Id
@@ -66,18 +78,12 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
             rs7AndRevision.RevisionDate.ShouldNotBeNull();
 
             rs7AndRevision.AdvanceMonths.ShouldNotBeNull();
-            rs7AndRevision.AdvanceMonths.Count().ShouldBe(4);
+            rs7AndRevision.AdvanceMonths?.Count().ShouldBe(4);
 
             rs7AndRevision.EntitlementMonths.ShouldNotBeNull();
-            rs7AndRevision.EntitlementMonths.Count().ShouldBe(4);
+            rs7AndRevision.EntitlementMonths?.Count().ShouldBe(4);
 
             rs7AndRevision.IsAttested.ShouldNotBeNull();
-        }
-
-        private Rs7Updated Rs7Updated
-        {
-            get => TestData.Rs7Submitted;
-            set => TestData.Rs7Submitted = value;
         }
     }
 }

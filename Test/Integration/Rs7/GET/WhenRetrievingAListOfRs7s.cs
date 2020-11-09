@@ -1,4 +1,8 @@
-﻿using MoE.ECE.Integration.Tests.Infrastructure;
+﻿using MoE.ECE.Domain.Read.Model;
+using MoE.ECE.Domain.Read.Model.Rs7;
+using MoE.ECE.Integration.Tests.Chapter;
+using MoE.ECE.Integration.Tests.Infrastructure;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -7,31 +11,28 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
     // ReSharper disable once InconsistentNaming
     public class WhenRetrievingAListOfRs7s : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
-        public WhenRetrievingAListOfRs7s(
-            RunOnceBeforeAllTests testSetUp,
-            ITestOutputHelper output,
-            TestState testState)
-            : base(testSetUp, output, testState)
+        protected WhenRetrievingAListOfRs7s(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
 
+        private const string Url = "api/rs7";
+
         protected override void Arrange()
         {
-            If.A_rs7_has_been_created();
+            Given.A_rs7_has_been_created();
         }
 
         protected override void Act()
         {
-            Api.Get(Url);
+            When.Get(Url);
         }
 
         [Fact]
         public void ThenTheResponseShouldBeOk()
         {
             Then
-                .TheResponse
+                .Response
                 .ShouldBe
                 .Ok<CollectionModel<Rs7Model>>();
         }
@@ -40,7 +41,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
         public void ThenTheResponseShouldContainSomeItems()
         {
             var response = Then
-                .TheResponse
+                .Response
                 .Content<CollectionModel<Rs7Model>>();
 
             response.Data.Length.ShouldBeGreaterThan(0);

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MoE.ECE.CLI.Data;
 using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Model.ValueObject;
+using MoE.ECE.Domain.Read.Model.Rs7;
 using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
 using Shouldly;
@@ -17,13 +18,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
         private const string Url = "api/rs7";
         private readonly int _organisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId;
 
-        private Rs7Created _previouslyStartedNewRs7 = new Rs7Created();
+        private Rs7Model _previouslyStartedNewRs7 = new Rs7Model();
 
         protected override void Arrange()
         {
             Given
                 .A_rs7_has_been_created(setup => setup.OrganisationId = _organisationId)
-                .GetResult(result => _previouslyStartedNewRs7 = result.Rs7Created);
+                .GetResult(result => _previouslyStartedNewRs7 = result.Rs7Model);
         }
 
         protected override void Act()

@@ -3,7 +3,7 @@
 // ReSharper disable once CheckNamespace
 namespace Events.Integration.Protobuf.Roll
 {
-    public partial class Rs7Updated: IIntegrationEvent
+    public partial class Rs7Updated : IIntegrationEvent
     {
     }
 }

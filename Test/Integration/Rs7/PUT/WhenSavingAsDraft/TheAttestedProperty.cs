@@ -1,5 +1,4 @@
 ﻿using Bard;
-using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Model.ReferenceData;
 using MoE.ECE.Domain.Read.Model.Rs7;
 using MoE.ECE.Integration.Tests.Chapter;
@@ -35,11 +34,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void ForTheseOrganisationTypesTheIsAttestedFieldIsNotRequired(int organisationType)
         {
             // Arrange 
-            var rs7Created = new Rs7Created();
+            var rs7Created = new Rs7Model();
 
             Given
                 .An_rs7_has_been_created_for_an_organisation_type(organisationType)
-                .GetResult(created => rs7Created = created.Rs7Created);
+                .GetResult(created => rs7Created = created.Rs7Model);
 
             var command = ModelBuilder.SaveAsDraft(rs7Created, rs7 =>
             {

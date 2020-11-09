@@ -1,5 +1,4 @@
 using Bard;
-using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Read.Model.Rs7;
 using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
@@ -15,19 +14,19 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         {
         }
 
-        private const string Url = "When/rs7";
+        private const string Url = "api/rs7";
 
-        private Rs7Created Rs7Created
+        private Rs7Model Rs7Model
         {
-            get => TestData.Rs7Created;
-            set => TestData.Rs7Created = value;
+            get => TestData.Rs7Model;
+            set => TestData.Rs7Model = value;
         }
 
         protected override void Arrange()
         {
             Given
                 .A_rs7_has_been_created()
-                .GetResult(created => Rs7Created = created.Rs7Created);
+                .GetResult(created => Rs7Model = created.Rs7Model);
         }
 
         private static string GenerateString(int length)
@@ -39,7 +38,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void ContactPhoneCanBeAnEmptyString()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 =>
             {
                 rs7.Declaration = new DeclarationModel
                 {
@@ -48,7 +47,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -59,7 +58,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void ContactPhoneCannotBeLessThanTwoCharacters()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 =>
             {
                 rs7.Declaration = new DeclarationModel
                 {
@@ -68,7 +67,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -80,7 +79,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void ContactPhoneCannotBeMoreThan50Characters()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 =>
             {
                 rs7.Declaration = new DeclarationModel
                 {
@@ -89,7 +88,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -101,7 +100,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void ContactPhoneIsNotRequired()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 =>
             {
                 rs7.Declaration = new DeclarationModel
                 {
@@ -110,7 +109,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -121,7 +120,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void FullNameCanBeAnEmptyString()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 =>
             {
                 rs7.Declaration = new DeclarationModel
                 {
@@ -130,7 +129,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -141,7 +140,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void FullNameCannotBeLessThanTwoCharacters()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 =>
             {
                 rs7.Declaration = new DeclarationModel
                 {
@@ -150,7 +149,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -162,7 +161,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void FullNameCannotBeMoreThan150Characters()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 =>
             {
                 rs7.Declaration = new DeclarationModel
                 {
@@ -171,7 +170,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -183,7 +182,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void FullNameIsNotRequired()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 =>
             {
                 rs7.Declaration = new DeclarationModel
                 {
@@ -192,7 +191,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -203,7 +202,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IsDeclaredTrueIsNotRequired()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 =>
             {
                 rs7.Declaration = new DeclarationModel
                 {
@@ -212,7 +211,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -223,10 +222,10 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IsNotRequired()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 => rs7.Declaration = null);
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 => rs7.Declaration = null);
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -237,7 +236,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void RoleCanBeAnEmptyString()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 =>
             {
                 rs7.Declaration = new DeclarationModel
                 {
@@ -246,7 +245,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -257,7 +256,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void RoleCannotBeLessThanTwoCharacters()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 =>
             {
                 rs7.Declaration = new DeclarationModel
                 {
@@ -266,7 +265,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -278,7 +277,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void RoleCannotBeMoreThan100Characters()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 =>
             {
                 rs7.Declaration = new DeclarationModel
                 {
@@ -287,7 +286,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -299,7 +298,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void RoleIsNotRequired()
         {
             // Arrange
-            var command = ModelBuilder.SaveAsDraft(Rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(Rs7Model, rs7 =>
             {
                 rs7.Declaration = new DeclarationModel
                 {
@@ -308,7 +307,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe

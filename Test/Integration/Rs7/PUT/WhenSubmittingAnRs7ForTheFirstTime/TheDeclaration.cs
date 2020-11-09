@@ -1,6 +1,5 @@
 using Bard;
 using MoE.ECE.Domain.Command.Rs7;
-using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Read.Model.Rs7;
 using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
@@ -18,17 +17,17 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 
         private const string Url = "When/rs7";
 
-        private Rs7Created Rs7Created
+        private Rs7Model Rs7Model
         {
-            get => TestData.Rs7Created;
-            set => TestData.Rs7Created = value;
+            get => TestData.Rs7Model;
+            set => TestData.Rs7Model = value;
         }
 
         protected override void Arrange()
         {
             Given
                 .A_rs7_has_been_created()
-                .GetResult(created => Rs7Created = created.Rs7Created);
+                .GetResult(created => Rs7Model = created.Rs7Model);
         }
 
         private static string GenerateString(int length)
@@ -40,13 +39,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ContactPhoneCannotBeAnEmptyString()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null) rs7.Declaration.ContactPhone = string.Empty;
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -58,13 +57,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ContactPhoneCannotBeLessThanTwoCharacters()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null) rs7.Declaration.ContactPhone = "T";
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -76,13 +75,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ContactPhoneCannotBeMoreThan50Characters()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null) rs7.Declaration.ContactPhone = GenerateString(51);
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -94,13 +93,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ContactPhoneIsRequired()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null) rs7.Declaration.ContactPhone = null;
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -112,14 +111,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void FullNameCannotBeAnEmptyString()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null)
                     rs7.Declaration.FullName = string.Empty;
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -131,14 +130,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void FullNameCannotBeLessThanTwoCharacters()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null)
                     rs7.Declaration.FullName = "T";
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -150,14 +149,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void FullNameCannotBeMoreThan150Characters()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null)
                     rs7.Declaration.FullName = GenerateString(151);
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -169,14 +168,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void FullNameIsRequired()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null)
                     rs7.Declaration.FullName = null;
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -188,13 +187,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void IsDeclaredTrueIsRequired()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null) rs7.Declaration.IsDeclaredTrue = null;
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -206,10 +205,10 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void IsRequired()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 => rs7.Declaration = null);
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 => rs7.Declaration = null);
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -222,13 +221,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void RoleCannotBeAnEmptyString()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null) rs7.Declaration.Role = string.Empty;
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -240,13 +239,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void RoleCannotBeLessThanTwoCharacters()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null) rs7.Declaration.Role = "T";
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -258,13 +257,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void RoleCannotBeMoreThan100Characters()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null) rs7.Declaration.Role = GenerateString(101);
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe
@@ -276,13 +275,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void RoleIsRequired()
         {
             // Arrange
-            var command = ModelBuilder.UpdateRs7(Rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null) rs7.Declaration.Role = null;
             });
 
             // Act
-            When.Put($"{Url}/{Rs7Created.Id}", command);
+            When.Put($"{Url}/{Rs7Model.Id}", command);
 
             Then.Response
                 .ShouldBe

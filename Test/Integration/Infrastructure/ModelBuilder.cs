@@ -4,13 +4,15 @@ using MoE.ECE.CLI.Data;
 using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Model.ValueObject;
 using MoE.ECE.Domain.Read.Model.Rs7;
+using Moe.ECE.Events.Integration.ELI;
 using Newtonsoft.Json;
+using FundingPeriodMonth = MoE.ECE.Domain.Model.ValueObject.FundingPeriodMonth;
 
 namespace MoE.ECE.Integration.Tests.Infrastructure
 {
      public class ModelBuilder
     {
-        public UpdateRs7EntitlementMonth UpdateRs7EntitlementMonth(Rs7Model rs7Model, int monthIndex, Action<UpdateRs7EntitlementMonth>? applyCustomerSetup = null)
+        public static UpdateRs7EntitlementMonth UpdateRs7EntitlementMonth(Rs7Model rs7Model, int monthIndex, Action<UpdateRs7EntitlementMonth>? applyCustomerSetup = null)
         {
             var clonedRs7Model = Clone(rs7Model);
 
@@ -26,7 +28,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             return command;
         }
 
-        public UpdateRs7Declaration UpdateRs7Declaration(Action<UpdateRs7Declaration>? applyCustomerSetup = null)
+        public static UpdateRs7Declaration UpdateRs7Declaration(Action<UpdateRs7Declaration>? applyCustomerSetup = null)
         {
             var command = new UpdateRs7Declaration
             {
@@ -183,7 +185,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             return command;
         }
 
-        public CreateRs7ZeroReturn CreateRs7ZeroReturn(Action<CreateRs7ZeroReturn>? applyCustomSetup = null)
+        public static CreateRs7ZeroReturn CreateRs7ZeroReturn(Action<CreateRs7ZeroReturn>? applyCustomSetup = null)
         {
             var command = new CreateRs7ZeroReturn
             {
@@ -194,6 +196,131 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
             applyCustomSetup?.Invoke(command);
             return command;
+        }
+
+        public static Rs7Received Rs7Received(Action<Rs7Received>? modifyEvent = null)
+        {
+            var integrationEvent = new Rs7Received
+            {
+                OrganisationNumber = ReferenceData.EceServices.MontessoriLittleHands.OrganisationNumber,
+                FundingPeriod = Moe.ECE.Events.Integration.ELI.FundingPeriodMonth.July,
+                IsAttested = true,
+                Source = "Uranus",
+                AdvanceMonths = new[]
+                {
+                    new Rs7ReceivedAdvanceMonth
+                    {
+                        MonthNumber = 7,
+                        FundingPeriodYear = 2020,
+                        AllDay = 2,
+                        ParentLed = 4,
+                        Sessional = 6
+                    },
+                    new Rs7ReceivedAdvanceMonth
+                    {
+                        MonthNumber = 8,
+                        FundingPeriodYear = 2020,
+                        AllDay = 1,
+                        ParentLed = 2,
+                        Sessional = 4
+                    },
+                    new Rs7ReceivedAdvanceMonth
+                    {
+                        MonthNumber = 9,
+                        FundingPeriodYear = 2020,
+                        AllDay = 3,
+                        ParentLed = 5,
+                        Sessional = 3
+                    },
+                    new Rs7ReceivedAdvanceMonth
+                    {
+                        MonthNumber = 10,
+                        FundingPeriodYear = 2020,
+                        AllDay = 1,
+                        ParentLed = 2,
+                        Sessional = 3
+                    }
+                },
+                EntitlementMonths = new[]
+                {
+                    new Rs7ReceivedEntitlementMonth
+                    {
+                        MonthNumber = 2,
+                        FundingPeriodYear = 2020,
+                        Days = new[]
+                        {
+                            new Rs7ReceivedEntitlementDay
+                            {
+                                DayNumber = 1,
+                                Certificated = 5,
+                                NonCertificated = 6,
+                                Hours20 = 2,
+                                TwoAndOver = 3,
+                                Plus10 = 4,
+                                Under2 = 5
+                            }
+                        }
+                    },
+                    new Rs7ReceivedEntitlementMonth
+                    {
+                        MonthNumber = 3,
+                        FundingPeriodYear = 2020,
+                        Days = new[]
+                        {
+                            new Rs7ReceivedEntitlementDay
+                            {
+                                DayNumber = 1,
+                                Certificated = 5,
+                                NonCertificated = 6,
+                                Hours20 = 2,
+                                TwoAndOver = 3,
+                                Plus10 = 4,
+                                Under2 = 5
+                            }
+                        }
+                    },
+                    new Rs7ReceivedEntitlementMonth
+                    {
+                        MonthNumber = 4,
+                        FundingPeriodYear = 2020,
+                        Days = new[]
+                        {
+                            new Rs7ReceivedEntitlementDay
+                            {
+                                DayNumber = 1,
+                                Certificated = 5,
+                                NonCertificated = 6,
+                                Hours20 = 2,
+                                TwoAndOver = 3,
+                                Plus10 = 4,
+                                Under2 = 5
+                            }
+                        }
+                    },
+                    new Rs7ReceivedEntitlementMonth
+                    {
+                        MonthNumber = 5,
+                        FundingPeriodYear = 2020,
+                        Days = new[]
+                        {
+                            new Rs7ReceivedEntitlementDay
+                            {
+                                DayNumber = 1,
+                                Certificated = 5,
+                                NonCertificated = 6,
+                                Hours20 = 2,
+                                TwoAndOver = 3,
+                                Plus10 = 4,
+                                Under2 = 5
+                            }
+                        }
+                    }
+                }
+            };
+
+            modifyEvent?.Invoke(integrationEvent);
+            
+            return integrationEvent;
         }
     }
 }

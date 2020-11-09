@@ -1,3 +1,8 @@
+using Bard;
+using MoE.ECE.Domain.Event;
+using MoE.ECE.Domain.Exceptions;
+using MoE.ECE.Domain.Read.Model.Rs7;
+using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
@@ -14,36 +19,36 @@ namespace MoE.ECE.Integration.Tests.Rs7.DELETE.WhenARs7IsPendingApproval
             set => TestData.Rs7Model = value;
         }
         
-        public ItShouldNotBePossibleToDiscardTheRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState testState) : base(testSetUp, output, testState)
-        {
-        }
-
+     
         protected override void Arrange()
         {
-            If
+            Given
                 .A_rs7_has_been_created()
                 .An_rs7_is_ready_for_internal_ministry_review()
-                .UseResult(created => Rs7Model = created);
+                .GetResult(storyData => Rs7Model = storyData.Rs7Model);
         }
 
         protected override void Act()
         {
             // Act
-            Api.Delete($"{Url}/{Rs7Model.Id}");
+            When.Delete($"{Url}/{Rs7Model.Id}");
         }
 
         [Fact]
         public void ThenA400NoContentResponseShouldBeReturned()
         {
-            Then.TheResponse.ShouldBe.BadRequest
+            Then.Response.ShouldBe.BadRequest
                 .WithErrorCode(ErrorCode.InvalidRollStatusForDiscard);
         }
         
         [Fact]
         public void ThenADomainEventShouldNotBeFired()
         {
-            Then
-                .A_domain_event_should_not_be_fired<Rs7Discarded>();
+            A_domain_event_should_not_be_fired<Rs7Discarded>();
+        }
+
+        protected ItShouldNotBePossibleToDiscardTheRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
+        {
         }
     }
 }

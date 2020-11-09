@@ -1,3 +1,7 @@
+using Bard;
+using MoE.ECE.Domain.Event;
+using MoE.ECE.Domain.Read.Model.Rs7;
+using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
@@ -6,45 +10,44 @@ namespace MoE.ECE.Integration.Tests.Rs7.DELETE.WhenARs7IsRejected
 {
     public class ItShouldBePossibleToDiscardTheRs7 : SpeedyIntegrationTestBase
     {
+        protected ItShouldBePossibleToDiscardTheRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
+        {
+        }
+
         private const string Url = "api/rs7";
-        
+
         private Rs7Model Rs7Model
         {
             get => TestData.Rs7Model;
             set => TestData.Rs7Model = value;
         }
-        
-        public ItShouldBePossibleToDiscardTheRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState testState) : base(testSetUp, output, testState)
-        {
-        }
 
         protected override void Arrange()
         {
-            If.A_rs7_has_been_created()
-                .And().The()
-                .Rs7_has_been_submitted_for_peer_approval()
-                .And().Then().The()
-                .Rs7_has_been_peer_review_rejected()
-                .UseResult(rejected => Rs7Model = rejected);
+            Given
+                .A_rs7_has_been_created()
+                .The_rs7_has_been_submitted_for_peer_approval()
+                .The_rs7_has_been_peer_review_rejected()
+                .GetResult(storyData => Rs7Model = storyData.Rs7Model);
         }
 
         protected override void Act()
         {
             // Act
-            Api.Delete($"{Url}/{Rs7Model.Id}");
+            When.Delete($"{Url}/{Rs7Model.Id}");
         }
 
         [Fact]
         public void ThenA204NoContentResponseShouldBeReturned()
         {
-            Then.TheResponse.ShouldBe.NoContent();
+            Then.Response.ShouldBe.NoContent();
         }
-        
+
         [Fact]
         public void ThenADomainEventShouldBeFired()
         {
-            Then
-                .A_domain_event_should_be_fired<Rs7Discarded>();
+            A_domain_event_should_be_fired<Rs7Discarded>();
         }
     }
 }

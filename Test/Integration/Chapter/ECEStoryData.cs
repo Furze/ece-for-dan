@@ -1,10 +1,9 @@
-﻿using MoE.ECE.Domain.Event;
+﻿using MoE.ECE.Domain.Read.Model.Rs7;
 
 namespace MoE.ECE.Integration.Tests.Chapter
 {
     public class ECEStoryData
     {
-        public Rs7Created Rs7Created { get; set; } = new Rs7Created();
-        public Rs7Updated Rs7Updated { get; set; } = new Rs7Updated();
+        public Rs7Model Rs7Model = new Rs7Model();
     }
 }

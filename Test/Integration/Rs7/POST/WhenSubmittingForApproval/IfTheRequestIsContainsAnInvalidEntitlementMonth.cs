@@ -22,7 +22,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenSubmittingForApproval
         {
             Given
                 .A_rs7_has_been_created()
-                .GetResult(created => Rs7 = created.Rs7Created);
+                .GetResult(created => Rs7 = created.Rs7Model);
         }
 
         private Rs7Model Rs7

@@ -5,7 +5,7 @@ using MoE.ECE.Domain.Model.ValueObject;
 
 namespace MoE.ECE.Domain.Model.FundingPeriod
 {
-    public class NovemberFundingPeriod : ECE.Domain.Model.FundingPeriod.FundingPeriod
+    public class NovemberFundingPeriod : FundingPeriod
     {
         public NovemberFundingPeriod(Date date) : base(CalendarMonth.November, date)
         {

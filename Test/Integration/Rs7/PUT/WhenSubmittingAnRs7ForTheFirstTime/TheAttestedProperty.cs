@@ -1,8 +1,8 @@
 ﻿using Bard;
 using MoE.ECE.Domain.Command.Rs7;
-using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Model.ReferenceData;
 using MoE.ECE.Domain.Model.ValueObject;
+using MoE.ECE.Domain.Read.Model.Rs7;
 using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
 using Xunit;
@@ -26,11 +26,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ForTheseOrganisationTypesTheIsAttestedFieldIsRequired(int organisationType)
         {
             // Arrange 
-            var rs7Created = new Rs7Created();
+            var rs7Created = new Rs7Model();
 
             Given
                 .An_rs7_has_been_created_for_an_organisation_type(organisationType)
-                .GetResult(created => rs7Created = created.Rs7Created);
+                .GetResult(created => rs7Created = created.Rs7Model);
 
             // Act
             When.Put($"{Url}/{rs7Created.Id}", ModelBuilder.UpdateRs7(rs7Created, rs7 =>
@@ -57,11 +57,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ForTheseOrganisationTypesTheIsAttestedFieldCanBeSetToFalse(int organisationType)
         {
             // Arrange 
-            var rs7Created = new Rs7Created();
+            var rs7Created = new Rs7Model();
 
             Given
                 .An_rs7_has_been_created_for_an_organisation_type(organisationType)
-                .GetResult(created => rs7Created = created.Rs7Created);
+                .GetResult(created => rs7Created = created.Rs7Model);
 
             // Act
             When.Put($"{Url}/{rs7Created.Id}", ModelBuilder.UpdateRs7(rs7Created, rs7 =>
@@ -90,11 +90,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ForTheseOrganisationTypesTheIsAttestedFieldIsNotRequired(int organisationType)
         {
             // Arrange 
-            var rs7Created = new Rs7Created();
+            var rs7Created = new Rs7Model();
 
             Given
                 .An_rs7_has_been_created_for_an_organisation_type(organisationType)
-                .GetResult(created => rs7Created = created.Rs7Created);
+                .GetResult(created => rs7Created = created.Rs7Model);
 
             var command = ModelBuilder.UpdateRs7(rs7Created, rs7 =>
             {

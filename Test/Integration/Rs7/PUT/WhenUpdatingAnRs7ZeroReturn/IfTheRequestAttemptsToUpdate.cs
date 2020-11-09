@@ -1,4 +1,8 @@
-﻿using MoE.ECE.Integration.Tests.Infrastructure;
+﻿using Bard;
+using MoE.ECE.Domain.Exceptions;
+using MoE.ECE.Domain.Read.Model.Rs7;
+using MoE.ECE.Integration.Tests.Chapter;
+using MoE.ECE.Integration.Tests.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -6,23 +10,18 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingAnRs7ZeroReturn
 {
     public class IfTheRequestAttemptsToUpdate : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
-        public IfTheRequestAttemptsToUpdate(
-            RunOnceBeforeAllTests testSetUp,
-            ITestOutputHelper output,
-            TestState testState)
-            : base(testSetUp, output, testState)
+        protected IfTheRequestAttemptsToUpdate(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
 
+        private const string Url = "api/rs7";
+
         protected override void Arrange()
         {
-            If
+            Given
                 .A_rs7_zero_return_has_been_created()
-                .UseResult(result => Rs7Model = result);
-
-            UpdateRs7Command = Command.UpdateRs7(Rs7Model);
+                .GetResult(storyData => Rs7Model = storyData.Rs7Model);
         }
 
         private Rs7Model Rs7Model
@@ -31,22 +30,18 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingAnRs7ZeroReturn
             set => TestData.Rs7Model = value;
         }
 
-        private UpdateRs7 UpdateRs7Command
-        {
-            get => TestData.SubmitRs7Command;
-            set => TestData.SubmitRs7Command = value;
-        }
-
         protected override void Act()
         {
+            var updateRs7Command = ModelBuilder.UpdateRs7(Rs7Model);
+
             // Act
-            Api.Put($"{Url}/{Rs7Model.Id}", UpdateRs7Command);
+            When.Put($"{Url}/{updateRs7Command.Id}", updateRs7Command);
         }
 
         [Fact]
         public void ThenTheResponseShouldBeABadRequest()
         {
-            Then.TheResponse
+            Then.Response
                 .ShouldBe
                 .BadRequest
                 .WithErrorCode(ErrorCode.InvalidRollStatusForUpdate);

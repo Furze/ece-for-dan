@@ -3,6 +3,7 @@ using Bard;
 using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Model.ValueObject;
+using MoE.ECE.Domain.Read.Model.Rs7;
 using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
 using Shouldly;
@@ -24,16 +25,16 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         {
             Given
                 .A_rs7_has_been_created()
-                .GetResult(result => Rs7Created = result.Rs7Created);
+                .GetResult(result => Rs7Model = result.Rs7Model);
 
             UpdateRs7Command =
-                ModelBuilder.UpdateRs7(Rs7Created, rs7 => rs7.RollStatus = RollStatus.InternalReadyForReview);
+                ModelBuilder.UpdateRs7(Rs7Model, rs7 => rs7.RollStatus = RollStatus.InternalReadyForReview);
         }
 
-        private Rs7Created Rs7Created
+        private Rs7Model Rs7Model
         {
-            get => TestData.Rs7Created;
-            set => TestData.Rs7Created = value;
+            get => TestData.Rs7Model;
+            set => TestData.Rs7Model = value;
         }
 
         private UpdateRs7 UpdateRs7Command

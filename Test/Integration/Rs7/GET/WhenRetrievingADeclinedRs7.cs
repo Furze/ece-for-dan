@@ -1,4 +1,9 @@
+using Bard;
+using MoE.ECE.Domain.Model.ValueObject;
+using MoE.ECE.Domain.Read.Model.Rs7;
+using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -6,32 +11,39 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
 {
     public class WhenRetrievingADeclinedRs7 : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-        private int _rs7Id;
-        public WhenRetrievingADeclinedRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState testState) : base(testSetUp, output, testState)
+        protected WhenRetrievingADeclinedRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
-        
+
+        private const string Url = "api/rs7";
+
+        private Rs7Model Rs7Model
+        {
+            get => TestData.Rs7Model;
+            set => TestData.Rs7Model = value;
+        }
+
         protected override void Arrange()
         {
-            If
+            Given
                 .A_rs7_has_been_created()
-                .Rs7_has_been_submitted_for_peer_approval()
-                .Rs7_Has_Been_Peer_Approved()
-                .Rs7_has_been_declined()
-                .UseResult(result => _rs7Id = result.Id);
+                .The_rs7_has_been_submitted_for_peer_approval()
+                .The_rs7_has_been_peer_approved()
+                .The_rs7_has_been_declined()
+                .GetResult(storyData => Rs7Model = storyData.Rs7Model);
         }
 
         protected override void Act()
         {
-            Api.Get($"{Url}/{_rs7Id}");
+            When.Get($"{Url}/{Rs7Model.Id}");
         }
 
         [Fact]
         public void ThenTheRollStatusIsUpdatedToPendingApproval()
         {
             Then
-                .TheResponse.Content<Rs7Model>().RollStatus.ShouldBe(RollStatus.Declined);
+                .Response.Content<Rs7Model>().RollStatus.ShouldBe(RollStatus.Declined);
         }
     }
 }
