@@ -82,7 +82,7 @@ namespace MoE.ECE.Web.Infrastructure.Extensions
                         .Filter.ByExcluding(le => le.Exception is TaskCanceledException)
                         .Enrich.FromLogContext()
                         .Enrich.With<VersionTagEnricher>()
-                        .Enrich.WithProperty("API", "Schools")
+                        .Enrich.WithProperty("API", "ECE")
                         .Enrich.WithExceptionDetails(new DestructuringOptionsBuilder()
                             .WithDefaultDestructurers()
                             .WithDestructurers(new[] {new DbUpdateExceptionDestructurer()}))

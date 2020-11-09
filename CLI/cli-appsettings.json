@@ -1,0 +1,6 @@
+﻿{
+  "MartenSettings": {
+    "AutoCreate": "None",
+    "ConnectionString": "host=localhost;port=8432;database=ece_local_db;password=Password1;username=ece_api_docker_user;Pooling=true;"
+  }
+}

@@ -93,7 +93,7 @@ stages:
 
 
                   - script: |
-                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(SCHOOLS-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
+                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(ece-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
                       docker run \
                       -e MartenSettings__ConnectionString="$connectionString" \
                       --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
@@ -106,7 +106,7 @@ stages:
                     failOnStderr: false
 
                   - script: |
-                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(SCHOOLS-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
+                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(ece-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
                       docker run \
                       -e MartenSettings__ConnectionString="$connectionString" \
                       --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
@@ -119,7 +119,7 @@ stages:
                     failOnStderr: false
 
                   - script: |
-                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(SCHOOLS-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
+                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(ece-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
                       docker run \
                       -e MartenSettings__ConnectionString="$connectionString" \
                       --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
