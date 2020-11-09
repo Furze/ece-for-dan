@@ -5,7 +5,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 {
     public class SpeedyIntegrationTestBase : IntegrationTestBase<ECEStoryBook, ECEStoryData>
     {
-        protected SpeedyIntegrationTestBase(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
+        public SpeedyIntegrationTestBase(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
         

@@ -7,7 +7,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.DELETE.WhenTheRs7DoesNotExist
 {
     public class ItShouldNotBePossibleToDiscardTheRs7 : SpeedyIntegrationTestBase
     {
-        protected ItShouldNotBePossibleToDiscardTheRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+        public ItShouldNotBePossibleToDiscardTheRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }

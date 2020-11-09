@@ -4,6 +4,7 @@ using Bard;
 using Bard.Configuration;
 using Bard.Infrastructure;
 using Marten;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.Extensions.DependencyInjection;
 using Moe.ECE.Events.Integration;
 using Moe.Library.Cqrs;
@@ -29,7 +30,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             HttpClient = testSetUp.HttpClient;
             Output = new LogWriter(output.WriteLine);
             Services = testSetUp.Services.CreateScope().ServiceProvider;
-           
+
             // ReSharper disable once VirtualMemberCallInConstructor
             Initialize();
         }

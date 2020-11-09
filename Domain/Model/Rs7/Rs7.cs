@@ -41,6 +41,8 @@ namespace MoE.ECE.Domain.Model.Rs7
             }
         }
 
+        public bool IsZeroReturn => CurrentRevision.IsZeroReturn;
+
         /// <summary>
         /// Creates a first Revision if one doesn't already exist.
         /// </summary>
@@ -90,8 +92,6 @@ namespace MoE.ECE.Domain.Model.Rs7
                 Source = oldRevision.Source,
                 Declaration = oldRevision.Declaration.Clone(),
             };
-
-
 
             Revisions.Add(rs7Revision);
 

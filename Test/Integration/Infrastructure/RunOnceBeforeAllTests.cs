@@ -56,7 +56,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                 .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
-                .Enrich.WithProperty("Environment", "ECE Integration Test")
+                .Enrich.WithProperty("Environment", "ECE API Integration Test")
                 .WriteTo.Seq("http://localhost:5341")
                 .WriteTo.Console()
                 .CreateLogger();
