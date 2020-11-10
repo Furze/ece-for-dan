@@ -5,11 +5,17 @@ using Marten.Storage;
 using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.DependencyInjection;
 using MoE.ECE.Domain.Infrastructure;
+using MoE.ECE.Domain.Model.Rs7;
 
 namespace MoE.ECE.Web.Bootstrap
 {
     public class ECEMartenRegistry : MartenRegistry
     {
+        public ECEMartenRegistry()
+        {
+            For<Rs7>().Identity(rs7 => rs7.Id);
+        }
+
         public static void ApplyDefaultConfiguration(StoreOptions storeOptions, MartenSettings settings,
             IServiceProvider? serviceProvider = null)
         {

@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MoE.ECE.CLI.Data;
 using MoE.ECE.Domain.Infrastructure;
 using MoE.ECE.Domain.Infrastructure.EntityFramework;
 
@@ -67,7 +68,9 @@ namespace MoE.ECE.CLI.Commands
         {
             var referenceDataContext = CreateReferenceDataContext(connectionString);
 
-            // TODO
+            var referenceData = new ReferenceData(referenceDataContext);
+            
+            referenceData.SeedData();
 
             referenceDataContext.SaveChanges();
         }

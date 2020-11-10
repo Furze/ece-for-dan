@@ -10,22 +10,33 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 {
     internal class DatabaseManager
     {
+        /// <summary>
+        ///     /// This password is only used to connect to a docker integration test db...So don't worry.
+        /// </summary>
+        private const string Password = "Password1";
+
+        private const string DockerDatabaseContainerName = "ece_local_db";
+        private const string UserName = "ece_api_docker_user";
+
         private static readonly Checkpoint Checkpoint = new Checkpoint
         {
             SchemasToInclude = new[]
             {
                 "referencedata"
             },
+            TablesToIgnore = new[]
+            {
+                "__EFMigrationsHistory", "ece_service", "ece_licencing_detail_date_ranged_parameter",
+                "ece_operating_session", "ece_operating_session_date_ranged_parameter",
+                "ece_service_date_ranged_parameter", "lookup", "lookup_type"
+            },
             DbAdapter = DbAdapter.Postgres
         };
-        
+
+        private static string? _hostIp;
+
         private readonly IDocumentStore _documentStore;
-        /// <summary>
-        /// /// This password is only used to connect to a docker integration test db...So don't worry.
-        /// </summary>
-        private const string Password = "Password1";
-        private const string DockerDatabaseContainerName = "ece_local_db";
-        private const string UserName = "ece_api_docker_user";
+
         public DatabaseManager(IDocumentStore documentStore)
         {
             _documentStore = documentStore;
@@ -33,24 +44,25 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         private static bool IsRunningOnBuildServer =>
             Environment.GetEnvironmentVariable("BUILD_DEFINITIONNAME") != null;
-        
-        private static string ConnectionString => $"host={HostIp};port={PortNumber};database={DockerDatabaseContainerName};password={Password};username={UserName};Pooling=true;";
 
-        private static string? _hostIp;
+        private static string ConnectionString =>
+            $"host={HostIp};port={PortNumber};database={DockerDatabaseContainerName};password={Password};username={UserName};Pooling=true;";
+
         private static string HostIp => IsRunningOnBuildServer == false || _hostIp == null ? "localhost" : _hostIp;
-        public static string Start()
-        {
-            var postgresDb = new PostgresDatabase(databaseName: DockerDatabaseContainerName, postgresUser: UserName, Password, PortNumber);
-            
-            _hostIp = postgresDb.StartDatabase();
-            
-            MigrateDatabases(ConnectionString);
-            return ConnectionString;
-        }
-        
+
         private static string PortNumber => IsRunningOnBuildServer
             ? "5432"
             : "8432"; // Change to 8342 on dev machine to stop collisions if Postgres server running locally.
+
+        public static string Start()
+        {
+            var postgresDb = new PostgresDatabase(DockerDatabaseContainerName, UserName, Password, PortNumber);
+
+            _hostIp = postgresDb.StartDatabase();
+
+            MigrateDatabases(ConnectionString);
+            return ConnectionString;
+        }
 
         private static void MigrateDatabases(string databaseConnectionString)
         {
@@ -63,14 +75,14 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             //     "-md",
             //     $"{Environment.CurrentDirectory}/../../../../../CLI/migrations"
             // }));
-            
+
             AsyncHelper.RunSync(() => Program.Main(new[]
             {
                 "migrate-reference-data",
                 "-cs",
                 databaseConnectionString
             }));
-            
+
             AsyncHelper.RunSync(() => Program.Main(new[]
             {
                 "seed",
@@ -87,7 +99,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                 await conn.OpenAsync();
                 await Checkpoint.Reset(conn);
             });
-            
+
             _documentStore.Advanced.Clean.DeleteAllDocuments();
             _documentStore.Advanced.Clean.DeleteAllEventData();
         }
