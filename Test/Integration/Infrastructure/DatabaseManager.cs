@@ -67,14 +67,14 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         private static void MigrateDatabases(string databaseConnectionString)
         {
             Console.WriteLine(Environment.CurrentDirectory);
-            // AsyncHelper.RunSync(() => Program.Main(new[]
-            // {
-            //     "migrate",
-            //     "-cs",
-            //     databaseConnectionString,
-            //     "-md",
-            //     $"{Environment.CurrentDirectory}/../../../../../CLI/migrations"
-            // }));
+            AsyncHelper.RunSync(() => Program.Main(new[]
+            {
+                "migrate",
+                "-cs",
+                databaseConnectionString,
+                "-md",
+                $"{Environment.CurrentDirectory}/../../../../../CLI/migrations"
+            }));
 
             AsyncHelper.RunSync(() => Program.Main(new[]
             {
