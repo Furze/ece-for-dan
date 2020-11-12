@@ -129,12 +129,12 @@ namespace MoE.ECE.Domain.Saga
 
         public Task<Unit> Handle(SaveAsDraft command, CancellationToken cancellationToken)
         {
-            return DoUpdateRs7(command, Source.Internal, cancellationToken);
+            return DoUpdateRs7(command, cancellationToken);
         }
 
         public Task<Unit> Handle(UpdateRs7 command, CancellationToken cancellationToken)
         {
-            return DoUpdateRs7(command, Source.Internal, cancellationToken);
+            return DoUpdateRs7(command, cancellationToken);
         }
 
         public async Task<Unit> Handle(UpdateRs7EntitlementMonth command, CancellationToken cancellationToken)
@@ -150,7 +150,7 @@ namespace MoE.ECE.Domain.Saga
             // apply the updates
             _mapper.Map(command, rs7.CurrentRevision);
 
-            rs7.EntitlementMonthUpdated(_systemClock.UtcNow);
+            rs7.WasUpdated(_systemClock.UtcNow);
 
             _documentSession.Update(rs7);
             
@@ -171,8 +171,6 @@ namespace MoE.ECE.Domain.Saga
                 throw ResourceNotFoundException<Rs7>(command.Id);
 
             rs7.UpdateDeclaration(command);
-            
-            //_mapper.Map(command, rs7.CurrentRevision.Declaration);
 
             await _documentSession.SaveChangesAsync(cancellationToken);
 
@@ -183,50 +181,22 @@ namespace MoE.ECE.Domain.Saga
             return Unit.Value;
         }
 
-        private async Task<Unit> DoUpdateRs7<TSource>(TSource command, string source, CancellationToken cancellationToken) where TSource : Rs7Model
+        private async Task<Unit> DoUpdateRs7<TSource>(TSource command, CancellationToken cancellationToken) where TSource : Rs7Model
         {
             var rs7 = await _documentSession.LoadAsync<Rs7>(command.Id, cancellationToken);
 
             if (rs7 == null)
                 throw ResourceNotFoundException<Rs7>(command.Id);
 
-            // updates to Zero Returns convert to a normal Rs7 - ensure the service is eligible.
-            if (rs7.IsZeroReturn)
-            {
-                ServiceAndEligibilityCheck(rs7.OrganisationId, true);
-            }
+            ServiceAndEligibilityCheck(rs7.OrganisationId, true);
 
-            // Don't allow save with New status. The consumer should provide Draft or PendingApproval
-            if (command.RollStatus == RollStatus.ExternalNew)
-                throw InvalidUpdateRs7StatusNew();
-
-            // Don't let the status move back into Draft!
-            if (command.RollStatus == RollStatus.ExternalDraft && rs7.RollStatus > RollStatus.ExternalDraft)
-                throw InvalidRollStatusTransition(rs7.RollStatus, command.RollStatus);
-
-            // Once submitted, can not update roll data
-            if (rs7.RollStatus != RollStatus.ExternalNew 
-                && rs7.RollStatus != RollStatus.ExternalDraft 
-                && rs7.RollStatus != RollStatus.ExternalSubmittedForApproval  
-                && rs7.RollStatus != RollStatus.ExternalReturnedForEdit)
-                throw InvalidRollStatusForUpdate(rs7.RollStatus);
-            
-            // if the current Rs7 had already passed Draft status we create a new revision for the updates
-            if (rs7.RollStatus > RollStatus.ExternalDraft)
-            {
-                rs7.CloneNextRevision(_systemClock.UtcNow);
-                //only change the Source on a new revision, because we want the original Revision's Source to
-                //retain whatever value it was created with.
-                rs7.CurrentRevision.Source = source;
-            }
+            rs7.UpdateRollStatus(command.RollStatus, _systemClock.UtcNow);
 
             // apply the updates
             _mapper.Map(command, rs7.CurrentRevision);
-            rs7.CurrentRevision.IsZeroReturn = false;
-            rs7.RollStatus = command.RollStatus;
-            rs7.CurrentRevision.UpdateRevisionDate(_systemClock);
 
             _documentSession.Update(rs7);
+            
             await _documentSession.SaveChangesAsync(cancellationToken);
 
             var domainEvent = _mapper.Map<Rs7Updated>(rs7);

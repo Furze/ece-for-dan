@@ -101,10 +101,5 @@ namespace MoE.ECE.Domain.Model.Rs7
                 monthAction(date.AddMonths(offset));
             }
         }
-
-        public void UpdateRevisionDate(ISystemClock systemClock)
-        {
-            RevisionDate = systemClock.UtcNow;
-        }
     }
 }

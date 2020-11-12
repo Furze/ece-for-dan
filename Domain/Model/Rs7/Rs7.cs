@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Internal;
 using MoE.ECE.Domain.Command.Rs7;
-using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Model.ValueObject;
 using Newtonsoft.Json;
 using static MoE.ECE.Domain.Exceptions.DomainExceptions;
@@ -118,36 +116,31 @@ namespace MoE.ECE.Domain.Model.Rs7
             return rs7Revision;
         }
 
-        public void PeerApprove(ISystemClock systemClock)
+        public void PeerApprove(DateTimeOffset now)
         {
-            SetStatus(RollStatus.InternalReadyForReview, systemClock);
+            UpdateWorkflowStatus(RollStatus.InternalReadyForReview, now);
         }
 
-        public void PeerReject(ISystemClock systemClock)
+        public void PeerReject(DateTimeOffset now)
         {
             if (RollStatus != RollStatus.ExternalSubmittedForApproval)
-                throw DomainExceptions.InvalidRollStatusForPeerRejectingRs7(RollStatus);
+                throw InvalidRollStatusForPeerRejectingRs7(RollStatus);
 
-            SetStatus(RollStatus.ExternalReturnedForEdit, systemClock);
+            UpdateWorkflowStatus(RollStatus.ExternalReturnedForEdit, now);
         }
 
-        public void ApproveInternally(ISystemClock systemClock)
+        public void ApproveInternally(DateTimeOffset now)
         {
-            SetStatus(RollStatus.InternalApproved, systemClock);
-            ReceivedDate = systemClock.UtcNow;
+            UpdateWorkflowStatus(RollStatus.InternalApproved, now);
+            //ReceivedDate = systemClock.UtcNow;
         }
 
-        public void Decline(ISystemClock systemClock)
+        public void Decline(DateTimeOffset now)
         {
-            SetStatus(RollStatus.Declined, systemClock);
+            UpdateWorkflowStatus(RollStatus.Declined, now);
         }
 
-        private void SetStatus(RollStatus rollStatus, ISystemClock systemClock)
-        {
-            RollStatus = rollStatus;
-
-            CurrentRevision.UpdateRevisionDate(systemClock);
-        }
+       
 
         public Rs7Revision GetRevision(int revisionNumber)
         {
@@ -184,7 +177,7 @@ namespace MoE.ECE.Domain.Model.Rs7
             CreateFirstRevision(now, null);
         }
 
-        public void EntitlementMonthUpdated(in DateTimeOffset now)
+        public void WasUpdated(in DateTimeOffset now)
         {
             // if the current Rs7 had already passed Draft status we create a new revision for the updates
             if (RollStatus > RollStatus.ExternalDraft)
@@ -198,7 +191,7 @@ namespace MoE.ECE.Domain.Model.Rs7
 
 
             CurrentRevision.IsZeroReturn = false;
-            //CurrentRevision.UpdateRevisionDate(now);
+            CurrentRevision.RevisionDate = now;
         }
 
         public bool CanBeDiscarded()
@@ -222,6 +215,36 @@ namespace MoE.ECE.Domain.Model.Rs7
             revision.Declaration.ContactPhone = command.ContactPhone ?? string.Empty;
             revision.Declaration.FullName = command.FullName ?? string.Empty;
             revision.Declaration.IsDeclaredTrue = command.IsDeclaredTrue;
+        }
+
+        public void UpdateRollStatus(RollStatus newRollStatus, DateTimeOffset now)
+        {
+            // Don't allow save with New status. The consumer should provide Draft or PendingApproval
+            if (newRollStatus == RollStatus.ExternalNew)
+                throw InvalidUpdateRs7StatusNew();
+
+            // Don't let the status move back into Draft!
+            if (newRollStatus == RollStatus.ExternalDraft && RollStatus > RollStatus.ExternalDraft)
+                throw InvalidRollStatusTransition(RollStatus, newRollStatus);
+
+            // Once submitted, can not update roll data
+            if (RollStatus != RollStatus.ExternalNew 
+                && RollStatus != RollStatus.ExternalDraft 
+                && RollStatus != RollStatus.ExternalSubmittedForApproval  
+                && RollStatus != RollStatus.ExternalReturnedForEdit)
+                throw InvalidRollStatusForUpdate(RollStatus);
+            
+            WasUpdated(now);
+
+            //rs7.CurrentRevision.IsZeroReturn = false;
+            RollStatus = newRollStatus;
+        }
+        
+        private void UpdateWorkflowStatus(RollStatus rollStatus, DateTimeOffset now)
+        {
+            RollStatus = rollStatus;
+        
+            CurrentRevision.RevisionDate = now;
         }
     }
 }

@@ -39,25 +39,25 @@ namespace MoE.ECE.Domain.Saga
 
         public Task<Unit> Handle(ApproveRs7 command, CancellationToken cancellationToken)
         {
-            return ApplyStateChange<Rs7Approved>(command.BusinessEntityId, rs7 => rs7.ApproveInternally(_systemClock),
+            return ApplyStateChange<Rs7Approved>(command.BusinessEntityId, rs7 => rs7.ApproveInternally(_systemClock.UtcNow),
                 cancellationToken);
         }
 
         public Task<Unit> Handle(DeclineRs7 command, CancellationToken cancellationToken)
         {
-            return ApplyStateChange<Rs7Declined>(command.BusinessEntityId, rs7 => rs7.Decline(_systemClock),
+            return ApplyStateChange<Rs7Declined>(command.BusinessEntityId, rs7 => rs7.Decline(_systemClock.UtcNow),
                 cancellationToken);
         }
 
         public Task<Unit> Handle(PeerApproveRs7 command, CancellationToken cancellationToken)
         {
-            return ApplyStateChange<Rs7PeerApproved>(command.BusinessEntityId, rs7 => rs7.PeerApprove(_systemClock),
+            return ApplyStateChange<Rs7PeerApproved>(command.BusinessEntityId, rs7 => rs7.PeerApprove(_systemClock.UtcNow),
                 cancellationToken);
         }
 
         public Task<Unit> Handle(Rs7PeerReject command, CancellationToken cancellationToken)
         {
-            return ApplyStateChange<Rs7PeerRejected>(command.BusinessEntityId, rs7 => rs7.PeerReject(_systemClock),
+            return ApplyStateChange<Rs7PeerRejected>(command.BusinessEntityId, rs7 => rs7.PeerReject(_systemClock.UtcNow),
                 cancellationToken);
         }
 
@@ -75,7 +75,7 @@ namespace MoE.ECE.Domain.Saga
             _mapper.Map(command, rs7.CurrentRevision);
 
             rs7.RollStatus = RollStatus.ExternalSubmittedForApproval;
-            rs7.CurrentRevision.UpdateRevisionDate(_systemClock);
+            rs7.CurrentRevision.RevisionDate = _systemClock.UtcNow;
 
             _documentSession.Update(rs7);
             await _documentSession.SaveChangesAsync(cancellationToken);

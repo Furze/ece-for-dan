@@ -40,7 +40,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
         }
 
         [Fact]
-        public void ThenTheRollStatusIsUpdatedToPendingApproval()
+        public void ThenTheRollStatusIsUpdatedToDeclined()
         {
             Then
                 .Response.Content<Rs7Model>().RollStatus.ShouldBe(RollStatus.Declined);
