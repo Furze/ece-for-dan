@@ -3,7 +3,6 @@ using System.Linq;
 using MoE.ECE.Domain.Model.FundingPeriod;
 using MoE.ECE.Domain.Model.Rs7;
 using MoE.ECE.Domain.Model.ValueObject;
-using Date = MoE.ECE.Domain.Model.ValueObject.Date;
 
 namespace MoE.ECE.CLI.Data
 {
@@ -13,8 +12,12 @@ namespace MoE.ECE.CLI.Data
         {
             get
             {
-                var julyFundingPeriod = FundingPeriod.GetFundingPeriodForDate(new Date(1, (int) FundingPeriodMonth.July, DateTime.Now.Year - 1));
-                var novemberFundingPeriod = FundingPeriod.GetFundingPeriodForDate(new Date(1, (int) FundingPeriodMonth.November, DateTime.Now.Year - 1));
+                var julyFundingPeriod =
+                    FundingPeriod.GetFundingPeriodForDate(new Date(1, (int) FundingPeriodMonth.July,
+                        DateTime.Now.Year - 1));
+                var novemberFundingPeriod =
+                    FundingPeriod.GetFundingPeriodForDate(new Date(1, (int) FundingPeriodMonth.November,
+                        DateTime.Now.Year - 1));
                 return new[]
                 {
                     new Rs7

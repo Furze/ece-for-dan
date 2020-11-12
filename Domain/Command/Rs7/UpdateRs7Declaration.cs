@@ -5,5 +5,6 @@ namespace MoE.ECE.Domain.Command.Rs7
 {
     public class UpdateRs7Declaration : DeclarationModel, ICommand
     {
+        public int Id { get; set; }
     }
 }

@@ -25,12 +25,17 @@ namespace MoE.ECE.Domain.Integration
             
             CreateMap<Rs7EntitlementMonthUpdated, IntegrationEvents.Roll.Rs7Updated>();
 
-            CreateMap<DeclarationModel, IntegrationEvents.Roll.DeclarationModel>();
+            CreateMap<DeclarationModel, IntegrationEvents.Roll.DeclarationModel>()
+                .Ignore(d => d.Id);
             
             CreateMap<Rs7AdvanceMonthModel, IntegrationEvents.Roll.Rs7AdvanceMonth>()
+                // TODO: Update PROTO files to remove these fields..
+                .Ignore(d => d.Id)
                 .Ignore(d => d.Days);
                             
-            CreateMap<Rs7EntitlementMonthModel, IntegrationEvents.Roll.Rs7EntitlementMonth>();
+            CreateMap<Rs7EntitlementMonthModel, IntegrationEvents.Roll.Rs7EntitlementMonth>()
+                .Ignore(d => d.Id);
+            
             CreateMap<Rs7EntitlementDayModel, IntegrationEvents.Roll.Rs7EntitlementDay>()
                 .Map(d => d.Over1, s => s.TwoAndOver);
         }

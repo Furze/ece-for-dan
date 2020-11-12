@@ -1,6 +1,6 @@
 namespace MoE.ECE.Domain.Model.Rs7
 {
-    public class Declaration : DomainEntity
+    public class Declaration
     {
         public string FullName { get; set; } = string.Empty;
 
@@ -9,10 +9,6 @@ namespace MoE.ECE.Domain.Model.Rs7
         public string Role { get; set; } = string.Empty;
 
         public bool? IsDeclaredTrue { get; set; }
-
-        public int Rs7RevisionId { get; set; }
-
-        public virtual Rs7Revision Rs7Revision { get; set; } = null!;
 
         public Declaration Clone()
         {

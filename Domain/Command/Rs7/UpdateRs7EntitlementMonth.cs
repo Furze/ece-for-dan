@@ -5,5 +5,6 @@ namespace MoE.ECE.Domain.Command.Rs7
 {
     public class UpdateRs7EntitlementMonth : Rs7EntitlementMonthModel, ICommand
     {
+        public int Id { get; set; }
     }
 }

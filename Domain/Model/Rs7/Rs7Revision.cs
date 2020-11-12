@@ -29,7 +29,7 @@ namespace MoE.ECE.Domain.Model.Rs7
 
         public string Source { get; set; } = string.Empty;
 
-        public virtual Declaration Declaration { get; set; } = null!;
+        public Declaration? Declaration { get; set; }
 
         /// <summary>
         /// Creates all the required entitlement and advance months/days for this rs7.

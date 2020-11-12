@@ -5,13 +5,9 @@ namespace MoE.ECE.Domain.Model.Rs7
 {
     public class Rs7EntitlementMonth
     {
-        public int Id { get; set; }
-
         public int MonthNumber { get; set; }
 
         public int Year { get; set; }
-
-        public int Rs7RevisionId { get; set; }
 
         public ICollection<Rs7EntitlementDay> Days = new List<Rs7EntitlementDay>();
 

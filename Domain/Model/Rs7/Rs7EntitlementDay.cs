@@ -1,12 +1,7 @@
-﻿using System.ComponentModel;
-
-namespace MoE.ECE.Domain.Model.Rs7
+﻿namespace MoE.ECE.Domain.Model.Rs7
 {
     public class Rs7EntitlementDay
     {
-        [ReadOnly(true)]
-        public int? Id { get; set; }
-
         public int? DayNumber { get; set; }
 
         public int? Under2 { get; set; }
@@ -21,10 +16,6 @@ namespace MoE.ECE.Domain.Model.Rs7
 
         public int? NonCertificated { get; set; }
 
-        public int Rs7EntitlementMonthId { get; set; }
-
-        public virtual Rs7EntitlementMonth Rs7EntitlementMonth { get; set; } = null!;
-        
         internal Rs7EntitlementDay Clone()
         {
             return new Rs7EntitlementDay

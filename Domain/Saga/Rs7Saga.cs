@@ -113,15 +113,14 @@ namespace MoE.ECE.Domain.Saga
             if (rs7 == null)
                 throw ResourceNotFoundException<Rs7>(command.Id);
 
-            if (rs7.RollStatus != RollStatus.ExternalDraft && rs7.RollStatus != RollStatus.ExternalNew && rs7.RollStatus != RollStatus.ExternalReturnedForEdit)
+            if (rs7.CanBeDiscarded() == false)
                 throw InvalidRollStatusForDiscard(rs7.RollStatus);
 
             _documentSession.Delete<Rs7>(command.Id);
 
             await _documentSession.SaveChangesAsync(cancellationToken);
 
-            var domainEvent = new Rs7Discarded
-            {Id = rs7.Id, BusinessEntityId = rs7.BusinessEntityId, Time = _systemClock.UtcNow};
+            var domainEvent = new Rs7Discarded(rs7, _systemClock.UtcNow);
 
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
 
@@ -145,12 +144,8 @@ namespace MoE.ECE.Domain.Saga
             if (rs7 == null)
                 throw ResourceNotFoundException<Rs7>(command.Id);
 
-            // updates to Zero Returns convert to a normal Rs7 - ensure the service is eligible.
-            if (rs7.IsZeroReturn)
-            {
-                ServiceAndEligibilityCheck(rs7.OrganisationId, true);
-            }
-
+            ServiceAndEligibilityCheck(rs7.OrganisationId, true);
+     
             //TODO: fix mapping issues and map into rs7 rather than revision..
             // apply the updates
             _mapper.Map(command, rs7.CurrentRevision);
@@ -175,23 +170,16 @@ namespace MoE.ECE.Domain.Saga
             if (rs7 == null)
                 throw ResourceNotFoundException<Rs7>(command.Id);
 
-            if (rs7.RollStatus != RollStatus.ExternalSubmittedForApproval)
-            {
-                throw InvalidRollStatusForUpdate(rs7.RollStatus);
-            }
-
-            var revision = rs7.CurrentRevision;
-            if (revision.Declaration == null)
-            {
-                revision.Declaration = new Declaration();
-            }
-            _mapper.Map(command, revision.Declaration);
+            rs7.UpdateDeclaration(command);
+            
+            //_mapper.Map(command, rs7.CurrentRevision.Declaration);
 
             await _documentSession.SaveChangesAsync(cancellationToken);
 
             var domainEvent = _mapper.Map<Rs7DeclarationUpdated>(rs7);
 
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
+
             return Unit.Value;
         }
 
