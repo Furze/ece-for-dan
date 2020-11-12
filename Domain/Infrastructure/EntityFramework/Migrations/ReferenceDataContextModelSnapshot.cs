@@ -7,6 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(ReferenceDataContext))]
+    // ReSharper disable once PartialTypeWithSinglePart
     partial class ReferenceDataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -151,26 +151,18 @@ namespace MoE.ECE.Domain.Saga
                 ServiceAndEligibilityCheck(rs7.OrganisationId, true);
             }
 
-            // if the current Rs7 had already passed Draft status we create a new revision for the updates
-            if (rs7.RollStatus > RollStatus.ExternalDraft)
-            {
-                rs7.CloneNextRevision(_systemClock);
-
-                //only change the Source on a new revision, because we want the original Revision's Source to
-                //retain whatever value it was created with.
-                rs7.CurrentRevision.Source = Source.Internal;
-            }
-
+            //TODO: fix mapping issues and map into rs7 rather than revision..
             // apply the updates
-            _mapper.Map(command, rs7);
-            
-            rs7.CurrentRevision.IsZeroReturn = false;
-            rs7.CurrentRevision.UpdateRevisionDate(_systemClock);
+            _mapper.Map(command, rs7.CurrentRevision);
+
+            rs7.EntitlementMonthUpdated(_systemClock.UtcNow);
 
             _documentSession.Update(rs7);
+            
             await _documentSession.SaveChangesAsync(cancellationToken);
 
             var domainEvent = _mapper.Map<Rs7EntitlementMonthUpdated>(rs7);
+            
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
 
             return Unit.Value;
@@ -234,7 +226,7 @@ namespace MoE.ECE.Domain.Saga
             // if the current Rs7 had already passed Draft status we create a new revision for the updates
             if (rs7.RollStatus > RollStatus.ExternalDraft)
             {
-                rs7.CloneNextRevision(_systemClock);
+                rs7.CloneNextRevision(_systemClock.UtcNow);
                 //only change the Source on a new revision, because we want the original Revision's Source to
                 //retain whatever value it was created with.
                 rs7.CurrentRevision.Source = source;

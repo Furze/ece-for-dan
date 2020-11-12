@@ -63,9 +63,10 @@ namespace MoE.ECE.Domain.Model.Rs7
         /// Creates a first Revision if one doesn't already exist.
         /// </summary>
         /// <param name="now">the current time</param>
+        /// <param name="source"></param>
         /// <returns>Returns the first revision just created, or one that already existed</returns>
         /// <exception cref="Exception">Exception is thrown if the Rs7 already has more Revisions than the first</exception>
-        public Rs7Revision CreateFirstRevision(DateTimeOffset now)
+        public Rs7Revision CreateFirstRevision(DateTimeOffset now, string? source)
         {
             if (Revisions.Count > 1)
             {
@@ -74,7 +75,8 @@ namespace MoE.ECE.Domain.Model.Rs7
 
             var revision = Revisions.Count == 0 ? CreateNewRevision(now) : Revisions.First();
 
-            revision.Source = Source.Internal;
+            if(source != null)
+                revision.Source = source;
 
             return revision;
         }
@@ -95,7 +97,7 @@ namespace MoE.ECE.Domain.Model.Rs7
             return rs7Revision;
         }
 
-        public Rs7Revision CloneNextRevision(ISystemClock systemClock)
+        public Rs7Revision CloneNextRevision(DateTimeOffset now)
         {
             var oldRevision = CurrentRevision;
 
@@ -104,7 +106,7 @@ namespace MoE.ECE.Domain.Model.Rs7
                 Rs7Id = Id,
                 Id = oldRevision.RevisionNumber + 1,
                 RevisionNumber = oldRevision.RevisionNumber + 1,
-                RevisionDate = systemClock.UtcNow,
+                RevisionDate = now,
                 AdvanceMonths = oldRevision.AdvanceMonths.Select(am => am.Clone()).ToList(),
                 EntitlementMonths = oldRevision.EntitlementMonths.Select(em => em.Clone()).ToList(),
                 IsAttested = oldRevision.IsAttested,
@@ -162,7 +164,7 @@ namespace MoE.ECE.Domain.Model.Rs7
             ReceivedDate = now;
 
             // set the first revision
-            var rs7Revision = CreateFirstRevision(now);
+            var rs7Revision = CreateFirstRevision(now, Source.Internal);
             
             rs7Revision.IsZeroReturn = true;
             rs7Revision.IsAttested = false;
@@ -173,7 +175,7 @@ namespace MoE.ECE.Domain.Model.Rs7
             RollStatus = RollStatus.ExternalNew;
             ReceivedDate = now;
             // build the first revision
-            CreateFirstRevision(now);
+            CreateFirstRevision(now, Source.Internal);
         }
 
         public void CreatedFromExternalSystem(in DateTimeOffset now)
@@ -183,7 +185,25 @@ namespace MoE.ECE.Domain.Model.Rs7
             ReceivedDate = now;
 
             // build the first revision
-            CreateFirstRevision(now);
+            CreateFirstRevision(now, null);
+        }
+
+        public void EntitlementMonthUpdated(in DateTimeOffset now)
+        {
+            // if the current Rs7 had already passed Draft status we create a new revision for the updates
+            if (RollStatus > RollStatus.ExternalDraft)
+            {
+                CloneNextRevision(now);
+
+                //only change the Source on a new revision, because we want the original Revision's Source to
+                //retain whatever value it was created with.
+                CurrentRevision.Source = Source.Internal;
+            }
+
+           
+            
+            CurrentRevision.IsZeroReturn = false;
+            //CurrentRevision.UpdateRevisionDate(now);
         }
     }
 }

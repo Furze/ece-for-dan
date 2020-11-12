@@ -36,7 +36,8 @@ namespace MoE.ECE.Domain.Model.Rs7
             {
                 var match = destinationAdvanceMonths
                     .FirstOrDefault(month => month.MonthNumber == advance.MonthNumber && month.Year == advance.Year);
-
+                
+                //TODO: Remove:Mixture of mapping and validation 
                 if (match == null)
                 {
                     throw new BadRequestException(
@@ -60,6 +61,7 @@ namespace MoE.ECE.Domain.Model.Rs7
                 var destinationMonth = entitlementMonthsDestination
                     .FirstOrDefault(month => month.MonthNumber == sourceMonth.MonthNumber && month.Year == sourceMonth.Year);
 
+                //TODO: Remove:Mixture of mapping and validation
                 if (destinationMonth == null)
                 {
                     throw new BadRequestException(
@@ -84,6 +86,7 @@ namespace MoE.ECE.Domain.Model.Rs7
                     .Days
                     .FirstOrDefault(day => day.DayNumber == entitlementDay.DayNumber);
 
+                //TODO: Remove:Mixture of mapping and validation
                 if (dayMatch == null)
                 {
                     throw new BadRequestException(
