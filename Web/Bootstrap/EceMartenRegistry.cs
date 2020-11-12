@@ -4,14 +4,15 @@ using Marten.Services.Events;
 using Marten.Storage;
 using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.DependencyInjection;
+using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Infrastructure;
 using MoE.ECE.Domain.Model.Rs7;
 
 namespace MoE.ECE.Web.Bootstrap
 {
-    public class ECEMartenRegistry : MartenRegistry
+    public class EceMartenRegistry : MartenRegistry
     {
-        public ECEMartenRegistry()
+        public EceMartenRegistry()
         {
             For<Rs7>().Identity(rs7 => rs7.Id);
         }
@@ -23,7 +24,7 @@ namespace MoE.ECE.Web.Bootstrap
                 storeOptions.DatabaseSchemaName = settings.SchemaName;
 
             if (string.IsNullOrEmpty(settings.ConnectionString))
-                throw new Exception("Configuration Error: MartenSettings:ConnectionString not set.");
+                throw new ECEApplicationException("Configuration Error: MartenSettings:ConnectionString not set.");
 
             storeOptions.Connection(settings.ConnectionString);
             storeOptions.UseDefaultSerialization(nonPublicMembersStorage: NonPublicMembersStorage.NonPublicSetters);
@@ -40,7 +41,7 @@ namespace MoE.ECE.Web.Bootstrap
                 storeOptions.Logger(new AppInsightsMartenLogger(telemetryClient));
             }
 
-            storeOptions.Schema.Include<ECEMartenRegistry>();
+            storeOptions.Schema.Include<EceMartenRegistry>();
 
             EventConfiguration(storeOptions);
         }

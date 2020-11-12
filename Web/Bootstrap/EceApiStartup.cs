@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace MoE.ECE.Web.Bootstrap
 {
-    public abstract class ECEApiStartup
+    public abstract class EceApiStartup
     {
         private readonly StartupConfigRegistry _registry;
 
@@ -13,7 +13,7 @@ namespace MoE.ECE.Web.Bootstrap
         ///     The order of registration is important from the middleware pipeline configuration
         ///     aspect. <see cref="StartupConfig.Configure(IApplicationBuilder)" />.
         /// </summary>
-        protected ECEApiStartup(IConfiguration configuration, IWebHostEnvironment environment)
+        protected EceApiStartup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             // ReSharper disable once VirtualMemberCallInConstructor
             _registry = CreateRegistry(configuration, environment);

@@ -4,7 +4,7 @@ using MoE.ECE.Web.Bootstrap;
 
 namespace MoE.ECE.Integration.Tests.Infrastructure
 {
-    public class TestStartup : ECEApiStartup
+    public class TestStartup : EceApiStartup
     {
         public TestStartup(IConfiguration configuration, IWebHostEnvironment environment)
             : base(configuration, environment)

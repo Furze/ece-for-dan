@@ -32,7 +32,6 @@ namespace MoE.ECE.Web.Bootstrap
 
         public override void Configure(IApplicationBuilder app)
         {
-            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
             var dashboardOptions = new DashboardOptions();

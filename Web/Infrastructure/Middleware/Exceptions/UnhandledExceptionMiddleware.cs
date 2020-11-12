@@ -16,6 +16,6 @@ namespace MoE.ECE.Web.Infrastructure.Middleware.Exceptions
 
         protected override HttpStatusCode StatusCode => HttpStatusCode.InternalServerError;
 
-        protected override string CreateMessage(Exception ex) => "An unhandled error occurred";
+        protected override string CreateMessage(Exception exception) => "An unhandled error occurred";
     }
 }

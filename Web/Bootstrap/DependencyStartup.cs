@@ -19,7 +19,6 @@ namespace MoE.ECE.Web.Bootstrap
         public override void ConfigureServices(IServiceCollection services)
         {
             // Hosted Services
-            //services.AddHostedService<FirstWorkflowConsumer>();
             
             // Singleton
             services.AddSingleton(Configuration);

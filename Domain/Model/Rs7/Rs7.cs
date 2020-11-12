@@ -183,7 +183,7 @@ namespace MoE.ECE.Domain.Model.Rs7
         /// <exception cref="Exception">Exception is thrown if the Rs7 already has more Revisions than the first</exception>
         private Rs7Revision CreateFirstRevision(DateTimeOffset now, string? source)
         {
-            if (Revisions.Count > 1) throw new Exception("Rs7 already has multiple revisions");
+            if (Revisions.Count > 1) throw new ECEApplicationException("Rs7 already has multiple revisions");
 
             var revision = Revisions.Count == 0 ? CreateNewRevision(now) : Revisions.First();
 

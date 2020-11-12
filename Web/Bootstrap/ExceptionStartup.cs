@@ -10,9 +10,9 @@ namespace MoE.ECE.Web.Bootstrap
         {
         }
 
-        public override void Configure(IApplicationBuilder appBuilder)
+        public override void Configure(IApplicationBuilder app)
         {
-            appBuilder
+            app
                 .UseMiddleware<UnhandledExceptionMiddleware>()
                 .UseMiddleware<ResourceNotFoundExceptionMiddleware>()
                 .UseMiddleware<BadDataExceptionMiddleware>()
