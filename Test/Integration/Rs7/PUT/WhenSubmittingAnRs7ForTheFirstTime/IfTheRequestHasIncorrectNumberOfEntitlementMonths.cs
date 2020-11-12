@@ -41,7 +41,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
                     .Select(month => new Rs7EntitlementMonthModel
                     {
                         MonthNumber = month
-                    }).ToList();
+                    }).ToArray();
             }));
         }
 

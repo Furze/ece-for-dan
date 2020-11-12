@@ -80,7 +80,7 @@ namespace MoE.ECE.Domain.Saga
             _documentSession.Update(rs7);
             await _documentSession.SaveChangesAsync(cancellationToken);
 
-            var domainEvent = _mapper.Map<Rs7SubmittedForApproval>(rs7.CurrentRevision);
+            var domainEvent = _mapper.Map<Rs7SubmittedForApproval>(rs7);
 
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
 
@@ -102,7 +102,7 @@ namespace MoE.ECE.Domain.Saga
             
             await _documentSession.SaveChangesAsync(cancellationToken);
 
-            var domainEvent = _mapper.Map<TDomainEvent>(rs7.CurrentRevision);
+            var domainEvent = _mapper.Map<TDomainEvent>(rs7);
 
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
 

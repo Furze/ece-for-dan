@@ -14,7 +14,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
 {
     public class IfTheExternallyCreatedMonthIsValid : SpeedyIntegrationTestBase
     {
-        protected IfTheExternallyCreatedMonthIsValid(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+        public IfTheExternallyCreatedMonthIsValid(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }

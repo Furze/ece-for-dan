@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace MoE.ECE.Domain.Read.Model.Rs7
@@ -14,6 +13,6 @@ namespace MoE.ECE.Domain.Read.Model.Rs7
         [ReadOnly(true)]
         public int Year { get; set; }
 
-        public ICollection<Rs7EntitlementDayModel>? Days { get; set; }
+        public Rs7EntitlementDayModel[]? Days { get; set; }
     }
 }

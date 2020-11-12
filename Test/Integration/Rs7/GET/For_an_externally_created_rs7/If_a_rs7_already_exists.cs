@@ -16,7 +16,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
     public class If_a_rs7_already_exists : SpeedyIntegrationTestBase
     {
         private const string Url = "api/rs7";
-        protected If_a_rs7_already_exists(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
+        public If_a_rs7_already_exists(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
 
@@ -62,7 +62,6 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
         [Fact]
         public void Then_the_response_snapshot_should_be_ok()
         {
-            throw new NotImplementedException();
             Then.Snapshot().Match<Rs7Model>();
         }
         

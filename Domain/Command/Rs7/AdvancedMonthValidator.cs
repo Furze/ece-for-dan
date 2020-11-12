@@ -1,5 +1,7 @@
+using System.Linq;
 using FluentValidation;
 using Marten;
+using Microsoft.EntityFrameworkCore;
 using MoE.ECE.Domain.Infrastructure.EntityFramework;
 using MoE.ECE.Domain.Read.Model.Rs7;
 
@@ -28,7 +30,9 @@ namespace MoE.ECE.Domain.Command.Rs7
                     return;
                 }
 
-                var organisation = referenceDataContext.EceServices.Find(rs7.OrganisationId);
+                var organisation = referenceDataContext.EceServices
+                    .Include(service => service.OperatingSessions)
+                    .SingleOrDefault(service => service.RefOrganisationId == rs7.OrganisationId);
 
                 if (organisation == null)
                 {        

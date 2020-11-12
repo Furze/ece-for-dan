@@ -180,7 +180,7 @@ namespace MoE.ECE.Domain.Saga
             await _documentSession.SaveChangesAsync(cancellationToken);
 
             // Rs7CreatedFromExternal must be mapped after save to get new Id
-            var domainEvent = _mapper.Map<Rs7CreatedFromExternal>(rs7Revision);
+            var domainEvent = _mapper.Map<Rs7CreatedFromExternal>(rs7);
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
 
             return Unit.Value;
@@ -251,7 +251,7 @@ namespace MoE.ECE.Domain.Saga
             _documentSession.Update(rs7);
             await _documentSession.SaveChangesAsync(cancellationToken);
 
-            var domainEvent = _mapper.Map<Rs7EntitlementMonthUpdated>(rs7.CurrentRevision);
+            var domainEvent = _mapper.Map<Rs7EntitlementMonthUpdated>(rs7);
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
 
             return Unit.Value;
@@ -278,18 +278,18 @@ namespace MoE.ECE.Domain.Saga
 
             await _documentSession.SaveChangesAsync(cancellationToken);
 
-            var domainEvent = _mapper.Map<Rs7DeclarationUpdated>(revision);
+            var domainEvent = _mapper.Map<Rs7DeclarationUpdated>(rs7);
 
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
             return Unit.Value;
         }
 
-        private async Task<Unit> DoUpdateRs7<TSource>(TSource model, string source, CancellationToken cancellationToken) where TSource : Rs7Model
+        private async Task<Unit> DoUpdateRs7<TSource>(TSource command, string source, CancellationToken cancellationToken) where TSource : Rs7Model
         {
-            var rs7 = await _documentSession.LoadAsync<Rs7>(model.Id, cancellationToken);
+            var rs7 = await _documentSession.LoadAsync<Rs7>(command.Id, cancellationToken);
 
             if (rs7 == null)
-                throw ResourceNotFoundException<Rs7>(model.Id);
+                throw ResourceNotFoundException<Rs7>(command.Id);
 
             // updates to Zero Returns convert to a normal Rs7 - ensure the service is eligible.
             if (rs7.IsZeroReturn)
@@ -298,12 +298,12 @@ namespace MoE.ECE.Domain.Saga
             }
 
             // Don't allow save with New status. The consumer should provide Draft or PendingApproval
-            if (model.RollStatus == RollStatus.ExternalNew)
+            if (command.RollStatus == RollStatus.ExternalNew)
                 throw InvalidUpdateRs7StatusNew();
 
             // Don't let the status move back into Draft!
-            if (model.RollStatus == RollStatus.ExternalDraft && rs7.RollStatus > RollStatus.ExternalDraft)
-                throw InvalidRollStatusTransition(rs7.RollStatus, model.RollStatus);
+            if (command.RollStatus == RollStatus.ExternalDraft && rs7.RollStatus > RollStatus.ExternalDraft)
+                throw InvalidRollStatusTransition(rs7.RollStatus, command.RollStatus);
 
             // Once submitted, can not update roll data
             if (rs7.RollStatus != RollStatus.ExternalNew 
@@ -322,14 +322,15 @@ namespace MoE.ECE.Domain.Saga
             }
 
             // apply the updates
-            _mapper.Map(model, rs7.CurrentRevision);
+            _mapper.Map(command, rs7.CurrentRevision);
             rs7.CurrentRevision.IsZeroReturn = false;
-            rs7.CurrentRevision.Rs7.RollStatus = model.RollStatus;
+            rs7.RollStatus = command.RollStatus;
             rs7.CurrentRevision.UpdateRevisionDate(_systemClock);
 
+            _documentSession.Update(rs7);
             await _documentSession.SaveChangesAsync(cancellationToken);
 
-            var domainEvent = _mapper.Map<Rs7Updated>(rs7.CurrentRevision);
+            var domainEvent = _mapper.Map<Rs7Updated>(rs7);
 
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
 

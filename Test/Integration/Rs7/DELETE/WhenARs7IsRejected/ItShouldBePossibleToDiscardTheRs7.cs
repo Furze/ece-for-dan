@@ -10,7 +10,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.DELETE.WhenARs7IsRejected
 {
     public class ItShouldBePossibleToDiscardTheRs7 : SpeedyIntegrationTestBase
     {
-        protected ItShouldBePossibleToDiscardTheRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+        public ItShouldBePossibleToDiscardTheRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }

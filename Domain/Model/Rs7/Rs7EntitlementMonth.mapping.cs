@@ -10,7 +10,6 @@ namespace MoE.ECE.Domain.Model.Rs7
         {
             CreateMap<Rs7EntitlementMonthModel, Rs7EntitlementMonth>()
                 .Ignore(dest => dest.Id)
-                .Ignore(dest => dest.Rs7Revision)
                 .Ignore(dest => dest.Rs7RevisionId);
         }
     }

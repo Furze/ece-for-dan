@@ -11,7 +11,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
 {
     public class WhenRetrievingADeclinedRs7 : SpeedyIntegrationTestBase
     {
-        protected WhenRetrievingADeclinedRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+        public WhenRetrievingADeclinedRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }

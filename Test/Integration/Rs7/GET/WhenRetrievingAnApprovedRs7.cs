@@ -11,7 +11,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
 {
     public class WhenRetrievingAnApprovedRs7 : IntegrationTestBase<ECEStoryBook, ECEStoryData>
     {
-        protected WhenRetrievingAnApprovedRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+        public WhenRetrievingAnApprovedRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }

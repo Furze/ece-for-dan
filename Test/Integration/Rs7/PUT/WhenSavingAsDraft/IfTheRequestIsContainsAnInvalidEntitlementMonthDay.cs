@@ -16,7 +16,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         {
         }
 
-        private const string Url = "When/rs7";
+        private const string Url = "api/rs7";
 
         protected override void Arrange()
         {

@@ -51,7 +51,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         public static SubmitRs7ForApproval SubmitRs7ForApproval(Rs7Model rs7Model, Action<SubmitRs7ForApproval>? applyCustomSetup = null)
         {
             var clonedRs7Model = Clone(rs7Model);
-            var command = new SubmitRs7ForApproval()
+            var command = new SubmitRs7ForApproval
             {
                 IsAttested = true,
                 AdvanceMonths = clonedRs7Model.AdvanceMonths,

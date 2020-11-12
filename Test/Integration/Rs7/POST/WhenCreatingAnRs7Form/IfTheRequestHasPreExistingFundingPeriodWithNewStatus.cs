@@ -1,5 +1,4 @@
 ﻿using Bard;
-using Microsoft.AspNetCore.Mvc;
 using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Read.Model.Rs7;
 using MoE.ECE.Integration.Tests.Chapter;
@@ -50,9 +49,15 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
         }
 
         [Fact]
-        public void ThenResponseShouldBe201()
+        public void Then_the_response_should_be_a_201_created()
         {
-            Then.Response.ShouldBe.Created<CreatedAtActionResult>();
+            Then.Response.ShouldBe.Created();
+        }
+        
+        [Fact]
+        public void Then_the_response_should_contain_a_location_header()
+        {
+            Then.Response.Headers.Should.Include.Location();
         }
     }
 }

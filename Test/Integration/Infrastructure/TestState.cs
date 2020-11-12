@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Dynamic;
+using System.Linq;
 using Bard;
 using Bard.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
@@ -72,10 +73,15 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                     WriteDomainEventToConsole(value);
                 }
 
-                var receivedEvents = _domainEventTracker.ReceivedEvents();
+                var receivedEvents = _domainEventTracker.ReceivedEvents().ToArray();
+                
+                var message = receivedEvents.Any()
+                    ? $"The following events were fired though. {string.Join(", ", receivedEvents)}."
+                    : "No events were fired.";
+                
                 // ReSharper disable once ExpressionIsAlwaysNull
                 domainEvent.ShouldNotBeNull(
-                    $"A {typeof(TDomainEvent).Name} domain event was not fired. The following events were fired though. {string.Join(", ", receivedEvents)}");
+                    $"A {typeof(TDomainEvent).Name} domain event was not fired. {message}");
             }
             else
             {
@@ -97,10 +103,15 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                     WriteIntegrationEventToConsole(value);
                 }
 
-                var receivedEvents = _integrationEventTracker.ReceivedEvents();
+                var receivedEvents = _integrationEventTracker.ReceivedEvents().ToArray();
+
+                var message = receivedEvents.Any()
+                    ? $"The following events were fired though. {string.Join(", ", receivedEvents)}."
+                    : "No events were fired.";
+                
                 // ReSharper disable once ExpressionIsAlwaysNull
                 domainEvent.ShouldNotBeNull(
-                    $"A {typeof(TIntegrationEvent).Name} integration event was not fired. The following events were fired though. {string.Join(", ", receivedEvents)}");
+                    $"A {typeof(TIntegrationEvent).Name} integration event was not fired. {message}");
             }
             else
             {

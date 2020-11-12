@@ -39,7 +39,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
                     .Select(month => new Rs7AdvanceMonthModel
                     {
                         MonthNumber = month
-                    }).ToList();
+                    }).ToArray();
             }));
         }
 

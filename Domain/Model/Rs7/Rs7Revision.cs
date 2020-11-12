@@ -19,11 +19,9 @@ namespace MoE.ECE.Domain.Model.Rs7
 
         public DateTimeOffset RevisionDate { get; set; }
 
-        public virtual Rs7 Rs7 { get; set; } = null!;
+        public IList<Rs7EntitlementMonth> EntitlementMonths { get; set; } = new List<Rs7EntitlementMonth>();
 
-        public virtual ICollection<Rs7EntitlementMonth> EntitlementMonths { get; set; } = new HashSet<Rs7EntitlementMonth>();
-
-        public virtual ICollection<Rs7AdvanceMonth> AdvanceMonths { get; set; } = new HashSet<Rs7AdvanceMonth>();
+        public IList<Rs7AdvanceMonth> AdvanceMonths { get; set; } = new List<Rs7AdvanceMonth>();
 
         public bool? IsAttested { get; set; }
 
@@ -33,36 +31,29 @@ namespace MoE.ECE.Domain.Model.Rs7
 
         public virtual Declaration Declaration { get; set; } = null!;
 
-        public RollStatus CurrentRollStatus()
-        {
-            return Rs7.RollStatus;
-        }
-
         /// <summary>
         /// Creates all the required entitlement and advance months/days for this rs7.
         /// </summary>
-        public void CreateMonthsForPeriod()
+        public void CreateMonthsForPeriod(FundingPeriodMonth fundingPeriodMonth, int fundingPeriodYear)
         {
-            CreateEntitlementMonths();
-            CreateAdvanceMonths();
+            var advancedStartDate = GetAdvanceStartDate(fundingPeriodMonth, fundingPeriodYear);
+            CreateEntitlementMonths(advancedStartDate);
+            CreateAdvanceMonths(advancedStartDate);
         }
 
-        public DateTime AdvanceStartDate
+        private static DateTime GetAdvanceStartDate(FundingPeriodMonth fundingPeriodMonth, int fundingPeriodYear)
         {
-            get
-            {
-                var date = new DateTime(
-                    year: Rs7.FundingPeriodYear,
-                    month: (int) Rs7.FundingPeriod,
-                    day: 01);
+            var date = new DateTime(
+                year: fundingPeriodYear,
+                month: (int) fundingPeriodMonth,
+                day: 01);
 
-                return date;
-            }
+            return date;
         }
 
-        private void CreateEntitlementMonths()
+        private void CreateEntitlementMonths(DateTime advancedStartDate)
         {
-            var date = AdvanceStartDate
+            var date = advancedStartDate
                 // take off 5 months so we're at the beginning of the washup (advanced months) for
                 // the funding period.
                 .AddMonths(-5);
@@ -71,7 +62,6 @@ namespace MoE.ECE.Domain.Model.Rs7
             {
                 var month = new Rs7EntitlementMonth
                 {
-                    Rs7Revision = this,
                     MonthNumber = entitlementMonth.Month,
                     Year = entitlementMonth.Year
                 };
@@ -90,9 +80,9 @@ namespace MoE.ECE.Domain.Model.Rs7
             });
         }
 
-        private void CreateAdvanceMonths()
+        private void CreateAdvanceMonths(DateTime advancedStartDate)
         {
-            AddMonths(AdvanceStartDate, 4, advanceMonth =>
+            AddMonths(advancedStartDate, 4, advanceMonth =>
             {
                 var month = new Rs7AdvanceMonth
                 {

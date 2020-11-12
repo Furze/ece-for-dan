@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.Internal;
 using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Model.ValueObject;
+using Newtonsoft.Json;
 
 namespace MoE.ECE.Domain.Model.Rs7
 {
@@ -26,8 +27,9 @@ namespace MoE.ECE.Domain.Model.Rs7
         /// </summary>
         public DateTimeOffset? ReceivedDate { get; set; }
 
-        public virtual ICollection<Rs7Revision> Revisions { get; set; } = new HashSet<Rs7Revision>();
+        public ICollection<Rs7Revision> Revisions { get; set; } = new List<Rs7Revision>();
 
+       [JsonIgnore]
         public Rs7Revision CurrentRevision
         {
             get
@@ -63,14 +65,14 @@ namespace MoE.ECE.Domain.Model.Rs7
         {
             var rs7Revision = new Rs7Revision
             {
-                Rs7 = this,
+                Id = Revisions.Count + 1,
                 RevisionNumber = Revisions.Count + 1,
                 RevisionDate = systemClock.UtcNow
             };
 
             Revisions.Add(rs7Revision);
 
-            rs7Revision.CreateMonthsForPeriod();
+            rs7Revision.CreateMonthsForPeriod(FundingPeriod, FundingPeriodYear);
 
             return rs7Revision;
         }
@@ -81,12 +83,12 @@ namespace MoE.ECE.Domain.Model.Rs7
 
             var rs7Revision = new Rs7Revision
             {
-                Rs7 = this,
                 Rs7Id = Id,
+                Id = oldRevision.RevisionNumber + 1,
                 RevisionNumber = oldRevision.RevisionNumber + 1,
                 RevisionDate = systemClock.UtcNow,
-                AdvanceMonths = oldRevision.AdvanceMonths.Select(am => am.Clone()).ToHashSet(),
-                EntitlementMonths = oldRevision.EntitlementMonths.Select(em => em.Clone()).ToHashSet(),
+                AdvanceMonths = oldRevision.AdvanceMonths.Select(am => am.Clone()).ToList(),
+                EntitlementMonths = oldRevision.EntitlementMonths.Select(em => em.Clone()).ToList(),
                 IsAttested = oldRevision.IsAttested,
                 IsZeroReturn = oldRevision.IsZeroReturn,
                 Source = oldRevision.Source,
@@ -129,6 +131,11 @@ namespace MoE.ECE.Domain.Model.Rs7
             RollStatus = rollStatus;
 
             CurrentRevision.UpdateRevisionDate(systemClock);
+        }
+
+        public Rs7Revision GetRevision(int revisionNumber)
+        {
+            return Revisions.Single(revision => revision.RevisionNumber == revisionNumber);
         }
     }
 }

@@ -11,15 +11,19 @@ namespace MoE.ECE.Integration.Tests.Rs7.DELETE.WhenARs7IsPendingApproval
 {
     public class ItShouldNotBePossibleToDiscardTheRs7 : SpeedyIntegrationTestBase
     {
+        public ItShouldNotBePossibleToDiscardTheRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
+        {
+        }
+
         private const string Url = "api/rs7";
-        
+
         private Rs7Model Rs7Model
         {
             get => TestData.Rs7Model;
             set => TestData.Rs7Model = value;
         }
-        
-     
+
         protected override void Arrange()
         {
             Given
@@ -40,15 +44,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.DELETE.WhenARs7IsPendingApproval
             Then.Response.ShouldBe.BadRequest
                 .WithErrorCode(ErrorCode.InvalidRollStatusForDiscard);
         }
-        
+
         [Fact]
         public void ThenADomainEventShouldNotBeFired()
         {
             A_domain_event_should_not_be_fired<Rs7Discarded>();
-        }
-
-        protected ItShouldNotBePossibleToDiscardTheRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
-        {
         }
     }
 }

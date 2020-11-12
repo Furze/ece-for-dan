@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
 using MoE.ECE.Domain.Infrastructure;
@@ -40,9 +39,9 @@ namespace MoE.ECE.Domain.Read.Model.Rs7
         [ReadOnly(true)]
         public DateTimeOffset RevisionDate { get; set; }
 
-        public IEnumerable<Rs7AdvanceMonthModel>? AdvanceMonths { get; set; } = new HashSet<Rs7AdvanceMonthModel>();
+        public Rs7AdvanceMonthModel[]? AdvanceMonths { get; set; }
 
-        public IEnumerable<Rs7EntitlementMonthModel>? EntitlementMonths { get; set; } = new HashSet<Rs7EntitlementMonthModel>();
+        public Rs7EntitlementMonthModel[]? EntitlementMonths { get; set; }
 
         public bool? IsAttested { get; set; }
 

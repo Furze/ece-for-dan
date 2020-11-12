@@ -10,7 +10,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingDeclaration
 {
     public class If_the_declaration_is_invalid : SpeedyIntegrationTestBase
     {
-        protected If_the_declaration_is_invalid(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+        public If_the_declaration_is_invalid(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }

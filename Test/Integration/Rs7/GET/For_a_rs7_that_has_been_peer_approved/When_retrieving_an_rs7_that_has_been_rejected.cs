@@ -13,7 +13,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_a_rs7_that_has_been_peer_approve
     // ReSharper disable once InconsistentNaming
     public class When_retrieving_an_rs7_that_has_been_rejected : SpeedyIntegrationTestBase
     {
-        protected When_retrieving_an_rs7_that_has_been_rejected(RunOnceBeforeAllTests testSetUp,
+        public When_retrieving_an_rs7_that_has_been_rejected(RunOnceBeforeAllTests testSetUp,
             ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output,
             testState)
         {

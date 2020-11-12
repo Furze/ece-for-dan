@@ -14,7 +14,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
 {
     public class IfTheExternallySubmittedMonthIsValid : SpeedyIntegrationTestBase
     {
-        protected IfTheExternallySubmittedMonthIsValid(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+        public IfTheExternallySubmittedMonthIsValid(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
@@ -66,8 +66,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
 
             domainEvent.Declaration?.FullName.ShouldBe("Declarer");
 
-            domainEvent.EntitlementMonths?.ElementAt(1)
-                .Days?.ElementAt(7).Under2.ShouldBe(12);
+            domainEvent
+                .EntitlementMonths?
+                .ElementAt(1)
+                .Days?
+                .ElementAt(7)
+                .Under2
+                .ShouldBe(12);
         }
 
         [Fact]

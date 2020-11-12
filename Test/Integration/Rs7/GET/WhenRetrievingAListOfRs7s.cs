@@ -11,7 +11,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
     // ReSharper disable once InconsistentNaming
     public class WhenRetrievingAListOfRs7s : SpeedyIntegrationTestBase
     {
-        protected WhenRetrievingAListOfRs7s(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+        public WhenRetrievingAListOfRs7s(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }

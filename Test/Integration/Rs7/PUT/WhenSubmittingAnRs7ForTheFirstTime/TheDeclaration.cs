@@ -10,12 +10,12 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 {
     public class TheDeclaration : SpeedyIntegrationTestBase
     {
-        protected TheDeclaration(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+        public TheDeclaration(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
 
-        private const string Url = "When/rs7";
+        private const string Url = "api/rs7";
 
         private Rs7Model Rs7Model
         {

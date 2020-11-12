@@ -40,7 +40,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
                     .Select(month => new Rs7AdvanceMonthModel
                     {
                         MonthNumber = month
-                    }).ToList();
+                    }).ToArray();
             }));
         }
 

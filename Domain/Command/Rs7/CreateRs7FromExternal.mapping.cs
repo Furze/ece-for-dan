@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using MoE.ECE.Domain.Infrastructure.EntityFramework;
@@ -26,8 +25,10 @@ namespace MoE.ECE.Domain.Command.Rs7
             _context = context;
         }
 
-        public CreateRs7FromExternal Convert(Rs7Received source, CreateRs7FromExternal destination, ResolutionContext context)
+        public CreateRs7FromExternal Convert(Rs7Received source, CreateRs7FromExternal? destination, ResolutionContext context)
         {
+            destination ??= new CreateRs7FromExternal();
+            
             destination.BusinessEntityId = Guid.NewGuid();
             destination.IsAttested = source.IsAttested;
             destination.Source = source.Source ?? string.Empty;
@@ -46,8 +47,8 @@ namespace MoE.ECE.Domain.Command.Rs7
                 .SingleOrDefault(ece => ece.OrganisationNumber == source.OrganisationNumber)
                 ?.RefOrganisationId;
 
-            destination.EntitlementMonths = context.Mapper.Map<IEnumerable<Rs7EntitlementMonthModel>>(source.EntitlementMonths);
-            destination.AdvanceMonths = context.Mapper.Map<IEnumerable<Rs7AdvanceMonthModel>>(source.AdvanceMonths);
+            destination.EntitlementMonths = context.Mapper.Map<Rs7EntitlementMonthModel[]>(source.EntitlementMonths);
+            destination.AdvanceMonths = context.Mapper.Map<Rs7AdvanceMonthModel[]>(source.AdvanceMonths);
             destination.IsZeroReturn = false;
 
             return destination;

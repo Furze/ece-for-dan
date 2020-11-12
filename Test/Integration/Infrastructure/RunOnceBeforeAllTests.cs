@@ -53,14 +53,15 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(LogEventLevel.Verbose)
-                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("Hangfire", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty("Environment", "ECE API Integration Test")
                 .WriteTo.Seq("http://localhost:5341")
                 .WriteTo.Console()
                 .CreateLogger();
 
+            
             var hostBuilder = new HostBuilder()
                 .ConfigureWebHost(builder =>
                     builder
@@ -71,12 +72,14 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                         .ConfigureAppConfiguration((context, configBuilder) =>
                         {
                             configBuilder.AddJsonFile("appsettings.json", true, true);
+                            configBuilder.AddJsonFile("appsettings.integration-test.json", false, true);
                             configBuilder.AddInMemoryCollection(InMemoryConfiguration);
                             configBuilder.AddEnvironmentVariables();
                             configBuilder.AddUserSecrets<TestStartup>();
                         })
                         .ConfigureTestServices(ServicesConfiguration));
 
+            Log.Information("******* TEST API STARTING *******");
             var host = hostBuilder.Start();
             return host;
         }

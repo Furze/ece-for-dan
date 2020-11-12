@@ -27,7 +27,7 @@ namespace MoE.ECE.Web.Infrastructure.Middleware.Exceptions
                         ErrorCode = error.ErrorCode,
                         Property = error.PropertyName,
                         Message = error.ErrorMessage
-                    })
+                    }).ToArray()
             };
         }
     }

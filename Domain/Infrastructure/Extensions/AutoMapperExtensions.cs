@@ -82,5 +82,49 @@ namespace MoE.ECE.Domain.Infrastructure.Extensions
 
             return mappingExpression;
         }
+        
+        /// <summary>
+        ///     Add the ability to map from multiple sources objects into a single destination object.
+        /// </summary>
+        /// <param name="mapper"></param>
+        /// <param name="sources"></param>
+        /// <returns></returns>
+        public static MultiMapper MapFrom(this IMapper mapper, params object[] sources)
+        {
+            return new MultiMapper(mapper, sources);
+        }
+        
+        public class MultiMapper
+        {
+            private readonly IMapper _mapper;
+            private readonly object[] _sources;
+
+            public MultiMapper(IMapper mapper, object[] sources)
+            {
+                _mapper = mapper;
+                _sources = sources;
+            }
+
+            /// <summary>
+            ///     The destination object that you with to Multi Map into.
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <param name="destination"></param>
+            /// <returns></returns>
+            public T Into<T>(T destination)
+            {
+                foreach (var source in _sources)
+                    _mapper.Map(source, destination);
+
+                return destination;
+            }
+
+            public T Into<T>() where T : new()
+            {
+                var destination = new T();
+
+                return Into(destination);
+            }
+        }
     }
 }

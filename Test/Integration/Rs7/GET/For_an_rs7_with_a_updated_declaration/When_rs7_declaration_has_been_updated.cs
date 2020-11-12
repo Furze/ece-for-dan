@@ -10,7 +10,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_rs7_with_a_updated_declaratio
 {
     public class When_rs7_declaration_has_been_updated : SpeedyIntegrationTestBase
     {
-        protected When_rs7_declaration_has_been_updated(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+        public When_rs7_declaration_has_been_updated(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }

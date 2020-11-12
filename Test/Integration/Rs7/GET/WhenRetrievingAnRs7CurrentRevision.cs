@@ -11,7 +11,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
 {
     public class WhenRetrievingAnRs7CurrentRevision : SpeedyIntegrationTestBase
     {
-        protected WhenRetrievingAnRs7CurrentRevision(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+        public WhenRetrievingAnRs7CurrentRevision(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }

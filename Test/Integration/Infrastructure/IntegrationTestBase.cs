@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Bard;
 using Bard.Configuration;
 using Bard.Infrastructure;
 using Marten;
-using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.Extensions.DependencyInjection;
 using Moe.ECE.Events.Integration;
 using Moe.Library.Cqrs;
@@ -14,7 +15,7 @@ using Xunit.Abstractions;
 namespace MoE.ECE.Integration.Tests.Infrastructure
 {
     [Collection(Collections.IntegrationTestCollection)]
-    public abstract class IntegrationTestBase<TStoryBook, TStoryData> : IClassFixture<TestState<TStoryBook, TStoryData>> 
+    public abstract class IntegrationTestBase<TStoryBook, TStoryData> : IClassFixture<TestState<TStoryBook, TStoryData>>
         where TStoryBook : StoryBook<TStoryData>, new()
         where TStoryData : class, new()
     {
@@ -40,7 +41,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         protected IWhen When => TestState.Scenario.When;
 
         protected TStoryBook Given => TestState.Scenario.Given;
-        
+
         protected TStoryBook And => Given;
         protected TestState<TStoryBook, TStoryData> TestState { get; }
 
@@ -67,8 +68,20 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                     options.LogMessage = _output.WriteLine;
                     //options.MaxApiResponseTime = 4000; //OPA ops funding call is taking 20 seconds
                     options.BadRequestProvider = new ResponseValidator();
+                    options.JsonSerializeOptions = new JsonSerializerOptions
+                    {
+                        IgnoreNullValues = true,
+                        WriteIndented = true,
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        PropertyNameCaseInsensitive = true
+                    };
+                    options.JsonDeserializeOptions = new JsonSerializerOptions
+                    {
+                        Converters = {new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)},
+                        PropertyNameCaseInsensitive = true
+                    };
                 });
-           
+
             TestState.Initialize(scenario, Services, Output);
             var databaseManager = new DatabaseManager(Services.GetService<IDocumentStore>());
             databaseManager.ResetDatabase();
@@ -101,13 +114,13 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         {
             return TestState.A_domain_event_should_be_fired<TDomainEvent>();
         }
-        
+
         protected void A_domain_event_should_not_be_fired<TDomainEvent>()
             where TDomainEvent : class, IDomainEvent
         {
             TestState.A_domain_event_should_not_be_fired<TDomainEvent>();
         }
-        
+
         protected TIntegrationEvent An_integration_event_should_be_fired<TIntegrationEvent>()
             where TIntegrationEvent : class, IIntegrationEvent
         {

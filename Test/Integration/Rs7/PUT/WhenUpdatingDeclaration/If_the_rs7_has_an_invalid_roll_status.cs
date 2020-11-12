@@ -10,7 +10,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingDeclaration
 {
     public class If_the_rs7_has_an_invalid_roll_status : SpeedyIntegrationTestBase
     {
-        protected If_the_rs7_has_an_invalid_roll_status(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+        public If_the_rs7_has_an_invalid_roll_status(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
