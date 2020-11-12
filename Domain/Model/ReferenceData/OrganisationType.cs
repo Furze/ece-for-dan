@@ -1,6 +1,6 @@
 ﻿namespace MoE.ECE.Domain.Model.ReferenceData
 {
-    public class OrganisationType
+    public static class OrganisationType
     {
         public const int CasualEducationAndCare = 10000;
         public const int FreeKindergarten = 10001;

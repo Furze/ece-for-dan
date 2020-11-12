@@ -1,6 +1,6 @@
 ﻿namespace MoE.ECE.Domain.Model.ReferenceData
 {
-    public class LicenceStatus
+    public static class LicenceStatus
     {
         public const int Full = 134000;
         public const int Probationary = 134001;
