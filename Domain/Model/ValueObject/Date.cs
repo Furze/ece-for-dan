@@ -2,7 +2,7 @@
 
 namespace MoE.ECE.Domain.Model.ValueObject
 {
-    public class Date : IComparable<Date>
+    public class Date : IComparable<Date>, IEquatable<Date>
     {
         public Date(int day, int month, int year)
         {
@@ -16,8 +16,15 @@ namespace MoE.ECE.Domain.Model.ValueObject
         public int Month { get; }
         public int Year { get; }
 
-        private bool Equals(Date other)
+        public int CompareTo(Date? other)
         {
+            return CompareTo(this, other);
+        }
+
+        public bool Equals(Date? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
             return Day == other.Day && Month == other.Month && Year == other.Year;
         }
 
@@ -25,8 +32,7 @@ namespace MoE.ECE.Domain.Model.ValueObject
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((Date) obj);
+            return obj.GetType() == GetType() && Equals((Date) obj);
         }
 
         public override int GetHashCode()
@@ -36,10 +42,7 @@ namespace MoE.ECE.Domain.Model.ValueObject
 
         private static int ConcatDate(Date? date)
         {
-            if (date is null)
-            {
-                return 0;
-            }
+            if (date is null) return 0;
 
             var d = int.Parse($"{date.Year}{date.Month:#00}{date.Day:#00}");
             return d;
@@ -48,11 +51,6 @@ namespace MoE.ECE.Domain.Model.ValueObject
         private static int CompareTo(Date? a, Date? b)
         {
             return ConcatDate(a).CompareTo(ConcatDate(b));
-        }
-
-        public int CompareTo(Date? other)
-        {
-            return CompareTo(this, other);
         }
 
         public static bool operator !=(Date? a, Date? b)
