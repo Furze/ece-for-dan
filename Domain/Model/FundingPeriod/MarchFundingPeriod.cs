@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Model.ValueObject;
 
 namespace MoE.ECE.Domain.Model.FundingPeriod
@@ -13,7 +13,7 @@ namespace MoE.ECE.Domain.Model.FundingPeriod
                 {CalendarMonth.February, CalendarMonth.March, CalendarMonth.April, CalendarMonth.May};
 
             if (FundingPeriodMonths.Any(month => month.Id == date.Month) == false)
-                throw new ApplicationException($"Date - {date} is invalid for {nameof(MarchFundingPeriod)}");
+                throw new ECEApplicationException($"Date - {date} is invalid for {nameof(MarchFundingPeriod)}");
         }
 
         protected override Dictionary<CalendarMonth, MonthYear[]> CalendarMonthAdvancePeriods =>

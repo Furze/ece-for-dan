@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace MoE.ECE.Domain.Model.ValueObject
 {
-    public abstract class Enumeration : IComparable
+    public abstract class Enumeration : IComparable, IEqualityComparer<Enumeration>
     {
         public string Name { get; }
 
@@ -51,6 +51,18 @@ namespace MoE.ECE.Domain.Model.ValueObject
 
         public int CompareTo(object? other) => Id.CompareTo(((Enumeration) other!).Id);
 
-        // Other utility methods ...
+        public bool Equals(Enumeration? x, Enumeration? y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null)) return false;
+            if (ReferenceEquals(y, null)) return false;
+            if (x.GetType() != y.GetType()) return false;
+            return x.Name == y.Name && x.Id == y.Id;
+        }
+
+        public int GetHashCode(Enumeration obj)
+        {
+            return HashCode.Combine(obj.Name, obj.Id);
+        }
     }
 }

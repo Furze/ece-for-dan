@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MoE.ECE.Domain.Command.Rs7;
+using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Model.ValueObject;
 using Newtonsoft.Json;
 using static MoE.ECE.Domain.Exceptions.DomainExceptions;
@@ -49,7 +50,7 @@ namespace MoE.ECE.Domain.Model.Rs7
             get
             {
                 if (Revisions.Count == 0)
-                    throw new Exception("Rs7 does not contain any Revisions");
+                    throw new ECEApplicationException("Rs7 does not contain any Revisions");
 
                 return Revisions
                     .OrderByDescending(r => r.RevisionNumber)

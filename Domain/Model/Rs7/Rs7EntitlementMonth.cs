@@ -9,7 +9,7 @@ namespace MoE.ECE.Domain.Model.Rs7
 
         public int Year { get; set; }
 
-        public ICollection<Rs7EntitlementDay> Days = new List<Rs7EntitlementDay>();
+        public ICollection<Rs7EntitlementDay> Days { get; set; } = new List<Rs7EntitlementDay>();
 
         public void AddDay(Rs7EntitlementDay match)
         {
