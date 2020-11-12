@@ -102,7 +102,7 @@ namespace MoE.ECE.Domain.Model.Rs7
         
         public void CreateSkeleton(in DateTimeOffset now, RollStatus initialStatus)
         {
-            RollStatus = RollStatus.ExternalNew;
+            RollStatus = initialStatus;
             ReceivedDate = now;
             // build the first revision
             CreateFirstRevision(now, Source.Internal);
