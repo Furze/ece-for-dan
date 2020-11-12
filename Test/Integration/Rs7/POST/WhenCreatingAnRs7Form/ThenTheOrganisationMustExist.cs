@@ -29,7 +29,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
                 .Response
                 .ShouldBe
                 .BadRequest
-                .ForProperty<CreateRs7>(rs7 => rs7.OrganisationId);
+                .ForProperty<CreateSkeletonRs7>(rs7 => rs7.OrganisationId);
         }
     }
 }

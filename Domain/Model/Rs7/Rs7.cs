@@ -5,6 +5,7 @@ using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Model.ValueObject;
 using Newtonsoft.Json;
 using static MoE.ECE.Domain.Exceptions.DomainExceptions;
+
 namespace MoE.ECE.Domain.Model.Rs7
 {
     public class Rs7 : BusinessEntity
@@ -58,6 +59,120 @@ namespace MoE.ECE.Domain.Model.Rs7
 
         public bool IsZeroReturn => CurrentRevision.IsZeroReturn;
 
+        
+        public void PeerApprove(DateTimeOffset now)
+        {
+            UpdateWorkflowStatus(RollStatus.InternalReadyForReview, now);
+        }
+
+        public void PeerReject(DateTimeOffset now)
+        {
+            if (RollStatus != RollStatus.ExternalSubmittedForApproval)
+                throw InvalidRollStatusForPeerRejectingRs7(RollStatus);
+
+            UpdateWorkflowStatus(RollStatus.ExternalReturnedForEdit, now);
+        }
+
+        public void ApproveInternally(DateTimeOffset now)
+        {
+            UpdateWorkflowStatus(RollStatus.InternalApproved, now);
+        }
+
+        public void Decline(DateTimeOffset now)
+        {
+            UpdateWorkflowStatus(RollStatus.Declined, now);
+        }
+
+        public Rs7Revision GetRevision(int revisionNumber)
+        {
+            return Revisions.Single(revision => revision.RevisionNumber == revisionNumber);
+        }
+
+        public void CreateZeroReturn(in DateTimeOffset now)
+        {
+            RollStatus = RollStatus.InternalReadyForReview;
+            ReceivedDate = now;
+
+            // set the first revision
+            var rs7Revision = CreateFirstRevision(now, Source.Internal);
+
+            rs7Revision.IsZeroReturn = true;
+            rs7Revision.IsAttested = false;
+        }
+        
+        public void CreateSkeleton(in DateTimeOffset now, RollStatus initialStatus)
+        {
+            RollStatus = RollStatus.ExternalNew;
+            ReceivedDate = now;
+            // build the first revision
+            CreateFirstRevision(now, Source.Internal);
+        }
+
+        public void WasUpdated(in DateTimeOffset now)
+        {
+            // if the current Rs7 had already passed Draft status we create a new revision for the updates
+            if (RollStatus > RollStatus.ExternalDraft)
+            {
+                CloneNextRevision(now);
+
+                //only change the Source on a new revision, because we want the original Revision's Source to
+                //retain whatever value it was created with.
+                CurrentRevision.Source = Source.Internal;
+            }
+
+            CurrentRevision.IsZeroReturn = false;
+            CurrentRevision.RevisionDate = now;
+        }
+
+        public bool CanBeDiscarded()
+        {
+            return RollStatus == RollStatus.ExternalDraft || RollStatus == RollStatus.ExternalNew ||
+                   RollStatus == RollStatus.ExternalReturnedForEdit;
+        }
+
+        public void UpdateDeclaration(UpdateRs7Declaration command)
+        {
+            if (RollStatus != RollStatus.ExternalSubmittedForApproval) throw InvalidRollStatusForUpdate(RollStatus);
+
+            var revision = CurrentRevision;
+
+            revision.Declaration ??= new Declaration();
+
+            revision.Declaration.Role = command.Role ?? string.Empty;
+            revision.Declaration.ContactPhone = command.ContactPhone ?? string.Empty;
+            revision.Declaration.FullName = command.FullName ?? string.Empty;
+            revision.Declaration.IsDeclaredTrue = command.IsDeclaredTrue;
+        }
+
+        public void UpdateRollStatus(RollStatus newRollStatus, DateTimeOffset now)
+        {
+            // Don't allow save with New status. The consumer should provide Draft or PendingApproval
+            if (newRollStatus == RollStatus.ExternalNew)
+                throw InvalidUpdateRs7StatusNew();
+
+            // Don't let the status move back into Draft!
+            if (newRollStatus == RollStatus.ExternalDraft && RollStatus > RollStatus.ExternalDraft)
+                throw InvalidRollStatusTransition(RollStatus, newRollStatus);
+
+            // Once submitted, can not update roll data
+            if (RollStatus != RollStatus.ExternalNew
+                && RollStatus != RollStatus.ExternalDraft
+                && RollStatus != RollStatus.ExternalSubmittedForApproval
+                && RollStatus != RollStatus.ExternalReturnedForEdit)
+                throw InvalidRollStatusForUpdate(RollStatus);
+
+            WasUpdated(now);
+
+            RollStatus = newRollStatus;
+        }
+
+        private void UpdateWorkflowStatus(RollStatus rollStatus, DateTimeOffset now)
+        {
+            RollStatus = rollStatus;
+
+            CurrentRevision.RevisionDate = now;
+        }
+        
         /// <summary>
         ///     Creates a first Revision if one doesn't already exist.
         /// </summary>
@@ -65,7 +180,7 @@ namespace MoE.ECE.Domain.Model.Rs7
         /// <param name="source"></param>
         /// <returns>Returns the first revision just created, or one that already existed</returns>
         /// <exception cref="Exception">Exception is thrown if the Rs7 already has more Revisions than the first</exception>
-        public Rs7Revision CreateFirstRevision(DateTimeOffset now, string? source)
+        private Rs7Revision CreateFirstRevision(DateTimeOffset now, string? source)
         {
             if (Revisions.Count > 1) throw new Exception("Rs7 already has multiple revisions");
 
@@ -77,7 +192,7 @@ namespace MoE.ECE.Domain.Model.Rs7
             return revision;
         }
 
-        public Rs7Revision CreateNewRevision(DateTimeOffset now)
+        private Rs7Revision CreateNewRevision(DateTimeOffset now)
         {
             var rs7Revision = new Rs7Revision
             {
@@ -93,7 +208,7 @@ namespace MoE.ECE.Domain.Model.Rs7
             return rs7Revision;
         }
 
-        public Rs7Revision CloneNextRevision(DateTimeOffset now)
+        private void CloneNextRevision(DateTimeOffset now)
         {
             var oldRevision = CurrentRevision;
 
@@ -112,139 +227,7 @@ namespace MoE.ECE.Domain.Model.Rs7
             };
 
             Revisions.Add(rs7Revision);
-
-            return rs7Revision;
         }
 
-        public void PeerApprove(DateTimeOffset now)
-        {
-            UpdateWorkflowStatus(RollStatus.InternalReadyForReview, now);
-        }
-
-        public void PeerReject(DateTimeOffset now)
-        {
-            if (RollStatus != RollStatus.ExternalSubmittedForApproval)
-                throw InvalidRollStatusForPeerRejectingRs7(RollStatus);
-
-            UpdateWorkflowStatus(RollStatus.ExternalReturnedForEdit, now);
-        }
-
-        public void ApproveInternally(DateTimeOffset now)
-        {
-            UpdateWorkflowStatus(RollStatus.InternalApproved, now);
-            //ReceivedDate = systemClock.UtcNow;
-        }
-
-        public void Decline(DateTimeOffset now)
-        {
-            UpdateWorkflowStatus(RollStatus.Declined, now);
-        }
-
-       
-
-        public Rs7Revision GetRevision(int revisionNumber)
-        {
-            return Revisions.Single(revision => revision.RevisionNumber == revisionNumber);
-        }
-
-        public void SetAsZeroReturn(in DateTimeOffset now)
-        {
-            RollStatus = RollStatus.InternalReadyForReview;
-            ReceivedDate = now;
-
-            // set the first revision
-            var rs7Revision = CreateFirstRevision(now, Source.Internal);
-
-            rs7Revision.IsZeroReturn = true;
-            rs7Revision.IsAttested = false;
-        }
-
-        public void CreatedByExternalUser(in DateTimeOffset now)
-        {
-            RollStatus = RollStatus.ExternalNew;
-            ReceivedDate = now;
-            // build the first revision
-            CreateFirstRevision(now, Source.Internal);
-        }
-
-        public void CreatedFromExternalSystem(in DateTimeOffset now)
-        {
-            // go straight to PendingApproval and received
-            RollStatus = RollStatus.InternalReadyForReview;
-            ReceivedDate = now;
-
-            // build the first revision
-            CreateFirstRevision(now, null);
-        }
-
-        public void WasUpdated(in DateTimeOffset now)
-        {
-            // if the current Rs7 had already passed Draft status we create a new revision for the updates
-            if (RollStatus > RollStatus.ExternalDraft)
-            {
-                CloneNextRevision(now);
-
-                //only change the Source on a new revision, because we want the original Revision's Source to
-                //retain whatever value it was created with.
-                CurrentRevision.Source = Source.Internal;
-            }
-
-
-            CurrentRevision.IsZeroReturn = false;
-            CurrentRevision.RevisionDate = now;
-        }
-
-        public bool CanBeDiscarded()
-        {
-            return RollStatus == RollStatus.ExternalDraft || RollStatus == RollStatus.ExternalNew ||
-                   RollStatus == RollStatus.ExternalReturnedForEdit;
-        }
-
-        public void UpdateDeclaration(UpdateRs7Declaration command)
-        {
-            if (RollStatus != RollStatus.ExternalSubmittedForApproval)
-            {
-                throw InvalidRollStatusForUpdate(RollStatus);
-            }
-            
-            var revision = CurrentRevision;
-            
-            revision.Declaration ??= new Declaration();
-            
-            revision.Declaration.Role = command.Role ?? string.Empty;
-            revision.Declaration.ContactPhone = command.ContactPhone ?? string.Empty;
-            revision.Declaration.FullName = command.FullName ?? string.Empty;
-            revision.Declaration.IsDeclaredTrue = command.IsDeclaredTrue;
-        }
-
-        public void UpdateRollStatus(RollStatus newRollStatus, DateTimeOffset now)
-        {
-            // Don't allow save with New status. The consumer should provide Draft or PendingApproval
-            if (newRollStatus == RollStatus.ExternalNew)
-                throw InvalidUpdateRs7StatusNew();
-
-            // Don't let the status move back into Draft!
-            if (newRollStatus == RollStatus.ExternalDraft && RollStatus > RollStatus.ExternalDraft)
-                throw InvalidRollStatusTransition(RollStatus, newRollStatus);
-
-            // Once submitted, can not update roll data
-            if (RollStatus != RollStatus.ExternalNew 
-                && RollStatus != RollStatus.ExternalDraft 
-                && RollStatus != RollStatus.ExternalSubmittedForApproval  
-                && RollStatus != RollStatus.ExternalReturnedForEdit)
-                throw InvalidRollStatusForUpdate(RollStatus);
-            
-            WasUpdated(now);
-
-            //rs7.CurrentRevision.IsZeroReturn = false;
-            RollStatus = newRollStatus;
-        }
-        
-        private void UpdateWorkflowStatus(RollStatus rollStatus, DateTimeOffset now)
-        {
-            RollStatus = rollStatus;
-        
-            CurrentRevision.RevisionDate = now;
-        }
     }
 }

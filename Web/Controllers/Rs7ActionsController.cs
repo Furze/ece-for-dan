@@ -36,7 +36,7 @@ namespace MoE.ECE.Web.Controllers
         /// <returns></returns>
         [HttpPost("new-requests")]
         [RequirePermission(Rs7.NewRequestsCreate)]
-        public async Task<ActionResult<Rs7NewRequestModel>> PostActionNewRequest([FromBody] CreateRs7 request, CancellationToken cancellationToken)
+        public async Task<ActionResult<Rs7NewRequestModel>> PostActionNewRequest([FromBody] CreateSkeletonRs7 request, CancellationToken cancellationToken)
         {
             var id = await _cqrs.ExecuteAsync(request, cancellationToken);
 
@@ -140,7 +140,7 @@ namespace MoE.ECE.Web.Controllers
         /// <returns></returns>
         [HttpPost("new-zero-returns")]
         [RequirePermission(Rs7.ZeroReturnsCreate)]
-        public async Task<ActionResult> PostActionZeroReturn([FromRoute] CreateRs7 request, CancellationToken cancellationToken)
+        public async Task<ActionResult> PostActionZeroReturn([FromRoute] CreateSkeletonRs7 request, CancellationToken cancellationToken)
         {
             return await Task.FromResult(NoContent());
         }

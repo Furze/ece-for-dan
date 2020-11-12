@@ -48,7 +48,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
         [Fact]
         public void ThenADomainEventShouldNotBePublished()
         {
-            A_domain_event_should_be_fired<Rs7Created>()
+            A_domain_event_should_be_fired<Rs7SkeletonCreated>()
                 .Id
                 .ShouldBe(Rs7Model.Id);
             //The preExisting Id should be the only Rs7Created event fired

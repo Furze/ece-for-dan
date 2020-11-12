@@ -3,7 +3,7 @@ using Moe.Library.Cqrs;
 
 namespace MoE.ECE.Domain.Command.Rs7
 {
-    public class CreateRs7 : IBeginSagaCommand
+    public class CreateSkeletonRs7 : IBeginSagaCommand
     {
         public int? OrganisationId { get; set; }
 

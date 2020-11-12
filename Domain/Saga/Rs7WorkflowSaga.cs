@@ -8,6 +8,7 @@ using Microsoft.Extensions.Internal;
 using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Exceptions;
+using MoE.ECE.Domain.Infrastructure.Extensions;
 using MoE.ECE.Domain.Model.Rs7;
 using MoE.ECE.Domain.Model.ValueObject;
 using Moe.Library.Cqrs;
@@ -63,11 +64,8 @@ namespace MoE.ECE.Domain.Saga
 
         public async Task<Unit> Handle(SubmitRs7ForApproval command, CancellationToken cancellationToken)
         {
-            var rs7 = await _documentSession.LoadAsync<Rs7>(command.Id, cancellationToken);
+            var rs7 = await _documentSession.LoadRs7Async(command.Id, cancellationToken);
 
-            if (rs7 == null)
-                throw DomainExceptions.ResourceNotFoundException<Rs7>(command.Id);
-            
             if (rs7.RollStatus != RollStatus.ExternalDraft && rs7.RollStatus != RollStatus.ExternalNew &&
                 rs7.RollStatus != RollStatus.ExternalReturnedForEdit)
                 throw DomainExceptions.InvalidRollStatusForSubmitRs7ForApproval(rs7.RollStatus);
@@ -90,11 +88,7 @@ namespace MoE.ECE.Domain.Saga
         private async Task<Unit> ApplyStateChange<TDomainEvent>(Guid businessEntityId,
             Action<Rs7> changeState, CancellationToken cancellationToken) where TDomainEvent : IDomainEvent
         {
-            var rs7 = await _documentSession.Query<Rs7>()
-                .SingleOrDefaultAsync(entity => entity.BusinessEntityId == businessEntityId, cancellationToken);
-               
-            if (rs7 == null)
-                throw DomainExceptions.ResourceNotFoundException<Rs7>(businessEntityId);
+            var rs7 = await _documentSession.LoadRs7ByBusinessEntityIdAsync(businessEntityId, cancellationToken);
 
             changeState(rs7);
 

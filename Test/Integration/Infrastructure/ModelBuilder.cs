@@ -172,9 +172,9 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             return model;
         }
 
-        public static CreateRs7 CreateRs7(Action<CreateRs7>? applyCustomSetup = null)
+        public static CreateSkeletonRs7 CreateRs7(Action<CreateSkeletonRs7>? applyCustomSetup = null)
         {
-            var command = new CreateRs7
+            var command = new CreateSkeletonRs7
             {
                 OrganisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId,
                 FundingPeriodYear = DateTimeOffset.Now.Year,

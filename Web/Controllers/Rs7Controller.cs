@@ -75,7 +75,7 @@ namespace MoE.ECE.Web.Controllers
             }
             else
             {
-                command = new CreateRs7
+                command = new CreateSkeletonRs7
                 {
                     OrganisationId = request.OrganisationId,
                     FundingPeriod = request.FundingPeriod,

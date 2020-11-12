@@ -10,7 +10,7 @@ namespace MoE.ECE.Integration.Tests.Chapter
 {
     public class ECEStoryBook : StoryBook<ECEStoryData>
     {
-        public Rs7CreatedChapter A_rs7_has_been_created(Action<CreateRs7>? setUpCommand = null)
+        public Rs7CreatedChapter A_rs7_has_been_created(Action<CreateSkeletonRs7>? setUpCommand = null)
         {
             return When(context =>
             {
@@ -20,12 +20,12 @@ namespace MoE.ECE.Integration.Tests.Chapter
 
                 context.CqrsExecute(command);
 
-                context.StoryData.Rs7Model = context.GetDomainEvent<Rs7Created>();
+                context.StoryData.Rs7Model = context.GetDomainEvent<Rs7SkeletonCreated>();
             }).ProceedToChapter<Rs7CreatedChapter>();
         }
 
         public Rs7CreatedChapter An_rs7_has_been_created_for_an_organisation_type(int organisationTypeId,
-            Action<CreateRs7>? setUpCommand = null)
+            Action<CreateSkeletonRs7>? setUpCommand = null)
         {
             return When(context =>
             {
@@ -40,7 +40,7 @@ namespace MoE.ECE.Integration.Tests.Chapter
 
                 context.CqrsExecute(command);
 
-                context.StoryData.Rs7Model = context.GetDomainEvent<Rs7Created>();
+                context.StoryData.Rs7Model = context.GetDomainEvent<Rs7SkeletonCreated>();
             }).ProceedToChapter<Rs7CreatedChapter>();
         }
 

@@ -20,13 +20,13 @@ using static MoE.ECE.Domain.Exceptions.DomainExceptions;
 namespace MoE.ECE.Domain.Saga
 {
      public class Rs7Saga :
-        IBeginASaga<CreateRs7>,
+        IBeginASaga<CreateSkeletonRs7>,
         IBeginASaga<CreateRs7ZeroReturn>,
         IHandleACommand<SaveAsDraft>,
         IHandleACommand<UpdateRs7>,
        
         IHandleACommand<DiscardRs7>,
-        IHandleACommand<CreateRs7FromExternal>,
+        IHandleACommand<CreateFullRs7>,
         
         IHandleACommand<UpdateRs7EntitlementMonth>,
         IHandleACommand<UpdateRs7Declaration>
@@ -51,20 +51,16 @@ namespace MoE.ECE.Domain.Saga
             _systemClock = systemClock;
         }
 
-        public async Task<int> Handle(CreateRs7 command, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateSkeletonRs7 command, CancellationToken cancellationToken)
         {
             // check the service is eligible for a new rs7
             ServiceAndEligibilityCheck(command.OrganisationId.GetValueOrDefault(), true);
             
-            var rs7 = await LoadRs7(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
+            var rs7 = await LoadOrCreateRs7(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
 
-            rs7.CreatedByExternalUser(_systemClock.UtcNow);
-            
-            await _documentSession.SaveChangesAsync(cancellationToken);
+            rs7.CreateSkeleton(_systemClock.UtcNow, RollStatus.ExternalNew);
 
-            var domainEvent = _mapper.Map<Rs7Created>(rs7);
-            
-            await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
+            await SaveAndRaiseAsync<Rs7SkeletonCreated>(rs7, cancellationToken);
 
             return rs7.Id;
         }
@@ -74,44 +70,35 @@ namespace MoE.ECE.Domain.Saga
             // check the service is eligible for a new rs7. License checks are not performed for Zero-returns.
             ServiceAndEligibilityCheck(command.OrganisationId.GetValueOrDefault(), false);
             
-            var rs7 = await LoadRs7(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
+            var rs7 = await LoadOrCreateRs7(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
 
-            rs7.SetAsZeroReturn(_systemClock.UtcNow);
+            rs7.CreateZeroReturn(_systemClock.UtcNow);
 
-            await _documentSession.SaveChangesAsync(cancellationToken);
-
-            var domainEvent = _mapper.Map<Rs7ZeroReturnCreated>(rs7);
+            await SaveAndRaiseAsync<Rs7ZeroReturnCreated>(rs7, cancellationToken);
             
-            await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
-
             return rs7.Id;
         }
 
-        public async Task<Unit> Handle(CreateRs7FromExternal command, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateFullRs7 command, CancellationToken cancellationToken)
         {
             ServiceAndEligibilityCheck(command.OrganisationId.GetValueOrDefault(), true);
             
-            var rs7 = await LoadRs7(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
+            var rs7 = await LoadOrCreateRs7(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
 
-            rs7.CreatedFromExternalSystem(_systemClock.UtcNow);
+            // Go straight to InternalReadyForReview
+            rs7.CreateSkeleton(_systemClock.UtcNow, RollStatus.InternalReadyForReview);
            
+            // Now map in the details..
             _mapper.Map(command, rs7);
 
-            await _documentSession.SaveChangesAsync(cancellationToken);
-
-            var domainEvent = _mapper.Map<Rs7CreatedFromExternal>(rs7);
+            await SaveAndRaiseAsync<Rs7CreatedFromExternal>(rs7, cancellationToken);
             
-            await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
-
             return Unit.Value;
         }
 
         public async Task<Unit> Handle(DiscardRs7 command, CancellationToken cancellationToken)
         {
-            var rs7 = await _documentSession.LoadAsync<Rs7>(command.Id, cancellationToken);
-
-            if (rs7 == null)
-                throw ResourceNotFoundException<Rs7>(command.Id);
+            var rs7 = await _documentSession.LoadRs7Async(command.Id, cancellationToken);
 
             if (rs7.CanBeDiscarded() == false)
                 throw InvalidRollStatusForDiscard(rs7.RollStatus);
@@ -139,10 +126,7 @@ namespace MoE.ECE.Domain.Saga
 
         public async Task<Unit> Handle(UpdateRs7EntitlementMonth command, CancellationToken cancellationToken)
         {
-            var rs7 = await _documentSession.LoadAsync<Rs7>(command.Id, cancellationToken);
-
-            if (rs7 == null)
-                throw ResourceNotFoundException<Rs7>(command.Id);
+            var rs7 = await _documentSession.LoadRs7Async(command.Id, cancellationToken);
 
             ServiceAndEligibilityCheck(rs7.OrganisationId, true);
      
@@ -154,39 +138,25 @@ namespace MoE.ECE.Domain.Saga
 
             _documentSession.Update(rs7);
             
-            await _documentSession.SaveChangesAsync(cancellationToken);
-
-            var domainEvent = _mapper.Map<Rs7EntitlementMonthUpdated>(rs7);
-            
-            await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
-
+            await SaveAndRaiseAsync<Rs7EntitlementMonthUpdated>(rs7, cancellationToken);
+           
             return Unit.Value;
         }
 
         public async Task<Unit> Handle(UpdateRs7Declaration command, CancellationToken cancellationToken)
         {
-            var rs7 = await _documentSession.LoadAsync<Rs7>(command.Id, cancellationToken);
-
-            if (rs7 == null)
-                throw ResourceNotFoundException<Rs7>(command.Id);
+            var rs7 = await _documentSession.LoadRs7Async(command.Id, cancellationToken);
 
             rs7.UpdateDeclaration(command);
 
-            await _documentSession.SaveChangesAsync(cancellationToken);
-
-            var domainEvent = _mapper.Map<Rs7DeclarationUpdated>(rs7);
-
-            await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
-
+            await SaveAndRaiseAsync<Rs7DeclarationUpdated>(rs7, cancellationToken);
+           
             return Unit.Value;
         }
 
         private async Task<Unit> DoUpdateRs7<TSource>(TSource command, CancellationToken cancellationToken) where TSource : Rs7Model
         {
-            var rs7 = await _documentSession.LoadAsync<Rs7>(command.Id, cancellationToken);
-
-            if (rs7 == null)
-                throw ResourceNotFoundException<Rs7>(command.Id);
+            var rs7 = await _documentSession.LoadRs7Async(command.Id, cancellationToken);
 
             ServiceAndEligibilityCheck(rs7.OrganisationId, true);
 
@@ -197,14 +167,12 @@ namespace MoE.ECE.Domain.Saga
 
             _documentSession.Update(rs7);
             
-            await _documentSession.SaveChangesAsync(cancellationToken);
-
-            var domainEvent = _mapper.Map<Rs7Updated>(rs7);
-
-            await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
+            await SaveAndRaiseAsync<Rs7Updated>(rs7, cancellationToken);
 
             return Unit.Value;
         }
+
+       
 
         /// <summary>
         /// Checks the Service actually exists and when required, checks their license status is eligible for an Rs7.
@@ -241,7 +209,7 @@ namespace MoE.ECE.Domain.Saga
         /// <param name="cancellationToken"></param>
         /// <returns>Returns Null, or an existing New status Rs7 if found</returns>
         /// <exception cref="BadRequestException">Thrown when a duplicate Rs7 is found, and is not New status</exception>
-        private async Task<Rs7> LoadRs7(int organisationId, FundingPeriodMonth fundingPeriod, int fundingPeriodYear, CancellationToken cancellationToken)
+        private async Task<Rs7> LoadOrCreateRs7(int organisationId, FundingPeriodMonth fundingPeriod, int fundingPeriodYear, CancellationToken cancellationToken)
         {
             // check for duplicates
             var rs7 = await _documentSession.Query<Rs7>()
@@ -272,6 +240,15 @@ namespace MoE.ECE.Domain.Saga
             }
 
             return rs7;
+        }
+        
+        private async Task SaveAndRaiseAsync<TDomainEvent>(Rs7 rs7, CancellationToken cancellationToken)where TDomainEvent: IDomainEvent
+        {
+            await _documentSession.SaveChangesAsync(cancellationToken);
+
+            var domainEvent = _mapper.Map<TDomainEvent>(rs7);
+            
+            await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
         }
     }
 }

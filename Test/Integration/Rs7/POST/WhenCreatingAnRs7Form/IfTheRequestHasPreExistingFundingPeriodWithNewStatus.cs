@@ -43,7 +43,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
         [Fact]
         public void ThenDomainEventShouldBePublishedUsingThePreExistingId()
         {
-            A_domain_event_should_be_fired<Rs7Created>()
+            A_domain_event_should_be_fired<Rs7SkeletonCreated>()
                 .Id
                 .ShouldBe(_rs7.Id);
         }

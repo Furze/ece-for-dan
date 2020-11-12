@@ -9,7 +9,7 @@ namespace MoE.ECE.Domain.Model.Rs7
     {
         public Rs7Mapping()
         {
-            CreateMap<CreateRs7FromExternal, Rs7>()
+            CreateMap<CreateFullRs7, Rs7>()
                 .Map(d => d.CurrentRevision, s => s)
                 .Ignore(d => d.Id)
                 .Ignore(d => d.RollStatus)

@@ -7,9 +7,9 @@ using MoE.ECE.Domain.Model.ValueObject;
 
 namespace MoE.ECE.Domain.Command.Rs7
 {
-    public class CreateRs7FromExternalValidator : AbstractValidator<CreateRs7FromExternal>
+    public class CreateFullRs7Validator : AbstractValidator<CreateFullRs7>
     {
-        public CreateRs7FromExternalValidator(IDocumentSession documentSession, ReferenceDataContext referenceDataContext)
+        public CreateFullRs7Validator(IDocumentSession documentSession, ReferenceDataContext referenceDataContext)
         {
             RuleFor(command => command.FundingPeriod)
                 .SetValidator(new ShouldBeAValidNullableEnum<FundingPeriodMonth>())
@@ -22,7 +22,7 @@ namespace MoE.ECE.Domain.Command.Rs7
 
             RuleFor(command => command.EntitlementMonths)
                 .NotEmpty()
-                .When(command => !command.AdvanceMonths.Any())
+                .When(command => command.AdvanceMonths == null || !command.AdvanceMonths.Any())
                 .WithErrorCode("MissingEntitlementMonths")
                 .WithMessage("Must have at least one entitlement month when no advance months specified.");
 

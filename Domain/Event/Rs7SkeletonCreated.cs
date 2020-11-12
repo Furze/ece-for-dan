@@ -1,9 +1,9 @@
 ﻿using MoE.ECE.Domain.Read.Model.Rs7;
 using Moe.Library.Cqrs;
 
-namespace MoE.ECE.Domain.Command.Rs7
+namespace MoE.ECE.Domain.Event
 {
-    public class CreateRs7FromExternal : Rs7Model, ICommand
+    public class Rs7SkeletonCreated : Rs7Model, IDomainEvent
     {
         public string Source { get; set; } = string.Empty;
     }

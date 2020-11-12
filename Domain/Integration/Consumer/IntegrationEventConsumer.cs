@@ -88,7 +88,7 @@ namespace MoE.ECE.Domain.Integration.Consumer
 
         public Task Handle(Rs7Received rs7Received, CancellationToken cancellationToken)
         {
-            var createRs7 = _mapper.Map<CreateRs7FromExternal>(rs7Received);
+            var createRs7 = _mapper.Map<CreateFullRs7>(rs7Received);
 
             return _cqrs.ExecuteAsync(createRs7, cancellationToken);
         }

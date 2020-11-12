@@ -26,7 +26,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
                     rs7.OrganisationId = _organisationId));
         }
 
-        private Rs7Created DomainEvent => A_domain_event_should_be_fired<Rs7Created>();
+        private Rs7SkeletonCreated DomainEvent => A_domain_event_should_be_fired<Rs7SkeletonCreated>();
 
         [Fact]
         public void ThenADomainEventShouldBePublished()

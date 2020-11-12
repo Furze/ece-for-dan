@@ -8,7 +8,7 @@ namespace MoE.ECE.Domain.Read.Model.Rs7
     {
         public Rs7NewRequestModelMapping()
         {
-            CreateMap<CreateRs7, Rs7NewRequestModel>().Ignore(x => x.Rs7Id);
+            CreateMap<CreateSkeletonRs7, Rs7NewRequestModel>().Ignore(x => x.Rs7Id);
         }
     }
 }

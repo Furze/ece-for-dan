@@ -8,7 +8,7 @@ namespace MoE.ECE.Domain.Event
     {
         public Rs7CreatedMapping()
         {
-            CreateMap<Rs7, Rs7Created>()
+            CreateMap<Rs7, Rs7SkeletonCreated>()
                 .Map(d => d.RevisionNumber, s => s.CurrentRevision.RevisionNumber)
                 .Map(d => d.RevisionDate, s => s.CurrentRevision.RevisionDate)
                 .Map(d => d.AdvanceMonths, s => s.CurrentRevision.AdvanceMonths)

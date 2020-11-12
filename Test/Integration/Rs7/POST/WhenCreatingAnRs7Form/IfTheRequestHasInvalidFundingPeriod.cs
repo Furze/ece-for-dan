@@ -19,7 +19,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
 
         protected override void Act()
         {
-            When.Post(Url, new CreateRs7
+            When.Post(Url, new CreateSkeletonRs7
             {
                 FundingPeriod = (FundingPeriodMonth) 5,
                 FundingPeriodYear = 2020,
@@ -30,7 +30,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
         [Fact]
         public void ThenADomainEventShouldNotBePublished()
         {
-            A_domain_event_should_not_be_fired<Rs7Created>();
+            A_domain_event_should_not_be_fired<Rs7SkeletonCreated>();
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
                 .Response
                 .ShouldBe
                 .BadRequest
-                .ForProperty(nameof(CreateRs7.FundingPeriod))
+                .ForProperty(nameof(CreateSkeletonRs7.FundingPeriod))
                 .WithMessage("5 is invalid. These are the valid options: 3, 7, 11");
         }
     }

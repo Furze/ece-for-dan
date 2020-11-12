@@ -7,27 +7,27 @@ using Moe.ECE.Events.Integration.ELI;
 
 namespace MoE.ECE.Domain.Command.Rs7
 {
-    public class CreateRs7FromExternalMapping : Profile
+    public class CreateFullRs7Mapping : Profile
     {
-        public CreateRs7FromExternalMapping()
+        public CreateFullRs7Mapping()
         {
-            CreateMap<Rs7Received, CreateRs7FromExternal>()
-                .ConvertUsing<Rs7ReceivedToCreateRs7FromExternalConverter>();
+            CreateMap<Rs7Received, CreateFullRs7>()
+                .ConvertUsing<Rs7ReceivedToCreateFullRs7Converter>();
         }
     }
 
-    public class Rs7ReceivedToCreateRs7FromExternalConverter : ITypeConverter<Rs7Received, CreateRs7FromExternal>
+    public class Rs7ReceivedToCreateFullRs7Converter : ITypeConverter<Rs7Received, CreateFullRs7>
     {
         private readonly ReferenceDataContext _context;
 
-        public Rs7ReceivedToCreateRs7FromExternalConverter(ReferenceDataContext context)
+        public Rs7ReceivedToCreateFullRs7Converter(ReferenceDataContext context)
         {
             _context = context;
         }
 
-        public CreateRs7FromExternal Convert(Rs7Received source, CreateRs7FromExternal? destination, ResolutionContext context)
+        public CreateFullRs7 Convert(Rs7Received source, CreateFullRs7? destination, ResolutionContext context)
         {
-            destination ??= new CreateRs7FromExternal();
+            destination ??= new CreateFullRs7();
             
             destination.BusinessEntityId = Guid.NewGuid();
             destination.IsAttested = source.IsAttested;

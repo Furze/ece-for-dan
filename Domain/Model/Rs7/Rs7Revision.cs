@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Internal;
 using MoE.ECE.Domain.Model.ValueObject;
 
 namespace MoE.ECE.Domain.Model.Rs7

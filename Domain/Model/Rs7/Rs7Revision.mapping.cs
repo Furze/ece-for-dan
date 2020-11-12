@@ -15,7 +15,7 @@ namespace MoE.ECE.Domain.Model.Rs7
             CreateMap<UpdateRs7, Rs7Revision>()
                 .ConvertUsing<Rs7RevisionConverter>();
 
-            CreateMap<CreateRs7FromExternal, Rs7Revision>()
+            CreateMap<CreateFullRs7, Rs7Revision>()
                .ConvertUsing<CreateRs7RevisionFromExternalConverter>();
 
             CreateMap<UpdateRs7EntitlementMonth, Rs7Revision>()
@@ -152,9 +152,9 @@ namespace MoE.ECE.Domain.Model.Rs7
         }
     }
 
-    public class CreateRs7RevisionFromExternalConverter : ITypeConverter<CreateRs7FromExternal, Rs7Revision>
+    public class CreateRs7RevisionFromExternalConverter : ITypeConverter<CreateFullRs7, Rs7Revision>
     {
-        public Rs7Revision Convert(CreateRs7FromExternal source, Rs7Revision destination, ResolutionContext context)
+        public Rs7Revision Convert(CreateFullRs7 source, Rs7Revision destination, ResolutionContext context)
         {
             destination.Declaration = context.Mapper.Map<Declaration>(source.Declaration);
             destination.IsAttested = source.IsAttested;
