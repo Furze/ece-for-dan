@@ -10,6 +10,20 @@ namespace MoE.ECE.Domain.Model.Rs7
 {
     public class Rs7 : BusinessEntity
     {
+        public Rs7()
+        {
+        }
+
+        public Rs7(int? organisationId, FundingPeriodMonth fundingPeriodMonth, int fundingPeriodYear)
+        {
+            OrganisationId = organisationId.GetValueOrDefault();
+            FundingPeriod = fundingPeriodMonth;
+            FundingPeriodYear = fundingPeriodYear;
+            FundingYear =
+                MoE.ECE.Domain.Model.FundingPeriod.FundingPeriod.GetFundingYearForFundingPeriod(fundingPeriodMonth,
+                    fundingPeriodYear);
+        }
+
         public FundingPeriodMonth FundingPeriod { get; set; }
 
         public int FundingYear { get; set; }
@@ -48,26 +62,30 @@ namespace MoE.ECE.Domain.Model.Rs7
         /// <summary>
         /// Creates a first Revision if one doesn't already exist.
         /// </summary>
-        /// <param name="systemClock"></param>
+        /// <param name="now">the current time</param>
         /// <returns>Returns the first revision just created, or one that already existed</returns>
         /// <exception cref="Exception">Exception is thrown if the Rs7 already has more Revisions than the first</exception>
-        public Rs7Revision CreateFirstRevision(ISystemClock systemClock)
+        public Rs7Revision CreateFirstRevision(DateTimeOffset now)
         {
             if (Revisions.Count > 1)
             {
                 throw new Exception("Rs7 already has multiple revisions");
             }
 
-            return Revisions.Count == 0 ? CreateNewRevision(systemClock) : Revisions.First();
+            var revision = Revisions.Count == 0 ? CreateNewRevision(now) : Revisions.First();
+
+            revision.Source = Source.Internal;
+
+            return revision;
         }
 
-        public Rs7Revision CreateNewRevision(ISystemClock systemClock)
+        public Rs7Revision CreateNewRevision(DateTimeOffset now)
         {
             var rs7Revision = new Rs7Revision
             {
                 Id = Revisions.Count + 1,
                 RevisionNumber = Revisions.Count + 1,
-                RevisionDate = systemClock.UtcNow
+                RevisionDate = now
             };
 
             Revisions.Add(rs7Revision);
@@ -136,6 +154,36 @@ namespace MoE.ECE.Domain.Model.Rs7
         public Rs7Revision GetRevision(int revisionNumber)
         {
             return Revisions.Single(revision => revision.RevisionNumber == revisionNumber);
+        }
+
+        public void SetAsZeroReturn(in DateTimeOffset now)
+        {
+            RollStatus = RollStatus.InternalReadyForReview;
+            ReceivedDate = now;
+
+            // set the first revision
+            var rs7Revision = CreateFirstRevision(now);
+            
+            rs7Revision.IsZeroReturn = true;
+            rs7Revision.IsAttested = false;
+        }
+
+        public void CreatedFromExternalUser(in DateTimeOffset now)
+        {
+            RollStatus = RollStatus.ExternalNew;
+            ReceivedDate = now;
+            // build the first revision
+            CreateFirstRevision(now);
+        }
+
+        public void CreatedFromExternalSystem(in DateTimeOffset now)
+        {
+            // go straight to PendingApproval and received
+            RollStatus = RollStatus.InternalReadyForReview;
+            ReceivedDate = now;
+
+            // build the first revision
+            CreateFirstRevision(now);
         }
     }
 }

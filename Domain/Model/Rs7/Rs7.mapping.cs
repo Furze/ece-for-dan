@@ -10,13 +10,17 @@ namespace MoE.ECE.Domain.Model.Rs7
         public Rs7Mapping()
         {
             CreateMap<CreateRs7FromExternal, Rs7>()
-                .Ignore(dest => dest.Id)
-                .Ignore(dest => dest.Revisions)
-                .Ignore(dest => dest.RowVersion);
+                .Map(d => d.CurrentRevision, s => s)
+                .Ignore(d => d.Id)
+                .Ignore(d => d.RollStatus)
+                .Ignore(d => d.ReceivedDate)
+                .Ignore(d => d.FundingYear)
+                .Ignore(d => d.Revisions)
+                .Ignore(d => d.RowVersion);
 
             CreateMap<Rs7Model, Rs7>()
-                .Ignore(dest => dest.Revisions)
-                .Ignore(dest => dest.RowVersion);
+                .Ignore(d => d.Revisions)
+                .Ignore(d => d.RowVersion);
         }
     }
 }

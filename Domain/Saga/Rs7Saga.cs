@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,7 +10,6 @@ using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Infrastructure.EntityFramework;
 using MoE.ECE.Domain.Infrastructure.Extensions;
-using MoE.ECE.Domain.Model.FundingPeriod;
 using MoE.ECE.Domain.Model.ReferenceData;
 using MoE.ECE.Domain.Model.Rs7;
 using MoE.ECE.Domain.Model.ValueObject;
@@ -55,42 +53,32 @@ namespace MoE.ECE.Domain.Saga
 
         public async Task<int> Handle(CreateRs7 command, CancellationToken cancellationToken)
         {
-            if (!command.OrganisationId.HasValue) // shouldn't actually happen since Command Validators would have caught
-                throw new Exception($"{nameof(command.OrganisationId)} must be given");
-
             // check the service is eligible for a new rs7
-            ServiceAndEligibilityCheck(command.OrganisationId.Value, true);
-            var existingNewRs7 = await ExistingEntityCheck(command.OrganisationId.Value, command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
+            ServiceAndEligibilityCheck(command.OrganisationId.GetValueOrDefault(), true);
+            var existingNewRs7 = await ExistingEntityCheck(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
 
             // build the Rs7 at New status
             Rs7 rs7;
             if (existingNewRs7 == null)
             {
                 // make a new Rs7
-                rs7 = new Rs7
-                {
-                    OrganisationId = command.OrganisationId.Value,
-                    FundingPeriod = command.FundingPeriod,
-                    FundingPeriodYear = command.FundingPeriodYear,
-                    FundingYear = FundingPeriod.GetFundingYearForFundingPeriod(command.FundingPeriod, command.FundingPeriodYear),
-                };
-                
+                rs7 = new Rs7(command.OrganisationId, command.FundingPeriod, command.FundingPeriodYear);
                 _documentSession.Insert(rs7);
             }
             else
             {
                 // just reuse the existing New status Rs7 of the same period.
                 rs7 = existingNewRs7;
+                _documentSession.Update(rs7);
             }
 
-            // build the first revision
-            var rs7Revision = rs7.CreateFirstRevision(_systemClock);
-            rs7Revision.Source = Source.Internal;
-
+            rs7.CreatedFromExternalUser(_systemClock.UtcNow);
+            
             await _documentSession.SaveChangesAsync(cancellationToken);
 
             // Rs7Created must be mapped after save to get new Id
             var domainEvent = _mapper.Map<Rs7Created>(rs7);
+            
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
 
             return rs7.Id;
@@ -98,25 +86,17 @@ namespace MoE.ECE.Domain.Saga
 
         public async Task<int> Handle(CreateRs7ZeroReturn command, CancellationToken cancellationToken)
         {
-            if (!command.OrganisationId.HasValue) // shouldn't actually happen since Command Validators would have caught
-                throw new Exception($"{nameof(command.OrganisationId)} must be given");
-
             // check the service is eligible for a new rs7. License checks are not performed for Zero-returns.
-            ServiceAndEligibilityCheck(command.OrganisationId.Value, false);
-            var existingNewRs7 = await ExistingEntityCheck(command.OrganisationId.Value, command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
+            ServiceAndEligibilityCheck(command.OrganisationId.GetValueOrDefault(), false);
+            
+            var existingNewRs7 = await ExistingEntityCheck(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
 
             // build the new Rs7 at Ready for Review status
             Rs7 rs7;
             if (existingNewRs7 == null)
             {
                 // make a new Rs7
-                rs7 = new Rs7
-                {
-                    OrganisationId = command.OrganisationId.Value,
-                    FundingPeriod = command.FundingPeriod,
-                    FundingPeriodYear = command.FundingPeriodYear,
-                    FundingYear = FundingPeriod.GetFundingYearForFundingPeriod(command.FundingPeriod, command.FundingPeriodYear),
-                };
+                rs7 = new Rs7(command.OrganisationId, command.FundingPeriod, command.FundingPeriodYear);
                 _documentSession.Insert(rs7);
             }
             else
@@ -126,19 +106,13 @@ namespace MoE.ECE.Domain.Saga
                 _documentSession.Update(rs7);
             }
 
-            rs7.RollStatus = RollStatus.InternalReadyForReview;
-            rs7.ReceivedDate = _systemClock.UtcNow;
-
-            // set the first revision
-            var rs7Revision = rs7.CreateFirstRevision(_systemClock);
-            rs7Revision.Source = Source.Internal;
-            rs7Revision.IsZeroReturn = true;
-            rs7Revision.IsAttested = false;
+            rs7.SetAsZeroReturn(_systemClock.UtcNow);
 
             await _documentSession.SaveChangesAsync(cancellationToken);
 
             // Rs7ZeroReturnCreated must be mapped after save to get new Id
             var domainEvent = _mapper.Map<Rs7ZeroReturnCreated>(rs7);
+            
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
 
             return rs7.Id;
@@ -146,41 +120,34 @@ namespace MoE.ECE.Domain.Saga
 
         public async Task<Unit> Handle(CreateRs7FromExternal command, CancellationToken cancellationToken)
         {
-            if (!command.OrganisationId.HasValue) // shouldn't actually happen since Command Validators would have caught
-                throw new Exception($"{nameof(command.OrganisationId)} must be given");
-
-            ServiceAndEligibilityCheck(command.OrganisationId.Value, true);
-            var existingNewRs7 = await ExistingEntityCheck(command.OrganisationId.Value, command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
+            ServiceAndEligibilityCheck(command.OrganisationId.GetValueOrDefault(), true);
+            var existingNewRs7 = await ExistingEntityCheck(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
 
             // build the new Rs7 from the command, at PendingApproval status
             Rs7 rs7;
             if (existingNewRs7 == null)
             {
                 // make a new Rs7
-                rs7 = _mapper.Map<Rs7>(command);
-                rs7.FundingYear = FundingPeriod.GetFundingYearForFundingPeriod(rs7.FundingPeriod, rs7.FundingPeriodYear);
+                rs7 = new Rs7(command.OrganisationId, command.FundingPeriod, command.FundingPeriodYear);
+                
                 _documentSession.Insert(rs7);
             }
             else
             {
                 // just reuse the existing New status Rs7 of the same period.
                 rs7 = existingNewRs7;
-                rs7 = _mapper.Map(command, rs7);
                 _documentSession.Update(rs7);
             }
 
-            // go straight to PendingApproval and received
-            rs7.RollStatus = RollStatus.InternalReadyForReview;
-            rs7.ReceivedDate = _systemClock.UtcNow;
-
-            // build the first revision
-            var rs7Revision = rs7.CreateFirstRevision(_systemClock);
-            _mapper.Map(command, rs7Revision);
+            rs7.CreatedFromExternalSystem(_systemClock.UtcNow);
+           
+            _mapper.Map(command, rs7);
 
             await _documentSession.SaveChangesAsync(cancellationToken);
 
             // Rs7CreatedFromExternal must be mapped after save to get new Id
             var domainEvent = _mapper.Map<Rs7CreatedFromExternal>(rs7);
+            
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
 
             return Unit.Value;
@@ -379,7 +346,7 @@ namespace MoE.ECE.Domain.Saga
                 .Where(rs7 => rs7.OrganisationId == organisationId
                             && rs7.FundingPeriod == fundingPeriod
                             && rs7.FundingPeriodYear == fundingPeriodYear)
-                .FirstOrDefaultAsync(cancellationToken);
+                .SingleOrDefaultAsync(cancellationToken);
 
             if (existingRs7 != null)
             {
