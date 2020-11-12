@@ -13,5 +13,15 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                     .IgnoreField("RevisionDate")
                     .IgnoreField("RequestId");
         }
+
+        public static MatchOptions CollectionModelRs7Model(MatchOptions options)
+        {
+            return options
+                .IgnoreFields("Data.[*].Id")
+                .IgnoreFields("Data.[*].BusinessEntityId")
+                .IgnoreFields("Data.[*].ReceivedDate")
+                .IgnoreFields("Data.[*].RevisionDate")
+                .IgnoreFields("Data.[*].RequestId");
+        }
     }
 }

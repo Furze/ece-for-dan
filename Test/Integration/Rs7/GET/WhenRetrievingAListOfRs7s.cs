@@ -49,5 +49,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
             response.Pagination.PageNumber.ShouldBe(1);
             response.Pagination.PageSize.ShouldBe(10);
         }
+        
+        [Fact]
+        public void Then_the_response_snapshot_should_be_ok()
+        {
+            Then.Snapshot().Match<CollectionModel<Rs7Model>>(IgnoreFieldsFor.CollectionModelRs7Model);
+        }
     }
 }

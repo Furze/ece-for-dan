@@ -45,5 +45,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
             Then
                 .Response.Content<Rs7Model>().RollStatus.ShouldBe(RollStatus.Declined);
         }
+        
+        [Fact]
+        public void Then_the_response_snapshot_should_be_ok()
+        {
+            Then.Snapshot().Match<Rs7Model>(IgnoreFieldsFor.Rs7Model);
+        }
     }
 }

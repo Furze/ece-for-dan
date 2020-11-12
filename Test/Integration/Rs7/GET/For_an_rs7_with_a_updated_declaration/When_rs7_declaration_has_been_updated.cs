@@ -48,5 +48,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_rs7_with_a_updated_declaratio
             response.Declaration?.ContactPhone.ShouldBe("123");
             response.Declaration?.FullName.ShouldBe("joe bloggs");
         }
+        
+        [Fact]
+        public void Then_the_response_snapshot_should_be_ok()
+        {
+            Then.Snapshot().Match<Rs7Model>(IgnoreFieldsFor.Rs7Model);
+        }
     }
 }

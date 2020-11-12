@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Bard;
 using MoE.ECE.CLI.Data;
 using MoE.ECE.Domain.Event;
