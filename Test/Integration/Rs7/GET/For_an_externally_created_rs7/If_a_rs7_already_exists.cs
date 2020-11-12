@@ -56,13 +56,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
         [Fact]
         public void Then_the_response_should_be_ok()
         {
-            Then.Response.ShouldBe.Ok();
+            Then.Response.ShouldBe.Ok<Rs7Model>();
         }
         
         [Fact]
         public void Then_the_response_snapshot_should_be_ok()
         {
-            Then.Snapshot().Match<Rs7Model>();
+            Then.Snapshot().Match<Rs7Model>(IgnoreFieldsFor.Rs7Model);
         }
         
         [Fact]
