@@ -55,28 +55,13 @@ namespace MoE.ECE.Domain.Saga
         {
             // check the service is eligible for a new rs7
             ServiceAndEligibilityCheck(command.OrganisationId.GetValueOrDefault(), true);
-            var existingNewRs7 = await ExistingEntityCheck(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
+            
+            var rs7 = await LoadRs7(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
 
-            // build the Rs7 at New status
-            Rs7 rs7;
-            if (existingNewRs7 == null)
-            {
-                // make a new Rs7
-                rs7 = new Rs7(command.OrganisationId, command.FundingPeriod, command.FundingPeriodYear);
-                _documentSession.Insert(rs7);
-            }
-            else
-            {
-                // just reuse the existing New status Rs7 of the same period.
-                rs7 = existingNewRs7;
-                _documentSession.Update(rs7);
-            }
-
-            rs7.CreatedFromExternalUser(_systemClock.UtcNow);
+            rs7.CreatedByExternalUser(_systemClock.UtcNow);
             
             await _documentSession.SaveChangesAsync(cancellationToken);
 
-            // Rs7Created must be mapped after save to get new Id
             var domainEvent = _mapper.Map<Rs7Created>(rs7);
             
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
@@ -89,28 +74,12 @@ namespace MoE.ECE.Domain.Saga
             // check the service is eligible for a new rs7. License checks are not performed for Zero-returns.
             ServiceAndEligibilityCheck(command.OrganisationId.GetValueOrDefault(), false);
             
-            var existingNewRs7 = await ExistingEntityCheck(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
-
-            // build the new Rs7 at Ready for Review status
-            Rs7 rs7;
-            if (existingNewRs7 == null)
-            {
-                // make a new Rs7
-                rs7 = new Rs7(command.OrganisationId, command.FundingPeriod, command.FundingPeriodYear);
-                _documentSession.Insert(rs7);
-            }
-            else
-            {
-                // just reuse the existing New status Rs7 of the same period.
-                rs7 = existingNewRs7;
-                _documentSession.Update(rs7);
-            }
+            var rs7 = await LoadRs7(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
 
             rs7.SetAsZeroReturn(_systemClock.UtcNow);
 
             await _documentSession.SaveChangesAsync(cancellationToken);
 
-            // Rs7ZeroReturnCreated must be mapped after save to get new Id
             var domainEvent = _mapper.Map<Rs7ZeroReturnCreated>(rs7);
             
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
@@ -121,23 +90,8 @@ namespace MoE.ECE.Domain.Saga
         public async Task<Unit> Handle(CreateRs7FromExternal command, CancellationToken cancellationToken)
         {
             ServiceAndEligibilityCheck(command.OrganisationId.GetValueOrDefault(), true);
-            var existingNewRs7 = await ExistingEntityCheck(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
-
-            // build the new Rs7 from the command, at PendingApproval status
-            Rs7 rs7;
-            if (existingNewRs7 == null)
-            {
-                // make a new Rs7
-                rs7 = new Rs7(command.OrganisationId, command.FundingPeriod, command.FundingPeriodYear);
-                
-                _documentSession.Insert(rs7);
-            }
-            else
-            {
-                // just reuse the existing New status Rs7 of the same period.
-                rs7 = existingNewRs7;
-                _documentSession.Update(rs7);
-            }
+            
+            var rs7 = await LoadRs7(command.OrganisationId.GetValueOrDefault(), command.FundingPeriod, command.FundingPeriodYear, cancellationToken);
 
             rs7.CreatedFromExternalSystem(_systemClock.UtcNow);
            
@@ -145,7 +99,6 @@ namespace MoE.ECE.Domain.Saga
 
             await _documentSession.SaveChangesAsync(cancellationToken);
 
-            // Rs7CreatedFromExternal must be mapped after save to get new Id
             var domainEvent = _mapper.Map<Rs7CreatedFromExternal>(rs7);
             
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
@@ -155,8 +108,6 @@ namespace MoE.ECE.Domain.Saga
 
         public async Task<Unit> Handle(DiscardRs7 command, CancellationToken cancellationToken)
         {
-            // This is rubbish that you have to load the entire entity to delete it. Without it EF does not
-            // delete the child collections and you get SQL foreign key exceptions...!!!
             var rs7 = await _documentSession.LoadAsync<Rs7>(command.Id, cancellationToken);
 
             if (rs7 == null)
@@ -211,7 +162,8 @@ namespace MoE.ECE.Domain.Saga
             }
 
             // apply the updates
-            _mapper.Map(command, rs7.CurrentRevision);
+            _mapper.Map(command, rs7);
+            
             rs7.CurrentRevision.IsZeroReturn = false;
             rs7.CurrentRevision.UpdateRevisionDate(_systemClock);
 
@@ -339,28 +291,37 @@ namespace MoE.ECE.Domain.Saga
         /// <param name="cancellationToken"></param>
         /// <returns>Returns Null, or an existing New status Rs7 if found</returns>
         /// <exception cref="BadRequestException">Thrown when a duplicate Rs7 is found, and is not New status</exception>
-        private async Task<Rs7?> ExistingEntityCheck(int organisationId, FundingPeriodMonth fundingPeriod, int fundingPeriodYear, CancellationToken cancellationToken)
+        private async Task<Rs7> LoadRs7(int organisationId, FundingPeriodMonth fundingPeriod, int fundingPeriodYear, CancellationToken cancellationToken)
         {
             // check for duplicates
-            var existingRs7 = await _documentSession.Query<Rs7>()
-                .Where(rs7 => rs7.OrganisationId == organisationId
-                            && rs7.FundingPeriod == fundingPeriod
-                            && rs7.FundingPeriodYear == fundingPeriodYear)
+            var rs7 = await _documentSession.Query<Rs7>()
+                .Where(r => r.OrganisationId == organisationId
+                            && r.FundingPeriod == fundingPeriod
+                            && r.FundingPeriodYear == fundingPeriodYear)
                 .SingleOrDefaultAsync(cancellationToken);
 
-            if (existingRs7 != null)
+            if (rs7 == null)
+            {
+                // make a new Rs7
+                rs7 = new Rs7(organisationId, fundingPeriod, fundingPeriodYear);
+                
+                _documentSession.Insert(rs7);
+            }
+            else
             {
                 // if one already exists with New status, it's likely dormant and can be reused.
-                if (existingRs7.RollStatus == RollStatus.ExternalNew)
+                if (rs7.RollStatus == RollStatus.ExternalNew)
                 {
-                    return existingRs7;
+                    _documentSession.Update(rs7);
                 }
-
-                // otherwise, throw duplicate error. A new one cannot be created
-                throw DuplicateResourceFundingPeriod<Rs7>(organisationId, fundingPeriod.ToString(), fundingPeriodYear);
+                else
+                {
+                    // otherwise, throw duplicate error. A new one cannot be created
+                    throw DuplicateResourceFundingPeriod<Rs7>(organisationId, fundingPeriod.ToString(), fundingPeriodYear);    
+                }
             }
 
-            return null;
+            return rs7;
         }
     }
 }

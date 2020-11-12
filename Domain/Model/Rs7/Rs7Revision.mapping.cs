@@ -67,7 +67,7 @@ namespace MoE.ECE.Domain.Model.Rs7
                         $"The provided entitlement month number {sourceMonth.MonthNumber} and funding period year {sourceMonth.Year} is not valid for the given Rs7.");
                 }
 
-                MappingFunctions.MapEntitlementMonthDays(sourceMonth, destinationMonth);
+                MapEntitlementMonthDays(sourceMonth, destinationMonth);
             }
         }
 

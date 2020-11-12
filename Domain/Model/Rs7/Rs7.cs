@@ -168,7 +168,7 @@ namespace MoE.ECE.Domain.Model.Rs7
             rs7Revision.IsAttested = false;
         }
 
-        public void CreatedFromExternalUser(in DateTimeOffset now)
+        public void CreatedByExternalUser(in DateTimeOffset now)
         {
             RollStatus = RollStatus.ExternalNew;
             ReceivedDate = now;
