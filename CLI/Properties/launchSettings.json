@@ -1,0 +1,13 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "CLI Migrate": {
+      "commandName": "Project",
+      "commandLineArgs": "migrate  -md ../../../../CLI/migrations"
+    },
+    "CLI Patch": {
+      "commandName": "Project",
+      "commandLineArgs": "patch -pn initial_migration -md ../../../"
+    }
+  }
+}

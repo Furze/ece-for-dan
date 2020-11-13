@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace MoE.ECE.Web.Bootstrap
 {
-    public class Startup : ECEApiStartup
+    public class Startup : EceApiStartup
     {
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
             : base(configuration, environment)

@@ -32,7 +32,7 @@ namespace MoE.ECE.Web.Infrastructure.Validation
                         .Where(e => e.Value.Errors.Any())
                         .Select(e => e.ToError());
 
-                    return new BadRequestObjectResult(new ErrorResponse {Errors = errors});
+                    return new BadRequestObjectResult(new ErrorResponse {Errors = errors.ToArray()});
                 };
             });
 
@@ -45,7 +45,7 @@ namespace MoE.ECE.Web.Infrastructure.Validation
 
             // Built-in data annotations do not get intercepted with an error code attached
             // to the error message; so we have to check.
-            var hasErrorCode = messageParts.Count() == 2;
+            var hasErrorCode = messageParts.Length == 2;
 
             return new Error
             {

@@ -31,7 +31,7 @@ namespace MoE.ECE.Web.Bootstrap
             settings.ConnectionString = connectionStringFactory.GetConnectionString();
 
             return DocumentStore.For(storeOptions =>
-                ECEMartenRegistry.ApplyDefaultConfiguration(storeOptions, settings, serviceProvider));
+                EceMartenRegistry.ApplyDefaultConfiguration(storeOptions, settings, serviceProvider));
         }
     }
 }

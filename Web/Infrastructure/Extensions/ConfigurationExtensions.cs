@@ -19,8 +19,6 @@ namespace MoE.ECE.Web.Infrastructure.Extensions
                 .Bind(section)
                 .ValidateDataAnnotations();
             
-            //services.Configure<T>(section);
-            
             return services;
         }
 

@@ -1,46 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MoE.ECE.Domain.Model.ReferenceData
 {
     public class EceService
     {
-        public int RefOrganisationId { get; set; }
+       public int RefOrganisationId { get; set; }
         public string OrganisationName { get; set; } = null!;
         public string OrganisationNumber { get; set; } = null!;
         public int OrganisationTypeId { get; set; }
         public string? OrganisationTypeDescription { get; set; }
-        public int? OrganisationSectorRoleId { get; set; }
-        public string? OrganisationSectorRoleDescription { get; set; }
         public int OrganisationStatusId { get; set; }
         public string? OrganisationStatusDescription { get; set; }
-        public string? ExternalProviderId { get; set; }
-        public long? Nzbn { get; set; }
-        public int? RegionId { get; set; }
-        public string? RegionDescription { get; set; }
-        public DateTimeOffset? OpenDate { get; set; }
-        public DateTimeOffset? EceServiceStatusDate { get; set; }
-        public int? EceServiceStatusReasonId { get; set; }
-        public string? EceServiceStatusReasonDescription { get; set; }
-        public string? PhoneNumber { get; set; }
-        public string? FaxNumber { get; set; }
-        public string? Email { get; set; }
-        public string? OtherEmail { get; set; }
-        public string? Website { get; set; }
         public int? PrimaryLanguageId { get; set; }
         public string? PrimaryLanguageDescription { get; set; }
         public bool? IsFunded { get; set; }
         public int? EceServiceProviderId { get; set; }
         public string? EceServiceProviderNumber { get; set; }
         public string? EceServiceProviderName { get; set; }
-        public string? LocationAddressLine1 { get; set; }
-        public string? LocationAddressLine2 { get; set; }
-        public string? LocationAddressLine3 { get; set; }
-        public string? LocationAddressLine4 { get; set; }
-        public string? PostalAddressLine1 { get; set; }
-        public string? PostalAddressLine2 { get; set; }
-        public string? PostalAddressLine3 { get; set; }
-        public string? PostalAddressLine4 { get; set; }
         public int? ServiceProvisionTypeId { get; set; }
         public string? ServiceProvisionTypeDescription { get; set; }
         public int ApplicationStatusId { get; set; }
@@ -52,14 +30,108 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public int? EquityIndexId { get; set; }
         public string? EquityIndexDescription { get; set; }
         public decimal? IsolationIndex { get; set; }
-        public bool? InstallmentPayments { get; set; }
-        public int? EcQualityLevelId { get; set; }
-        public string? EcQualityLevelDescription { get; set; }
-        public bool? TeacherLedEligibleToOfferFree { get; set; }
-        public bool? ParentLedEligibleToOfferFree { get; set; }
-        public int? EceServiceProviderOwnershipTypeId { get; set; }
-        public string? EceServiceProviderOwnershipTypeDescription { get; set; }
 
-        public virtual ICollection<EceOperatingSession> OperatingSessions { get; set; } = new List<EceOperatingSession>();
+        public virtual ICollection<EceOperatingSession> OperatingSessions { get; set; } = null!;
+
+        public bool IsAttestationRequired =>
+            OrganisationTypeId == OrganisationType.CasualEducationAndCare ||
+            OrganisationTypeId == OrganisationType.EducationAndCare ||
+            OrganisationTypeId == OrganisationType.Hospitalbased;
+        
+        public bool IsParentLed 
+        {
+            get
+            {
+                return OrganisationTypeId switch
+                {
+                    OrganisationType.Playcentre => LicenceClassId != LicenceClass.Mixed,
+                    _ => false
+                };
+            }
+        }
+
+        public bool IsAllDays
+        {
+            get
+            {
+                return OrganisationTypeId switch
+                {
+                    OrganisationType.CasualEducationAndCare => LicenceClassId != LicenceClass.Sessional,
+                    OrganisationType.EducationAndCare => LicenceClassId != LicenceClass.Sessional,
+                    OrganisationType.Hospitalbased => LicenceClassId != LicenceClass.Sessional,
+                    OrganisationType.FreeKindergarten => LicenceClassId != LicenceClass.Sessional,
+                    OrganisationType.Playcentre => false,
+                    OrganisationType.HomebasedNetwork => true,
+                    _ => true
+                };
+            }
+        }
+        
+        public bool IsSessional
+        {
+            get
+            {
+                return OrganisationTypeId switch
+                {
+                    OrganisationType.CasualEducationAndCare => LicenceClassId != LicenceClass.AllDay,
+                    OrganisationType.EducationAndCare => LicenceClassId != LicenceClass.AllDay,
+                    OrganisationType.Hospitalbased => LicenceClassId != LicenceClass.AllDay,
+                    OrganisationType.FreeKindergarten => LicenceClassId != LicenceClass.AllDay,
+                    OrganisationType.Playcentre => false,
+                    OrganisationType.HomebasedNetwork => false,
+                    _ => true
+                };
+            }
+        }
+
+        public int ParentLedMaxFundingDays(int month, int year)
+        {
+            return CalculateMaximumFundingDays(IsParentLed, month, year, SessionType.Sessional);
+        }
+        
+        public int AllDaysMaxFundingDays(int month, int year)
+        {
+            return CalculateMaximumFundingDays(IsAllDays, month, year, SessionType.AllDay);
+        }
+        
+        public int SessionalMaxFundingDays(int month, int year)
+        {
+            return CalculateMaximumFundingDays(IsSessional, month, year, SessionType.Sessional);
+        }
+        
+        public int CalculateMaximumFundingDays(bool isServiceEligible,
+            int month, int year,
+            int sessionTypeId
+        )
+        {
+            if (isServiceEligible == false) return 0;
+            if (month < 1 || month > 12 || year < 1 || year > 9999) return 0;
+            
+            var numberOfDaysInMonth = DateTime.DaysInMonth(year, month);
+            
+            var daysOfWeekWithSessions = OperatingSessions.Where(operatingSession =>
+                operatingSession.SessionTypeId == sessionTypeId)
+                .ToArray();
+            
+            var availableDays = 0;
+
+            if (!daysOfWeekWithSessions.Any()) return availableDays;
+            
+            for (var dayOfMonth = 1; dayOfMonth <= numberOfDaysInMonth; dayOfMonth++)
+            {
+                // Get the day of the week eg. Sunday = 0, Monday = 1 etc..
+                var dayOfWeek = new DateTime(
+                    year,
+                    month,
+                    dayOfMonth
+                ).DayOfWeek;
+
+                // Check whether the day of the week is allowed a session on that day of the week.
+                if (daysOfWeekWithSessions.Any(session => session.DayOfWeek == dayOfWeek))
+                    availableDays++;
+            }
+
+            return availableDays;
+        }
     }
 }

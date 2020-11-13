@@ -55,7 +55,7 @@ namespace MoE.ECE.Web.Bootstrap
                 {
                     options.Authority = settings.Authority;
 
-                    options.ClientId = "schools-api";
+                    options.ClientId = "ece-api";
                     options.ClientSecret = "secret";
                     options.ResponseType = "code";
                     options.UsePkce = true;

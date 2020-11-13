@@ -23,7 +23,7 @@ namespace MoE.ECE.Web.Bootstrap
                 .AddCodedFluentValidation(options =>
                 {
                     options.RegisterValidatorsFromAssemblyContaining<IAssemblyMarker>();
-                    options.RegisterValidatorsFromAssemblyContaining<MoE.ECE.Domain.IAssemblyMarker>();
+                    options.RegisterValidatorsFromAssemblyContaining<Domain.IAssemblyMarker>();
                 })
                 .AddApplicationPart(typeof(IAssemblyMarker).Assembly);
 
@@ -32,7 +32,6 @@ namespace MoE.ECE.Web.Bootstrap
 
         public override void Configure(IApplicationBuilder app)
         {
-            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
             var dashboardOptions = new DashboardOptions();

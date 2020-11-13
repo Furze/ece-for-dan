@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using MoE.ECE.Domain.Services.Opa;
+using MoE.ECE.Domain.Infrastructure.Services.Opa;
 using MoE.ECE.Web.Infrastructure.Extensions;
 using MoE.ECE.Web.Infrastructure.Opa;
 using OpaSettings = MoE.ECE.Web.Infrastructure.Settings.OpaSettings;

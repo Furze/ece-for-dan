@@ -217,7 +217,7 @@ namespace MoE.ECE.CLI.Commands
             Migrations.EnsureDatabaseExists(connectionString);
 
             return DocumentStore.For(
-                options => ECEMartenRegistry.ApplyDefaultConfiguration(options, martenSettings));
+                options => EceMartenRegistry.ApplyDefaultConfiguration(options, martenSettings));
         }
     }
 }

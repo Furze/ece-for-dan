@@ -46,7 +46,7 @@ stages:
           displayName: 'Set OPA Settings For Integration Tests'
           inputs:
             JsonWorkingDir: '$(Build.SourcesDirectory)/Test/Integration'
-            JsonTargetFilters: appsettings.json
+            JsonTargetFilters: appsettings.integration-test.json
             JsonPatchContent: |
               = /OpaSettings/UserName => "ersuser"
               = /OpaSettings/UserSecret => "$(OPASettings--UserSecret)"               

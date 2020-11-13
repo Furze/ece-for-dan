@@ -3,8 +3,8 @@ using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using MoE.ECE.Domain.Abstractions;
 using MoE.ECE.Domain.Infrastructure;
+using MoE.ECE.Domain.Infrastructure.Abstractions;
 using MoE.ECE.Domain.Integration;
 using MoE.ECE.Web.Infrastructure;
 using MoE.ECE.Web.Infrastructure.Authorisation;
@@ -19,7 +19,6 @@ namespace MoE.ECE.Web.Bootstrap
         public override void ConfigureServices(IServiceCollection services)
         {
             // Hosted Services
-            //services.AddHostedService<FirstWorkflowConsumer>();
             
             // Singleton
             services.AddSingleton(Configuration);

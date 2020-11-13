@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using MoE.ECE.Domain.Services.Opa;
+using MoE.ECE.Domain.Infrastructure.Services.Opa;
 using Newtonsoft.Json;
 
 namespace MoE.ECE.Web.Infrastructure.Opa

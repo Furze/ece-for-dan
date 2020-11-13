@@ -8,7 +8,7 @@ using MoE.ECE.CLI.Commands;
 
 namespace MoE.ECE.CLI
 {
-    internal class Program
+    public class Program
     {
         private static ServiceProvider _serviceProvider = null!;
         private static IConfigurationRoot? _configuration;

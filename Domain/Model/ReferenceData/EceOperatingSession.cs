@@ -18,7 +18,19 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public string? SessionProvisionTypeDescription { get; set; }
         public int FundedHours { get; set; }
         public int OperatingHours { get; set; }
-
         public virtual EceService EceService { get; set; } = null!;
+        
+        public DayOfWeek DayOfWeek =>
+            SessionDayDescription switch
+            {
+                "Monday" => DayOfWeek.Monday,
+                "Tuesday" => DayOfWeek.Tuesday,
+                "Wednesday" => DayOfWeek.Wednesday,
+                "Thursday" => DayOfWeek.Thursday,
+                "Friday" => DayOfWeek.Friday,
+                "Saturday" => DayOfWeek.Saturday,
+                "Sunday" => DayOfWeek.Sunday,
+                var _ => throw new Exception($"Invalid SessionDayDescription - '{SessionDayDescription}'")
+            };
     }
 }
