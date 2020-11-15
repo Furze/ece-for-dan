@@ -10,10 +10,15 @@ namespace MoE.ECE.Domain.Model.Rs7
 
         public bool? IsDeclaredTrue { get; set; }
 
-        public Declaration Clone() =>
-            new Declaration
+        public Declaration Clone()
+        {
+            return new Declaration
             {
-                FullName = FullName, ContactPhone = ContactPhone, Role = Role, IsDeclaredTrue = IsDeclaredTrue
+                FullName = FullName,
+                ContactPhone = ContactPhone,
+                Role = Role,
+                IsDeclaredTrue = IsDeclaredTrue
             };
+        }
     }
 }

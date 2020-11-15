@@ -11,12 +11,19 @@ namespace MoE.ECE.Domain.Model.Rs7
 
         public ICollection<Rs7EntitlementDay> Days { get; set; } = new List<Rs7EntitlementDay>();
 
-        public void AddDay(Rs7EntitlementDay match) => Days.Add(match);
+        public void AddDay(Rs7EntitlementDay match)
+        {
+            Days.Add(match);
+        }
 
-        internal Rs7EntitlementMonth Clone() =>
-            new Rs7EntitlementMonth
+        internal Rs7EntitlementMonth Clone()
+        {
+            return new Rs7EntitlementMonth
             {
-                MonthNumber = MonthNumber, Year = Year, Days = Days.Select(d => d.Clone()).ToList()
+                MonthNumber = MonthNumber,
+                Year = Year,
+                Days = Days.Select(d => d.Clone()).ToList()
             };
+        }
     }
 }

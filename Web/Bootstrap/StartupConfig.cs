@@ -19,10 +19,7 @@ namespace MoE.ECE.Web.Bootstrap
             get
             {
                 if (_configuration == null)
-                {
                     throw new InvalidOperationException($"{nameof(Configuration)} not set.");
-                }
-
                 return _configuration;
             }
             set => _configuration = value;

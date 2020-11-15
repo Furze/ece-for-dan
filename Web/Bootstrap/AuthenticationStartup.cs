@@ -17,22 +17,26 @@ namespace MoE.ECE.Web.Bootstrap
 {
     public class LoggingStartup : StartupConfig
     {
-        public override void ConfigureServices(IServiceCollection services) =>
+        public override void ConfigureServices(IServiceCollection services)
+        {
             // The recommended approach is to configure Serilog in the program.            
             // AppInsights will get instrumentation key from env var: APPINSIGHTS_INSTRUMENTATIONKEY
             services.AddApplicationInsightsTelemetry();
+        }
 
-        public override void Configure(IApplicationBuilder app) =>
+        public override void Configure(IApplicationBuilder app)
+        {
             app.ApplicationServices
                 .GetService<ILoggerFactory>()
                 .AddSerilog();
+        }
     }
 
     public class AuthenticationStartup : StartupConfig
     {
         public override void ConfigureServices(IServiceCollection services)
         {
-            OidcSettings? settings = Configuration.BindFor<OidcSettings>();
+            var settings = Configuration.BindFor<OidcSettings>();
 
             if (Environment.IsDevelopment())
             {
@@ -66,7 +70,7 @@ namespace MoE.ECE.Web.Bootstrap
                         ValidateAudience = true,
                         ValidateIssuer = true,
                         ValidIssuer = settings.Issuer,
-                        ValidateIssuerSigningKey = true
+                        ValidateIssuerSigningKey = true,
                     };
                 })
                 .AddJwtBearer(options =>
@@ -89,6 +93,9 @@ namespace MoE.ECE.Web.Bootstrap
                 });
         }
 
-        public override void Configure(IApplicationBuilder app) => app.UseAuthentication();
+        public override void Configure(IApplicationBuilder app)
+        {
+            app.UseAuthentication();
+        }
     }
 }

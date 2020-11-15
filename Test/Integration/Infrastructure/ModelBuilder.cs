@@ -10,16 +10,15 @@ using FundingPeriodMonth = MoE.ECE.Domain.Model.ValueObject.FundingPeriodMonth;
 
 namespace MoE.ECE.Integration.Tests.Infrastructure
 {
-    public class ModelBuilder
+     public class ModelBuilder
     {
-        public static UpdateRs7EntitlementMonth UpdateRs7EntitlementMonth(Rs7Model rs7Model, int monthIndex,
-            Action<UpdateRs7EntitlementMonth>? applyCustomerSetup = null)
+        public static UpdateRs7EntitlementMonth UpdateRs7EntitlementMonth(Rs7Model rs7Model, int monthIndex, Action<UpdateRs7EntitlementMonth>? applyCustomerSetup = null)
         {
-            Rs7Model? clonedRs7Model = Clone(rs7Model);
+            var clonedRs7Model = Clone(rs7Model);
 
-            Rs7EntitlementMonthModel? entitlementMonth1 = clonedRs7Model.EntitlementMonths?.ElementAt(monthIndex);
+            var entitlementMonth1 = clonedRs7Model.EntitlementMonths?.ElementAt(monthIndex);
 
-            UpdateRs7EntitlementMonth? command = new UpdateRs7EntitlementMonth
+            var command = new UpdateRs7EntitlementMonth
             {
                 Year = entitlementMonth1?.Year ?? 0,
                 MonthNumber = entitlementMonth1?.MonthNumber ?? 0,
@@ -31,9 +30,12 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         public static UpdateRs7Declaration UpdateRs7Declaration(Action<UpdateRs7Declaration>? applyCustomerSetup = null)
         {
-            UpdateRs7Declaration? command = new UpdateRs7Declaration
+            var command = new UpdateRs7Declaration
             {
-                Role = "role", ContactPhone = "123", FullName = "joe bloggs", IsDeclaredTrue = true
+                Role = "role",
+                ContactPhone = "123",
+                FullName = "joe bloggs",
+                IsDeclaredTrue = true
             };
             applyCustomerSetup?.Invoke(command);
             return command;
@@ -41,24 +43,22 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         public Rs7PeerReject Rs7PeerReject(Guid businessEntityId, Action<Rs7PeerReject>? applyCustomSetup = null)
         {
-            Rs7PeerReject? command = new Rs7PeerReject(businessEntityId);
+            var command = new Rs7PeerReject(businessEntityId);
             applyCustomSetup?.Invoke(command);
             return command;
         }
-
-        public static SubmitRs7ForApproval SubmitRs7ForApproval(Rs7Model rs7Model,
-            Action<SubmitRs7ForApproval>? applyCustomSetup = null)
+       
+        public static SubmitRs7ForApproval SubmitRs7ForApproval(Rs7Model rs7Model, Action<SubmitRs7ForApproval>? applyCustomSetup = null)
         {
-            Rs7Model? clonedRs7Model = Clone(rs7Model);
-            SubmitRs7ForApproval? command = new SubmitRs7ForApproval
+            var clonedRs7Model = Clone(rs7Model);
+            var command = new SubmitRs7ForApproval
             {
                 IsAttested = true,
                 AdvanceMonths = clonedRs7Model.AdvanceMonths,
-                EntitlementMonths = clonedRs7Model.EntitlementMonths
+                EntitlementMonths = clonedRs7Model.EntitlementMonths,
             };
 
             if (command.AdvanceMonths != null)
-            {
                 foreach (var advanceMonth in command.AdvanceMonths)
                 {
                     // Default organisation Montessori little hands cannot capture Sessional & Parent Led Days
@@ -66,7 +66,6 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                     advanceMonth.Sessional = null;
                     advanceMonth.ParentLed = null;
                 }
-            }
 
             command.Id = rs7Model.Id;
             applyCustomSetup?.Invoke(command);
@@ -77,8 +76,8 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         {
             // We need to clone because the underlying Rs7Model that was created is shared across multiple
             // tests and we get tests failures.
-            Rs7Model? clonedRs7Model = Clone(rs7Model);
-            SaveAsDraft? command = new SaveAsDraft
+            var clonedRs7Model = Clone(rs7Model);
+            var command = new SaveAsDraft
             {
                 Id = clonedRs7Model.Id,
                 AdvanceMonths = clonedRs7Model.AdvanceMonths,
@@ -96,7 +95,6 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             };
 
             if (command.AdvanceMonths != null)
-            {
                 foreach (var advanceMonth in command.AdvanceMonths)
                 {
                     // Default organisation Montessori little hands cannot capture Sessional & Parent Led Days
@@ -104,7 +102,6 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                     advanceMonth.Sessional = null;
                     advanceMonth.ParentLed = null;
                 }
-            }
 
             applyCustomSetup?.Invoke(command);
 
@@ -115,7 +112,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         {
             // We need to clone because the underlying Rs7Model that was created is shared across multiple
             // tests and we get tests failures.
-            Rs7Model? clonedRs7Model = Clone(rs7Model);
+            var clonedRs7Model = Clone(rs7Model);
             UpdateRs7 command = new UpdateRs7
             {
                 Id = clonedRs7Model.Id,
@@ -138,11 +135,10 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                     IsDeclaredTrue = true
                 },
                 IsAttested = true,
-                IsZeroReturn = clonedRs7Model.IsZeroReturn
+                IsZeroReturn = clonedRs7Model.IsZeroReturn,
             };
 
             if (command.AdvanceMonths != null)
-            {
                 foreach (var advanceMonth in command.AdvanceMonths)
                 {
                     // Default organisation Montessori little hands cannot capture Sessional & Parent Led Days
@@ -150,7 +146,6 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                     advanceMonth.Sessional = null;
                     advanceMonth.ParentLed = null;
                 }
-            }
 
             applyCustomSetup?.Invoke(command);
 
@@ -159,14 +154,14 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         private static T Clone<T>(T obj)
         {
-            string? json = JsonConvert.SerializeObject(obj);
-            T clone = JsonConvert.DeserializeObject<T>(json);
+            var json = JsonConvert.SerializeObject(obj);
+            var clone = JsonConvert.DeserializeObject<T>(json);
             return clone;
         }
-
+      
         public static Rs7Model Rs7Model(Action<Rs7Model>? applyCustomSetup = null)
         {
-            Rs7Model? model = new Rs7Model
+            var model = new Rs7Model
             {
                 OrganisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId,
                 FundingPeriodYear = DateTimeOffset.Now.Year,
@@ -179,7 +174,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         public static CreateSkeletonRs7 CreateRs7(Action<CreateSkeletonRs7>? applyCustomSetup = null)
         {
-            CreateSkeletonRs7? command = new CreateSkeletonRs7
+            var command = new CreateSkeletonRs7
             {
                 OrganisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId,
                 FundingPeriodYear = DateTimeOffset.Now.Year,
@@ -192,7 +187,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         public static CreateRs7ZeroReturn CreateRs7ZeroReturn(Action<CreateRs7ZeroReturn>? applyCustomSetup = null)
         {
-            CreateRs7ZeroReturn? command = new CreateRs7ZeroReturn
+            var command = new CreateRs7ZeroReturn
             {
                 OrganisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId,
                 FundingPeriodYear = DateTimeOffset.Now.Year,
@@ -205,48 +200,47 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         public static Rs7Received Rs7Received(Action<Rs7Received>? modifyEvent = null)
         {
-            Rs7Received? integrationEvent = new Rs7Received
+            var integrationEvent = new Rs7Received
             {
                 OrganisationNumber = ReferenceData.EceServices.MontessoriLittleHands.OrganisationNumber,
                 FundingPeriod = Moe.ECE.Events.Integration.ELI.FundingPeriodMonth.July,
                 IsAttested = true,
                 Source = "Uranus",
-                AdvanceMonths =
-                    new[]
+                AdvanceMonths = new[]
+                {
+                    new Rs7ReceivedAdvanceMonth
                     {
-                        new Rs7ReceivedAdvanceMonth
-                        {
-                            MonthNumber = 7,
-                            FundingPeriodYear = 2020,
-                            AllDay = 2,
-                            ParentLed = 4,
-                            Sessional = 6
-                        },
-                        new Rs7ReceivedAdvanceMonth
-                        {
-                            MonthNumber = 8,
-                            FundingPeriodYear = 2020,
-                            AllDay = 1,
-                            ParentLed = 2,
-                            Sessional = 4
-                        },
-                        new Rs7ReceivedAdvanceMonth
-                        {
-                            MonthNumber = 9,
-                            FundingPeriodYear = 2020,
-                            AllDay = 3,
-                            ParentLed = 5,
-                            Sessional = 3
-                        },
-                        new Rs7ReceivedAdvanceMonth
-                        {
-                            MonthNumber = 10,
-                            FundingPeriodYear = 2020,
-                            AllDay = 1,
-                            ParentLed = 2,
-                            Sessional = 3
-                        }
+                        MonthNumber = 7,
+                        FundingPeriodYear = 2020,
+                        AllDay = 2,
+                        ParentLed = 4,
+                        Sessional = 6
                     },
+                    new Rs7ReceivedAdvanceMonth
+                    {
+                        MonthNumber = 8,
+                        FundingPeriodYear = 2020,
+                        AllDay = 1,
+                        ParentLed = 2,
+                        Sessional = 4
+                    },
+                    new Rs7ReceivedAdvanceMonth
+                    {
+                        MonthNumber = 9,
+                        FundingPeriodYear = 2020,
+                        AllDay = 3,
+                        ParentLed = 5,
+                        Sessional = 3
+                    },
+                    new Rs7ReceivedAdvanceMonth
+                    {
+                        MonthNumber = 10,
+                        FundingPeriodYear = 2020,
+                        AllDay = 1,
+                        ParentLed = 2,
+                        Sessional = 3
+                    }
+                },
                 EntitlementMonths = new[]
                 {
                     new Rs7ReceivedEntitlementMonth
@@ -325,7 +319,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             };
 
             modifyEvent?.Invoke(integrationEvent);
-
+            
             return integrationEvent;
         }
     }

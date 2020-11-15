@@ -16,63 +16,71 @@ namespace MoE.ECE.Domain.Model.ValueObject
         public int Month { get; }
         public int Year { get; }
 
-        public int CompareTo(Date? other) => CompareTo(this, other);
+        public int CompareTo(Date? other)
+        {
+            return CompareTo(this, other);
+        }
 
         public bool Equals(Date? other)
         {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
             return Day == other.Day && Month == other.Month && Year == other.Year;
         }
 
         public override bool Equals(object? obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            return obj.GetType() == GetType() && Equals((Date)obj);
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((Date) obj);
         }
 
-        public override int GetHashCode() => HashCode.Combine(Day, Month, Year);
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Day, Month, Year);
+        }
 
         private static int ConcatDate(Date? date)
         {
-            if (date is null)
-            {
-                return 0;
-            }
+            if (date is null) return 0;
 
-            int d = int.Parse($"{date.Year}{date.Month:#00}{date.Day:#00}");
+            var d = int.Parse($"{date.Year}{date.Month:#00}{date.Day:#00}");
             return d;
         }
 
-        private static int CompareTo(Date? a, Date? b) => ConcatDate(a).CompareTo(ConcatDate(b));
+        private static int CompareTo(Date? a, Date? b)
+        {
+            return ConcatDate(a).CompareTo(ConcatDate(b));
+        }
 
-        public static bool operator !=(Date? a, Date? b) => CompareTo(a, b) != 0;
+        public static bool operator !=(Date? a, Date? b)
+        {
+            return CompareTo(a, b) != 0;
+        }
 
-        public static bool operator ==(Date? a, Date? b) => CompareTo(a, b) == 0;
+        public static bool operator ==(Date? a, Date? b)
+        {
+            return CompareTo(a, b) == 0;
+        }
 
-        public static bool operator >(Date? a, Date? b) => CompareTo(a, b) == 1;
+        public static bool operator >(Date? a, Date? b)
+        {
+            return CompareTo(a, b) == 1;
+        }
 
-        public static bool operator <(Date? a, Date? b) => CompareTo(a, b) == -1;
+        public static bool operator <(Date? a, Date? b)
+        {
+            return CompareTo(a, b) == -1;
+        }
 
-        public static bool operator >=(Date? a, Date? b) => CompareTo(a, b) >= 0;
+        public static bool operator >=(Date? a, Date? b)
+        {
+            return CompareTo(a, b) >= 0;
+        }
 
-        public static bool operator <=(Date? a, Date? b) => CompareTo(a, b) <= 0;
+        public static bool operator <=(Date? a, Date? b)
+        {
+            return CompareTo(a, b) <= 0;
+        }
     }
 }

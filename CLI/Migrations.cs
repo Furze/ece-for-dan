@@ -14,11 +14,13 @@ namespace MoE.ECE.CLI
         public const string VersionedMigrationPrefix = "V";
         public const string SqlFileExtension = ".sql";
 
-        public static IEnumerable<string> GetMigrationFiles(string migrationDirectory) =>
-            Directory.GetFiles(migrationDirectory)
+        public static IEnumerable<string> GetMigrationFiles(string migrationDirectory)
+        {
+            return Directory.GetFiles(migrationDirectory)
                 // ReSharper disable once ConstantNullCoalescingCondition
                 .Select(f => Path.GetFileName(f) ?? "")
                 .Where(f => f.StartsWith(VersionedMigrationPrefix) && f.EndsWith(SqlFileExtension));
+        }
 
         public static void EchoMigrationsDirectory(string migrationsDirectory)
         {
@@ -29,29 +31,29 @@ namespace MoE.ECE.CLI
 
         public static void EnsureDatabaseExists(string connectionString)
         {
-            NpgsqlConnectionStringBuilder? connectionStringBuilder =
-                new(connectionString);
-            string? database = connectionStringBuilder.Database;
+            var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+            var database = connectionStringBuilder.Database;
             if (string.IsNullOrEmpty(database) || database.Trim() == string.Empty)
-            {
                 throw new InvalidOperationException("The connection string does not specify a database name.");
-            }
 
-            using NpgsqlConnection? connection = new(connectionStringBuilder.ConnectionString);
+            using var connection = new NpgsqlConnection(connectionStringBuilder.ConnectionString);
             connection.Open();
 
-            using NpgsqlCommand? existsCommand = new(
+            using var existsCommand = new NpgsqlCommand(
                 $"SELECT case WHEN oid IS NOT NULL THEN 1 ELSE 0 end FROM pg_database WHERE datname = '{database}' limit 1;",
-                connection) {CommandType = CommandType.Text};
-
-            int result = (int)existsCommand.ExecuteScalar();
-            if (result == 1)
+                connection)
             {
-                return;
-            }
+                CommandType = CommandType.Text
+            };
 
-            using NpgsqlCommand? createDatabaseCommand =
-                new($"create database \"{database}\";", connection) {CommandType = CommandType.Text};
+            var result = (int)existsCommand.ExecuteScalar();
+            if (result == 1)
+                return;
+
+            using var createDatabaseCommand = new NpgsqlCommand($"create database \"{database}\";", connection)
+            {
+                CommandType = CommandType.Text
+            };
             createDatabaseCommand.ExecuteNonQuery();
 
             Console.WriteLine($"Created database {database}");

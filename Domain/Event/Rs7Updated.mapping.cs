@@ -2,11 +2,13 @@
 using MoE.ECE.Domain.Infrastructure.Extensions;
 using MoE.ECE.Domain.Model.Rs7;
 
+
 namespace MoE.ECE.Domain.Event
 {
     public class Rs7UpdatedMapping : Profile
     {
-        public Rs7UpdatedMapping() =>
+        public Rs7UpdatedMapping()
+        {
             CreateMap<Rs7, Rs7Updated>()
                 .Map(d => d.RevisionId, s => s.CurrentRevision.Id)
                 .Map(d => d.Source, s => s.CurrentRevision.Source)
@@ -16,5 +18,6 @@ namespace MoE.ECE.Domain.Event
                 .Map(d => d.EntitlementMonths, s => s.CurrentRevision.EntitlementMonths)
                 .Map(d => d.IsAttested, s => s.CurrentRevision.IsAttested)
                 .Map(d => d.Declaration, s => s.CurrentRevision.Declaration);
+        }
     }
 }

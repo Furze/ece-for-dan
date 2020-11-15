@@ -1,5 +1,4 @@
 ﻿using Bard;
-using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Model.ReferenceData;
 using MoE.ECE.Domain.Read.Model.Rs7;
 using MoE.ECE.Integration.Tests.Chapter;
@@ -20,15 +19,8 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
 
         private static void ClearAllDay(Rs7Model rs7)
         {
-            if (rs7.AdvanceMonths == null)
-            {
-                return;
-            }
-
-            foreach (var rs7AdvanceMonthModel in rs7.AdvanceMonths)
-            {
-                rs7AdvanceMonthModel.AllDay = null;
-            }
+            if (rs7.AdvanceMonths == null) return;
+            foreach (var rs7AdvanceMonthModel in rs7.AdvanceMonths) rs7AdvanceMonthModel.AllDay = null;
         }
 
         [Theory]
@@ -42,13 +34,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void ForTheseOrganisationTypesTheIsAttestedFieldIsNotRequired(int organisationType)
         {
             // Arrange 
-            Rs7Model? rs7Created = new Rs7Model();
+            var rs7Created = new Rs7Model();
 
             Given
                 .An_rs7_has_been_created_for_an_organisation_type(organisationType)
                 .GetResult(created => rs7Created = created.Rs7Model);
 
-            SaveAsDraft? command = ModelBuilder.SaveAsDraft(rs7Created, rs7 =>
+            var command = ModelBuilder.SaveAsDraft(rs7Created, rs7 =>
             {
                 rs7.IsAttested = null;
                 ClearAllDay(rs7);

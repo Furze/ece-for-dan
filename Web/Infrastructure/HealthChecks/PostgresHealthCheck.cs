@@ -9,19 +9,21 @@ namespace MoE.ECE.Web.Infrastructure.HealthChecks
 {
     public class PostgresHealthCheck : HealthCheck
     {
-        private const string HealthCheckName = "Postgres Health Check";
         private readonly IConnectionStringFactory _connectionStringFactory;
+        private const string HealthCheckName = "Postgres Health Check";
 
-        public PostgresHealthCheck(IConnectionStringFactory connectionStringFactory) : base(HealthCheckName) =>
+        public PostgresHealthCheck(IConnectionStringFactory connectionStringFactory) : base(HealthCheckName)
+        {
             _connectionStringFactory = connectionStringFactory;
+        }
 
         protected override async ValueTask<HealthCheckResult> CheckAsync(CancellationToken cancellationToken = default)
         {
             try
             {
-                string? connectionString = _connectionStringFactory.GetConnectionString();
+                var connectionString = _connectionStringFactory.GetConnectionString();
 
-                await using (NpgsqlConnection? connection = new(connectionString))
+                await using (var connection = new NpgsqlConnection(connectionString))
                 {
                     await connection.OpenAsync(cancellationToken);
                 }

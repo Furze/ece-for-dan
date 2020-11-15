@@ -24,11 +24,10 @@ namespace MoE.ECE.Web.Bootstrap
 
         private IDocumentStore ConfigureMarten(IServiceProvider serviceProvider)
         {
-            MartenSettings? settings =
-                (Configuration ?? throw new NullReferenceException($"{nameof(Configuration)} not set"))
+            var settings = (Configuration ?? throw new NullReferenceException($"{nameof(Configuration)} not set"))
                 .BindFor<MartenSettings>();
 
-            IConnectionStringFactory? connectionStringFactory = serviceProvider.GetService<IConnectionStringFactory>();
+            var connectionStringFactory = serviceProvider.GetService<IConnectionStringFactory>();
             settings.ConnectionString = connectionStringFactory.GetConnectionString();
 
             return DocumentStore.For(storeOptions =>

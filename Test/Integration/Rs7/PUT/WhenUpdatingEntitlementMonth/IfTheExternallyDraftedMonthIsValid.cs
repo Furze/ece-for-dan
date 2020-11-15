@@ -1,6 +1,5 @@
 using System.Linq;
 using Bard;
-using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Model.ValueObject;
 using MoE.ECE.Domain.Read.Model.Rs7;
@@ -15,11 +14,20 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
 {
     public class IfTheExternallyDraftedMonthIsValid : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
         public IfTheExternallyDraftedMonthIsValid(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
+        }
+
+        private const string Url = "api/rs7";
+
+        protected override void Arrange()
+        {
+            //Externally Created, before Admin saves
+            Given
+                .A_rs7_has_been_created()
+                .And_the_rs7_has_been_saved_as_draft()
+                .GetResult(storyData => Rs7Model = storyData.Rs7Model);
         }
 
         private Rs7Model Rs7Model
@@ -28,23 +36,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
             set => TestData.Rs7Model = value;
         }
 
-        protected override void Arrange() =>
-            //Externally Created, before Admin saves
-            Given
-                .A_rs7_has_been_created()
-                .And_the_rs7_has_been_saved_as_draft()
-                .GetResult(storyData => Rs7Model = storyData.Rs7Model);
-
         protected override void Act()
         {
-            UpdateRs7EntitlementMonth? update = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model,
+            var update = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model,
                 1,
                 em =>
                 {
-                    if (em.Days != null)
-                    {
+                    if(em.Days != null)
                         em.Days.ElementAt(7).Under2 = 12;
-                    }
                 });
 
             When.Put($"{Url}/{Rs7Model.Id}/entitlement-months/{update.MonthNumber}",
@@ -54,7 +53,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         [Fact]
         public void ThenADomainEventShouldBePublishedWithUpdatedData()
         {
-            Rs7EntitlementMonthUpdated? domainEvent = A_domain_event_should_be_fired<Rs7EntitlementMonthUpdated>();
+            var domainEvent = A_domain_event_should_be_fired<Rs7EntitlementMonthUpdated>();
 
             domainEvent.EntitlementMonths.ShouldNotBeNull();
             domainEvent.EntitlementMonths?.ElementAt(1).Days.ShouldNotBeNull();
@@ -66,7 +65,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void ThenADomainEventShouldUpdateTheCurrentRevision()
         {
             // Assert
-            Rs7EntitlementMonthUpdated? domainEvent = A_domain_event_should_be_fired<Rs7EntitlementMonthUpdated>();
+            var domainEvent = A_domain_event_should_be_fired<Rs7EntitlementMonthUpdated>();
 
             domainEvent.Source.ShouldBe(Source.Internal);
             domainEvent.RevisionNumber.ShouldBe(1);
@@ -76,20 +75,22 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void ThenAnIntegrationEventShouldBePublished()
         {
             // Assert
-            Rs7Updated? integrationEvent = An_integration_event_should_be_fired<Rs7Updated>();
+            var integrationEvent = An_integration_event_should_be_fired<Rs7Updated>();
 
             integrationEvent.RevisionNumber.ShouldBe(1);
             integrationEvent.RevisionDate.ShouldNotBeNull();
-
+            
             //TODO: MISSING ELEMENT
             // integrationEvent.EntitlementMonths.ElementAt(1)
             //     .Days.ElementAt(7).Under2.ShouldBe(12);
         }
 
         [Fact]
-        public void ThenTheResponseShouldBeAHttp204() =>
+        public void ThenTheResponseShouldBeAHttp204()
+        {
             Then.Response
                 .ShouldBe
                 .NoContent();
+        }
     }
 }

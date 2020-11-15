@@ -12,13 +12,16 @@ namespace MoE.ECE.CLI.Commands
     {
         private readonly IConfiguration _configuration;
 
-        public EvolveCommands(IConfiguration configuration) => _configuration = configuration;
+        public EvolveCommands(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         public Command Migrate
         {
             get
             {
-                Command? command = new("migrate", "Use Evolve to apply the SQL migration file(s)")
+                var command = new Command("migrate", "Use Evolve to apply the SQL migration file(s)")
                 {
                     new Option<string?>(new[] {"-cs", "--connection-string"},
                         "The connection string to use (optional)"),
@@ -35,7 +38,7 @@ namespace MoE.ECE.CLI.Commands
         {
             get
             {
-                Command? command = new("erase",
+                var command = new Command("erase",
                     "Use Evolve to erase the database schema(s) if Evolve has created it or has found it empty.")
                 {
                     new Option<string?>(new[] {"-cs", "--connection-string"},
@@ -53,7 +56,7 @@ namespace MoE.ECE.CLI.Commands
         {
             get
             {
-                Command? command = new("repair",
+                var command = new Command("repair",
                     "Use Evolve to Correct checksums of already applied migrations, with the ones from actual migration scripts.")
                 {
                     new Option<string?>(new[] {"-cs", "--connection-string"},
@@ -71,7 +74,7 @@ namespace MoE.ECE.CLI.Commands
         {
             get
             {
-                Command? command = new("info",
+                var command = new Command("info",
                     "Use Evolve to display the details and status information about all the migrations")
                 {
                     new Option<string?>("-cs", "--connection-string"),
@@ -87,9 +90,7 @@ namespace MoE.ECE.CLI.Commands
         private async Task<int> EvolveMigrate(string? connectionString, string? migrationsDirectory)
         {
             if (NoMigrationDirectoryPassed(migrationsDirectory))
-            {
                 return await Task.FromResult(-1);
-            }
 
             Console.WriteLine($"Migrating DB from {migrationsDirectory}");
 
@@ -101,9 +102,7 @@ namespace MoE.ECE.CLI.Commands
         private async Task<int> EvolveErase(string? connectionString, string? migrationsDirectory)
         {
             if (NoMigrationDirectoryPassed(migrationsDirectory))
-            {
                 return await Task.FromResult(-1);
-            }
 
             Console.WriteLine("Erasing DB...");
             CreateEvolveMigrator(connectionString, migrationsDirectory!).Erase();
@@ -114,9 +113,7 @@ namespace MoE.ECE.CLI.Commands
         private async Task<int> EvolveRepair(string? connectionString, string? migrationsDirectory)
         {
             if (NoMigrationDirectoryPassed(migrationsDirectory))
-            {
                 return await Task.FromResult(-1);
-            }
 
             Console.WriteLine($"Attempting repair. Migrations directory: {migrationsDirectory}");
 
@@ -128,9 +125,7 @@ namespace MoE.ECE.CLI.Commands
         private async Task<int> EvolveInfo(string? connectionString, string? migrationsDirectory)
         {
             if (NoMigrationDirectoryPassed(migrationsDirectory))
-            {
                 return await Task.FromResult(-1);
-            }
 
             Console.WriteLine($"Obtaining info. Migrations directory: {migrationsDirectory}");
             CreateEvolveMigrator(connectionString, migrationsDirectory!).Info();
@@ -140,21 +135,17 @@ namespace MoE.ECE.CLI.Commands
 
         private Evolve.Evolve CreateEvolveMigrator(string? connectionString, string migrationsDirectory)
         {
-            MartenSettings? martenSettings = _configuration.BindFor<MartenSettings>();
+            var martenSettings = _configuration.BindFor<MartenSettings>();
 
             if (string.IsNullOrEmpty(connectionString))
-            {
                 connectionString = martenSettings.ConnectionString;
-            }
 
             Console.WriteLine($"using connection string: {connectionString}");
             Migrations.EnsureDatabaseExists(connectionString);
 
-            Evolve.Evolve? evolve = new(new NpgsqlConnection(connectionString));
+            var evolve = new Evolve.Evolve(new NpgsqlConnection(connectionString));
             if (!string.IsNullOrEmpty(migrationsDirectory))
-            {
                 evolve.Locations = new[] {migrationsDirectory};
-            }
 
             Migrations.EchoMigrationsDirectory(migrationsDirectory);
 
@@ -164,9 +155,7 @@ namespace MoE.ECE.CLI.Commands
         private bool NoMigrationDirectoryPassed(string? migrationsDirectory)
         {
             if (migrationsDirectory != null)
-            {
                 return false;
-            }
 
             Console.WriteLine("You must provide the directory name to read the patch from -md");
             return true;

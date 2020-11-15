@@ -13,12 +13,12 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
 {
     public class If_the_received_data_is_valid : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
         public If_the_received_data_is_valid(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
+
+        private const string Url = "api/rs7";
 
         private Rs7Model Rs7Model
         {
@@ -26,25 +26,32 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
             set => TestData.Rs7Model = value;
         }
 
-        protected override void Arrange() =>
+        protected override void Arrange()
+        {
             Given
                 .An_rs7_has_been_received_externally()
                 .GetResult(storyData => Rs7Model = storyData.Rs7Model);
+        }
 
-        protected override void Act() => When.Get($"{Url}/{Rs7Model.Id}");
+        protected override void Act()
+        {
+            When.Get($"{Url}/{Rs7Model.Id}");
+        }
 
         [Fact]
-        public void Then_an_integration_event_should_have_been_fired() =>
+        public void Then_an_integration_event_should_have_been_fired()
+        {
             An_integration_event_should_be_fired<Rs7Updated>();
+        }
 
         [Fact]
         public void Then_the_domain_event_should_have_populated_the_advanced_months_correctly()
         {
-            Rs7CreatedFromExternal? domainEvent = A_domain_event_should_be_fired<Rs7CreatedFromExternal>();
+            var domainEvent = A_domain_event_should_be_fired<Rs7CreatedFromExternal>();
 
             domainEvent.AdvanceMonths.ShouldNotBeNull();
 
-            Rs7AdvanceMonthModel? firstAdvanceMonth = domainEvent.AdvanceMonths?.FirstOrDefault();
+            var firstAdvanceMonth = domainEvent.AdvanceMonths?.FirstOrDefault();
 
             firstAdvanceMonth.ShouldNotBeNull();
 
@@ -58,11 +65,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
         [Fact]
         public void Then_the_domain_event_should_have_populated_the_entitlement_months_correctly()
         {
-            Rs7CreatedFromExternal? domainEvent = A_domain_event_should_be_fired<Rs7CreatedFromExternal>();
+            var domainEvent = A_domain_event_should_be_fired<Rs7CreatedFromExternal>();
 
             domainEvent.AdvanceMonths.ShouldNotBeNull();
 
-            Rs7EntitlementMonthModel? entitlementMonth = domainEvent.EntitlementMonths?.FirstOrDefault();
+            var entitlementMonth = domainEvent.EntitlementMonths?.FirstOrDefault();
 
             entitlementMonth.ShouldNotBeNull();
             entitlementMonth?.MonthNumber.ShouldBe(2);
@@ -70,7 +77,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
 
             entitlementMonth?.Days.ShouldNotBeNull();
 
-            Rs7EntitlementDayModel? entitlementDay = entitlementMonth?.Days?.First();
+            var entitlementDay = entitlementMonth?.Days?.First();
             entitlementDay?.DayNumber.ShouldBe(1);
             entitlementDay?.Under2.ShouldBe(5);
             entitlementDay?.TwoAndOver.ShouldBe(3);
@@ -81,15 +88,22 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
         }
 
         [Fact]
-        public void Then_the_domain_event_should_have_populated_the_source_correctly() =>
+        public void Then_the_domain_event_should_have_populated_the_source_correctly()
+        {
             A_domain_event_should_be_fired<Rs7CreatedFromExternal>()
                 .Source.ShouldBe("Uranus");
+        }
 
         [Fact]
-        public void Then_the_response_should_be_ok() => Then.Response.ShouldBe.Ok();
+        public void Then_the_response_should_be_ok()
+        {
+            Then.Response.ShouldBe.Ok();
+        }
 
         [Fact]
-        public void Then_the_response_snapshot_should_be_ok() =>
+        public void Then_the_response_snapshot_should_be_ok()
+        {
             Then.Snapshot().Match<Rs7Model>(IgnoreFieldsFor.Rs7Model);
+        }
     }
 }

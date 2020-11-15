@@ -7,15 +7,18 @@ using Microsoft.Extensions.Caching.Memory;
 namespace MoE.ECE.Integration.Tests.Infrastructure
 {
     /// <summary>
-    ///     Keeps track of various different events flowing through the system. Domain Events & Integration Events
-    ///     so we can verify in our integration tests that they have been fired.
+    /// Keeps track of various different events flowing through the system. Domain Events & Integration Events
+    /// so we can verify in our integration tests that they have been fired.
     /// </summary>
     public class EventTracker<TEventType> : IEventTracker<TEventType> where TEventType : class
     {
         private readonly string _domainEventCache = $"{typeof(TEventType).Name}_cache";
         private readonly IMemoryCache _memoryCache;
 
-        public EventTracker(IMemoryCache memoryCache) => _memoryCache = memoryCache;
+        public EventTracker(IMemoryCache memoryCache)
+        {
+            _memoryCache = memoryCache;
+        }
 
         public ConcurrentDictionary<Type, TEventType> Events => _memoryCache.GetOrCreate(
             _domainEventCache,
@@ -33,7 +36,10 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             }
         }
 
-        public void Reset() => Events.Clear();
+        public void Reset()
+        {
+            Events.Clear();
+        }
 
         public TDerivedEventType? GetEvent<TDerivedEventType>()
             where TDerivedEventType : class
@@ -47,13 +53,18 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         }
 
         public bool ReceivedEvent<TDerivedEventType>()
-            where TDerivedEventType : class =>
-            Events.ContainsKey(typeof(TDerivedEventType));
+            where TDerivedEventType : class
+        {
+            return Events.ContainsKey(typeof(TDerivedEventType));
+        }
 
         /// <summary>
-        ///     Returns an enumerable list of the names of the received events.
+        /// Returns an enumerable list of the names of the received events.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ReceivedEvents() => Events.Select(pair => pair.Key.Name);
+        public IEnumerable<string> ReceivedEvents()
+        {
+            return Events.Select(pair => pair.Key.Name);
+        }
     }
 }

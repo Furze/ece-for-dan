@@ -37,13 +37,13 @@ namespace MoE.ECE.Web.Controllers
         [RequirePermission(Rs7.List)]
         public async Task<ActionResult<CollectionModel<Rs7Model>>> Index([FromQuery] ListRs7S query)
         {
-            CollectionModel<Rs7Model>? rs7S = await _cqrs.QueryAsync(query);
+            var rs7S = await _cqrs.QueryAsync(query);
 
             return Ok(rs7S);
         }
 
         /// <summary>
-        ///     Retrieve an Rs7 form by id, and revision.
+        /// Retrieve an Rs7 form by id, and revision.
         /// </summary>
         /// <param name="id">The id of the Rs7 form</param>
         /// <param name="revisionNumber">Optional, don't set to get the current revision. Set to 1 to get the original revision.</param>
@@ -52,8 +52,8 @@ namespace MoE.ECE.Web.Controllers
         [RequirePermission(Rs7.View)]
         public async Task<ActionResult<Rs7Model>> Get([FromRoute] int id, [FromQuery] int? revisionNumber)
         {
-            GetRs7ByIdRevisionNumber? query = new(id, revisionNumber);
-            Rs7Model? readModel = await _cqrs.QueryAsync(query);
+            var query = new GetRs7ByIdRevisionNumber(id, revisionNumber);
+            var readModel = await _cqrs.QueryAsync(query);
 
             return Ok(readModel);
         }
@@ -83,10 +83,10 @@ namespace MoE.ECE.Web.Controllers
                 };
             }
 
-            int id = await _cqrs.ExecuteAsync(command, cancellationToken);
+            var id = await _cqrs.ExecuteAsync(command, cancellationToken);
             var routeValues = new {id};
 
-            CreatedAtActionResult? result = CreatedAtAction(nameof(Get), routeValues, routeValues);
+            var result = CreatedAtAction(nameof(Get), routeValues, routeValues);
 
             return result;
         }
@@ -104,7 +104,7 @@ namespace MoE.ECE.Web.Controllers
 
             async Task MapAndExecuteCommand<TCommand>() where TCommand : ICommand
             {
-                TCommand? command = _mapper.Map<TCommand>(request);
+                var command = _mapper.Map<TCommand>(request);
                 await _cqrs.ExecuteAsync(command, cancellationToken);
             }
 
@@ -116,18 +116,18 @@ namespace MoE.ECE.Web.Controllers
             {
                 await MapAndExecuteCommand<UpdateRs7>();
             }
-
+            
             return NoContent();
         }
-
+        
         [Route("{id}")]
         [HttpDelete]
         [RequirePermission(Rs7.Delete)]
         public async Task<ActionResult> Delete(
             [FromRoute] int id,
-            CancellationToken cancellationToken)
+                CancellationToken cancellationToken)
         {
-            DiscardRs7? discardRs7 = new {Id = id};
+            var discardRs7 = new DiscardRs7 {Id = id};
 
             await _cqrs.ExecuteAsync(discardRs7, cancellationToken);
 

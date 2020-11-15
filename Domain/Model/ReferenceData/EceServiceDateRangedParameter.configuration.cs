@@ -8,7 +8,7 @@ namespace MoE.ECE.Domain.Model.ReferenceData
     {
         protected override void ConfigureEntity(EntityTypeBuilder<EceServiceDateRangedParameter> builder)
         {
-            builder.HasKey(entity => new {entity.HistoryId, entity.AttributeSource});
+            builder.HasKey(entity => new { entity.HistoryId, entity.AttributeSource });
 
             builder.HasIndex(entity => entity.RefOrganisationId);
 

@@ -1,17 +1,22 @@
 // ReSharper disable once CheckNamespace
-
 namespace ProtoBuf.Bcl
 {
     public partial class Guid
     {
-        public Guid(System.Guid initialValue) => Value = initialValue.ToString();
+        public Guid(System.Guid initialValue)
+        {
+            Value = initialValue.ToString();
+        }
 
-        public static implicit operator System.Guid(Guid protoGuid) => System.Guid.Parse(protoGuid.Value);
+        public static implicit operator System.Guid(Guid protoGuid)
+        {
+            return System.Guid.Parse(protoGuid.Value);
+        }
     }
 
     /// <summary>
-    ///     Implementation provided as per Microsoft documentation
-    ///     https://docs.microsoft.com/en-us/dotnet/architecture/grpc-for-wcf-developers/protobuf-data-types#decimals
+    /// Implementation provided as per Microsoft documentation
+    /// https://docs.microsoft.com/en-us/dotnet/architecture/grpc-for-wcf-developers/protobuf-data-types#decimals
     /// </summary>
     public partial class Decimal
     {
@@ -29,15 +34,20 @@ namespace ProtoBuf.Bcl
             Nanos = nanos;
         }
 
-        public static implicit operator decimal(Decimal grpcDecimal) =>
-            grpcDecimal.Units + grpcDecimal.Nanos / NanoFactor;
+        public static implicit operator decimal(Decimal grpcDecimal)
+        {
+            return grpcDecimal.Units + grpcDecimal.Nanos / NanoFactor;
+        }
 
-        public static implicit operator Decimal(decimal value) => ToDecimal(value);
+        public static implicit operator Decimal(decimal value)
+        {
+            return ToDecimal(value);
+        }
 
         private static Decimal ToDecimal(decimal value)
         {
-            long units = decimal.ToInt64(value);
-            int nanos = decimal.ToInt32((value - units) * NanoFactor);
+            var units = decimal.ToInt64(value);
+            var nanos = decimal.ToInt32((value - units) * NanoFactor);
             return new Decimal(units, nanos);
         }
     }

@@ -32,9 +32,15 @@ namespace MoE.ECE.Domain.Infrastructure
             // Do nothing.
         }
 
-        public void LogSuccess(NpgsqlCommand command) => LogDependency(command, true);
+        public void LogSuccess(NpgsqlCommand command)
+        {
+            LogDependency(command, true);
+        }
 
-        public void LogFailure(NpgsqlCommand command, Exception ex) => LogDependency(command, false);
+        public void LogFailure(NpgsqlCommand command, Exception ex)
+        {
+            LogDependency(command, false);
+        }
 
         public void RecordSavedChanges(IDocumentSession session, IChangeSet commit)
         {
@@ -55,7 +61,7 @@ namespace MoE.ECE.Domain.Infrastructure
 
         private static string GetDependencyName(NpgsqlCommand command)
         {
-            string? dependencyName = command.Connection?.Host ?? string.Empty;
+            var dependencyName = command.Connection?.Host ?? string.Empty;
 
             return dependencyName;
         }

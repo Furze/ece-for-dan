@@ -17,8 +17,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             _domainEventTracker = domainEventTracker;
         }
 
-        public async Task RaiseEventsAsync(IEnumerable<IDomainEvent> domainEvents,
-            CancellationToken cancellationToken = default)
+        public async Task RaiseEventsAsync(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken = default)
         {
             foreach (var domainEvent in domainEvents)
             {
@@ -28,23 +27,31 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         public Task RaiseEventAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default)
         {
-            Task? task = _cqrsImplementation.RaiseEventAsync(domainEvent, cancellationToken);
+            var task = _cqrsImplementation.RaiseEventAsync(domainEvent, cancellationToken);
 
             _domainEventTracker.Add(domainEvent);
 
             return task;
         }
 
-        public Task<TResponse> QueryAsync<TResponse>(IQuery<TResponse> query,
-            CancellationToken cancellationToken = default) => _cqrsImplementation.QueryAsync(query, cancellationToken);
+        public Task<TResponse> QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default)
+        {
+            return _cqrsImplementation.QueryAsync(query, cancellationToken);
+        }
 
-        public Task ExecuteAsync<TCommand>(CancellationToken cancellationToken = new CancellationToken())
-            where TCommand : ICommand, new() => _cqrsImplementation.ExecuteAsync<TCommand>(cancellationToken);
+        public Task ExecuteAsync<TCommand>(CancellationToken cancellationToken = new CancellationToken()) where TCommand : ICommand, new()
+        {
+            return _cqrsImplementation.ExecuteAsync<TCommand>(cancellationToken);
+        }
 
-        public Task ExecuteAsync(ICommand command, CancellationToken cancellationToken = default) =>
-            _cqrsImplementation.ExecuteAsync(command, cancellationToken);
+        public Task ExecuteAsync(ICommand command, CancellationToken cancellationToken = default)
+        {
+            return _cqrsImplementation.ExecuteAsync(command, cancellationToken);
+        }
 
-        public Task<int> ExecuteAsync(IBeginSagaCommand command, CancellationToken cancellationToken = default) =>
-            _cqrsImplementation.ExecuteAsync(command, cancellationToken);
+        public Task<int> ExecuteAsync(IBeginSagaCommand command, CancellationToken cancellationToken = default)
+        {
+            return _cqrsImplementation.ExecuteAsync(command, cancellationToken);
+        }
     }
 }

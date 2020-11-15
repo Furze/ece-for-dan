@@ -13,11 +13,21 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingAnRs7ZeroReturn
 {
     public class IfTheOrganisationLicenceIsSuspended : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
         public IfTheOrganisationLicenceIsSuspended(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
+        }
+
+        private const string Url = "api/rs7";
+
+        protected override void Arrange()
+        {
+            Given
+                .A_rs7_zero_return_has_been_created(rs7 =>
+                    rs7.OrganisationId = ReferenceData.EceServices.NurtureMe2.RefOrganisationId)
+                .GetResult(result => Rs7Model = result.Rs7Model);
+
+            UpdateRs7Command = ModelBuilder.UpdateRs7(Rs7Model);
         }
 
         private Rs7Model Rs7Model
@@ -32,28 +42,24 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingAnRs7ZeroReturn
             set => TestData.SubmitRs7Command = value;
         }
 
-        protected override void Arrange()
+        protected override void Act()
         {
-            Given
-                .A_rs7_zero_return_has_been_created(rs7 =>
-                    rs7.OrganisationId = ReferenceData.EceServices.NurtureMe2.RefOrganisationId)
-                .GetResult(result => Rs7Model = result.Rs7Model);
-
-            UpdateRs7Command = ModelBuilder.UpdateRs7(Rs7Model);
-        }
-
-        protected override void Act() =>
             // Act
             When.Put($"{Url}/{Rs7Model.Id}", UpdateRs7Command);
+        }
 
         [Fact]
-        public void ThenADomainEventShouldNotBePublished() =>
+        public void ThenADomainEventShouldNotBePublished()
+        {
             // Assert
             A_domain_event_should_not_be_fired<Rs7Updated>();
+        }
 
         [Fact]
-        public void ThenTheResponseShouldBeAHttpBadRequest() =>
+        public void ThenTheResponseShouldBeAHttpBadRequest()
+        {
             Then.Response
                 .ShouldBe.BadRequest.WithErrorCode(ErrorCode.EceServiceIneligibleBecauseLicenceStatus);
+        }
     }
 }

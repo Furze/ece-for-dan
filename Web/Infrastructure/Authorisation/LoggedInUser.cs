@@ -22,7 +22,9 @@ namespace MoE.ECE.Web.Infrastructure.Authorisation
 
         public string UserName => ResolveClaim(JwtClaimTypes.Name);
 
-        private string ResolveClaim(string claimType) =>
-            _claimsIdentity?.Claims.FirstOrDefault(claim => claim.Type == claimType)?.Value ?? string.Empty;
+        private string ResolveClaim(string claimType)
+        {
+            return _claimsIdentity?.Claims.FirstOrDefault(claim => claim.Type == claimType)?.Value ?? string.Empty;
+        }
     }
 }

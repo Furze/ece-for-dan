@@ -20,7 +20,10 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         private static readonly Checkpoint Checkpoint = new Checkpoint
         {
-            SchemasToInclude = new[] {"referencedata"},
+            SchemasToInclude = new[]
+            {
+                "referencedata"
+            },
             TablesToIgnore = new[]
             {
                 "__EFMigrationsHistory", "ece_service", "ece_licencing_detail_date_ranged_parameter",
@@ -34,7 +37,10 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         private readonly IDocumentStore _documentStore;
 
-        public DatabaseManager(IDocumentStore documentStore) => _documentStore = documentStore;
+        public DatabaseManager(IDocumentStore documentStore)
+        {
+            _documentStore = documentStore;
+        }
 
         private static bool IsRunningOnBuildServer =>
             Environment.GetEnvironmentVariable("BUILD_DEFINITIONNAME") != null;
@@ -50,8 +56,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         public static string Start()
         {
-            PostgresDatabase? postgresDb =
-                new PostgresDatabase(DockerDatabaseContainerName, UserName, Password, PortNumber);
+            var postgresDb = new PostgresDatabase(DockerDatabaseContainerName, UserName, Password, PortNumber);
 
             _hostIp = postgresDb.StartDatabase();
 
@@ -64,20 +69,33 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             Console.WriteLine(Environment.CurrentDirectory);
             AsyncHelper.RunSync(() => Program.Main(new[]
             {
-                "migrate", "-cs", databaseConnectionString, "-md",
+                "migrate",
+                "-cs",
+                databaseConnectionString,
+                "-md",
                 $"{Environment.CurrentDirectory}/../../../../../CLI/migrations"
             }));
 
-            AsyncHelper.RunSync(() => Program.Main(new[] {"migrate-reference-data", "-cs", databaseConnectionString}));
+            AsyncHelper.RunSync(() => Program.Main(new[]
+            {
+                "migrate-reference-data",
+                "-cs",
+                databaseConnectionString
+            }));
 
-            AsyncHelper.RunSync(() => Program.Main(new[] {"seed", "-cs", databaseConnectionString}));
+            AsyncHelper.RunSync(() => Program.Main(new[]
+            {
+                "seed",
+                "-cs",
+                databaseConnectionString
+            }));
         }
 
         public void ResetDatabase()
         {
             AsyncHelper.RunSync(async () =>
             {
-                await using NpgsqlConnection? conn = new NpgsqlConnection(ConnectionString);
+                await using var conn = new NpgsqlConnection(ConnectionString);
                 await conn.OpenAsync();
                 await Checkpoint.Reset(conn);
             });

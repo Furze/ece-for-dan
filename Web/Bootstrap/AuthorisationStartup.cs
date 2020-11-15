@@ -8,7 +8,8 @@ namespace MoE.ECE.Web.Bootstrap
 {
     public class AuthorisationStartup : StartupConfig
     {
-        public override void ConfigureServices(IServiceCollection services) =>
+        public override void ConfigureServices(IServiceCollection services)
+        {
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Hangfire", builder =>
@@ -18,12 +19,13 @@ namespace MoE.ECE.Web.Bootstrap
                     builder.RequireAuthenticatedUser();
                 });
 
-                AuthorizationPolicyBuilder? defaultAuthorizationPolicyBuilder = new(
+                var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
                     JwtBearerDefaults.AuthenticationScheme);
-                defaultAuthorizationPolicyBuilder =
+                defaultAuthorizationPolicyBuilder = 
                     defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
                 options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
             });
+        }
 
         public override void Configure(IApplicationBuilder app)
         {

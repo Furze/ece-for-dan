@@ -8,13 +8,17 @@ namespace MoE.ECE.Integration.Tests
     [Collection(Collections.IntegrationTestCollection)]
     public class AutoMapperTests
     {
+        public AutoMapperTests(RunOnceBeforeAllTests runOnceBeforeAllTests)
+        {
+            _runOnceBeforeAllTests = runOnceBeforeAllTests;
+        }
+
         private readonly RunOnceBeforeAllTests _runOnceBeforeAllTests;
 
-        public AutoMapperTests(RunOnceBeforeAllTests runOnceBeforeAllTests) =>
-            _runOnceBeforeAllTests = runOnceBeforeAllTests;
-
         [Fact]
-        public void AssertConfigurationIsValid() => _runOnceBeforeAllTests.Services.GetService<IMapper>()
-            .ConfigurationProvider.AssertConfigurationIsValid();
+        public void AssertConfigurationIsValid()
+        {
+            _runOnceBeforeAllTests.Services.GetService<IMapper>().ConfigurationProvider.AssertConfigurationIsValid();
+        }
     }
 }

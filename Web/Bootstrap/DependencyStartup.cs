@@ -3,7 +3,6 @@ using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Internal;
 using MoE.ECE.Domain.Infrastructure;
 using MoE.ECE.Domain.Infrastructure.Abstractions;
 using MoE.ECE.Domain.Integration;
@@ -12,7 +11,6 @@ using MoE.ECE.Web.Infrastructure.Authorisation;
 using MoE.ECE.Web.Infrastructure.ServiceBus;
 using MoE.ECE.Web.Infrastructure.Validation;
 using Moe.Library.Cqrs;
-using SystemClock = MoE.ECE.Domain.Infrastructure.SystemClock;
 
 namespace MoE.ECE.Web.Bootstrap
 {
@@ -21,11 +19,11 @@ namespace MoE.ECE.Web.Bootstrap
         public override void ConfigureServices(IServiceCollection services)
         {
             // Hosted Services
-
+            
             // Singleton
             services.AddSingleton(Configuration);
             services.AddSingleton<IConnectionStringFactory, ConnectionStringFactory>();
-
+           
             // Scoped
             services.AddScoped<IValidatorInterceptor, UseErrorCodeInterceptor>();
             services.AddScoped<IServiceBus, ServiceBusPublisher>();
@@ -34,13 +32,13 @@ namespace MoE.ECE.Web.Bootstrap
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehaviour<,>));
 
             services.AddScoped<ILoggedOnUser, LoggedOnUser>();
-            services.AddScoped<ISystemClock, SystemClock>();
+            services.AddScoped<Microsoft.Extensions.Internal.ISystemClock, SystemClock>();
 
-
+            
             services.AddAutoMapper(
                 typeof(IAssemblyMarker),
-                typeof(Domain.IAssemblyMarker));
-
+                typeof(MoE.ECE.Domain.IAssemblyMarker));
+            
             services.AddMediatR(typeof(Domain.IAssemblyMarker));
         }
 

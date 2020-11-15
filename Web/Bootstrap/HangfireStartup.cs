@@ -10,7 +10,7 @@ namespace MoE.ECE.Web.Bootstrap
     {
         public override void ConfigureServices(IServiceCollection services)
         {
-            ConnectionStringFactory? connectionStringFactory = new(Configuration);
+            var connectionStringFactory = new ConnectionStringFactory(Configuration);
 
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)

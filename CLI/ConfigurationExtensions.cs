@@ -7,7 +7,7 @@ namespace MoE.ECE.CLI
         public static T BindFor<T>(this IConfiguration configuration)
             where T : new()
         {
-            T settings = new();
+            var settings = new T();
             configuration
                 .GetSection(typeof(T).Name)
                 .Bind(settings);

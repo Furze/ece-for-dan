@@ -10,12 +10,12 @@ namespace MoE.ECE.Integration.Tests.Rs7.DELETE.WhenARs7IsRejected
 {
     public class ItShouldBePossibleToDiscardTheRs7 : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
         public ItShouldBePossibleToDiscardTheRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
+
+        private const string Url = "api/rs7";
 
         private Rs7Model Rs7Model
         {
@@ -23,21 +23,31 @@ namespace MoE.ECE.Integration.Tests.Rs7.DELETE.WhenARs7IsRejected
             set => TestData.Rs7Model = value;
         }
 
-        protected override void Arrange() =>
+        protected override void Arrange()
+        {
             Given
                 .A_rs7_has_been_created()
                 .The_rs7_has_been_submitted_for_peer_approval()
                 .The_rs7_has_been_peer_review_rejected()
                 .GetResult(storyData => Rs7Model = storyData.Rs7Model);
+        }
 
-        protected override void Act() =>
+        protected override void Act()
+        {
             // Act
             When.Delete($"{Url}/{Rs7Model.Id}");
+        }
 
         [Fact]
-        public void ThenA204NoContentResponseShouldBeReturned() => Then.Response.ShouldBe.NoContent();
+        public void ThenA204NoContentResponseShouldBeReturned()
+        {
+            Then.Response.ShouldBe.NoContent();
+        }
 
         [Fact]
-        public void ThenADomainEventShouldBeFired() => A_domain_event_should_be_fired<Rs7Discarded>();
+        public void ThenADomainEventShouldBeFired()
+        {
+            A_domain_event_should_be_fired<Rs7Discarded>();
+        }
     }
 }

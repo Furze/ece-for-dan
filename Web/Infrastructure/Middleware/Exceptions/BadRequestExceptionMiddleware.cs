@@ -16,7 +16,19 @@ namespace MoE.ECE.Web.Infrastructure.Middleware.Exceptions
 
         protected override HttpStatusCode StatusCode => HttpStatusCode.BadRequest;
 
-        protected override ErrorResponse CreateResponse(HttpContext context, BadRequestException exception) =>
-            new {Errors = new[] {new Error {ErrorCode = exception.ErrorCode, Message = CreateMessage(exception)}}};
+        protected override ErrorResponse CreateResponse(HttpContext context, BadRequestException exception)
+        {
+            return new ErrorResponse
+            {
+                Errors = new[]
+                {
+                    new Error
+                    {
+                        ErrorCode = exception.ErrorCode,
+                        Message = CreateMessage(exception)
+                    }
+                }
+            };
+        }
     }
 }

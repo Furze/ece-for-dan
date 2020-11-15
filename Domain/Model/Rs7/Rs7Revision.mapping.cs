@@ -16,7 +16,7 @@ namespace MoE.ECE.Domain.Model.Rs7
                 .ConvertUsing<Rs7RevisionConverter>();
 
             CreateMap<CreateFullRs7, Rs7Revision>()
-                .ConvertUsing<CreateRs7RevisionFromExternalConverter>();
+               .ConvertUsing<CreateRs7RevisionFromExternalConverter>();
 
             CreateMap<UpdateRs7EntitlementMonth, Rs7Revision>()
                 .ConvertUsing<UpdateRs7EntitlementMonthToRs7RevisionConverter>();
@@ -30,14 +30,13 @@ namespace MoE.ECE.Domain.Model.Rs7
 
     public static class MappingFunctions
     {
-        public static void MapAdvanceMonths(IEnumerable<Rs7AdvanceMonthModel> sourceAdvanceMonths,
-            ICollection<Rs7AdvanceMonth> destinationAdvanceMonths, ResolutionContext context)
+        public static void MapAdvanceMonths(IEnumerable<Rs7AdvanceMonthModel> sourceAdvanceMonths, ICollection<Rs7AdvanceMonth> destinationAdvanceMonths, ResolutionContext context)
         {
             foreach (var advance in sourceAdvanceMonths)
             {
-                Rs7AdvanceMonth? match = destinationAdvanceMonths
+                var match = destinationAdvanceMonths
                     .FirstOrDefault(month => month.MonthNumber == advance.MonthNumber && month.Year == advance.Year);
-
+                
                 //TODO: Remove:Mixture of mapping and validation 
                 if (match == null)
                 {
@@ -50,8 +49,7 @@ namespace MoE.ECE.Domain.Model.Rs7
             }
         }
 
-        public static void MapEntitlementMonths(IEnumerable<Rs7EntitlementMonthModel>? entitlementMonthsSource,
-            ICollection<Rs7EntitlementMonth> entitlementMonthsDestination)
+        public static void MapEntitlementMonths(IEnumerable<Rs7EntitlementMonthModel>? entitlementMonthsSource, ICollection<Rs7EntitlementMonth> entitlementMonthsDestination)
         {
             if (entitlementMonthsSource == null)
             {
@@ -60,9 +58,8 @@ namespace MoE.ECE.Domain.Model.Rs7
 
             foreach (var sourceMonth in entitlementMonthsSource)
             {
-                Rs7EntitlementMonth? destinationMonth = entitlementMonthsDestination
-                    .FirstOrDefault(month =>
-                        month.MonthNumber == sourceMonth.MonthNumber && month.Year == sourceMonth.Year);
+                var destinationMonth = entitlementMonthsDestination
+                    .FirstOrDefault(month => month.MonthNumber == sourceMonth.MonthNumber && month.Year == sourceMonth.Year);
 
                 //TODO: Remove:Mixture of mapping and validation
                 if (destinationMonth == null)
@@ -76,8 +73,7 @@ namespace MoE.ECE.Domain.Model.Rs7
             }
         }
 
-        private static void MapEntitlementMonthDays(Rs7EntitlementMonthModel entitlement,
-            Rs7EntitlementMonth monthMatch)
+        private static void MapEntitlementMonthDays(Rs7EntitlementMonthModel entitlement, Rs7EntitlementMonth monthMatch)
         {
             if (entitlement.Days == null)
             {
@@ -86,7 +82,7 @@ namespace MoE.ECE.Domain.Model.Rs7
 
             foreach (var entitlementDay in entitlement.Days)
             {
-                Rs7EntitlementDay? dayMatch = monthMatch
+                var dayMatch = monthMatch
                     .Days
                     .FirstOrDefault(day => day.DayNumber == entitlementDay.DayNumber);
 
@@ -114,8 +110,7 @@ namespace MoE.ECE.Domain.Model.Rs7
         {
             if (destination == null)
             {
-                throw new InvalidOperationException(
-                    $"A {nameof(UpdateRs7)} mapping must be given a target {nameof(Rs7)} to populate.");
+                throw new InvalidOperationException($"A {nameof(UpdateRs7)} mapping must be given a target {nameof(Rs7)} to populate.");
             }
 
             //Rs7 business object properties are ignored as they are either set by Create, or updated by API.
@@ -138,8 +133,7 @@ namespace MoE.ECE.Domain.Model.Rs7
         {
             if (destination == null)
             {
-                throw new InvalidOperationException(
-                    $"A {nameof(UpdateRs7)} mapping must be given a target {nameof(Rs7)} to populate.");
+                throw new InvalidOperationException($"A {nameof(UpdateRs7)} mapping must be given a target {nameof(Rs7)} to populate.");
             }
 
             //Rs7 business object properties are ignored as they are either set by Create, or updated by API.
@@ -198,15 +192,13 @@ namespace MoE.ECE.Domain.Model.Rs7
         }
     }
 
-    public class
-        UpdateRs7EntitlementMonthToRs7RevisionConverter : ITypeConverter<UpdateRs7EntitlementMonth, Rs7Revision>
+    public class UpdateRs7EntitlementMonthToRs7RevisionConverter : ITypeConverter<UpdateRs7EntitlementMonth, Rs7Revision>
     {
         public Rs7Revision Convert(UpdateRs7EntitlementMonth source, Rs7Revision destination, ResolutionContext context)
         {
             if (destination == null)
             {
-                throw new InvalidOperationException(
-                    $"A {nameof(UpdateRs7EntitlementMonth)} mapping must be given a target {nameof(Rs7)} to populate.");
+                throw new InvalidOperationException($"A {nameof(UpdateRs7EntitlementMonth)} mapping must be given a target {nameof(Rs7)} to populate.");
             }
 
             MappingFunctions.MapEntitlementMonths(new HashSet<Rs7EntitlementMonthModel> {source}
@@ -215,4 +207,5 @@ namespace MoE.ECE.Domain.Model.Rs7
             return destination;
         }
     }
+
 }

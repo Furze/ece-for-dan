@@ -24,11 +24,11 @@ namespace MoE.ECE.Domain.Query
         public async Task<CollectionModel<Rs7Model>> Handle(ListRs7S query,
             CancellationToken cancellationToken)
         {
-            IPagedList<Rs7>? models = await _documentSession.Query<Rs7>()
+            var models = await _documentSession.Query<Rs7>()
                 .ToPagedListAsync(query.PageNumber, query.PageSize, cancellationToken);
 
-            Rs7Model[]? result = _mapper.Map<Rs7Model[]>(models);
-
+            var result = _mapper.Map<Rs7Model[]>(models);
+            
             return new CollectionModel<Rs7Model>(
                 query.PageSize,
                 query.PageNumber,

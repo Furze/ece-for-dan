@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Bard;
-using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Read.Model.Rs7;
 using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
@@ -11,12 +10,19 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
 {
     public class IfTheRequestIsContainsAnInvalidEntitlementMonthDay : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
         public IfTheRequestIsContainsAnInvalidEntitlementMonthDay(RunOnceBeforeAllTests testSetUp,
             ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output,
             testState)
         {
+        }
+
+        private const string Url = "api/rs7";
+
+        protected override void Arrange()
+        {
+            Given
+                .A_rs7_has_been_created()
+                .GetResult(created => Rs7 = created.Rs7Model);
         }
 
         private Rs7Model Rs7
@@ -25,22 +31,15 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             set => TestData.Rs7Model = value;
         }
 
-        protected override void Arrange() =>
-            Given
-                .A_rs7_has_been_created()
-                .GetResult(created => Rs7 = created.Rs7Model);
-
         [Fact]
         public void IfTheDayNumberIsInvalidThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            SaveAsDraft? updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
+            var updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
             {
-                Rs7EntitlementDayModel[]? rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
+                var rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
                 if (rs7EntitlementDayModels != null)
-                {
                     rs7EntitlementDayModels.First().DayNumber = 100; // Not valid
-                }
             });
 
             // Act
@@ -56,13 +55,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheSuppliedCertificatedValueIsGreaterThan9999ThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            SaveAsDraft? updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
+            var updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
             {
-                Rs7EntitlementDayModel[]? rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
+                var rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
                 if (rs7EntitlementDayModels != null)
-                {
                     rs7EntitlementDayModels.First().Certificated = 10000; // Not valid
-                }
             });
 
             // Act
@@ -78,13 +75,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheSuppliedCertificatedValueIsLessThanZeroThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            SaveAsDraft? updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
+            var updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
             {
-                Rs7EntitlementDayModel[]? rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
+                var rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
                 if (rs7EntitlementDayModels != null)
-                {
                     rs7EntitlementDayModels.First().Certificated = -1; // Not valid
-                }
             });
 
             // Act
@@ -100,13 +95,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheSuppliedHours20ValueIsGreaterThan9999ThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            SaveAsDraft? updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
+            var updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
             {
-                Rs7EntitlementDayModel[]? rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
+                var rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
                 if (rs7EntitlementDayModels != null)
-                {
                     rs7EntitlementDayModels.First().Hours20 = 10000; // Not valid
-                }
             });
 
             // Act
@@ -122,13 +115,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheSuppliedHours20ValueIsLessThanZeroThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            SaveAsDraft? updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
+            var updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
             {
-                Rs7EntitlementDayModel[]? rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
+                var rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
                 if (rs7EntitlementDayModels != null)
-                {
                     rs7EntitlementDayModels.First().Hours20 = -1; // Not valid
-                }
             });
 
             // Act
@@ -144,13 +135,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheSuppliedNonCertificatedValueIsGreaterThan9999ThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            SaveAsDraft? updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
+            var updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
             {
-                Rs7EntitlementDayModel[]? rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
+                var rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
                 if (rs7EntitlementDayModels != null)
-                {
                     rs7EntitlementDayModels.First().NonCertificated = 10000; // Not valid
-                }
             });
 
             // Act
@@ -166,13 +155,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheSuppliedNonCertificatedValueIsLessThanZeroThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            SaveAsDraft? updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
+            var updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
             {
-                Rs7EntitlementDayModel[]? rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
+                var rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
                 if (rs7EntitlementDayModels != null)
-                {
                     rs7EntitlementDayModels.First().NonCertificated = -1; // Not valid
-                }
             });
 
             // Act
@@ -188,13 +175,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheSuppliedTwoAndOverValueIsGreaterThan9999ThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            SaveAsDraft? updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
+            var updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
             {
-                Rs7EntitlementDayModel[]? rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
+                var rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
                 if (rs7EntitlementDayModels != null)
-                {
                     rs7EntitlementDayModels.First().TwoAndOver = 10000; // Not valid
-                }
             });
 
             // Act
@@ -210,13 +195,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheSuppliedTwoAndOverValueIsLessThanZeroThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            SaveAsDraft? updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
+            var updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
             {
-                Rs7EntitlementDayModel[]? rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
+                var rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
                 if (rs7EntitlementDayModels != null)
-                {
                     rs7EntitlementDayModels.First().TwoAndOver = -1; // Not valid
-                }
             });
 
             // Act
@@ -232,13 +215,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheSuppliedUnder2ValueIsGreaterThan9999ThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            SaveAsDraft? updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
+            var updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
             {
-                Rs7EntitlementDayModel[]? rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
+                var rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
                 if (rs7EntitlementDayModels != null)
-                {
                     rs7EntitlementDayModels.First().Under2 = 10000; // Not valid
-                }
             });
 
             // Act
@@ -254,13 +235,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheSuppliedUnder2ValueIsLessThanZeroThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            SaveAsDraft? updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
+            var updateCommand = ModelBuilder.SaveAsDraft(Rs7, r =>
             {
-                Rs7EntitlementDayModel[]? rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
+                var rs7EntitlementDayModels = r.EntitlementMonths?.First().Days;
                 if (rs7EntitlementDayModels != null)
-                {
                     rs7EntitlementDayModels.First().Under2 = -1; // Not valid
-                }
             });
 
             // Act

@@ -6,7 +6,8 @@ namespace MoE.ECE.Domain.Event
 {
     public class Rs7CreatedMapping : Profile
     {
-        public Rs7CreatedMapping() =>
+        public Rs7CreatedMapping()
+        {
             CreateMap<Rs7, Rs7SkeletonCreated>()
                 .Map(d => d.RevisionNumber, s => s.CurrentRevision.RevisionNumber)
                 .Map(d => d.RevisionDate, s => s.CurrentRevision.RevisionDate)
@@ -16,5 +17,6 @@ namespace MoE.ECE.Domain.Event
                 .Map(d => d.Declaration, s => s.CurrentRevision.Declaration)
                 .Map(d => d.IsZeroReturn, s => s.CurrentRevision.IsZeroReturn)
                 .Map(d => d.Source, s => s.CurrentRevision.Source);
+        }
     }
 }

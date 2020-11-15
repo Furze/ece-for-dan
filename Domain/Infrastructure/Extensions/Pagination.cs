@@ -14,13 +14,13 @@ namespace MoE.ECE.Domain.Infrastructure.Extensions
             PaginationParameters parameters,
             CancellationToken cancellationToken)
         {
-            int count = await query.CountAsync(cancellationToken);
+            var count = await query.CountAsync(cancellationToken);
 
-            IQueryable<TReadModel>? paginationQuery = query
+            var paginationQuery = query
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize);
 
-            TReadModel[]? data = await paginationQuery.ToArrayAsync(cancellationToken);
+            var data = await paginationQuery.ToArrayAsync(cancellationToken);
 
             return new CollectionModel<TReadModel>(
                 parameters.PageSize,

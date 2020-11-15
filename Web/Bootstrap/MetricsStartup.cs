@@ -21,15 +21,15 @@ namespace MoE.ECE.Web.Bootstrap
         {
             AllowSynchronousCallsForAppMetricsBug(services);
 
-            ConnectionStrings? connectionStrings = Configuration.BindFor<ConnectionStrings>();
-
-            IHealthRoot? health = AppMetricsHealth.CreateDefaultBuilder()
+            var connectionStrings = Configuration.BindFor<ConnectionStrings>();
+            
+            var health = AppMetricsHealth.CreateDefaultBuilder()
                 .HealthChecks.RegisterFromAssembly(services) // configure options and add health checks
                 .HealthChecks.AddAzureServiceBusTopicConnectivityCheck(
                     $"Service Bus '{Constants.Topic.ECE}' Topic Connectivity Check",
                     connectionStrings.ServiceBus, Constants.Topic.ECE, TimeSpan.FromMinutes(10))
                 .BuildAndAddTo(services);
-
+            
             services.AddHealth(health);
             services.AddHealthEndpoints();
         }
@@ -37,10 +37,16 @@ namespace MoE.ECE.Web.Bootstrap
         private static void AllowSynchronousCallsForAppMetricsBug(IServiceCollection services)
         {
             // If using Kestrel:
-            services.Configure<KestrelServerOptions>(options => { options.AllowSynchronousIO = true; });
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
 
             // If using IIS:
-            services.Configure<IISServerOptions>(options => { options.AllowSynchronousIO = true; });
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
         }
     }
 }

@@ -20,10 +20,6 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset ModifiedDate { get; set; }
 
-        public virtual ICollection<EceOperatingSessionDateRangedParameter> EceOperatingSessionDateRangedParameters
-        {
-            get;
-            set;
-        } = null!;
+        public virtual ICollection<EceOperatingSessionDateRangedParameter> EceOperatingSessionDateRangedParameters { get; set; } = null!;
     }
 }

@@ -15,8 +15,8 @@ namespace MoE.ECE.Web.Infrastructure.Opa
     public class OpaClient : IOpaClient
     {
         private readonly HttpClient _httpClient;
-        private readonly ILogger<OpaClient> _logger;
         private readonly IOpaTokenGenerator _tokenGenerator;
+        private readonly ILogger<OpaClient> _logger;
 
         public OpaClient(
             HttpClient httpClient,
@@ -28,41 +28,39 @@ namespace MoE.ECE.Web.Infrastructure.Opa
             _logger = logger;
         }
 
-        public async Task<OpaResponse<TResponse>> PostRequest<TRequest, TResponse>(OpaRequest<TRequest> request,
-            string endpointUrl) where TResponse : class
+        public async Task<OpaResponse<TResponse>> PostRequest<TRequest, TResponse>(OpaRequest<TRequest> request, string endpointUrl) where TResponse : class
         {
-            OpaAccessToken? accessToken = await _tokenGenerator.GenerateAsync();
+            var accessToken = await _tokenGenerator.GenerateAsync();
 
             if (accessToken == null)
-            {
                 throw new ECEApplicationException("Unable to obtain access token from OPA.");
-            }
 
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken.TokenValue);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken.TokenValue);
 
-            JsonSerializerSettings? settings = new {ContractResolver = new CamelCasePropertyNamesContractResolver()};
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
 
             _logger.LogInformation($"Request to be sent to OPA: {JsonConvert.SerializeObject(request, settings)}");
 
-            StringContent? httpContent = new(
+            var httpContent = new StringContent(
                 JsonConvert.SerializeObject(request, settings),
                 Encoding.UTF8,
                 MediaTypeNames.Application.Json);
 
-            HttpResponseMessage? response = await _httpClient.PostAsync(endpointUrl, httpContent);
+            var response = await _httpClient.PostAsync(endpointUrl, httpContent);
 
             _logger.LogInformation($"Request response received from OPA, status code: {response.StatusCode}");
 
             if (response.IsSuccessStatusCode)
             {
-                string? responseContent = await response.Content.ReadAsStringAsync();
+                var responseContent = await response.Content.ReadAsStringAsync();
                 //OPA sometimes returns invalid json where it returns an empty object instead of 0 or null
                 //which breaks the Deserializing
                 if (responseContent.Contains("{}"))
                 {
-                    _logger.LogError(
-                        $"OPA response returned with success code but the response contains an empty object which breaks the deserializing, response received from OPA: {responseContent}");
+                    _logger.LogError($"OPA response returned with success code but the response contains an empty object which breaks the deserializing, response received from OPA: {responseContent}");
                     responseContent = responseContent.Replace("{}", "null");
                 }
 
@@ -73,33 +71,33 @@ namespace MoE.ECE.Web.Infrastructure.Opa
                 }
                 catch (Exception ex)
                 {
-                    string? serializedRequest = JsonConvert.SerializeObject(request, settings);
+                    var serializedRequest = JsonConvert.SerializeObject(request, settings);
                     //logging here as the throw error is not logging to app insights for some reason,
                     //will leave this here until we can figure out why
-                    _logger.LogError(
-                        $"Received a {response.StatusCode} but failed to deserialize the OPA response with error {ex.Message}. OPA raw response: {responseContent}. OPA request: {serializedRequest}");
+                    _logger.LogError($"Received a {response.StatusCode} but failed to deserialize the OPA response with error {ex.Message}. OPA raw response: {responseContent}. OPA request: {serializedRequest}");
 
-                    throw new ECEApplicationException(
-                        $"Received a {response.StatusCode} but failed to deserialize the OPA response with error {ex.Message}. OPA raw response: {responseContent}. OPA request: {serializedRequest}");
+                    throw new ECEApplicationException($"Received a {response.StatusCode} but failed to deserialize the OPA response with error {ex.Message}. OPA raw response: {responseContent}. OPA request: {serializedRequest}");
                 }
             }
 
-            string? opaResponseBody = "";
+            var opaResponseBody = "";
             try
             {
                 opaResponseBody = await response.Content.ReadAsStringAsync();
             }
-            catch
+            catch 
             {
                 // NOOP
             }
-
-            ApplicationException? applicationException =
-                new($"Received a {response.StatusCode} response from OPA.");
-            _logger.LogError("OPA request error",
-                new {ResponseStatus = response.StatusCode, ResponseBody = opaResponseBody, Request = request},
-                applicationException);
-
+            
+            var applicationException = new ApplicationException($"Received a {response.StatusCode} response from OPA.");
+            _logger.LogError("OPA request error", new
+            {
+                ResponseStatus = response.StatusCode, 
+                ResponseBody = opaResponseBody,
+                Request = request
+            }, applicationException);
+            
             throw applicationException;
         }
     }

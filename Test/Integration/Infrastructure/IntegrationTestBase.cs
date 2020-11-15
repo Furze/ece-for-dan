@@ -53,11 +53,14 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         protected dynamic TestData => TestState.Data;
 
-        protected virtual void Initialize() => RunTestInitialization();
+        protected virtual void Initialize()
+        {
+            RunTestInitialization();
+        }
 
         protected void RunTestInitialization()
         {
-            IScenario<TStoryBook, TStoryData>? scenario = ScenarioConfiguration.WithStoryBook<TStoryBook, TStoryData>()
+            var scenario = ScenarioConfiguration.WithStoryBook<TStoryBook, TStoryData>()
                 .Configure(options =>
                 {
                     options.Client = HttpClient;
@@ -80,7 +83,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                 });
 
             TestState.Initialize(scenario, Services, Output);
-            DatabaseManager? databaseManager = new DatabaseManager(Services.GetService<IDocumentStore>());
+            var databaseManager = new DatabaseManager(Services.GetService<IDocumentStore>());
             databaseManager.ResetDatabase();
             ArrangeAndAct();
         }
@@ -107,15 +110,21 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         }
 
         protected TDomainEvent A_domain_event_should_be_fired<TDomainEvent>()
-            where TDomainEvent : class, IDomainEvent =>
-            TestState.A_domain_event_should_be_fired<TDomainEvent>();
+            where TDomainEvent : class, IDomainEvent
+        {
+            return TestState.A_domain_event_should_be_fired<TDomainEvent>();
+        }
 
         protected void A_domain_event_should_not_be_fired<TDomainEvent>()
-            where TDomainEvent : class, IDomainEvent =>
+            where TDomainEvent : class, IDomainEvent
+        {
             TestState.A_domain_event_should_not_be_fired<TDomainEvent>();
+        }
 
         protected TIntegrationEvent An_integration_event_should_be_fired<TIntegrationEvent>()
-            where TIntegrationEvent : class, IIntegrationEvent =>
-            TestState.An_integration_event_should_be_fired<TIntegrationEvent>();
+            where TIntegrationEvent : class, IIntegrationEvent
+        {
+            return TestState.An_integration_event_should_be_fired<TIntegrationEvent>();
+        }
     }
 }

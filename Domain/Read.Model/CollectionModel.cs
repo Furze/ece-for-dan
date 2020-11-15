@@ -10,7 +10,12 @@
 
         public CollectionModel(int pageSize, int pageNumber, int count, T[] data)
         {
-            Pagination = new PaginationModel {PageSize = pageSize, PageNumber = pageNumber, Count = count};
+            Pagination = new PaginationModel
+            {
+                PageSize = pageSize,
+                PageNumber = pageNumber,
+                Count = count
+            };
 
             Data = data;
         }

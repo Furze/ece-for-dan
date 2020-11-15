@@ -9,24 +9,28 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
 {
     public class IfTheOrganisationLicenceIsCancelled : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
-        private readonly int _organisationId = ReferenceData.EceServices.FamilyTiesEducare.RefOrganisationId;
-
         public IfTheOrganisationLicenceIsCancelled(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
 
-        protected override void Act() =>
+        private readonly int _organisationId = ReferenceData.EceServices.FamilyTiesEducare.RefOrganisationId;
+
+        private const string Url = "api/rs7";
+
+        protected override void Act()
+        {
             When.Post(Url, ModelBuilder.Rs7Model(rs7 => rs7.OrganisationId = _organisationId));
+        }
 
         [Fact]
-        public void ThenTheResponseShouldBeABadRequest() =>
+        public void ThenTheResponseShouldBeABadRequest()
+        {
             Then
                 .Response
                 .ShouldBe
                 .BadRequest
                 .WithErrorCode(ErrorCode.EceServiceIneligibleBecauseLicenceStatus);
+        }
     }
 }

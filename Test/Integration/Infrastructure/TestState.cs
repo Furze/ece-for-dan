@@ -17,7 +17,6 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         private IEventTracker<IIntegrationEvent>? _integrationEventTracker;
         private LogWriter? _logWriter;
         private IScenario<TStoryBook, TStoryData>? _scenario;
-
         public TestState()
         {
             HasRun = false;
@@ -31,9 +30,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             get
             {
                 if (_scenario == null)
-                {
                     throw new Exception($"Scenario is null. {nameof(Initialize)} method should be called.");
-                }
 
                 return _scenario;
             }
@@ -58,7 +55,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         public void A_domain_event_should_not_be_fired<TDomainEvent>()
             where TDomainEvent : class, IDomainEvent
         {
-            TDomainEvent? domainEvent = _domainEventTracker?.GetEvent<TDomainEvent>();
+            var domainEvent = _domainEventTracker?.GetEvent<TDomainEvent>();
 
             domainEvent.ShouldBeNull(
                 $"A '{typeof(TDomainEvent).Name}'domain event should not have been fired but it was.");
@@ -67,7 +64,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         public TDomainEvent A_domain_event_should_be_fired<TDomainEvent>()
             where TDomainEvent : class, IDomainEvent
         {
-            TDomainEvent? domainEvent = _domainEventTracker?.GetEvent<TDomainEvent>();
+            var domainEvent = _domainEventTracker?.GetEvent<TDomainEvent>();
 
             if (domainEvent == null)
             {
@@ -76,12 +73,12 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                     WriteDomainEventToConsole(value);
                 }
 
-                string[]? receivedEvents = _domainEventTracker.ReceivedEvents().ToArray();
-
-                string? message = receivedEvents.Any()
+                var receivedEvents = _domainEventTracker.ReceivedEvents().ToArray();
+                
+                var message = receivedEvents.Any()
                     ? $"The following events were fired though. {string.Join(", ", receivedEvents)}."
                     : "No events were fired.";
-
+                
                 // ReSharper disable once ExpressionIsAlwaysNull
                 domainEvent.ShouldNotBeNull(
                     $"A {typeof(TDomainEvent).Name} domain event was not fired. {message}");
@@ -97,7 +94,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         public TIntegrationEvent An_integration_event_should_be_fired<TIntegrationEvent>()
             where TIntegrationEvent : class, IIntegrationEvent
         {
-            TIntegrationEvent? domainEvent = _integrationEventTracker?.GetEvent<TIntegrationEvent>();
+            var domainEvent = _integrationEventTracker?.GetEvent<TIntegrationEvent>();
 
             if (domainEvent == null)
             {
@@ -106,12 +103,12 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                     WriteIntegrationEventToConsole(value);
                 }
 
-                string[]? receivedEvents = _integrationEventTracker.ReceivedEvents().ToArray();
+                var receivedEvents = _integrationEventTracker.ReceivedEvents().ToArray();
 
-                string? message = receivedEvents.Any()
+                var message = receivedEvents.Any()
                     ? $"The following events were fired though. {string.Join(", ", receivedEvents)}."
                     : "No events were fired.";
-
+                
                 // ReSharper disable once ExpressionIsAlwaysNull
                 domainEvent.ShouldNotBeNull(
                     $"A {typeof(TIntegrationEvent).Name} integration event was not fired. {message}");
@@ -125,12 +122,16 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         }
 
         private void WriteIntegrationEventToConsole<TIntegrationEvent>(TIntegrationEvent integrationEvent)
-            where TIntegrationEvent : class, IIntegrationEvent =>
+            where TIntegrationEvent : class, IIntegrationEvent
+        {
             WriteEventToConsole(integrationEvent, "Integration");
+        }
 
         private void WriteDomainEventToConsole<TDomainEvent>(TDomainEvent domainEvent)
-            where TDomainEvent : class, IDomainEvent =>
+            where TDomainEvent : class, IDomainEvent
+        {
             WriteEventToConsole(domainEvent, "Domain");
+        }
 
         private void WriteEventToConsole<TDomainEv>(TDomainEv dEvent, string eventType)
         {

@@ -12,17 +12,17 @@ namespace MoE.ECE.CLI.Data
         {
             get
             {
-                FundingPeriod? julyFundingPeriod =
-                    FundingPeriod.GetFundingPeriodForDate(new Date(1, (int)FundingPeriodMonth.July,
+                var julyFundingPeriod =
+                    FundingPeriod.GetFundingPeriodForDate(new Date(1, (int) FundingPeriodMonth.July,
                         DateTime.Now.Year - 1));
-                FundingPeriod? novemberFundingPeriod =
-                    FundingPeriod.GetFundingPeriodForDate(new Date(1, (int)FundingPeriodMonth.November,
+                var novemberFundingPeriod =
+                    FundingPeriod.GetFundingPeriodForDate(new Date(1, (int) FundingPeriodMonth.November,
                         DateTime.Now.Year - 1));
                 return new[]
                 {
                     new Rs7
                     {
-                        FundingPeriod = (FundingPeriodMonth)julyFundingPeriod.StartDate.Month,
+                        FundingPeriod = (FundingPeriodMonth) julyFundingPeriod.StartDate.Month,
                         FundingYear = julyFundingPeriod.FundingYear,
                         FundingPeriodYear = julyFundingPeriod.FundingPeriodYear,
                         OrganisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId,
@@ -34,15 +34,14 @@ namespace MoE.ECE.CLI.Data
                                 RevisionNumber = 1,
                                 RevisionDate = DateTimeOffset.Now,
                                 AdvanceMonths = CreateAdvanceMonths(julyFundingPeriod.StartDate),
-                                EntitlementMonths =
-                                    CreateEntitlementMonths(julyFundingPeriod.StartDate),
+                                EntitlementMonths = CreateEntitlementMonths(julyFundingPeriod.StartDate),
                                 IsAttested = false
                             }
                         }
                     },
                     new Rs7
                     {
-                        FundingPeriod = (FundingPeriodMonth)novemberFundingPeriod.StartDate.Month,
+                        FundingPeriod = (FundingPeriodMonth) novemberFundingPeriod.StartDate.Month,
                         FundingYear = novemberFundingPeriod.FundingYear,
                         FundingPeriodYear = novemberFundingPeriod.FundingPeriodYear,
                         OrganisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId,
@@ -54,8 +53,7 @@ namespace MoE.ECE.CLI.Data
                                 RevisionNumber = 1,
                                 RevisionDate = DateTimeOffset.Now,
                                 AdvanceMonths = CreateAdvanceMonths(novemberFundingPeriod.StartDate),
-                                EntitlementMonths =
-                                    CreateEntitlementMonths(novemberFundingPeriod.StartDate),
+                                EntitlementMonths = CreateEntitlementMonths(novemberFundingPeriod.StartDate),
                                 IsAttested = true
                             }
                         }
@@ -66,10 +64,10 @@ namespace MoE.ECE.CLI.Data
 
         private static Rs7AdvanceMonth[] CreateAdvanceMonths(Date monthDate)
         {
-            DateTime date = new(monthDate.Year, monthDate.Month, 1);
+            var date = new DateTime(monthDate.Year, monthDate.Month, 1);
             return Enumerable.Range(1, 4).Select(monthOffset =>
             {
-                DateTime advanceMonth = date.AddMonths(monthOffset);
+                var advanceMonth = date.AddMonths(monthOffset);
                 return new Rs7AdvanceMonth
                 {
                     MonthNumber = advanceMonth.Month,
@@ -83,19 +81,19 @@ namespace MoE.ECE.CLI.Data
 
         private static Rs7EntitlementMonth[] CreateEntitlementMonths(Date monthDate)
         {
-            DateTime date = new(monthDate.Year, monthDate.Month, 1);
+            var date = new DateTime(monthDate.Year, monthDate.Month, 1);
             return Enumerable.Range(-4, 4)
                 .Select(monthOffset => CreateEntitlementMonth(date.AddMonths(monthOffset))).ToArray();
         }
 
         private static Rs7EntitlementMonth CreateEntitlementMonth(DateTime monthDate)
         {
-            int monthDayCount = monthDate.AddMonths(1).AddDays(-1).Day;
+            var monthDayCount = monthDate.AddMonths(1).AddDays(-1).Day;
 
-            Rs7EntitlementMonth? entitlementMonth = new {MonthNumber = monthDate.Month, Year = monthDate.Year};
+            var entitlementMonth = new Rs7EntitlementMonth
+                {MonthNumber = monthDate.Month, Year = monthDate.Year};
 
-            foreach (int day in Enumerable.Range(1, monthDayCount))
-            {
+            foreach (var day in Enumerable.Range(1, monthDayCount))
                 entitlementMonth.AddDay(
                     new Rs7EntitlementDay
                     {
@@ -108,7 +106,6 @@ namespace MoE.ECE.CLI.Data
                         NonCertificated = 6
                     }
                 );
-            }
 
             return entitlementMonth;
         }

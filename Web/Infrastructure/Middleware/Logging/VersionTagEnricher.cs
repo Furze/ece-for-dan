@@ -6,20 +6,20 @@ using Serilog.Events;
 namespace MoE.ECE.Web.Infrastructure.Middleware.Logging
 {
     public class VersionTagEnricher : ILogEventEnricher
-    {
-        private const string PropertyName = "VersionTag";
+    {    
         private LogEventProperty? _cachedProperty;
-
-        public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory) =>
+        private const string PropertyName = "VersionTag";
+        
+        public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+        {
             logEvent.AddPropertyIfAbsent(GetLogEventProperty(propertyFactory));
-
+        }
+        
         private LogEventProperty GetLogEventProperty(ILogEventPropertyFactory propertyFactory)
         {
             // Don't care about thread-safety, in the worst case the field gets overwritten and one property will be GCed
             if (_cachedProperty == null)
-            {
                 _cachedProperty = CreateProperty(propertyFactory);
-            }
 
             return _cachedProperty;
         }
@@ -28,7 +28,7 @@ namespace MoE.ECE.Web.Infrastructure.Middleware.Logging
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static LogEventProperty CreateProperty(ILogEventPropertyFactory propertyFactory)
         {
-            string? value = Environment.GetEnvironmentVariable("VERSION_TAG") ?? "NoVersion";
+            var value = Environment.GetEnvironmentVariable("VERSION_TAG") ?? "NoVersion";
             return propertyFactory.CreateProperty(PropertyName, value);
         }
     }

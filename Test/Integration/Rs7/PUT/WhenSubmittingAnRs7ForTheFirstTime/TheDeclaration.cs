@@ -10,12 +10,12 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 {
     public class TheDeclaration : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
         public TheDeclaration(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
+
+        private const string Url = "api/rs7";
 
         private Rs7Model Rs7Model
         {
@@ -23,23 +23,25 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
             set => TestData.Rs7Model = value;
         }
 
-        protected override void Arrange() =>
+        protected override void Arrange()
+        {
             Given
                 .A_rs7_has_been_created()
                 .GetResult(created => Rs7Model = created.Rs7Model);
+        }
 
-        private static string GenerateString(int length) => new string('x', length);
+        private static string GenerateString(int length)
+        {
+            return new string('x', length);
+        }
 
         [Fact]
         public void ContactPhoneCannotBeAnEmptyString()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.ContactPhone = string.Empty;
-                }
+                if (rs7.Declaration != null) rs7.Declaration.ContactPhone = string.Empty;
             });
 
             // Act
@@ -55,12 +57,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ContactPhoneCannotBeLessThanTwoCharacters()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.ContactPhone = "T";
-                }
+                if (rs7.Declaration != null) rs7.Declaration.ContactPhone = "T";
             });
 
             // Act
@@ -76,12 +75,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ContactPhoneCannotBeMoreThan50Characters()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.ContactPhone = GenerateString(51);
-                }
+                if (rs7.Declaration != null) rs7.Declaration.ContactPhone = GenerateString(51);
             });
 
             // Act
@@ -97,12 +93,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ContactPhoneIsRequired()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.ContactPhone = null;
-                }
+                if (rs7.Declaration != null) rs7.Declaration.ContactPhone = null;
             });
 
             // Act
@@ -118,12 +111,10 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void FullNameCannotBeAnEmptyString()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null)
-                {
                     rs7.Declaration.FullName = string.Empty;
-                }
             });
 
             // Act
@@ -139,12 +130,10 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void FullNameCannotBeLessThanTwoCharacters()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null)
-                {
                     rs7.Declaration.FullName = "T";
-                }
             });
 
             // Act
@@ -160,12 +149,10 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void FullNameCannotBeMoreThan150Characters()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null)
-                {
                     rs7.Declaration.FullName = GenerateString(151);
-                }
             });
 
             // Act
@@ -181,12 +168,10 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void FullNameIsRequired()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
                 if (rs7.Declaration != null)
-                {
                     rs7.Declaration.FullName = null;
-                }
             });
 
             // Act
@@ -202,12 +187,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void IsDeclaredTrueIsRequired()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.IsDeclaredTrue = null;
-                }
+                if (rs7.Declaration != null) rs7.Declaration.IsDeclaredTrue = null;
             });
 
             // Act
@@ -223,7 +205,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void IsRequired()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 => rs7.Declaration = null);
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 => rs7.Declaration = null);
 
             // Act
             When.Put($"{Url}/{Rs7Model.Id}", command);
@@ -239,12 +221,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void RoleCannotBeAnEmptyString()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.Role = string.Empty;
-                }
+                if (rs7.Declaration != null) rs7.Declaration.Role = string.Empty;
             });
 
             // Act
@@ -260,12 +239,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void RoleCannotBeLessThanTwoCharacters()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.Role = "T";
-                }
+                if (rs7.Declaration != null) rs7.Declaration.Role = "T";
             });
 
             // Act
@@ -281,12 +257,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void RoleCannotBeMoreThan100Characters()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.Role = GenerateString(101);
-                }
+                if (rs7.Declaration != null) rs7.Declaration.Role = GenerateString(101);
             });
 
             // Act
@@ -302,12 +275,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void RoleIsRequired()
         {
             // Arrange
-            UpdateRs7? command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
+            var command = ModelBuilder.UpdateRs7(Rs7Model, rs7 =>
             {
-                if (rs7.Declaration != null)
-                {
-                    rs7.Declaration.Role = null;
-                }
+                if (rs7.Declaration != null) rs7.Declaration.Role = null;
             });
 
             // Act

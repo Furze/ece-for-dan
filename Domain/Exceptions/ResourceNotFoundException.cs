@@ -17,10 +17,9 @@ namespace MoE.ECE.Domain.Exceptions
         {
         }
 
-        public static ResourceNotFoundException Create<TEntity>(Expression<Func<TEntity, object?>> expression,
-            object id)
+        public static ResourceNotFoundException Create<TEntity>(Expression<Func<TEntity, object?>> expression, object id)
         {
-            string? propertyName = PropertyExpressionHelper.GetPropertyName(expression);
+            var propertyName = PropertyExpressionHelper.GetPropertyName(expression);
 
             return new ResourceNotFoundException($"{typeof(TEntity).Name} with {propertyName} {id} does not exist.");
         }

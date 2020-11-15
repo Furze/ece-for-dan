@@ -26,7 +26,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ForTheseOrganisationTypesTheIsAttestedFieldIsRequired(int organisationType)
         {
             // Arrange 
-            Rs7Model? rs7Created = new Rs7Model();
+            var rs7Created = new Rs7Model();
 
             Given
                 .An_rs7_has_been_created_for_an_organisation_type(organisationType)
@@ -57,7 +57,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ForTheseOrganisationTypesTheIsAttestedFieldCanBeSetToFalse(int organisationType)
         {
             // Arrange 
-            Rs7Model? rs7Created = new Rs7Model();
+            var rs7Created = new Rs7Model();
 
             Given
                 .An_rs7_has_been_created_for_an_organisation_type(organisationType)
@@ -78,15 +78,8 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 
         private static void ClearAllDay(UpdateRs7 rs7)
         {
-            if (rs7.AdvanceMonths == null)
-            {
-                return;
-            }
-
-            foreach (var rs7AdvanceMonthModel in rs7.AdvanceMonths)
-            {
-                rs7AdvanceMonthModel.AllDay = null;
-            }
+            if (rs7.AdvanceMonths == null) return;
+            foreach (var rs7AdvanceMonthModel in rs7.AdvanceMonths) rs7AdvanceMonthModel.AllDay = null;
         }
 
         [Theory]
@@ -97,13 +90,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ForTheseOrganisationTypesTheIsAttestedFieldIsNotRequired(int organisationType)
         {
             // Arrange 
-            Rs7Model? rs7Created = new Rs7Model();
+            var rs7Created = new Rs7Model();
 
             Given
                 .An_rs7_has_been_created_for_an_organisation_type(organisationType)
                 .GetResult(created => rs7Created = created.Rs7Model);
 
-            UpdateRs7? command = ModelBuilder.UpdateRs7(rs7Created, rs7 =>
+            var command = ModelBuilder.UpdateRs7(rs7Created, rs7 =>
             {
                 rs7.RollStatus = RollStatus.InternalReadyForReview;
                 rs7.IsAttested = null;

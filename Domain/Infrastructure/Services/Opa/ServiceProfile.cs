@@ -5,7 +5,8 @@ namespace MoE.ECE.Domain.Infrastructure.Services.Opa
 {
     public class ServiceProfile
     {
-        [JsonProperty(PropertyName = "@id")] public string? Id { get; set; }
+        [JsonProperty(PropertyName = "@id")]
+        public string? Id { get; set; }
 
         [JsonProperty(PropertyName = "codeValueDescription")]
         public string? Description { get; set; }

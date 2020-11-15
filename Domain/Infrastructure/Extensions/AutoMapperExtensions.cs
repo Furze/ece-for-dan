@@ -7,41 +7,49 @@ using MoE.ECE.Domain.Model;
 
 namespace MoE.ECE.Domain.Infrastructure.Extensions
 {
-    public static class AutoMapperExtensions
+   public static class AutoMapperExtensions
     {
         public static IMappingExpression<TSource, TDestination> ResolveUsing<TSource, TDestination, TDestinationMember>(
             this IMappingExpression<TSource, TDestination> mappingExpression,
             Expression<Func<TDestination, TDestinationMember>> destinationMember,
-            IValueResolver<TSource, TDestination, TDestinationMember> valueResolver) =>
-            mappingExpression.ForMember(destinationMember, options => options.MapFrom(valueResolver));
+            IValueResolver<TSource, TDestination, TDestinationMember> valueResolver)
+        {
+            return mappingExpression.ForMember(destinationMember, options => options.MapFrom(valueResolver));
+        }
 
         public static TDestination[] MapToArray<TDestination>(this IMapper mapper,
-            object source) =>
-            mapper.Map<TDestination[]>(source);
+            object source)
+        {
+            return mapper.Map<TDestination[]>(source);
+        }
 
         public static List<TDestination> MapToList<TDestination>(this IMapper mapper,
-            object source) =>
-            mapper.Map<List<TDestination>>(source);
+            object source)
+        {
+            return mapper.Map<List<TDestination>>(source);
+        }
 
         public static IEnumerable<TDestination> MapToList<TSource, TDestination>(this IMapper mapper,
             IEnumerable<TSource> sourceCollection, IEnumerable<TDestination> destinationCollection,
-            Func<TDestination, TSource, bool> equalsPredicate) =>
-            mapper.MapToList(sourceCollection, destinationCollection,
+            Func<TDestination, TSource, bool> equalsPredicate)
+        {
+            return mapper.MapToList(sourceCollection, destinationCollection,
                 (collection, sourceItem) =>
                     collection.FirstOrDefault(destItem => equalsPredicate(destItem, sourceItem)));
+        }
 
         public static IEnumerable<TDestination> MapToList<TSource, TDestination>(this IMapper mapper,
             IEnumerable<TSource> sourceCollection, IEnumerable<TDestination> destinationCollection,
             Func<IEnumerable<TDestination>, TSource, TDestination> destinationResolver)
         {
-            List<TDestination>? updatedDestinationCollection = new List<TDestination>();
-            List<TDestination>? destList = destinationCollection.ToList();
+            var updatedDestinationCollection = new List<TDestination>();
+            var destList = destinationCollection.ToList();
 
-            foreach (TSource source in sourceCollection)
+            foreach (var source in sourceCollection)
             {
-                TDestination existingDestination = destinationResolver(destList, source);
+                var existingDestination = destinationResolver(destList, source);
 
-                TDestination updatedPosition = existingDestination != null
+                var updatedPosition = existingDestination != null
                     ? mapper.Map(source, existingDestination)
                     : mapper.Map<TDestination>(source);
 
@@ -54,16 +62,19 @@ namespace MoE.ECE.Domain.Infrastructure.Extensions
         public static IMappingExpression<TSource, TDestination> Map<TSource, TSourceMember, TDestination>(
             this IMappingExpression<TSource, TDestination> mappingExpression,
             Expression<Func<TDestination, object?>> destinationMember,
-            Expression<Func<TSource, TSourceMember>> sourceMember) =>
-            mappingExpression.ForMember(destinationMember, options => options.MapFrom(sourceMember));
-
+            Expression<Func<TSource, TSourceMember>> sourceMember)
+        {
+            return mappingExpression.ForMember(destinationMember, options => options.MapFrom(sourceMember));
+        }
+       
         public static IMappingExpression<TSource, TDestination> Ignore<TSource, TDestination>(
             this IMappingExpression<TSource, TDestination> mappingExpression,
-            Expression<Func<TDestination, object?>> destinationMember) =>
-            mappingExpression.ForMember(destinationMember, options => options.Ignore());
-
-        public static IMappingExpression<TSource, TDomainEntity> IgnoreDomainEntityProperties<TSource, TDomainEntity>(
-            this IMappingExpression<TSource, TDomainEntity> mappingExpression
+            Expression<Func<TDestination, object?>> destinationMember)
+        {
+            return mappingExpression.ForMember(destinationMember, options => options.Ignore());
+        }
+        
+        public static IMappingExpression<TSource, TDomainEntity> IgnoreDomainEntityProperties<TSource, TDomainEntity>(this IMappingExpression<TSource, TDomainEntity> mappingExpression
         ) where TDomainEntity : DomainEntity
         {
             mappingExpression.ForMember(entity => entity.Id, options => options.Ignore());
@@ -71,16 +82,18 @@ namespace MoE.ECE.Domain.Infrastructure.Extensions
 
             return mappingExpression;
         }
-
+        
         /// <summary>
         ///     Add the ability to map from multiple sources objects into a single destination object.
         /// </summary>
         /// <param name="mapper"></param>
         /// <param name="sources"></param>
         /// <returns></returns>
-        public static MultiMapper MapFrom(this IMapper mapper, params object[] sources) =>
-            new MultiMapper(mapper, sources);
-
+        public static MultiMapper MapFrom(this IMapper mapper, params object[] sources)
+        {
+            return new MultiMapper(mapper, sources);
+        }
+        
         public class MultiMapper
         {
             private readonly IMapper _mapper;
@@ -101,16 +114,14 @@ namespace MoE.ECE.Domain.Infrastructure.Extensions
             public T Into<T>(T destination)
             {
                 foreach (var source in _sources)
-                {
                     _mapper.Map(source, destination);
-                }
 
                 return destination;
             }
 
             public T Into<T>() where T : new()
             {
-                T destination = new T();
+                var destination = new T();
 
                 return Into(destination);
             }

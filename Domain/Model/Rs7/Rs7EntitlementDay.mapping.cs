@@ -5,6 +5,9 @@ namespace MoE.ECE.Domain.Model.Rs7
 {
     public class Rs7EntitlementDayMapping : Profile
     {
-        public Rs7EntitlementDayMapping() => CreateMap<Rs7EntitlementDayModel, Rs7EntitlementDay>();
+        public Rs7EntitlementDayMapping()
+        {
+            CreateMap<Rs7EntitlementDayModel, Rs7EntitlementDay>();
+        }
     }
 }

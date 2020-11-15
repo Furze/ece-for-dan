@@ -4,9 +4,7 @@ using MoE.ECE.Domain.Infrastructure.EntityFramework;
 
 namespace MoE.ECE.Domain.Model.ReferenceData
 {
-    public class
-        EceLicencingDetailDateRangedParameterConfiguration : EntityConfigurationBase<
-            EceLicencingDetailDateRangedParameter>
+    public class EceLicencingDetailDateRangedParameterConfiguration : EntityConfigurationBase<EceLicencingDetailDateRangedParameter>
     {
         protected override void ConfigureEntity(EntityTypeBuilder<EceLicencingDetailDateRangedParameter> builder)
         {

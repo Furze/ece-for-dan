@@ -50,9 +50,7 @@ namespace MoE.ECE.Domain.Model.Rs7
             get
             {
                 if (Revisions.Count == 0)
-                {
                     throw new ECEApplicationException("Rs7 does not contain any Revisions");
-                }
 
                 return Revisions
                     .OrderByDescending(r => r.RevisionNumber)
@@ -62,25 +60,34 @@ namespace MoE.ECE.Domain.Model.Rs7
 
         public bool IsZeroReturn => CurrentRevision.IsZeroReturn;
 
-
-        public void PeerApprove(DateTimeOffset now) => UpdateWorkflowStatus(RollStatus.InternalReadyForReview, now);
+        
+        public void PeerApprove(DateTimeOffset now)
+        {
+            UpdateWorkflowStatus(RollStatus.InternalReadyForReview, now);
+        }
 
         public void PeerReject(DateTimeOffset now)
         {
             if (RollStatus != RollStatus.ExternalSubmittedForApproval)
-            {
                 throw InvalidRollStatusForPeerRejectingRs7(RollStatus);
-            }
 
             UpdateWorkflowStatus(RollStatus.ExternalReturnedForEdit, now);
         }
 
-        public void ApproveInternally(DateTimeOffset now) => UpdateWorkflowStatus(RollStatus.InternalApproved, now);
+        public void ApproveInternally(DateTimeOffset now)
+        {
+            UpdateWorkflowStatus(RollStatus.InternalApproved, now);
+        }
 
-        public void Decline(DateTimeOffset now) => UpdateWorkflowStatus(RollStatus.Declined, now);
+        public void Decline(DateTimeOffset now)
+        {
+            UpdateWorkflowStatus(RollStatus.Declined, now);
+        }
 
-        public Rs7Revision GetRevision(int revisionNumber) =>
-            Revisions.Single(revision => revision.RevisionNumber == revisionNumber);
+        public Rs7Revision GetRevision(int revisionNumber)
+        {
+            return Revisions.Single(revision => revision.RevisionNumber == revisionNumber);
+        }
 
         public void CreateZeroReturn(in DateTimeOffset now)
         {
@@ -88,12 +95,12 @@ namespace MoE.ECE.Domain.Model.Rs7
             ReceivedDate = now;
 
             // set the first revision
-            Rs7Revision? rs7Revision = CreateFirstRevision(now, Source.Internal);
+            var rs7Revision = CreateFirstRevision(now, Source.Internal);
 
             rs7Revision.IsZeroReturn = true;
             rs7Revision.IsAttested = false;
         }
-
+        
         public void CreateSkeleton(in DateTimeOffset now, RollStatus initialStatus)
         {
             RollStatus = initialStatus;
@@ -118,18 +125,17 @@ namespace MoE.ECE.Domain.Model.Rs7
             CurrentRevision.RevisionDate = now;
         }
 
-        public bool CanBeDiscarded() =>
-            RollStatus == RollStatus.ExternalDraft || RollStatus == RollStatus.ExternalNew ||
-            RollStatus == RollStatus.ExternalReturnedForEdit;
+        public bool CanBeDiscarded()
+        {
+            return RollStatus == RollStatus.ExternalDraft || RollStatus == RollStatus.ExternalNew ||
+                   RollStatus == RollStatus.ExternalReturnedForEdit;
+        }
 
         public void UpdateDeclaration(UpdateRs7Declaration command)
         {
-            if (RollStatus != RollStatus.ExternalSubmittedForApproval)
-            {
-                throw InvalidRollStatusForUpdate(RollStatus);
-            }
+            if (RollStatus != RollStatus.ExternalSubmittedForApproval) throw InvalidRollStatusForUpdate(RollStatus);
 
-            Rs7Revision? revision = CurrentRevision;
+            var revision = CurrentRevision;
 
             revision.Declaration ??= new Declaration();
 
@@ -143,24 +149,18 @@ namespace MoE.ECE.Domain.Model.Rs7
         {
             // Don't allow save with New status. The consumer should provide Draft or PendingApproval
             if (newRollStatus == RollStatus.ExternalNew)
-            {
                 throw InvalidUpdateRs7StatusNew();
-            }
 
             // Don't let the status move back into Draft!
             if (newRollStatus == RollStatus.ExternalDraft && RollStatus > RollStatus.ExternalDraft)
-            {
                 throw InvalidRollStatusTransition(RollStatus, newRollStatus);
-            }
 
             // Once submitted, can not update roll data
             if (RollStatus != RollStatus.ExternalNew
                 && RollStatus != RollStatus.ExternalDraft
                 && RollStatus != RollStatus.ExternalSubmittedForApproval
                 && RollStatus != RollStatus.ExternalReturnedForEdit)
-            {
                 throw InvalidRollStatusForUpdate(RollStatus);
-            }
 
             WasUpdated(now);
 
@@ -173,7 +173,7 @@ namespace MoE.ECE.Domain.Model.Rs7
 
             CurrentRevision.RevisionDate = now;
         }
-
+        
         /// <summary>
         ///     Creates a first Revision if one doesn't already exist.
         /// </summary>
@@ -183,26 +183,23 @@ namespace MoE.ECE.Domain.Model.Rs7
         /// <exception cref="Exception">Exception is thrown if the Rs7 already has more Revisions than the first</exception>
         private Rs7Revision CreateFirstRevision(DateTimeOffset now, string? source)
         {
-            if (Revisions.Count > 1)
-            {
-                throw new ECEApplicationException("Rs7 already has multiple revisions");
-            }
+            if (Revisions.Count > 1) throw new ECEApplicationException("Rs7 already has multiple revisions");
 
-            Rs7Revision? revision = Revisions.Count == 0 ? CreateNewRevision(now) : Revisions.First();
+            var revision = Revisions.Count == 0 ? CreateNewRevision(now) : Revisions.First();
 
             if (source != null)
-            {
                 revision.Source = source;
-            }
 
             return revision;
         }
 
         private Rs7Revision CreateNewRevision(DateTimeOffset now)
         {
-            Rs7Revision? rs7Revision = new Rs7Revision
+            var rs7Revision = new Rs7Revision
             {
-                Id = Revisions.Count + 1, RevisionNumber = Revisions.Count + 1, RevisionDate = now
+                Id = Revisions.Count + 1,
+                RevisionNumber = Revisions.Count + 1,
+                RevisionDate = now
             };
 
             Revisions.Add(rs7Revision);
@@ -214,9 +211,9 @@ namespace MoE.ECE.Domain.Model.Rs7
 
         private void CloneNextRevision(DateTimeOffset now)
         {
-            Rs7Revision? oldRevision = CurrentRevision;
+            var oldRevision = CurrentRevision;
 
-            Rs7Revision? rs7Revision = new Rs7Revision
+            var rs7Revision = new Rs7Revision
             {
                 Rs7Id = Id,
                 Id = oldRevision.RevisionNumber + 1,
@@ -232,5 +229,6 @@ namespace MoE.ECE.Domain.Model.Rs7
 
             Revisions.Add(rs7Revision);
         }
+
     }
 }

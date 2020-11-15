@@ -17,14 +17,18 @@ namespace MoE.ECE.Web.Infrastructure.Middleware.Exceptions
 
         protected override HttpStatusCode StatusCode => HttpStatusCode.BadRequest;
 
-        protected override ErrorResponse CreateResponse(HttpContext context, ValidationException exception) =>
-            new
+        protected override ErrorResponse CreateResponse(HttpContext context, ValidationException exception)
+        {
+            return new ErrorResponse
             {
                 Errors = exception.Errors.Select(error =>
                     new Error
                     {
-                        ErrorCode = error.ErrorCode, Property = error.PropertyName, Message = error.ErrorMessage
+                        ErrorCode = error.ErrorCode,
+                        Property = error.PropertyName,
+                        Message = error.ErrorMessage
                     }).ToArray()
             };
+        }
     }
 }

@@ -5,6 +5,9 @@ namespace MoE.ECE.Domain.Command.Rs7
 {
     public class SaveAsDraftMapper : Profile
     {
-        public SaveAsDraftMapper() => CreateMap<Rs7Model, SaveAsDraft>();
+        public SaveAsDraftMapper()
+        {
+            CreateMap<Rs7Model, SaveAsDraft>();
+        }
     }
 }

@@ -12,8 +12,9 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         }
 
         protected override StartupConfigRegistry CreateRegistry(IConfiguration configuration,
-            IWebHostEnvironment environment) =>
-            new StartupConfigRegistry(configuration, environment)
+            IWebHostEnvironment environment)
+        {
+            return new StartupConfigRegistry(configuration, environment)
                 .Register<AppSettingsStartup>()
                 .Register<AuthenticationStartup>()
                 .Register<LoggingStartup>()
@@ -26,5 +27,6 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                 .Register<CorsStartup>()
                 .Register<SwaggerStartup>()
                 .Register<MvcStartup>();
+        }
     }
 }

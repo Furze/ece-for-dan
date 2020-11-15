@@ -9,13 +9,13 @@ namespace MoE.ECE.Integration.Tests.Chapter
 {
     public class Rs7SubmittedForApprovalChapter : Chapter<ECEStoryData>
     {
-        public Rs7PeerRejectedChapter The_rs7_has_been_peer_review_rejected() =>
-            When(context =>
+        public Rs7PeerRejectedChapter The_rs7_has_been_peer_review_rejected()
+        {
+            return When(context =>
                 {
-                    Returned? rejected = new Returned
+                    var rejected = new Returned
                     {
-                        BusinessEntityId =
-                            new Guid(context.StoryData.Rs7Model.BusinessEntityId.GetValueOrDefault()),
+                        BusinessEntityId = new Guid(context.StoryData.Rs7Model.BusinessEntityId.GetValueOrDefault()),
                         BusinessEntityType = Constants.BusinessEntityTypes.Rs7
                     };
 
@@ -24,11 +24,13 @@ namespace MoE.ECE.Integration.Tests.Chapter
                     context.StoryData.Rs7Model = context.GetDomainEvent<Rs7PeerRejected>();
                 })
                 .ProceedToChapter<Rs7PeerRejectedChapter>();
+        }
 
-        public Rs7PeerApprovedChapter The_rs7_has_been_peer_approved() =>
-            When(context =>
+        public Rs7PeerApprovedChapter The_rs7_has_been_peer_approved()
+        {
+            return When(context =>
             {
-                Approved? approved = new Approved
+                var approved = new Approved
                 {
                     BusinessEntityId = new Guid(context.StoryData.Rs7Model.BusinessEntityId.GetValueOrDefault()),
                     BusinessEntityType = Constants.BusinessEntityTypes.Rs7
@@ -38,11 +40,13 @@ namespace MoE.ECE.Integration.Tests.Chapter
 
                 context.StoryData.Rs7Model = context.GetDomainEvent<Rs7PeerApproved>();
             }).ProceedToChapter<Rs7PeerApprovedChapter>();
+        }
 
-        public EndChapter<ECEStoryData> The_rs7_declaration_has_been_updated() =>
-            When(context =>
+        public EndChapter<ECEStoryData> The_rs7_declaration_has_been_updated()
+        {
+            return When(context =>
             {
-                UpdateRs7Declaration? command = new UpdateRs7Declaration
+                var command = new UpdateRs7Declaration
                 {
                     Id = context.StoryData.Rs7Model.Id,
                     Role = "role",
@@ -55,5 +59,6 @@ namespace MoE.ECE.Integration.Tests.Chapter
 
                 context.StoryData.Rs7Model = context.GetDomainEvent<Rs7DeclarationUpdated>();
             }).End();
+        }
     }
 }

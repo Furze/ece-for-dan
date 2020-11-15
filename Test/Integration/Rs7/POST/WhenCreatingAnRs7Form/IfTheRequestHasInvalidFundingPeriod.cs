@@ -10,30 +10,38 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
 {
     public class IfTheRequestHasInvalidFundingPeriod : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
         public IfTheRequestHasInvalidFundingPeriod(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
         }
 
-        protected override void Act() =>
-            When.Post(Url,
-                new CreateSkeletonRs7
-                {
-                    FundingPeriod = (FundingPeriodMonth)5, FundingPeriodYear = 2020, OrganisationId = 1
-                });
+        private const string Url = "api/rs7";
+
+        protected override void Act()
+        {
+            When.Post(Url, new CreateSkeletonRs7
+            {
+                FundingPeriod = (FundingPeriodMonth) 5,
+                FundingPeriodYear = 2020,
+                OrganisationId = 1
+            });
+        }
 
         [Fact]
-        public void ThenADomainEventShouldNotBePublished() => A_domain_event_should_not_be_fired<Rs7SkeletonCreated>();
+        public void ThenADomainEventShouldNotBePublished()
+        {
+            A_domain_event_should_not_be_fired<Rs7SkeletonCreated>();
+        }
 
         [Fact]
-        public void ThenTheResponseShouldBeABadRequest() =>
+        public void ThenTheResponseShouldBeABadRequest()
+        {
             Then
                 .Response
                 .ShouldBe
                 .BadRequest
                 .ForProperty(nameof(CreateSkeletonRs7.FundingPeriod))
                 .WithMessage("5 is invalid. These are the valid options: 3, 7, 11");
+        }
     }
 }

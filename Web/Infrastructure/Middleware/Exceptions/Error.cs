@@ -1,7 +1,7 @@
 ﻿namespace MoE.ECE.Web.Infrastructure.Middleware.Exceptions
 {
     /// <summary>
-    ///     The details for a single api request error.
+    /// The details for a single api request error.
     /// </summary>
     public class Error
     {

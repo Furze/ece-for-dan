@@ -13,11 +13,20 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 {
     public class IfTheRequestRollStatusIsNew : SpeedyIntegrationTestBase
     {
-        private const string Url = "api/rs7";
-
         public IfTheRequestRollStatusIsNew(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
+        }
+
+        private const string Url = "api/rs7";
+
+        protected override void Arrange()
+        {
+            Given
+                .A_rs7_has_been_created()
+                .GetResult(result => Rs7Model = result.Rs7Model);
+
+            UpdateRs7Command = ModelBuilder.UpdateRs7(Rs7Model, rs7 => rs7.RollStatus = RollStatus.ExternalNew);
         }
 
         private Rs7Model Rs7Model
@@ -32,27 +41,25 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
             set => TestData.SubmitRs7Command = value;
         }
 
-        protected override void Arrange()
+        protected override void Act()
         {
-            Given
-                .A_rs7_has_been_created()
-                .GetResult(result => Rs7Model = result.Rs7Model);
-
-            UpdateRs7Command = ModelBuilder.UpdateRs7(Rs7Model, rs7 => rs7.RollStatus = RollStatus.ExternalNew);
-        }
-
-        protected override void Act() =>
             // Act
             When.Put($"{Url}/{Rs7Model.Id}", UpdateRs7Command);
+        }
 
         [Fact]
-        public void ThenADomainEventShouldNotBePublished() => A_domain_event_should_not_be_fired<Rs7Updated>();
+        public void ThenADomainEventShouldNotBePublished()
+        {
+            A_domain_event_should_not_be_fired<Rs7Updated>();
+        }
 
         [Fact]
-        public void ThenTheResponseShouldBeABadRequest() =>
+        public void ThenTheResponseShouldBeABadRequest()
+        {
             Then.Response
                 .ShouldBe
                 .BadRequest
                 .WithErrorCode(ErrorCode.InvalidUpdateRs7StatusNew);
+        }
     }
 }

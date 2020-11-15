@@ -44,17 +44,10 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         private static Dictionary<string, string> InMemoryConfiguration => new Dictionary<string, string>
         {
-            {"MartenSettings:ConnectionString", _connectionString}
+            {
+                "MartenSettings:ConnectionString", _connectionString
+            }
         };
-
-        public void Dispose()
-        {
-            Log.CloseAndFlush();
-
-            Host.Dispose();
-
-            HttpClient.Dispose();
-        }
 
         private static IHost CreateHost()
         {
@@ -68,8 +61,8 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                 .WriteTo.Console()
                 .CreateLogger();
 
-
-            IHostBuilder? hostBuilder = new HostBuilder()
+            
+            var hostBuilder = new HostBuilder()
                 .ConfigureWebHost(builder =>
                     builder
                         .UseSerilog()
@@ -87,7 +80,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                         .ConfigureTestServices(ServicesConfiguration));
 
             Log.Information("******* TEST API STARTING *******");
-            IHost? host = hostBuilder.Start();
+            var host = hostBuilder.Start();
             return host;
         }
 
@@ -117,16 +110,28 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             services.AddLogging(builder => builder.AddSeq());
         }
 
-        private static void RemoveDependency<T>(IServiceCollection services) =>
+        private static void RemoveDependency<T>(IServiceCollection services)
+        {
             GetDependencyDescriptor<T>(services)
                 .ToList()
                 .ForEach(dependency => services.Remove(dependency));
+        }
 
         /// <summary>
         ///     Gets the service description details for the given type.
         /// </summary>
-        private static IEnumerable<ServiceDescriptor>
-            GetDependencyDescriptor<TDependency>(IServiceCollection services) =>
-            services.Where(t => t.ServiceType == typeof(TDependency));
+        private static IEnumerable<ServiceDescriptor> GetDependencyDescriptor<TDependency>(IServiceCollection services)
+        {
+            return services.Where(t => t.ServiceType == typeof(TDependency));
+        }
+
+        public void Dispose()
+        {
+            Log.CloseAndFlush();
+            
+            Host.Dispose();
+            
+            HttpClient.Dispose();
+        }
     }
 }

@@ -7,20 +7,21 @@ namespace MoE.ECE.Integration.Tests.Chapter
 {
     public class Rs7UpdatedChapter : Chapter<ECEStoryData>
     {
-        public EndChapter<ECEStoryData> And_the_rs7_has_been_approved(Action<ApproveRs7>? setUpCommand = null) =>
-            When(context =>
-                {
-                    ApproveRs7? command =
-                        new ApproveRs7(context.StoryData.Rs7Model.BusinessEntityId.GetValueOrDefault());
+        public EndChapter<ECEStoryData> And_the_rs7_has_been_approved(Action<ApproveRs7>? setUpCommand = null)
+        {
+            return When(context =>
+            {
+                var command = new ApproveRs7(context.StoryData.Rs7Model.BusinessEntityId.GetValueOrDefault());
 
-                    setUpCommand?.Invoke(command);
+                setUpCommand?.Invoke(command);
+                
+                context.CqrsExecute(command);
+                
+                var domainEvent = context.GetDomainEvent<Rs7Approved>();
 
-                    context.CqrsExecute(command);
-
-                    Rs7Approved? domainEvent = context.GetDomainEvent<Rs7Approved>();
-
-                    context.StoryData.Rs7Model = domainEvent;
-                })
+                context.StoryData.Rs7Model = domainEvent;
+            })
                 .End();
+        }
     }
 }

@@ -5,6 +5,9 @@ namespace MoE.ECE.Domain.Command.Rs7
 {
     public class UpdateRs7EntitlementMonthValidator : AbstractValidator<UpdateRs7EntitlementMonth>
     {
-        public UpdateRs7EntitlementMonthValidator() => Include(new Rs7EntitlementMonthModelValidator());
+        public UpdateRs7EntitlementMonthValidator()
+        {
+            Include(new Rs7EntitlementMonthModelValidator());
+        }
     }
 }
