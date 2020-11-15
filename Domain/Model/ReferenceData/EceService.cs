@@ -7,8 +7,8 @@ namespace MoE.ECE.Domain.Model.ReferenceData
     public class EceService
     {
        public int RefOrganisationId { get; set; }
-        public string OrganisationName { get; set; } = null!;
-        public string OrganisationNumber { get; set; } = null!;
+       public string OrganisationName { get; set; } = string.Empty;
+        public string OrganisationNumber { get; set; } = string.Empty;
         public int OrganisationTypeId { get; set; }
         public string? OrganisationTypeDescription { get; set; }
         public int OrganisationStatusId { get; set; }

@@ -75,23 +75,13 @@ namespace MoE.ECE.Domain.Model.FundingPeriod
 
         protected abstract Dictionary<CalendarMonth, MonthYear[]> CalendarMonthAdvancePeriods { get; }
 
+        public abstract FundingPeriod PreviousFundingPeriod { get; }
+
         /// <summary>
         ///     This is the date of the next funding period
         /// </summary>
-        public abstract Date NextPeriodStartDate { get; }
-
-        /// <summary>
-        ///     Most of the time the year is the same as the date's year. But when the date is for January then it
-        ///     falls into the previous years funding round.
-        ///     Returns the actual year for the period (not the financial funding year)
-        /// </summary>
-        /// <param name="date">The date we wish to create a funding period for.</param>
-        /// <returns>the year</returns>
-        private static int CalculateFundingPeriodYearFromDate(Date date)
-        {
-            return date.Month == CalendarMonth.January.Id ? date.Year - 1 : date.Year;
-        }
-
+        public abstract FundingPeriod NextFundingPeriod { get; }
+        
         /// <summary>
         ///     If the funding period is March then the funding year is the same as the calendar year
         ///     Else it will be the next year
@@ -116,6 +106,26 @@ namespace MoE.ECE.Domain.Model.FundingPeriod
             var fundingPeriod = instantiateFundingPeriod(date);
 
             return fundingPeriod;
+        }
+
+        public FundingPeriod EarlierFundingPeriod(int count)
+        {
+            FundingPeriod fundingPeriod = this;
+            for (var i = 0; i < count; i++) fundingPeriod = fundingPeriod.PreviousFundingPeriod;
+
+            return fundingPeriod;
+        }
+
+        /// <summary>
+        ///     Most of the time the year is the same as the date's year. But when the date is for January then it
+        ///     falls into the previous years funding round.
+        ///     Returns the actual year for the period (not the financial funding year)
+        /// </summary>
+        /// <param name="date">The date we wish to create a funding period for.</param>
+        /// <returns>the year</returns>
+        private static int CalculateFundingPeriodYearFromDate(Date date)
+        {
+            return date.Month == CalendarMonth.January.Id ? date.Year - 1 : date.Year;
         }
     }
 }

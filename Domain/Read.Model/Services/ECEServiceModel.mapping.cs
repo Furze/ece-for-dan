@@ -33,7 +33,6 @@ namespace MoE.ECE.Domain.Read.Model.Services
                 .Map(dest => dest.AddressLine3, src => src.LocationAddressLine3)
                 .Map(dest => dest.AddressLine4, src => src.LocationAddressLine4)
                 .Map(d => d.DailySessions, s => s.OperatingSessions)
-                .Ignore(dest => dest.SanitisedOrganisationName)
                 .Ignore(dest => dest.CreatableRs7FundingPeriods);
         }
     }

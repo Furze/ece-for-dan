@@ -60,6 +60,12 @@ namespace MoE.ECE.Domain.Model.FundingPeriod
                 }
             };
 
-        public override Date NextPeriodStartDate => new Date(1, CalendarMonth.March.Id, StartDate.Year + 1);
+        public override FundingPeriod PreviousFundingPeriod
+            => new JulyFundingPeriod(new Date(1, CalendarMonth.July.Id, StartDate.Year));
+
+        public override FundingPeriod NextFundingPeriod
+            => new MarchFundingPeriod(new Date(1, CalendarMonth.March.Id, StartDate.Year + 1));
+
+        // public override Date NextPeriodStartDate => new Date(1, CalendarMonth.March.Id, StartDate.Year + 1);
     }
 }

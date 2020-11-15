@@ -23,7 +23,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Read.Model\Services" />
+      <Folder Include="Model\OperationalFunding" />
+      <Folder Include="Read.Model\OperationalFunding" />
     </ItemGroup>
 
 </Project>

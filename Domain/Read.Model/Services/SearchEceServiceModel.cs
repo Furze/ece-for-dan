@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace MoE.ECE.Domain.Read.Model.Services
+﻿namespace MoE.ECE.Domain.Read.Model.Services
 {
     public class SearchEceServiceModel
     {
@@ -9,11 +7,8 @@ namespace MoE.ECE.Domain.Read.Model.Services
         // can be consistent across schools and ECEs (would need to change the 
         // front-end search code to match of course).
         public int OrganisationId { get; set; }
-        public string OrganisationNumber { get; set; } = null!;
-        public string ServiceName { get; set; } = null!;
+        public string OrganisationNumber { get; set; } = string.Empty;
+        public string ServiceName { get; set; } = string.Empty;
         public string? ServiceProviderNumber { get; set; }
-
-        [JsonIgnore]
-        public string SanitisedOrganisationName { get; set; } = null!;
     }
 }
