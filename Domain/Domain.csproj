@@ -4,7 +4,6 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>MoE.ECE.Domain</RootNamespace>
         <Nullable>enable</Nullable>
-        <LangVersion>9</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
