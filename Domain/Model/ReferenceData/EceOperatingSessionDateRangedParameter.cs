@@ -22,6 +22,7 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset ModifiedDate { get; set; }
 
-        public virtual EceLicencingDetailDateRangedParameter EceLicencingDetailDateRangedParameter { get; set; } = null!;
+        public virtual EceLicencingDetailDateRangedParameter EceLicencingDetailDateRangedParameter { get; set; } =
+            null!;
     }
 }

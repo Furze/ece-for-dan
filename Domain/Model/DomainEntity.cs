@@ -2,10 +2,9 @@
 
 namespace MoE.ECE.Domain.Model
 {
-    public abstract class DomainEntity 
+    public abstract class DomainEntity
     {
-        [Timestamp]
-        public byte[] RowVersion { get; set; } = null!;
+        [Timestamp] public byte[] RowVersion { get; set; } = null!;
 
         public int Id { get; set; }
     }

@@ -6,7 +6,8 @@ using FluentValidation.Validators;
 namespace MoE.ECE.Domain.Command.Validation
 {
     /// <summary>
-    /// Checks that an enum is actually defined. Its possible to pass in a rubbish string and it will still be parsed to an enum.
+    ///     Checks that an enum is actually defined. Its possible to pass in a rubbish string and it will still be parsed to an
+    ///     enum.
     /// </summary>
     /// <typeparam name="TEnum"></typeparam>
     public class ShouldBeAValidEnum<TEnum> : PropertyValidator
@@ -17,14 +18,16 @@ namespace MoE.ECE.Domain.Command.Validation
                                            string.Join(", ", Enum.GetValues(typeof(TEnum)).Cast<int>()))
         {
             if (!typeof(TEnum).GetTypeInfo().IsEnum)
+            {
                 throw new ArgumentException("TEnum must be an enum.");
+            }
         }
-        
+
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            var propertyToValidate = (TEnum) context.PropertyValue;
+            TEnum propertyToValidate = (TEnum)context.PropertyValue;
 
-            var isValidEnum = Enum.IsDefined(typeof(TEnum), propertyToValidate);
+            bool isValidEnum = Enum.IsDefined(typeof(TEnum), propertyToValidate);
 
             return isValidEnum;
         }

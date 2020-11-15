@@ -20,7 +20,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             where TDerivedEventType : class;
 
         /// <summary>
-        /// Returns an enumerable list of the names of the received events.
+        ///     Returns an enumerable list of the names of the received events.
         /// </summary>
         /// <returns></returns>
         IEnumerable<string> ReceivedEvents();

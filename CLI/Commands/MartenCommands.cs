@@ -17,16 +17,13 @@ namespace MoE.ECE.CLI.Commands
     {
         private readonly IConfiguration _configuration;
 
-        public MartenCommands(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+        public MartenCommands(IConfiguration configuration) => _configuration = configuration;
 
         public Command Apply
         {
             get
             {
-                var command = new Command("apply",
+                Command? command = new("apply",
                     "Use Marten to apply all outstanding changes to the database based on the current Marten configuration")
                 {
                     new Option<string?>("-cs", "--connection-string")
@@ -42,7 +39,7 @@ namespace MoE.ECE.CLI.Commands
         {
             get
             {
-                var command = new Command("assert",
+                Command? command = new("assert",
                     "Use Marten to assert that the existing database matches the current Marten configuration")
                 {
                     new Option<string?>("-cs", "--connection-string")
@@ -58,7 +55,7 @@ namespace MoE.ECE.CLI.Commands
         {
             get
             {
-                var command = new Command("patch",
+                Command? command = new("patch",
                     "Use Marten to evaluate the current configuration against the database and write a patch and drop file if there are any differences")
                 {
                     new Option<string?>(new[] {"-cs", "--connection-string"}, "The PG connection string"),
@@ -79,7 +76,7 @@ namespace MoE.ECE.CLI.Commands
 
         private async Task<int> MartenApply(string? connectionString)
         {
-            var store = BuildDocumentStore(connectionString);
+            IDocumentStore? store = BuildDocumentStore(connectionString);
             store.Schema.ApplyAllConfiguredChangesToDatabase();
             Console.WriteLine("Successfully applied outstanding database changes");
             return await Task.FromResult(0);
@@ -87,7 +84,7 @@ namespace MoE.ECE.CLI.Commands
 
         private async Task<int> MartenAssert(string? connectionString)
         {
-            var store = BuildDocumentStore(connectionString);
+            IDocumentStore? store = BuildDocumentStore(connectionString);
             try
             {
                 store.Schema.AssertDatabaseMatchesConfiguration();
@@ -129,7 +126,7 @@ namespace MoE.ECE.CLI.Commands
                 return await Task.FromResult(-1);
             }
 
-            var store = BuildDocumentStore(connectionString);
+            IDocumentStore? store = BuildDocumentStore(connectionString);
             try
             {
                 store.Schema.AssertDatabaseMatchesConfiguration();
@@ -147,16 +144,17 @@ namespace MoE.ECE.CLI.Commands
         private async Task<int> BuildPatchFiles(string patchName, string migrationsDirectory, string schemaObjects,
             string transactional, IDocumentStore store)
         {
-            var scriptSchemaCreationFlag = bool.Parse(schemaObjects);
-            var transactionalScriptFlag = bool.Parse(transactional);
+            bool scriptSchemaCreationFlag = bool.Parse(schemaObjects);
+            bool transactionalScriptFlag = bool.Parse(transactional);
 
-            var patch = store.Schema.ToPatch(scriptSchemaCreationFlag, true);
+            SchemaPatch? patch = store.Schema.ToPatch(scriptSchemaCreationFlag, true);
 
-            var baseMigrationsDirectory = Path.Combine(migrationsDirectory, Migrations.MigrationFileRootDirectoryName);
+            string? baseMigrationsDirectory =
+                Path.Combine(migrationsDirectory, Migrations.MigrationFileRootDirectoryName);
             Directory.CreateDirectory(baseMigrationsDirectory);
 
-            var basePatchFile = GetPatchFileName(baseMigrationsDirectory, patchName) + Migrations.SqlFileExtension;
-            var upFileWithPath = Path.Combine(baseMigrationsDirectory, basePatchFile);
+            string? basePatchFile = GetPatchFileName(baseMigrationsDirectory, patchName) + Migrations.SqlFileExtension;
+            string? upFileWithPath = Path.Combine(baseMigrationsDirectory, basePatchFile);
 
             if (IfPatchFileAlreadyExists(patchName, baseMigrationsDirectory))
             {
@@ -164,9 +162,9 @@ namespace MoE.ECE.CLI.Commands
                 return await Task.FromResult(-1);
             }
 
-            var dropDirectory = Path.Combine(baseMigrationsDirectory, Migrations.MigrationsDropFileSubDirectory);
+            string? dropDirectory = Path.Combine(baseMigrationsDirectory, Migrations.MigrationsDropFileSubDirectory);
             Directory.CreateDirectory(dropDirectory);
-            var downFileWithPath =
+            string? downFileWithPath =
                 Path.Combine(dropDirectory, $"{Migrations.MigrationsDropFileSubDirectory}_{basePatchFile}");
 
             Console.WriteLine($"Wrote a patch file to {upFileWithPath}");
@@ -178,39 +176,37 @@ namespace MoE.ECE.CLI.Commands
             return await Task.FromResult(0);
         }
 
-        private static bool IfPatchFileAlreadyExists(string patchName, string baseMigrationsDirectory)
-        {
-            return Directory.GetFiles(baseMigrationsDirectory, $"*{patchName}{Migrations.SqlFileExtension}").Length > 1;
-        }
+        private static bool IfPatchFileAlreadyExists(string patchName, string baseMigrationsDirectory) => Directory
+            .GetFiles(baseMigrationsDirectory, $"*{patchName}{Migrations.SqlFileExtension}").Length > 1;
 
         private string GetPatchFileName(string migrationsDirectory, string patchName)
         {
-            var maxMigration = Migrations.GetMigrationFiles(migrationsDirectory)
+            int maxMigration = Migrations.GetMigrationFiles(migrationsDirectory)
                 .Select(GetVersionPrefixOfFileName)
                 .Select(int.Parse)
                 .OrderBy(f => f)
                 .LastOrDefault();
 
-            var migrationNumber = maxMigration + 1;
-            var datePart = DateTimeOffset.Now.ToString("yyyyMMdd");
+            int migrationNumber = maxMigration + 1;
+            string? datePart = DateTimeOffset.Now.ToString("yyyyMMdd");
             return $"{Migrations.VersionedMigrationPrefix}{migrationNumber}__{datePart}_{patchName}";
         }
 
-        private static string GetVersionPrefixOfFileName(string fileName)
-        {
-            return Regex.Match(fileName, $"^{Migrations.VersionedMigrationPrefix}" + @"\d*__")
-                       .Captures.FirstOrDefault()?.Value
-                       .Replace(Migrations.VersionedMigrationPrefix, "")
-                       .Replace("_", "")
-                   ?? "";
-        }
+        private static string GetVersionPrefixOfFileName(string fileName) =>
+            Regex.Match(fileName, $"^{Migrations.VersionedMigrationPrefix}" + @"\d*__")
+                .Captures.FirstOrDefault()?.Value
+                .Replace(Migrations.VersionedMigrationPrefix, "")
+                .Replace("_", "")
+            ?? "";
 
         private IDocumentStore BuildDocumentStore(string? connectionString = null)
         {
-            var martenSettings = _configuration.BindFor<MartenSettings>();
+            MartenSettings? martenSettings = _configuration.BindFor<MartenSettings>();
 
             if (string.IsNullOrEmpty(connectionString))
+            {
                 connectionString = martenSettings.ConnectionString;
+            }
 
             martenSettings.ConnectionString = connectionString;
 

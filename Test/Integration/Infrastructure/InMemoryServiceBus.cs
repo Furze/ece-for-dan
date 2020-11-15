@@ -15,13 +15,10 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         }
 
         /// <summary>
-        /// Override the actual Send so we don't really publish anything...
+        ///     Override the actual Send so we don't really publish anything...
         /// </summary>
         /// <param name="outgoingMessage"></param>
         /// <returns></returns>
-        protected override Task SendAsync(OutgoingMessage outgoingMessage)
-        {
-            return Task.CompletedTask;
-        }
+        protected override Task SendAsync(OutgoingMessage outgoingMessage) => Task.CompletedTask;
     }
 }

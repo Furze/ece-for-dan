@@ -9,19 +9,12 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 {
     public class IfTheRequestIsForUnknownRs7 : SpeedyIntegrationTestBase
     {
-        public IfTheRequestIsForUnknownRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
-            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
-        {
-        }
-
         private const string Url = "api/rs7";
         private const int SomeRandomRs7Id = 53232;
 
-        protected override void Arrange()
+        public IfTheRequestIsForUnknownRs7(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
-            Given
-                .A_rs7_has_been_created()
-                .GetResult(created => Rs7 = created.Rs7Model);
         }
 
         private Rs7Model Rs7
@@ -30,18 +23,19 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
             set => TestData.Rs7Model = value;
         }
 
-        protected override void Act()
-        {
+        protected override void Arrange() =>
+            Given
+                .A_rs7_has_been_created()
+                .GetResult(created => Rs7 = created.Rs7Model);
+
+        protected override void Act() =>
             // Act
             When.Put($"{Url}/{SomeRandomRs7Id}", ModelBuilder.UpdateRs7(Rs7));
-        }
 
         [Fact]
-        public void ThenTheResponseShouldBeAHttp404()
-        {
+        public void ThenTheResponseShouldBeAHttp404() =>
             Then.Response
                 .ShouldBe
                 .NotFound();
-        }
     }
 }

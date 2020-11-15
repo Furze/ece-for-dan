@@ -7,7 +7,8 @@ namespace MoE.ECE.Domain.Command.Rs7
 {
     public class SubmitRs7ForApprovalValidator : AbstractValidator<SubmitRs7ForApproval>
     {
-        public SubmitRs7ForApprovalValidator(IDocumentSession documentSession, ReferenceDataContext referenceDataContext)
+        public SubmitRs7ForApprovalValidator(IDocumentSession documentSession,
+            ReferenceDataContext referenceDataContext)
         {
             Include(new Rs7ModelAdvanceMonthsValidator(documentSession, referenceDataContext));
             Include(new Rs7ModelEntitlementMonthsValidator());

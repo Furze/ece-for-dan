@@ -5,9 +5,6 @@ namespace MoE.ECE.Domain.Model.Rs7
 {
     public class DeclarationMapper : Profile
     {
-        public DeclarationMapper()
-        {
-            CreateMap<DeclarationModel, Declaration>();
-        }
+        public DeclarationMapper() => CreateMap<DeclarationModel, Declaration>();
     }
 }

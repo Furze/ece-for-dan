@@ -34,16 +34,23 @@ namespace MoE.ECE.Web.Bootstrap
         {
             app.UseRouting();
             app.UseAuthorization();
-            var dashboardOptions = new DashboardOptions();
+            DashboardOptions? dashboardOptions = new();
             if (!Environment.IsDevelopment())
+            {
                 dashboardOptions.Authorization = new[] {new HangfireAuthorizationFilter()};
+            }
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
                 if (Environment.IsDevelopment())
+                {
                     endpoints.MapHangfireDashboard();
+                }
                 else
+                {
                     endpoints.MapHangfireDashboard(dashboardOptions).RequireAuthorization("Hangfire");
+                }
             });
         }
     }

@@ -6,8 +6,7 @@ namespace MoE.ECE.Domain.Event
 {
     public class Rs7EntitlementMonthUpdatedMapping : Profile
     {
-        public Rs7EntitlementMonthUpdatedMapping()
-        {
+        public Rs7EntitlementMonthUpdatedMapping() =>
             CreateMap<Rs7, Rs7EntitlementMonthUpdated>()
                 .Map(d => d.RevisionId, s => s.CurrentRevision.Id)
                 .Map(d => d.Source, s => s.CurrentRevision.Source)
@@ -16,8 +15,6 @@ namespace MoE.ECE.Domain.Event
                 .Map(d => d.AdvanceMonths, s => s.CurrentRevision.AdvanceMonths)
                 .Map(d => d.EntitlementMonths, s => s.CurrentRevision.EntitlementMonths)
                 .Map(d => d.IsAttested, s => s.CurrentRevision.IsAttested)
-                .Map(d => d.Declaration, s => s.CurrentRevision.Declaration)
-                ;
-        }
+                .Map(d => d.Declaration, s => s.CurrentRevision.Declaration);
     }
 }

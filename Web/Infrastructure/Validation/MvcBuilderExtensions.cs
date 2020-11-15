@@ -12,10 +12,10 @@ namespace MoE.ECE.Web.Infrastructure.Validation
     public static class MvcBuilderExtensions
     {
         /// <summary>
-        /// Adds fluent validation services to the mvc pipeline and enables validation
-        /// interception to include error codes.
+        ///     Adds fluent validation services to the mvc pipeline and enables validation
+        ///     interception to include error codes.
         /// </summary>
-        /// <seealso cref="UseErrorCodeInterceptor"/>
+        /// <seealso cref="UseErrorCodeInterceptor" />
         public static IMvcBuilder AddCodedFluentValidation(
             this IMvcBuilder builder,
             Action<FluentValidationMvcConfiguration> options)
@@ -28,7 +28,7 @@ namespace MoE.ECE.Web.Infrastructure.Validation
             {
                 opt.InvalidModelStateResponseFactory = actionContext =>
                 {
-                    var errors = actionContext.ModelState
+                    IEnumerable<Error>? errors = actionContext.ModelState
                         .Where(e => e.Value.Errors.Any())
                         .Select(e => e.ToError());
 
@@ -41,11 +41,11 @@ namespace MoE.ECE.Web.Infrastructure.Validation
 
         private static Error ToError(this KeyValuePair<string, ModelStateEntry> error)
         {
-            var messageParts = error.Value.Errors.First().ErrorMessage.Split('|');
+            string[]? messageParts = error.Value.Errors.First().ErrorMessage.Split('|');
 
             // Built-in data annotations do not get intercepted with an error code attached
             // to the error message; so we have to check.
-            var hasErrorCode = messageParts.Length == 2;
+            bool hasErrorCode = messageParts.Length == 2;
 
             return new Error
             {

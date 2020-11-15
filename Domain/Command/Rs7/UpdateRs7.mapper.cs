@@ -5,9 +5,6 @@ namespace MoE.ECE.Domain.Command.Rs7
 {
     public class UpdateRs7Mapper : Profile
     {
-        public UpdateRs7Mapper()
-        {
-            CreateMap<Rs7Model, UpdateRs7>();
-        }
+        public UpdateRs7Mapper() => CreateMap<Rs7Model, UpdateRs7>();
     }
 }

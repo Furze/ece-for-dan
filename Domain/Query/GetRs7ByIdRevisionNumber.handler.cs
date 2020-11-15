@@ -23,15 +23,17 @@ namespace MoE.ECE.Domain.Query
 
         public async Task<Rs7Model> Handle(GetRs7ByIdRevisionNumber query, CancellationToken cancellationToken)
         {
-            Rs7 rs7 = await _documentSession.Query<Rs7>().SingleOrDefaultAsync(r => r.Id == query.Id, cancellationToken);
-            
+            Rs7 rs7 = await _documentSession.Query<Rs7>()
+                .SingleOrDefaultAsync(r => r.Id == query.Id, cancellationToken);
+
             if (rs7 == null)
             {
-                throw new ResourceNotFoundException($"{nameof(Rs7Model)} with {nameof(Rs7Model.Id)} {query.Id} does not exist.");
+                throw new ResourceNotFoundException(
+                    $"{nameof(Rs7Model)} with {nameof(Rs7Model.Id)} {query.Id} does not exist.");
             }
 
-            var rs7Model = query.RevisionNumber.HasValue 
-                ? _mapper.MapFrom(rs7, rs7.GetRevision(query.RevisionNumber.Value)).Into<Rs7Model>() 
+            Rs7Model? rs7Model = query.RevisionNumber.HasValue
+                ? _mapper.MapFrom(rs7, rs7.GetRevision(query.RevisionNumber.Value)).Into<Rs7Model>()
                 : _mapper.Map<Rs7Model>(rs7);
 
             return rs7Model;

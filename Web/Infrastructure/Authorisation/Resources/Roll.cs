@@ -8,7 +8,7 @@ namespace MoE.ECE.Web.Infrastructure.Authorisation.Resources
 
         public const string ResourceName = "roll";
     }
-    
+
     public static class NotionalRoll
     {
         public const string View = ResourceName + ActionNames.View;

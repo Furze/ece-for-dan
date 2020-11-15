@@ -18,7 +18,7 @@ namespace MoE.ECE.Domain.Model.Rs7
                 .Ignore(d => d.Revisions)
                 .Ignore(d => d.RowVersion);
 
-            CreateMap<UpdateRs7EntitlementMonth , Rs7>()
+            CreateMap<UpdateRs7EntitlementMonth, Rs7>()
                 .Map(d => d.CurrentRevision, s => s)
                 .Ignore(d => d.Id)
                 .Ignore(d => d.FundingPeriod)
@@ -30,7 +30,7 @@ namespace MoE.ECE.Domain.Model.Rs7
                 .Ignore(d => d.Revisions)
                 .Ignore(d => d.BusinessEntityId)
                 .Ignore(d => d.RowVersion);
-            
+
             CreateMap<Rs7Model, Rs7>()
                 .Ignore(d => d.Revisions)
                 .Ignore(d => d.RowVersion);

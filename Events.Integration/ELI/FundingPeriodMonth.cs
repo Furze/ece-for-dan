@@ -1,4 +1,4 @@
-﻿﻿namespace Moe.ECE.Events.Integration.ELI
+﻿namespace Moe.ECE.Events.Integration.ELI
 {
     public enum FundingPeriodMonth
     {

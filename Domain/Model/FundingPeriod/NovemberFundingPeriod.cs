@@ -10,10 +10,14 @@ namespace MoE.ECE.Domain.Model.FundingPeriod
         public NovemberFundingPeriod(Date date) : base(CalendarMonth.November, date)
         {
             FundingPeriodMonths = new[]
-                {CalendarMonth.October, CalendarMonth.November, CalendarMonth.December, CalendarMonth.January};
+            {
+                CalendarMonth.October, CalendarMonth.November, CalendarMonth.December, CalendarMonth.January
+            };
 
             if (FundingPeriodMonths.Any(month => month.Id == date.Month) == false)
+            {
                 throw new ECEApplicationException($"Date - {date} is invalid for {nameof(NovemberFundingPeriod)}");
+            }
         }
 
         /// <inheritdoc />

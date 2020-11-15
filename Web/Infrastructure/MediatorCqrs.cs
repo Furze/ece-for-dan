@@ -10,12 +10,12 @@ namespace MoE.ECE.Web.Infrastructure
 {
     public class MediatorCqrs : ICqrs
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<MediatorCqrs> _logger;
         private const string Query = "Query";
         private const string QueryResponse = "Query Response";
         private const string DomainEvent = "Domain Event";
         private const string Command = "Command";
+        private readonly ILogger<MediatorCqrs> _logger;
+        private readonly IMediator _mediator;
 
         public MediatorCqrs(IMediator mediator, ILogger<MediatorCqrs> logger)
         {
@@ -23,10 +23,8 @@ namespace MoE.ECE.Web.Infrastructure
             _logger = logger;
         }
 
-        public Task ExecuteAsync<TCommand>(CancellationToken cancellationToken = new CancellationToken()) where TCommand : ICommand, new()
-        {
-            return ExecuteAsync(new TCommand(), cancellationToken);
-        }
+        public Task ExecuteAsync<TCommand>(CancellationToken cancellationToken = new())
+            where TCommand : ICommand, new() => ExecuteAsync(new TCommand(), cancellationToken);
 
         public Task ExecuteAsync(ICommand command, CancellationToken cancellationToken = default)
         {
@@ -40,18 +38,20 @@ namespace MoE.ECE.Web.Infrastructure
             return _mediator.Send(command, cancellationToken);
         }
 
-        public async Task<TResponse> QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default)
+        public async Task<TResponse> QueryAsync<TResponse>(IQuery<TResponse> query,
+            CancellationToken cancellationToken = default)
         {
             LogQuery(query);
 
-            var response = await _mediator.Send(query, cancellationToken);
+            TResponse response = await _mediator.Send(query, cancellationToken);
 
             LogQueryResponse(response);
 
             return response;
         }
-        
-        public async Task RaiseEventsAsync(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken = default)
+
+        public async Task RaiseEventsAsync(IEnumerable<IDomainEvent> domainEvents,
+            CancellationToken cancellationToken = default)
         {
             foreach (var domainEvent in domainEvents)
             {
@@ -65,33 +65,24 @@ namespace MoE.ECE.Web.Infrastructure
             return _mediator.Publish(domainEvent, cancellationToken);
         }
 
-        private void LogQuery(object query)
-        {
-            Log("[Executing Query]", query, Query);
-        }
+        private void LogQuery(object query) => Log("[Executing Query]", query, Query);
 
-        private void LogCommand<T>(IRequest<T> command)
-        {
-            Log("[Executing Command]", command, Command);
-        }
+        private void LogCommand<T>(IRequest<T> command) => Log("[Executing Command]", command, Command);
 
-        private void LogDomainEvent(IDomainEvent domainEvent)
-        {
-            Log("[Domain Event Raised]", domainEvent, DomainEvent);
-        }
+        private void LogDomainEvent(IDomainEvent domainEvent) => Log("[Domain Event Raised]", domainEvent, DomainEvent);
 
-        private void LogQueryResponse(object? response)
-        {
-            Log("Query Response", response, QueryResponse);
-        }
+        private void LogQueryResponse(object? response) => Log("Query Response", response, QueryResponse);
 
         private void Log(string message, object? objectToLog, string cqrsType)
         {
             if (objectToLog == null)
+            {
                 return;
+            }
 
-            var formattedMessage = message + " :{objectType} {objectJson} {cqrsType}";
-            _logger.LogDebug(formattedMessage, objectToLog.GetType().Name, JsonConvert.SerializeObject(objectToLog, Formatting.Indented), cqrsType);
+            string? formattedMessage = message + " :{objectType} {objectJson} {cqrsType}";
+            _logger.LogDebug(formattedMessage, objectToLog.GetType().Name,
+                JsonConvert.SerializeObject(objectToLog, Formatting.Indented), cqrsType);
         }
     }
 }

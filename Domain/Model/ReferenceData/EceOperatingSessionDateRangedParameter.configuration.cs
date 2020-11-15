@@ -4,11 +4,13 @@ using MoE.ECE.Domain.Infrastructure.EntityFramework;
 
 namespace MoE.ECE.Domain.Model.ReferenceData
 {
-    public class EceOperatingSessionDateRangedParameterConfiguration : EntityConfigurationBase<EceOperatingSessionDateRangedParameter>
+    public class
+        EceOperatingSessionDateRangedParameterConfiguration : EntityConfigurationBase<
+            EceOperatingSessionDateRangedParameter>
     {
         protected override void ConfigureEntity(EntityTypeBuilder<EceOperatingSessionDateRangedParameter> builder)
         {
-            builder.HasKey(entity => new { entity.LicencingDetailHistoryId, entity.OperatingSessionId });
+            builder.HasKey(entity => new {entity.LicencingDetailHistoryId, entity.OperatingSessionId});
 
             builder.HasIndex(entity => entity.RefOrganisationId);
 

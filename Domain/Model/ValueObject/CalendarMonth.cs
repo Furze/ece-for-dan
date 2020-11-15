@@ -17,13 +17,11 @@ namespace MoE.ECE.Domain.Model.ValueObject
         public static readonly CalendarMonth November = new CalendarMonth(11, "November");
         public static readonly CalendarMonth December = new CalendarMonth(12, "December");
 
-        public static CalendarMonth GetById(int id)
-        {
-            return GetAll<CalendarMonth>().Single(enumeration => enumeration.Id == id);
-        }
-
         private CalendarMonth(int id, string name) : base(id, name)
         {
         }
+
+        public static CalendarMonth GetById(int id) =>
+            GetAll<CalendarMonth>().Single(enumeration => enumeration.Id == id);
     }
 }

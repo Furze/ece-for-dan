@@ -12,18 +12,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
 {
     public class IfTheEntitlementMonthIsInvalid : SpeedyIntegrationTestBase
     {
+        private const string Url = "api/rs7";
+
         public IfTheEntitlementMonthIsInvalid(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
-        }
-
-        private const string Url = "api/rs7";
-
-        protected override void Arrange()
-        {
-            Given
-                .A_rs7_has_been_created()
-                .GetResult(storyData => Rs7Model = storyData.Rs7Model);
         }
 
         private Rs7Model Rs7Model
@@ -32,21 +25,27 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
             set => TestData.Rs7Model = value;
         }
 
-        private void Act(UpdateRs7EntitlementMonth updateRs7EntitlementMonthCommand)
-        {
+        protected override void Arrange() =>
+            Given
+                .A_rs7_has_been_created()
+                .GetResult(storyData => Rs7Model = storyData.Rs7Model);
+
+        private void Act(UpdateRs7EntitlementMonth updateRs7EntitlementMonthCommand) =>
             When.Put($"{Url}/{Rs7Model.Id}/entitlement-months/{updateRs7EntitlementMonthCommand.MonthNumber}",
                 updateRs7EntitlementMonthCommand);
-        }
 
         [Fact]
         public void IfTheDayNumberIsInvalidThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em =>
-            {
-                if (em.Days != null)
-                    em.Days.First().DayNumber = 100; // Not valid
-            });
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(
+                Rs7Model, 2, em =>
+                {
+                    if (em.Days != null)
+                    {
+                        em.Days.First().DayNumber = 100; // Not valid
+                    }
+                });
 
             Act(updateRs7EntitlementMonthCommand);
 
@@ -60,7 +59,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void IfTheMonthIsInvalidThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand =
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand =
                 ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em => { em.MonthNumber = 6; });
 
             Act(updateRs7EntitlementMonthCommand);
@@ -75,11 +74,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void IfTheSuppliedCertificatedValueIsGreaterThan9999ThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em =>
-            {
-                if (em.Days != null)
-                    em.Days.First().Certificated = 10000; // Not valid
-            });
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(
+                Rs7Model, 2, em =>
+                {
+                    if (em.Days != null)
+                    {
+                        em.Days.First().Certificated = 10000; // Not valid
+                    }
+                });
 
             Act(updateRs7EntitlementMonthCommand);
 
@@ -93,11 +95,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void IfTheSuppliedCertificatedValueIsLessThanZeroThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em =>
-            {
-                if (em.Days != null)
-                    em.Days.First().Certificated = -1; // Not valid
-            });
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(
+                Rs7Model, 2, em =>
+                {
+                    if (em.Days != null)
+                    {
+                        em.Days.First().Certificated = -1; // Not valid
+                    }
+                });
 
             Act(updateRs7EntitlementMonthCommand);
 
@@ -111,11 +116,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void IfTheSuppliedHours20ValueIsGreaterThan9999ThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em =>
-            {
-                if (em.Days != null)
-                    em.Days.First().Hours20 = 10000; // Not valid
-            });
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(
+                Rs7Model, 2, em =>
+                {
+                    if (em.Days != null)
+                    {
+                        em.Days.First().Hours20 = 10000; // Not valid
+                    }
+                });
 
             Act(updateRs7EntitlementMonthCommand);
 
@@ -129,11 +137,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void IfTheSuppliedHours20ValueIsLessThanZeroThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em =>
-            {
-                if (em.Days != null)
-                    em.Days.First().Hours20 = -1; // Not valid
-            });
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(
+                Rs7Model, 2, em =>
+                {
+                    if (em.Days != null)
+                    {
+                        em.Days.First().Hours20 = -1; // Not valid
+                    }
+                });
 
             Act(updateRs7EntitlementMonthCommand);
 
@@ -147,11 +158,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void IfTheSuppliedNonCertificatedValueIsGreaterThan9999ThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em =>
-            {
-                if (em.Days != null)
-                    em.Days.First().NonCertificated = 10000; // Not valid
-            });
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(
+                Rs7Model, 2, em =>
+                {
+                    if (em.Days != null)
+                    {
+                        em.Days.First().NonCertificated = 10000; // Not valid
+                    }
+                });
 
             Act(updateRs7EntitlementMonthCommand);
 
@@ -165,11 +179,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void IfTheSuppliedNonCertificatedValueIsLessThanZeroThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em =>
-            {
-                if (em.Days != null)
-                    em.Days.First().NonCertificated = -1; // Not valid
-            });
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(
+                Rs7Model, 2, em =>
+                {
+                    if (em.Days != null)
+                    {
+                        em.Days.First().NonCertificated = -1; // Not valid
+                    }
+                });
 
             Act(updateRs7EntitlementMonthCommand);
 
@@ -183,11 +200,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void IfTheSuppliedTwoAndOverValueIsGreaterThan9999ThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em =>
-            {
-                if (em.Days != null)
-                    em.Days.First().TwoAndOver = 10000; // Not valid
-            });
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(
+                Rs7Model, 2, em =>
+                {
+                    if (em.Days != null)
+                    {
+                        em.Days.First().TwoAndOver = 10000; // Not valid
+                    }
+                });
 
             Act(updateRs7EntitlementMonthCommand);
 
@@ -201,11 +221,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void IfTheSuppliedTwoAndOverValueIsLessThanZeroThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em =>
-            {
-                if (em.Days != null)
-                    em.Days.First().TwoAndOver = -1; // Not valid
-            });
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(
+                Rs7Model, 2, em =>
+                {
+                    if (em.Days != null)
+                    {
+                        em.Days.First().TwoAndOver = -1; // Not valid
+                    }
+                });
 
             Act(updateRs7EntitlementMonthCommand);
 
@@ -219,11 +242,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void IfTheSuppliedUnder2ValueIsGreaterThan9999ThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em =>
-            {
-                if (em.Days != null)
-                    em.Days.First().Under2 = 10000; // Not valid
-            });
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(
+                Rs7Model, 2, em =>
+                {
+                    if (em.Days != null)
+                    {
+                        em.Days.First().Under2 = 10000; // Not valid
+                    }
+                });
 
             Act(updateRs7EntitlementMonthCommand);
 
@@ -237,11 +263,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void IfTheSuppliedUnder2ValueIsLessThanZeroThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em =>
-            {
-                if (em.Days != null)
-                    em.Days.First().Under2 = -1; // Not valid
-            });
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(
+                Rs7Model, 2, em =>
+                {
+                    if (em.Days != null)
+                    {
+                        em.Days.First().Under2 = -1; // Not valid
+                    }
+                });
 
             Act(updateRs7EntitlementMonthCommand);
 
@@ -255,7 +284,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void IfTheYearIsInvalidThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand =
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand =
                 ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em => { em.Year = 2021; });
 
             Act(updateRs7EntitlementMonthCommand);
@@ -270,11 +299,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         public void ThenADomainEventShouldNotBePublished()
         {
             // Arrange
-            var updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(Rs7Model, 2, em =>
-            {
-                if (em.Days != null)
-                    em.Days.First().NonCertificated = 10000; // Not valid
-            });
+            UpdateRs7EntitlementMonth? updateRs7EntitlementMonthCommand = ModelBuilder.UpdateRs7EntitlementMonth(
+                Rs7Model, 2, em =>
+                {
+                    if (em.Days != null)
+                    {
+                        em.Days.First().NonCertificated = 10000; // Not valid
+                    }
+                });
 
             Act(updateRs7EntitlementMonthCommand);
 

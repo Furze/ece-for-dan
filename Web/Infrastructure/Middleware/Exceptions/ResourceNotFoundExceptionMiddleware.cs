@@ -16,9 +16,7 @@ namespace MoE.ECE.Web.Infrastructure.Middleware.Exceptions
 
         protected override HttpStatusCode StatusCode => HttpStatusCode.NotFound;
 
-        protected override ErrorResponse? CreateResponse(HttpContext context, ResourceNotFoundException exception)
-        {
-            return null;
-        }
+        protected override ErrorResponse? CreateResponse(HttpContext context, ResourceNotFoundException exception) =>
+            null;
     }
 }

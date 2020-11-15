@@ -8,11 +8,10 @@ namespace MoE.ECE.Integration.Tests.Chapter
 {
     public class Rs7PeerApprovedChapter : Chapter<ECEStoryData>
     {
-        public EndChapter<ECEStoryData> The_rs7_has_been_declined()
-        {
-            return When(context =>
+        public EndChapter<ECEStoryData> The_rs7_has_been_declined() =>
+            When(context =>
             {
-                var declined = new Declined
+                Declined? declined = new Declined
                 {
                     BusinessEntityId = new Guid(context.StoryData.Rs7Model.BusinessEntityId.GetValueOrDefault()),
                     BusinessEntityType = Constants.BusinessEntityTypes.Rs7
@@ -22,6 +21,5 @@ namespace MoE.ECE.Integration.Tests.Chapter
 
                 context.StoryData.Rs7Model = context.GetDomainEvent<Rs7Declined>();
             }).End();
-        }
     }
 }

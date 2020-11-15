@@ -12,19 +12,20 @@ namespace MoE.ECE.Web.Bootstrap
 {
     public class EceMartenRegistry : MartenRegistry
     {
-        public EceMartenRegistry()
-        {
-            For<Rs7>().Identity(rs7 => rs7.Id);
-        }
+        public EceMartenRegistry() => For<Rs7>().Identity(rs7 => rs7.Id);
 
         public static void ApplyDefaultConfiguration(StoreOptions storeOptions, MartenSettings settings,
             IServiceProvider? serviceProvider = null)
         {
             if (string.IsNullOrEmpty(settings.SchemaName) == false)
+            {
                 storeOptions.DatabaseSchemaName = settings.SchemaName;
+            }
 
             if (string.IsNullOrEmpty(settings.ConnectionString))
+            {
                 throw new ECEApplicationException("Configuration Error: MartenSettings:ConnectionString not set.");
+            }
 
             storeOptions.Connection(settings.ConnectionString);
             storeOptions.UseDefaultSerialization(nonPublicMembersStorage: NonPublicMembersStorage.NonPublicSetters);
@@ -37,7 +38,7 @@ namespace MoE.ECE.Web.Bootstrap
 
             if (serviceProvider != null)
             {
-                var telemetryClient = serviceProvider.GetService<TelemetryClient>();
+                TelemetryClient? telemetryClient = serviceProvider.GetService<TelemetryClient>();
                 storeOptions.Logger(new AppInsightsMartenLogger(telemetryClient));
             }
 
@@ -46,10 +47,8 @@ namespace MoE.ECE.Web.Bootstrap
             EventConfiguration(storeOptions);
         }
 
-        private static void EventConfiguration(StoreOptions storeOptions)
-        {
+        private static void EventConfiguration(StoreOptions storeOptions) =>
             // Perform inline projection for the DMs
             storeOptions.Events.UseAggregatorLookup(AggregationLookupStrategy.UsePublicAndPrivateApply);
-        }
     }
 }

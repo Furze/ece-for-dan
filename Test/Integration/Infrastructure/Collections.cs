@@ -9,7 +9,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         // to be the place to apply [CollectionDefinition] and all the
         // ICollectionFixture<> interfaces.
     }
-    
+
     public static class Collections
     {
         public const string IntegrationTestCollection = "IntegrationTestCollection";

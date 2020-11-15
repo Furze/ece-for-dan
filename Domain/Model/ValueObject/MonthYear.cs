@@ -3,7 +3,7 @@
     public struct MonthYear
     {
         public CalendarMonth Month { get; }
-        
+
         public int Year { get; }
 
         public MonthYear(CalendarMonth month, int year)

@@ -6,8 +6,7 @@ namespace MoE.ECE.Domain.Event
 {
     public class Rs7ApprovedMapper : Profile
     {
-        public Rs7ApprovedMapper()
-        {
+        public Rs7ApprovedMapper() =>
             CreateMap<Rs7, Rs7Approved>()
                 .Map(dest => dest.RevisionId, src => src.CurrentRevision.Id)
                 .Map(d => d.RevisionNumber, s => s.CurrentRevision.RevisionNumber)
@@ -16,6 +15,5 @@ namespace MoE.ECE.Domain.Event
                 .Map(d => d.EntitlementMonths, s => s.CurrentRevision.EntitlementMonths)
                 .Map(d => d.IsAttested, s => s.CurrentRevision.IsAttested)
                 .Map(d => d.Declaration, s => s.CurrentRevision.Declaration);
-        }
     }
 }

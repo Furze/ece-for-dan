@@ -3,12 +3,14 @@ using FluentValidation;
 using Marten;
 using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Infrastructure.EntityFramework;
+using MoE.ECE.Domain.Model.ReferenceData;
 
 namespace MoE.ECE.Domain.Read.Model.Rs7
 {
     public class Rs7ModelAdvanceMonthsValidator : AbstractValidator<IRs7AdvanceMonths>
     {
-        public Rs7ModelAdvanceMonthsValidator(IDocumentSession documentSession, ReferenceDataContext referenceDataContext)
+        public Rs7ModelAdvanceMonthsValidator(IDocumentSession documentSession,
+            ReferenceDataContext referenceDataContext)
         {
             RuleFor(command => command.AdvanceMonths)
                 .Must((command, months) => months?.Count() == 4)
@@ -21,7 +23,7 @@ namespace MoE.ECE.Domain.Read.Model.Rs7
                 .SetValidator(command => new AdvancedMonthValidator(command.Id, documentSession, referenceDataContext));
         }
     }
-    
+
     public class Rs7ModelEntitlementMonthsValidator : AbstractValidator<IRs7EntitlementMonths>
     {
         public Rs7ModelEntitlementMonthsValidator()
@@ -37,7 +39,7 @@ namespace MoE.ECE.Domain.Read.Model.Rs7
                 .SetValidator(new Rs7EntitlementMonthModelValidator());
         }
     }
-    
+
     public class Rs7ModelIsAttestedValidator : AbstractValidator<IRs7Attestation>
     {
         private readonly IDocumentSession _documentSession;
@@ -47,23 +49,28 @@ namespace MoE.ECE.Domain.Read.Model.Rs7
         {
             _documentSession = documentSession;
             _referenceDataContext = referenceDataContext;
-            
+
             RuleFor(command => command.IsAttested)
                 .Must(IsRequiredForCertainOrganisationTypes)
                 .WithMessage("'Is Attested' must not be empty.");
         }
-        
+
         private bool IsRequiredForCertainOrganisationTypes(IRs7Attestation updateRs7Model, bool? isAttested)
         {
-            var rs7 = _documentSession.Load<Domain.Model.Rs7.Rs7>(updateRs7Model.Id);
+            Domain.Model.Rs7.Rs7? rs7 = _documentSession.Load<Domain.Model.Rs7.Rs7>(updateRs7Model.Id);
 
-            if (rs7 == null) return true;
+            if (rs7 == null)
+            {
+                return true;
+            }
 
-            var organisation =
+            EceService? organisation =
                 _referenceDataContext.EceServices.Find(rs7.OrganisationId);
 
             if (organisation == null)
+            {
                 return true;
+            }
 
             return !organisation.IsAttestationRequired || isAttested.HasValue;
         }

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Bard;
+using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Read.Model.Rs7;
 using MoE.ECE.Integration.Tests.Chapter;
@@ -11,18 +12,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
 {
     public class IfTheRequestIsContainsAnInvalidAdvanceMonths : SpeedyIntegrationTestBase
     {
+        private const string Url = "api/rs7";
+
         public IfTheRequestIsContainsAnInvalidAdvanceMonths(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
-        }
-
-        private const string Url = "api/rs7";
-
-        protected override void Arrange()
-        {
-            Given
-                .A_rs7_has_been_created()
-                .GetResult(created => Rs7 = created.Rs7Model);
         }
 
         private Rs7Model Rs7
@@ -31,16 +25,23 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             set => TestData.Rs7Model = value;
         }
 
+        protected override void Arrange() =>
+            Given
+                .A_rs7_has_been_created()
+                .GetResult(created => Rs7 = created.Rs7Model);
+
         [Theory]
         [InlineData(0)]
         [InlineData(10000)]
         public void IfTheYearIsOutsideTheAllowedValueThenTheResponseShouldBeAHttp400(int year)
         {
             // Arrange
-            var updateRs7 = ModelBuilder.SaveAsDraft(Rs7, rs7 =>
+            SaveAsDraft? updateRs7 = ModelBuilder.SaveAsDraft(Rs7, rs7 =>
             {
                 if (rs7.AdvanceMonths != null)
+                {
                     rs7.AdvanceMonths.First().Year = year;
+                }
             });
 
             // Act
@@ -58,10 +59,12 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheMonthIsOutsideTheAllowedValueThenTheResponseShouldBeAHttp400(int month)
         {
             // Arrange
-            var updateRs7 = ModelBuilder.SaveAsDraft(Rs7, rs7 =>
+            SaveAsDraft? updateRs7 = ModelBuilder.SaveAsDraft(Rs7, rs7 =>
             {
                 if (rs7.AdvanceMonths != null)
+                {
                     rs7.AdvanceMonths.First().MonthNumber = month;
+                }
             });
 
             // Act
@@ -77,10 +80,12 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheMonthIsInvalidThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7 = ModelBuilder.SaveAsDraft(Rs7, rs7 =>
+            SaveAsDraft? updateRs7 = ModelBuilder.SaveAsDraft(Rs7, rs7 =>
             {
                 if (rs7.AdvanceMonths != null)
+                {
                     rs7.AdvanceMonths.First().MonthNumber = 12;
+                }
             });
 
             // Act
@@ -96,10 +101,12 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void IfTheYearIsInvalidThenTheResponseShouldBeAHttp400()
         {
             // Arrange
-            var updateRs7 = ModelBuilder.SaveAsDraft(Rs7, rs7 =>
+            SaveAsDraft? updateRs7 = ModelBuilder.SaveAsDraft(Rs7, rs7 =>
             {
                 if (rs7.AdvanceMonths != null)
+                {
                     rs7.AdvanceMonths.First().Year = 2021;
+                }
             });
 
             // Act

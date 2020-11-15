@@ -8,7 +8,6 @@ using MoE.ECE.Integration.Tests.Infrastructure;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
-using ModelBuilder = MoE.ECE.Integration.Tests.Infrastructure.ModelBuilder;
 
 namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
 {
@@ -19,15 +18,19 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
 
         private Rs7Model _previouslyStartedNewRs7 = new Rs7Model();
 
-        protected override void Arrange()
+        public IfTheRs7AlreadyExistsWithNewStatus(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
+            TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
+        }
+
+        private Rs7ZeroReturnCreated DomainEvent => A_domain_event_should_be_fired<Rs7ZeroReturnCreated>();
+
+        protected override void Arrange() =>
             Given
                 .A_rs7_has_been_created(setup => setup.OrganisationId = _organisationId)
                 .GetResult(result => _previouslyStartedNewRs7 = result.Rs7Model);
-        }
 
-        protected override void Act()
-        {
+        protected override void Act() =>
             When.Post(Url,
                 ModelBuilder.Rs7Model(rs7 =>
                 {
@@ -36,9 +39,6 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
                     rs7.FundingPeriod = _previouslyStartedNewRs7.FundingPeriod;
                     rs7.FundingPeriodYear = _previouslyStartedNewRs7.FundingPeriodYear;
                 }));
-        }
-
-        private Rs7ZeroReturnCreated DomainEvent => A_domain_event_should_be_fired<Rs7ZeroReturnCreated>();
 
         [Fact]
         public void ThenDomainEventShouldBePublishedUsingThePreExistingId()
@@ -48,67 +48,37 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
         }
 
         [Fact]
-        public void ThenDomainEventShouldHaveRollStatusInternalReadyForReview()
-        {
+        public void ThenDomainEventShouldHaveRollStatusInternalReadyForReview() =>
             DomainEvent.RollStatus.ShouldBe(RollStatus.InternalReadyForReview);
-        }
 
         [Fact]
-        public void ThenDomainEventShouldHaveAReceivedDate()
-        {
-            DomainEvent.ReceivedDate.ShouldNotBeNull();
-        }
+        public void ThenDomainEventShouldHaveAReceivedDate() => DomainEvent.ReceivedDate.ShouldNotBeNull();
 
         [Fact]
-        public void ThenDomainEventShouldBeZeroReturn()
-        {
-            DomainEvent.IsZeroReturn.ShouldBe(true);
-        }
+        public void ThenDomainEventShouldBeZeroReturn() => DomainEvent.IsZeroReturn.ShouldBe(true);
 
         [Fact]
-        public void ThenDomainEventShouldBeAttestedFalse()
-        {
-            DomainEvent.IsAttested.ShouldBe(false);
-        }
+        public void ThenDomainEventShouldBeAttestedFalse() => DomainEvent.IsAttested.ShouldBe(false);
 
         [Fact]
-        public void ThenDomainEventShouldHaveCorrectFundingPeriod()
-        {
+        public void ThenDomainEventShouldHaveCorrectFundingPeriod() =>
             DomainEvent.FundingPeriod.ShouldBe(FundingPeriodMonth.July);
-        }
 
         [Fact]
-        public void ThenDomainEventShouldHaveCorrectFundingYear()
-        {
-            DomainEvent.FundingYear.ShouldBe(2021);
-        }
+        public void ThenDomainEventShouldHaveCorrectFundingYear() => DomainEvent.FundingYear.ShouldBe(2021);
 
         [Fact]
-        public void ThenDomainEventShouldHaveCorrectFundingPeriodYear()
-        {
-            DomainEvent.FundingPeriodYear.ShouldBe(2020);
-        }
+        public void ThenDomainEventShouldHaveCorrectFundingPeriodYear() => DomainEvent.FundingPeriodYear.ShouldBe(2020);
 
         [Fact]
-        public void ThenDomainEventShouldHaveCorrectOrganisation()
-        {
+        public void ThenDomainEventShouldHaveCorrectOrganisation() =>
             DomainEvent.OrganisationId.ShouldBe(_organisationId);
-        }
 
         [Fact]
-        public void Then_the_response_should_be_a_201_created()
-        {
-            Then.Response.ShouldBe.Created();
-        }
-        
+        public void Then_the_response_should_be_a_201_created() => Then.Response.ShouldBe.Created();
+
         [Fact]
-        public void Then_the_response_should_contain_a_location_header()
-        {
+        public void Then_the_response_should_contain_a_location_header() =>
             Then.Response.Headers.Should.Include.Location();
-        }
-
-        public IfTheRs7AlreadyExistsWithNewStatus(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
-        {
-        }
     }
 }

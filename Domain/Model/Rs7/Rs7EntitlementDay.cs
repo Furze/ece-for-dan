@@ -16,9 +16,8 @@
 
         public int? NonCertificated { get; set; }
 
-        internal Rs7EntitlementDay Clone()
-        {
-            return new Rs7EntitlementDay
+        internal Rs7EntitlementDay Clone() =>
+            new Rs7EntitlementDay
             {
                 DayNumber = DayNumber,
                 Under2 = Under2,
@@ -28,6 +27,5 @@
                 Certificated = Certificated,
                 NonCertificated = NonCertificated
             };
-        }
     }
 }

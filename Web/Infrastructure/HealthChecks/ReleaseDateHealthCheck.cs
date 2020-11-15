@@ -9,19 +9,18 @@ namespace MoE.ECE.Web.Infrastructure.HealthChecks
     {
         private const string HealthCheckName = "ReleaseDate";
         private readonly IConfiguration _config;
-        
+
         public ReleaseDateHealthCheck(IConfiguration config)
-            : base(HealthCheckName)
-        {
+            : base(HealthCheckName) =>
             _config = config;
-        }
-        
+
         protected override ValueTask<HealthCheckResult> CheckAsync(CancellationToken cancellationToken = default)
         {
-            var releaseDateValue = _config.GetValue<string>(HealthCheckName);
-            
-            return string.IsNullOrWhiteSpace(releaseDateValue) 
-                ? new ValueTask<HealthCheckResult>(HealthCheckResult.Ignore($"{HealthCheckName} is unavailable via configuration, this should be set in the release pipeline.")) 
+            string? releaseDateValue = _config.GetValue<string>(HealthCheckName);
+
+            return string.IsNullOrWhiteSpace(releaseDateValue)
+                ? new ValueTask<HealthCheckResult>(HealthCheckResult.Ignore(
+                    $"{HealthCheckName} is unavailable via configuration, this should be set in the release pipeline."))
                 : new ValueTask<HealthCheckResult>(HealthCheckResult.Healthy($"{releaseDateValue}"));
         }
     }

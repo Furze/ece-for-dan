@@ -10,18 +10,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
 {
     public class IfTheRequestIsMissingEntitlementMonths : SpeedyIntegrationTestBase
     {
+        private const string Url = "api/rs7";
+
         public IfTheRequestIsMissingEntitlementMonths(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
-        }
-
-        private const string Url = "api/rs7";
-
-        protected override void Arrange()
-        {
-            Given
-                .A_rs7_has_been_created()
-                .GetResult(created => Rs7 = created.Rs7Model);
         }
 
         private Rs7Model Rs7
@@ -30,20 +23,21 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             set => TestData.Rs7Model = value;
         }
 
-        protected override void Act()
-        {
+        protected override void Arrange() =>
+            Given
+                .A_rs7_has_been_created()
+                .GetResult(created => Rs7 = created.Rs7Model);
+
+        protected override void Act() =>
             // Act
             When.Put($"{Url}/{Rs7.Id}", ModelBuilder.SaveAsDraft(Rs7, rs7 => rs7.EntitlementMonths = null));
-        }
 
         [Fact]
-        public void ThenTheResponseShouldBeAHttp400()
-        {
+        public void ThenTheResponseShouldBeAHttp400() =>
             Then.Response
                 .ShouldBe
                 .BadRequest
                 .ForProperty<UpdateRs7>(rs7 => rs7.EntitlementMonths)
                 .WithMessage("'Entitlement Months' must not be empty.");
-        }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MoE.ECE.CLI.Commands;
+using MoE.ECE.Domain;
 
 namespace MoE.ECE.CLI
 {
@@ -23,7 +24,7 @@ namespace MoE.ECE.CLI
                 .AddEnvironmentVariables()
                 .Build();
 
-            var rootCommand = ConfigureRootCommand();
+            RootCommand? rootCommand = ConfigureRootCommand();
             try
             {
                 // Parse the incoming args and invoke the handler
@@ -42,7 +43,7 @@ namespace MoE.ECE.CLI
 
             services.Scan(scan => scan
                 .FromAssembliesOf(
-                    typeof(Domain.IAssemblyMarker))
+                    typeof(IAssemblyMarker))
                 .AddClasses()
                 .AsImplementedInterfaces()
                 .WithScopedLifetime());
@@ -52,15 +53,19 @@ namespace MoE.ECE.CLI
 
         private static RootCommand ConfigureRootCommand()
         {
-            if (_configuration == null) throw new InvalidOperationException("Cannot run with out configuration");
+            if (_configuration == null)
+            {
+                throw new InvalidOperationException("Cannot run with out configuration");
+            }
 
-            var martenCommands = new MartenCommands(_configuration);
-            var evolveCommands = new EvolveCommands(_configuration);
-            var entityFrameworkCommands = new EntityFrameworkCommands(_serviceProvider, _configuration);
-            var authorisationReportCommands = new AuthorisationReportCommands();
+            MartenCommands? martenCommands = new(_configuration);
+            EvolveCommands? evolveCommands = new(_configuration);
+            EntityFrameworkCommands? entityFrameworkCommands =
+                new(_serviceProvider, _configuration);
+            AuthorisationReportCommands? authorisationReportCommands = new();
 
             // Create a root command with some options
-            var rootCommand = new RootCommand
+            RootCommand? rootCommand = new
             {
                 martenCommands.Apply,
                 martenCommands.Assert,
@@ -71,7 +76,7 @@ namespace MoE.ECE.CLI
                 evolveCommands.Repair,
                 entityFrameworkCommands.MigrateReferenceData,
                 entityFrameworkCommands.CreateSeedCommand(),
-                authorisationReportCommands.AuthorisationReportCommand,
+                authorisationReportCommands.AuthorisationReportCommand
             };
 
             rootCommand.Description = "ECE API Migrations";

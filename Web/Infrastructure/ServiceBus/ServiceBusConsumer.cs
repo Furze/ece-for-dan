@@ -45,7 +45,10 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
             RegisterMessageHandler();
 
             //Do your preparation (e.g. Start code) here
-            while (!stoppingToken.IsCancellationRequested) return Task.CompletedTask;
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                return Task.CompletedTask;
+            }
 
             return CloseAsync();
         }
@@ -54,10 +57,9 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
         {
             _logger.LogInformation($"Registering Message Handler for Topic:{Topic} Subscription:{Subscription}");
 
-            var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
+            MessageHandlerOptions? messageHandlerOptions = new(ExceptionReceivedHandler)
             {
-                MaxConcurrentCalls = 1,
-                AutoComplete = false
+                MaxConcurrentCalls = 1, AutoComplete = false
             };
 
             _subscriptionClient.Value.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
@@ -69,32 +71,30 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
             return _subscriptionClient.Value.CloseAsync();
         }
 
-        private SubscriptionClient CreateSubscriptionClient()
-        {
-            return new SubscriptionClient(
+        private SubscriptionClient CreateSubscriptionClient() =>
+            new(
                 _connectionString,
                 Topic,
                 Subscription,
                 ReceiveMode.PeekLock,
                 RetryPolicy.Default);
-        }
 
         private async Task ProcessMessagesAsync(Message message, CancellationToken token)
         {
-            var incomingMessage = new IncomingMessage(message, new MessageResolver());
+            IncomingMessage? incomingMessage = new(message, new MessageResolver());
 
             Log(incomingMessage);
 
             // Determine if implements Mediatr INotification interface
-            var canBeBroadcast = typeof(INotification).IsAssignableFrom(incomingMessage.PayloadType);
+            bool canBeBroadcast = typeof(INotification).IsAssignableFrom(incomingMessage.PayloadType);
 
             if (canBeBroadcast)
             {
                 // We need to create our own scope because the ServiceBusConsumer is a singleton and
                 // the lifecycle of our handlers is different.
-                using var serviceScope = _serviceProvider.CreateScope();
+                using IServiceScope? serviceScope = _serviceProvider.CreateScope();
 
-                var mediator = serviceScope.ServiceProvider.GetService<IMediator>();
+                IMediator? mediator = serviceScope.ServiceProvider.GetService<IMediator>();
 
                 await mediator.Publish(incomingMessage.Payload, token);
             }
@@ -110,7 +110,7 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
         private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
         {
             _logger.LogError(exceptionReceivedEventArgs.Exception, "Message handler encountered an exception");
-            var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
+            ExceptionReceivedContext? context = exceptionReceivedEventArgs.ExceptionReceivedContext;
 
             _logger.LogDebug($"- Endpoint: {context.Endpoint}");
             _logger.LogDebug($"- Entity Path: {context.EntityPath}");

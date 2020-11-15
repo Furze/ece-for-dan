@@ -26,11 +26,11 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
         public async Task PublishAsync<TEvent>(TEvent integrationEvent, string topic,
             CancellationToken cancellationToken) where TEvent : IIntegrationEvent
         {
-            var messageFormat = typeof(IMessage).IsAssignableFrom(typeof(TEvent))
+            MessageFormat messageFormat = typeof(IMessage).IsAssignableFrom(typeof(TEvent))
                 ? MessageFormat.Proto
                 : MessageFormat.Json;
 
-            var outgoingMessage = new OutgoingMessage(integrationEvent, topic, messageFormat);
+            OutgoingMessage? outgoingMessage = new(integrationEvent, topic, messageFormat);
 
             await SendAsync(outgoingMessage);
 
@@ -39,7 +39,7 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
 
         protected virtual Task SendAsync(OutgoingMessage outgoingMessage)
         {
-            var topicClient = new TopicClient(_serviceBusConnectionString, outgoingMessage.Topic);
+            TopicClient? topicClient = new(_serviceBusConnectionString, outgoingMessage.Topic);
 
             return topicClient.SendAsync(outgoingMessage.ServiceBusMessage);
         }

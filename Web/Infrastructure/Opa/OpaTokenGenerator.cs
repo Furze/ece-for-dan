@@ -9,8 +9,8 @@ namespace MoE.ECE.Web.Infrastructure.Opa
 {
     public class OpaTokenGenerator : IOpaTokenGenerator
     {
-        private readonly OpaSettings _settings;
         private readonly IHttpClientFactory _clientFactory;
+        private readonly OpaSettings _settings;
 
         public OpaTokenGenerator(IHttpClientFactory clientFactory, IOptions<OpaSettings> settings)
         {
@@ -18,35 +18,35 @@ namespace MoE.ECE.Web.Infrastructure.Opa
             _clientFactory = clientFactory;
         }
 
-        private OpaSettings AssertSettings(IOptions<OpaSettings> options)
-        {
-            var opaSettings = options.Value;
-
-            return opaSettings;
-        }
-
         public async Task<OpaAccessToken?> GenerateAsync()
         {
-            var requestData = new Dictionary<string, string>
+            Dictionary<string, string>? requestData = new
             {
                 ["grant_type"] = "client_credentials",
                 ["client_id"] = _settings.UserName,
                 ["client_secret"] = _settings.UserSecret
             };
 
-            var client = _clientFactory.CreateClient();
+            HttpClient? client = _clientFactory.CreateClient();
 
-            var request = new FormUrlEncodedContent(requestData);
-            
-            var response = await client.PostAsync(_settings.AuthorisationUrl, request);
+            FormUrlEncodedContent? request = new(requestData);
+
+            HttpResponseMessage? response = await client.PostAsync(_settings.AuthorisationUrl, request);
 
             if (response.IsSuccessStatusCode)
             {
-                var responseContent = await response.Content.ReadAsStringAsync();
+                string? responseContent = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<OpaAccessToken>(responseContent);
             }
 
             return null;
+        }
+
+        private OpaSettings AssertSettings(IOptions<OpaSettings> options)
+        {
+            OpaSettings? opaSettings = options.Value;
+
+            return opaSettings;
         }
     }
 }

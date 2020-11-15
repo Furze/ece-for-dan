@@ -12,7 +12,7 @@ namespace MoE.ECE.Domain.Model.Rs7
         public int Rs7Id { get; set; }
 
         /// <summary>
-        /// First value is 1.
+        ///     First value is 1.
         /// </summary>
         public int RevisionNumber { get; set; }
 
@@ -31,67 +31,60 @@ namespace MoE.ECE.Domain.Model.Rs7
         public Declaration? Declaration { get; set; }
 
         /// <summary>
-        /// Creates all the required entitlement and advance months/days for this rs7.
+        ///     Creates all the required entitlement and advance months/days for this rs7.
         /// </summary>
         public void CreateMonthsForPeriod(FundingPeriodMonth fundingPeriodMonth, int fundingPeriodYear)
         {
-            var advancedStartDate = GetAdvanceStartDate(fundingPeriodMonth, fundingPeriodYear);
+            DateTime advancedStartDate = GetAdvanceStartDate(fundingPeriodMonth, fundingPeriodYear);
             CreateEntitlementMonths(advancedStartDate);
             CreateAdvanceMonths(advancedStartDate);
         }
 
         private static DateTime GetAdvanceStartDate(FundingPeriodMonth fundingPeriodMonth, int fundingPeriodYear)
         {
-            var date = new DateTime(
-                year: fundingPeriodYear,
-                month: (int) fundingPeriodMonth,
-                day: 01);
+            DateTime date = new DateTime(
+                fundingPeriodYear,
+                (int)fundingPeriodMonth,
+                01);
 
             return date;
         }
 
         private void CreateEntitlementMonths(DateTime advancedStartDate)
         {
-            var date = advancedStartDate
+            DateTime date = advancedStartDate
                 // take off 5 months so we're at the beginning of the washup (advanced months) for
                 // the funding period.
                 .AddMonths(-5);
 
             AddMonths(date, 4, entitlementMonth =>
             {
-                var month = new Rs7EntitlementMonth
+                Rs7EntitlementMonth? month = new Rs7EntitlementMonth
                 {
-                    MonthNumber = entitlementMonth.Month,
-                    Year = entitlementMonth.Year
+                    MonthNumber = entitlementMonth.Month, Year = entitlementMonth.Year
                 };
 
                 int numberOfDays = entitlementMonth.AddMonths(1).AddDays(-1).Day;
 
                 foreach (int day in Enumerable.Range(1, numberOfDays))
                 {
-                    month.AddDay(new Rs7EntitlementDay
-                    {
-                        DayNumber = day
-                    });
+                    month.AddDay(new Rs7EntitlementDay {DayNumber = day});
                 }
 
                 EntitlementMonths.Add(month);
             });
         }
 
-        private void CreateAdvanceMonths(DateTime advancedStartDate)
-        {
+        private void CreateAdvanceMonths(DateTime advancedStartDate) =>
             AddMonths(advancedStartDate, 4, advanceMonth =>
             {
-                var month = new Rs7AdvanceMonth
+                Rs7AdvanceMonth? month = new Rs7AdvanceMonth
                 {
-                    MonthNumber = advanceMonth.Month,
-                    Year = advanceMonth.Year
+                    MonthNumber = advanceMonth.Month, Year = advanceMonth.Year
                 };
 
                 AdvanceMonths.Add(month);
             });
-        }
 
         private static void AddMonths(DateTime date, int numberOfMonths, Action<DateTime> monthAction)
         {

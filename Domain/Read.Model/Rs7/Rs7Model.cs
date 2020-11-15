@@ -8,24 +8,17 @@ namespace MoE.ECE.Domain.Read.Model.Rs7
 {
     public class Rs7Model : IRs7AdvanceMonths, IRs7EntitlementMonths, IRs7Attestation
     {
-        [ReadOnly(true)]
-        public int Id { get; set; }
+        [ReadOnly(true)] public Guid? BusinessEntityId { get; set; }
 
-        [ReadOnly(true)]
-        public Guid? BusinessEntityId { get; set; }
-
-        [ReadOnly(true)]
-        public int? OrganisationId { get; set; }
+        [ReadOnly(true)] public int? OrganisationId { get; set; }
 
         [ReadOnly(true)]
         [JsonConverter(typeof(JsonNoEnumConverter<FundingPeriodMonth>))]
         public FundingPeriodMonth FundingPeriod { get; set; }
 
-        [ReadOnly(true)]
-        public int FundingYear { get; set; }
+        [ReadOnly(true)] public int FundingYear { get; set; }
 
-        [ReadOnly(true)]
-        public int FundingPeriodYear { get; set; }
+        [ReadOnly(true)] public int FundingPeriodYear { get; set; }
 
         public bool? IsZeroReturn { get; set; }
 
@@ -33,20 +26,20 @@ namespace MoE.ECE.Domain.Read.Model.Rs7
 
         public DateTimeOffset? ReceivedDate { get; set; }
 
-        [ReadOnly(true)]
-        public int RevisionNumber { get; set; }
+        [ReadOnly(true)] public int RevisionNumber { get; set; }
 
-        [ReadOnly(true)]
-        public DateTimeOffset RevisionDate { get; set; }
+        [ReadOnly(true)] public DateTimeOffset RevisionDate { get; set; }
+
+        public DeclarationModel? Declaration { get; set; }
+
+        public string? RequestId { get; set; }
+
+        [ReadOnly(true)] public int Id { get; set; }
 
         public Rs7AdvanceMonthModel[]? AdvanceMonths { get; set; }
 
-        public Rs7EntitlementMonthModel[]? EntitlementMonths { get; set; }
-
         public bool? IsAttested { get; set; }
 
-        public DeclarationModel? Declaration { get; set; }
-        
-        public string? RequestId { get; set; }
+        public Rs7EntitlementMonthModel[]? EntitlementMonths { get; set; }
     }
 }

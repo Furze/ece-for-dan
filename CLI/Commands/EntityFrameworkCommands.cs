@@ -27,7 +27,7 @@ namespace MoE.ECE.CLI.Commands
         {
             get
             {
-                var command = new Command("migrate-reference-data",
+                Command? command = new("migrate-reference-data",
                     "Apply the latest reference data migrations to the database")
                 {
                     new Option<string?>(new[] {"-cs", "--connection-string"},
@@ -41,7 +41,7 @@ namespace MoE.ECE.CLI.Commands
 
         public Command CreateSeedCommand()
         {
-            var seed = new Command("seed", "Add the seed data to the database.")
+            Command? seed = new("seed", "Add the seed data to the database.")
             {
                 new Option<string?>(new[] {"-cs", "--connection-string"},
                     "The connection string to use (optional)")
@@ -52,12 +52,15 @@ namespace MoE.ECE.CLI.Commands
 
         private void ApplyReferenceDataMigrations(string? connectionString)
         {
-            var referenceDataContext = CreateReferenceDataContext(connectionString);
+            ReferenceDataContext? referenceDataContext = CreateReferenceDataContext(connectionString);
 
-            var pendingMigrations = referenceDataContext.Database.GetPendingMigrations().ToList();
+            List<string>? pendingMigrations = referenceDataContext.Database.GetPendingMigrations().ToList();
             Console.WriteLine($"Found {pendingMigrations.Count} pending migrations");
 
-            if (!pendingMigrations.Any()) return;
+            if (!pendingMigrations.Any())
+            {
+                return;
+            }
 
             Console.WriteLine("Applying migrations...");
 
@@ -66,10 +69,10 @@ namespace MoE.ECE.CLI.Commands
 
         private void SeedData(string? connectionString)
         {
-            var referenceDataContext = CreateReferenceDataContext(connectionString);
+            ReferenceDataContext? referenceDataContext = CreateReferenceDataContext(connectionString);
 
-            var referenceData = new ReferenceData(referenceDataContext);
-            
+            ReferenceData? referenceData = new(referenceDataContext);
+
             referenceData.SeedData();
 
             referenceDataContext.SaveChanges();
@@ -79,18 +82,19 @@ namespace MoE.ECE.CLI.Commands
         {
             if (string.IsNullOrEmpty(connectionString))
             {
-                var martenSettings = _configuration.BindFor<MartenSettings>();
+                MartenSettings? martenSettings = _configuration.BindFor<MartenSettings>();
                 connectionString = martenSettings.ConnectionString;
 
                 Console.WriteLine($"Upgrading the database using the default connection string: {connectionString}");
             }
 
-            var optionsBuilder = new DbContextOptionsBuilder<ReferenceDataContext>();
+            DbContextOptionsBuilder<ReferenceDataContext>? optionsBuilder =
+                new();
             optionsBuilder
                 .UseNpgsql(connectionString)
                 .UseSnakeCaseNamingConvention();
 
-            var referenceDataContext = new ReferenceDataContext(optionsBuilder.Options,
+            ReferenceDataContext? referenceDataContext = new(optionsBuilder.Options,
                 _serviceProvider.GetService<IEnumerable<IEntityConfiguration>>());
             return referenceDataContext;
         }

@@ -36,19 +36,19 @@ namespace MoE.ECE.Domain.Integration.Consumer
         {
             if (workflowApproved.BusinessEntityType == Constants.BusinessEntityTypes.Rs7)
             {
-                var rs7 = await _documentSession.Query<Rs7>()
+                Rs7? rs7 = await _documentSession.Query<Rs7>()
                     .SingleOrDefaultAsync(document => document.BusinessEntityId == workflowApproved.BusinessEntityId,
                         cancellationToken);
 
                 if (rs7.RollStatus == RollStatus.ExternalSubmittedForApproval)
                 {
-                    var command = new PeerApproveRs7(workflowApproved.BusinessEntityId);
+                    PeerApproveRs7? command = new PeerApproveRs7(workflowApproved.BusinessEntityId);
 
                     await _cqrs.ExecuteAsync(command, cancellationToken);
                 }
                 else
                 {
-                    var command = new ApproveRs7(workflowApproved.BusinessEntityId);
+                    ApproveRs7? command = new ApproveRs7(workflowApproved.BusinessEntityId);
 
                     await _cqrs.ExecuteAsync(command, cancellationToken);
                 }
@@ -63,10 +63,12 @@ namespace MoE.ECE.Domain.Integration.Consumer
         public Task Handle(Declined integrationEvent, CancellationToken cancellationToken)
         {
             if (integrationEvent.BusinessEntityType != Constants.BusinessEntityTypes.Rs7)
+            {
                 throw new InvalidOperationException(
                     $"We have not implemented a handler for the business entity type - {integrationEvent.BusinessEntityType}");
+            }
 
-            var command = new DeclineRs7(integrationEvent.BusinessEntityId);
+            DeclineRs7? command = new DeclineRs7(integrationEvent.BusinessEntityId);
 
             return _cqrs.ExecuteAsync(command, cancellationToken);
         }
@@ -75,7 +77,7 @@ namespace MoE.ECE.Domain.Integration.Consumer
         {
             if (integrationEvent.BusinessEntityType == Constants.BusinessEntityTypes.Rs7)
             {
-                var command = new Rs7PeerReject(integrationEvent.BusinessEntityId);
+                Rs7PeerReject? command = new Rs7PeerReject(integrationEvent.BusinessEntityId);
 
                 await _cqrs.ExecuteAsync(command, cancellationToken);
             }
@@ -88,7 +90,7 @@ namespace MoE.ECE.Domain.Integration.Consumer
 
         public Task Handle(Rs7Received rs7Received, CancellationToken cancellationToken)
         {
-            var createRs7 = _mapper.Map<CreateFullRs7>(rs7Received);
+            CreateFullRs7? createRs7 = _mapper.Map<CreateFullRs7>(rs7Received);
 
             return _cqrs.ExecuteAsync(createRs7, cancellationToken);
         }

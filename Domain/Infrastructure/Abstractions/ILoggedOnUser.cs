@@ -3,6 +3,6 @@
     public interface ILoggedOnUser
     {
         bool IsAuthenticated { get; }
-        string UserName { get; }    
+        string UserName { get; }
     }
 }

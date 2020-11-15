@@ -25,36 +25,24 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_a_rs7_that_has_been_peer_approve
             set => TestData.Rs7Model = value;
         }
 
-        protected override void Arrange()
-        {
+        protected override void Arrange() =>
             Given
                 .A_rs7_has_been_created()
                 .The_rs7_has_been_submitted_for_peer_approval()
                 .The_rs7_has_been_peer_review_rejected()
                 .GetResult(storyData => Rs7Model = storyData.Rs7Model);
-        }
 
-        protected override void Act()
-        {
-            When.Get($"{Constants.Url}/{Rs7Model.Id}");
-        }
+        protected override void Act() => When.Get($"{Constants.Url}/{Rs7Model.Id}");
 
         [Fact]
-        public void Domain_event_raised()
-        {
-            A_domain_event_should_be_fired<Rs7PeerRejected>();
-        }
+        public void Domain_event_raised() => A_domain_event_should_be_fired<Rs7PeerRejected>();
 
         [Fact]
-        public void Roll_status_has_been_updated()
-        {
-            Then.Response.Content<Rs7Model>().RollStatus.ShouldBe(RollStatus.ExternalReturnedForEdit);
-        }
-        
+        public void Roll_status_has_been_updated() => Then.Response.Content<Rs7Model>().RollStatus
+            .ShouldBe(RollStatus.ExternalReturnedForEdit);
+
         [Fact]
-        public void Then_the_response_snapshot_should_be_ok()
-        {
+        public void Then_the_response_snapshot_should_be_ok() =>
             Then.Snapshot().Match<Rs7Model>(IgnoreFieldsFor.Rs7Model);
-        }
     }
 }

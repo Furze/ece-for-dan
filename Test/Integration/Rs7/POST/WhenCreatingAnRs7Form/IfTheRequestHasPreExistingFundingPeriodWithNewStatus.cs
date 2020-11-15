@@ -11,25 +11,22 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
 {
     public class IfTheRequestHasPreExistingFundingPeriodWithNewStatus : IntegrationTestBase<ECEStoryBook, ECEStoryData>
     {
+        private const string Url = "api/rs7";
+
+        private Rs7Model _rs7 = new Rs7Model();
+
         public IfTheRequestHasPreExistingFundingPeriodWithNewStatus(RunOnceBeforeAllTests testSetUp,
             ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output,
             testState)
         {
         }
 
-        private const string Url = "api/rs7";
-
-        private Rs7Model _rs7 = new Rs7Model();
-
-        protected override void Arrange()
-        {
+        protected override void Arrange() =>
             Given
                 .A_rs7_has_been_created()
                 .GetResult(data => _rs7 = data.Rs7Model);
-        }
 
-        protected override void Act()
-        {
+        protected override void Act() =>
             When.Post(Url,
                 ModelBuilder.Rs7Model(rs7 =>
                 {
@@ -38,26 +35,18 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
                     rs7.FundingPeriodYear = _rs7.FundingPeriodYear;
                 })
             );
-        }
 
         [Fact]
-        public void ThenDomainEventShouldBePublishedUsingThePreExistingId()
-        {
+        public void ThenDomainEventShouldBePublishedUsingThePreExistingId() =>
             A_domain_event_should_be_fired<Rs7SkeletonCreated>()
                 .Id
                 .ShouldBe(_rs7.Id);
-        }
 
         [Fact]
-        public void Then_the_response_should_be_a_201_created()
-        {
-            Then.Response.ShouldBe.Created();
-        }
-        
+        public void Then_the_response_should_be_a_201_created() => Then.Response.ShouldBe.Created();
+
         [Fact]
-        public void Then_the_response_should_contain_a_location_header()
-        {
+        public void Then_the_response_should_contain_a_location_header() =>
             Then.Response.Headers.Should.Include.Location();
-        }
     }
 }

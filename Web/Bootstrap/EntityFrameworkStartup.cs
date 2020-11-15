@@ -18,13 +18,14 @@ namespace MoE.ECE.Web.Bootstrap
                 .WithSingletonLifetime());
 
             // Setup the context to use Postgres
-            var connectionStringFactory = new ConnectionStringFactory(Configuration);
+            ConnectionStringFactory? connectionStringFactory = new(Configuration);
             services.AddDbContext<ReferenceDataContext>(options =>
             {
                 options
                     .UseNpgsql(connectionStringFactory.GetConnectionString())
                     .UseSnakeCaseNamingConvention()
-                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);  // Reference data doesn't need to be tracked
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior
+                        .NoTracking); // Reference data doesn't need to be tracked
             });
         }
 

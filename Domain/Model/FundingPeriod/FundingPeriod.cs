@@ -39,7 +39,7 @@ namespace MoE.ECE.Domain.Model.FundingPeriod
             FundingPeriodMonths = new CalendarMonth[0];
             StartDate = new Date(1, calendarMonth.Id, CalculateFundingPeriodYearFromDate(effectiveDate));
             EffectiveDate = effectiveDate;
-            FundingYear = GetFundingYearForFundingPeriod((FundingPeriodMonth) StartDate.Month, StartDate.Year);
+            FundingYear = GetFundingYearForFundingPeriod((FundingPeriodMonth)StartDate.Month, StartDate.Year);
             FundingPeriodYear = StartDate.Year;
         }
 
@@ -87,10 +87,8 @@ namespace MoE.ECE.Domain.Model.FundingPeriod
         /// </summary>
         /// <param name="date">The date we wish to create a funding period for.</param>
         /// <returns>the year</returns>
-        private static int CalculateFundingPeriodYearFromDate(Date date)
-        {
-            return date.Month == CalendarMonth.January.Id ? date.Year - 1 : date.Year;
-        }
+        private static int CalculateFundingPeriodYearFromDate(Date date) =>
+            date.Month == CalendarMonth.January.Id ? date.Year - 1 : date.Year;
 
         /// <summary>
         ///     If the funding period is March then the funding year is the same as the calendar year
@@ -99,10 +97,8 @@ namespace MoE.ECE.Domain.Model.FundingPeriod
         /// <param name="fundingPeriodMonth">The funding period for which we want to calculate the funding year for</param>
         /// <param name="year">The calendar year of the funding period</param>
         /// <returns>the funding year</returns>
-        public static int GetFundingYearForFundingPeriod(FundingPeriodMonth fundingPeriodMonth, int year)
-        {
-            return fundingPeriodMonth == FundingPeriodMonth.March ? year : year + 1;
-        }
+        public static int GetFundingYearForFundingPeriod(FundingPeriodMonth fundingPeriodMonth, int year) =>
+            fundingPeriodMonth == FundingPeriodMonth.March ? year : year + 1;
 
         /// <summary>
         ///     Factory method to create the funding period for a give date.
@@ -111,9 +107,10 @@ namespace MoE.ECE.Domain.Model.FundingPeriod
         /// <returns></returns>
         public static FundingPeriod GetFundingPeriodForDate(Date date)
         {
-            var instantiateFundingPeriod = FundingPeriodFactories[CalendarMonth.GetById(date.Month)];
+            Func<Date, FundingPeriod>? instantiateFundingPeriod =
+                FundingPeriodFactories[CalendarMonth.GetById(date.Month)];
 
-            var fundingPeriod = instantiateFundingPeriod(date);
+            FundingPeriod? fundingPeriod = instantiateFundingPeriod(date);
 
             return fundingPeriod;
         }

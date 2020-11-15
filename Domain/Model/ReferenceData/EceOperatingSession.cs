@@ -19,7 +19,7 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public int FundedHours { get; set; }
         public int OperatingHours { get; set; }
         public virtual EceService EceService { get; set; } = null!;
-        
+
         public DayOfWeek DayOfWeek =>
             SessionDayDescription switch
             {

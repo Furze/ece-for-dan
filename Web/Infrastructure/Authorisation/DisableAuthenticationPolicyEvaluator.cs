@@ -16,12 +16,14 @@ namespace MoE.ECE.Web.Infrastructure.Authorisation
             throw new System.ApplicationException($"{nameof(DisableAuthenticationPolicyEvaluator)} should not be in use outside of local development.");
             // Always pass authentication.
 #else
-            var authenticationTicket = new AuthenticationTicket(new ClaimsPrincipal(), new AuthenticationProperties(), JwtBearerDefaults.AuthenticationScheme);
+            AuthenticationTicket? authenticationTicket = new(new ClaimsPrincipal(),
+                new AuthenticationProperties(), JwtBearerDefaults.AuthenticationScheme);
             return await Task.FromResult(AuthenticateResult.Success(authenticationTicket));
 #endif
         }
 
-        public async Task<PolicyAuthorizationResult> AuthorizeAsync(AuthorizationPolicy policy, AuthenticateResult authenticationResult, HttpContext context, object resource)
+        public async Task<PolicyAuthorizationResult> AuthorizeAsync(AuthorizationPolicy policy,
+            AuthenticateResult authenticationResult, HttpContext context, object resource)
         {
 #if !DEBUG
             throw new System.ApplicationException($"{nameof(DisableAuthenticationPolicyEvaluator)} should not be in use outside of local development.");

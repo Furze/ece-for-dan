@@ -13,16 +13,12 @@ namespace MoE.ECE.Domain.Exceptions
             string errorCode,
             string message,
             Exception? innerException = null)
-            : base(message, innerException)
-        {
+            : base(message, innerException) =>
             ErrorCode = errorCode;
-        }
 
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        protected BadRequestException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
+        protected BadRequestException(SerializationInfo info, StreamingContext context) : base(info, context) =>
             ErrorCode = info.GetString(BadRequestExceptionErrorCode) ?? string.Empty;
-        }
 
         public string ErrorCode { get; }
 

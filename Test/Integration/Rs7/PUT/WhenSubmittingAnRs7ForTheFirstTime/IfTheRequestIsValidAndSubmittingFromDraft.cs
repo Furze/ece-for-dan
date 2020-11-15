@@ -14,22 +14,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 {
     public class IfTheRequestIsValidAndSubmittingFromDraft : SpeedyIntegrationTestBase
     {
+        private const string Url = "api/rs7";
+
         public IfTheRequestIsValidAndSubmittingFromDraft(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output,
             TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
         {
-        }
-
-        private const string Url = "api/rs7";
-
-        protected override void Arrange()
-        {
-            Given
-                .A_rs7_has_been_created()
-                .And_the_rs7_has_been_saved_as_draft()
-                .GetResult(result => Rs7Model = result.Rs7Model);
-
-            UpdateRs7Command =
-                ModelBuilder.UpdateRs7(Rs7Model, rs7 => rs7.RollStatus = RollStatus.InternalReadyForReview);
         }
 
         private Rs7Model Rs7Model
@@ -44,17 +33,26 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
             set => TestData.SubmitRs7Command = value;
         }
 
-        protected override void Act()
+        protected override void Arrange()
         {
+            Given
+                .A_rs7_has_been_created()
+                .And_the_rs7_has_been_saved_as_draft()
+                .GetResult(result => Rs7Model = result.Rs7Model);
+
+            UpdateRs7Command =
+                ModelBuilder.UpdateRs7(Rs7Model, rs7 => rs7.RollStatus = RollStatus.InternalReadyForReview);
+        }
+
+        protected override void Act() =>
             // Act
             When.Put($"{Url}/{Rs7Model.Id}", UpdateRs7Command);
-        }
 
         [Fact]
         public void ThenADomainEventShouldBePublishedWithRs7Data()
         {
             // Assert
-            var domainEvent = A_domain_event_should_be_fired<Rs7Updated>();
+            Rs7Updated? domainEvent = A_domain_event_should_be_fired<Rs7Updated>();
 
             domainEvent.Id.ShouldNotBe(0);
             domainEvent.BusinessEntityId.ShouldNotBeNull();
@@ -66,7 +64,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ThenADomainEventShouldPublishAdvanceMonths()
         {
             // Assert
-            var domainEvent = A_domain_event_should_be_fired<Rs7Updated>();
+            Rs7Updated? domainEvent = A_domain_event_should_be_fired<Rs7Updated>();
 
             domainEvent.AdvanceMonths.ShouldNotBeNull();
             domainEvent.AdvanceMonths?.ElementAt(0).AllDay.GetValueOrDefault().ShouldBeGreaterThan(0);
@@ -88,7 +86,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ThenADomainEventShouldUpdateTheCurrentRevision()
         {
             // Assert
-            var domainEvent = A_domain_event_should_be_fired<Rs7Updated>();
+            Rs7Updated? domainEvent = A_domain_event_should_be_fired<Rs7Updated>();
 
             domainEvent.RevisionId.ShouldNotBe(0);
             domainEvent.RevisionNumber.ShouldBe(1);
@@ -108,7 +106,8 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ThenAnIntegrationEventShouldBePublished()
         {
             // Assert
-            var integrationEvent = An_integration_event_should_be_fired<Events.Integration.Protobuf.Roll.Rs7Updated>();
+            Events.Integration.Protobuf.Roll.Rs7Updated? integrationEvent =
+                An_integration_event_should_be_fired<Events.Integration.Protobuf.Roll.Rs7Updated>();
 
             integrationEvent.RollStatus.ShouldBe(Events.Integration.Protobuf.Roll.RollStatus.InternalReadyForReview);
             integrationEvent.RevisionNumber.ShouldBe(1);
@@ -116,11 +115,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         }
 
         [Fact]
-        public void ThenTheResponseShouldBeAHttp204()
-        {
+        public void ThenTheResponseShouldBeAHttp204() =>
             Then.Response
                 .ShouldBe
                 .NoContent();
-        }
     }
 }

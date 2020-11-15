@@ -8,9 +8,9 @@ namespace MoE.ECE.Web.Bootstrap
 {
     public class StartupConfigRegistry
     {
-        private readonly List<StartupConfig> _configurations = new List<StartupConfig>();
-        private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
+        private readonly List<StartupConfig> _configurations = new();
+        private readonly IWebHostEnvironment _environment;
 
         public StartupConfigRegistry(IConfiguration configuration, IWebHostEnvironment environment)
         {
@@ -21,25 +21,16 @@ namespace MoE.ECE.Web.Bootstrap
         public StartupConfigRegistry Register<TStartup>()
             where TStartup : StartupConfig, new()
         {
-            var startup = new TStartup
-            {
-                Configuration = _configuration,
-                Environment = _environment
-            };
+            TStartup? startup = new {Configuration = _configuration, Environment = _environment};
 
             _configurations.Add(startup);
 
             return this;
         }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
+        public void ConfigureServices(IServiceCollection services) =>
             _configurations.ForEach(startup => startup.ConfigureServices(services));
-        }
 
-        public void Configure(IApplicationBuilder app)
-        {
-            _configurations.ForEach(startup => startup.Configure(app));
-        }
+        public void Configure(IApplicationBuilder app) => _configurations.ForEach(startup => startup.Configure(app));
     }
 }
