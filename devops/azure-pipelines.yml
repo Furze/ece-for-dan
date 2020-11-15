@@ -10,7 +10,7 @@ trigger:
 
 schedules:
   - cron: "0 16 * * *" # Schedule earlier than first/integration pipelines 
-    displayName: Morning build # This will teardown dev00 and rebuild it
+    displayName: Morning build
     branches:
       include:
       - master
@@ -45,17 +45,18 @@ stages:
     parameters:      
       azureDevOpsServiceConnection: '$(testDevDevOpsServiceConnection)'
       azureKeyvaultInstance: 'mataersdev00secrets'
-  - template: release-stage.yml
-    parameters:
-      environmentPrefix: 'mata'
-      environmentSuffix: 'devtest'
-      environmentName: 'dev'
-      environmentNumber: '00'
-      azureDevOpsServiceConnection: '$(testDevDevOpsServiceConnection)'
-      azureKeyvaultInstance: 'mataersdev00secrets'
-      containerRegistry: 'mapaerscontainerregistry'
-      terraformVersion: '$(terraformVersion)'
-      decomDate: '$(decomDate)'
+  - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+    - template: release-stage.yml
+      parameters:
+        environmentPrefix: 'mata'
+        environmentSuffix: 'devtest'
+        environmentName: 'dev'
+        environmentNumber: '00'
+        azureDevOpsServiceConnection: '$(testDevDevOpsServiceConnection)'
+        azureKeyvaultInstance: 'mataersdev00secrets'
+        containerRegistry: 'mapaerscontainerregistry'
+        terraformVersion: '$(terraformVersion)'
+        decomDate: '$(decomDate)'
 
   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
     - template: release-stage.yml
