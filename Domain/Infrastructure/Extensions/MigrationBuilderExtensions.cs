@@ -11,15 +11,15 @@ namespace MoE.ECE.Domain.Infrastructure.Extensions
         public static void DropReferenceDataTables(this MigrationBuilder migrationBuilder)
         {
             const string sql = @"
-                drop table if exists referencedata.lookup
-                drop table if exists referencedata.lookup_type
+                drop table if exists referencedata.lookup;
+                drop table if exists referencedata.lookup_type;
 
-                drop table if exists referencedata.ece_operating_session_date_ranged_parameter
-                drop table if exists referencedata.ece_operating_session_date_ranged_parameter
-                drop table if exists referencedata.ece_service_date_ranged_parameter
+                drop table if exists referencedata.ece_operating_session_date_ranged_parameter;
+                drop table if exists referencedata.ece_operating_session_date_ranged_parameter;
+                drop table if exists referencedata.ece_service_date_ranged_parameter;
 
-                drop table if exists referencedata.ece_operating_session
-                drop table if exists referencedata.ece_service";
+                drop table if exists referencedata.ece_operating_session;
+                drop table if exists referencedata.ece_service;";
 
             migrationBuilder.Sql(sql);
         }
