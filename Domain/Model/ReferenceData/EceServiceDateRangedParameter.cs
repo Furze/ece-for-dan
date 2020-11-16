@@ -2,7 +2,7 @@
 
 namespace MoE.ECE.Domain.Model.ReferenceData
 {
-    public class EceServiceDateRangedParameter
+    public class EceServiceDateRangedParameter 
     {
         public int HistoryId { get; set; }
         public int RefOrganisationId { get; set; }

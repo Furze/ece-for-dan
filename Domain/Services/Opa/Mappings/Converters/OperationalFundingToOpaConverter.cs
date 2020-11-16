@@ -1,0 +1,471 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
+using Marten;
+using MoE.ECE.Domain.Command;
+using MoE.ECE.Domain.Infrastructure.EntityFramework;
+using MoE.ECE.Domain.Infrastructure.Extensions;
+using MoE.ECE.Domain.Infrastructure.Filters;
+using MoE.ECE.Domain.Infrastructure.Services.Opa;
+using MoE.ECE.Domain.Model.OperationalFunding;
+using MoE.ECE.Domain.Model.ReferenceData;
+using MoE.ECE.Domain.Model.Rs7;
+using MoE.ECE.Domain.Model.ValueObject;
+using MoE.ECE.Domain.Services.Opa.Request;
+using ServiceProfile = MoE.ECE.Domain.Services.Opa.Request.ServiceProfile;
+
+namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
+{
+    public class OperationalFundingToOpaConverter : ITypeConverter<CreateOperationalFundingRequest, OpaRequest<OperationalFundingBaseRequest>>
+    {
+        private readonly ReferenceDataContext _referenceDataContext;
+        private readonly IDocumentSession _documentSession;
+
+        private int _opaEntitlementDaysId = 1;
+        private int _opaServiceProfilesId = 1;
+
+        private static IEnumerable<string> OpaOperationalFundingOutcomeParameters =>
+            new List<string>
+            {
+                "entMonthName",
+                "relEntitlement",
+                "entitlementAmountName",
+                "entitlementAmountComponentType",
+                "entitlementAmountSessionType",
+                "entitlementAmount",
+                "entitlementAmountFCH",
+                "entitlementAmountRate",
+                "entitlementAmountStartDate",
+                "entitlementAmountDays",
+                "entitlementAmountRateName",
+                "advMonthName",
+                "advMonthNumber",
+                "advanceAmountName",
+                "advanceAmountComponentType",
+                "advanceAmountStartDate",
+                "advanceAmountDays",
+                "advanceAmountFCH",
+                "advanceAmountRate",
+                "advanceAmountRateName",
+                "advanceAmount",
+                "advMonthEstimateAllDayDays",
+                "advMonthEstimateSessionalDays",
+                "advMonthEstimateParentLedDays",
+                "advMonthAmountPayableUnder2",
+                "advMonthAmountPayable2AndOver",
+                "advMonthAmountPayable20Hours",
+                "advMonthAmountPayablePlus10",
+                "eceAllDayCertificatedTeacherPercentage",
+                "eceSessionalCertificatedTeacherPercentage",
+                "fundingYear",
+                "fundingPeriod",
+                "isLicenceExempt",
+                "entMonthNumber",
+                "entMonthSessionalCertificatedTeacherHours",
+                "entMonthSessionalNonCertificatedTeacherHours",
+                "entMonthAllDayNonCertificatedTeacherHours",
+                "entMonthAllDayCertificatedTeacherHours",
+                "entMonthWashUp20Hours",
+                "entMonthWashUpPlus10",
+                "entMonthWashUp2AndOver",
+                "entMonthWashUpUnder2",
+                "advanceAmountSessionType",
+                "entMonthTotalWorkingDays",
+                "advMonthTotalDays",
+                "entMonthTotalWashUp",
+                "eceTotalWashUp",
+                "entMonthYear",
+                "advMonthYear",
+                "entMonthTotalEntitlement",
+                "entMonthTotalFundsAdvanced",
+                "entMonthEntitlementUnder2",
+                "entMonthEntitlement2andOver",
+                "entMonthEntitlement20Hours",
+                "entMonthEntitlementPlus10",
+                "eceTotalAdvance",
+                "advMonthTotalAdvance"
+            };
+
+        public OperationalFundingToOpaConverter(
+            ReferenceDataContext referenceDataContext, 
+            IDocumentSession documentSession)
+        {
+            _referenceDataContext = referenceDataContext;
+            _documentSession = documentSession;
+        }
+
+        public OpaRequest<OperationalFundingBaseRequest> Convert(
+            CreateOperationalFundingRequest source,
+            OpaRequest<OperationalFundingBaseRequest> destination,
+            ResolutionContext context)
+        {
+            var eceService = _referenceDataContext.EceServices.SingleOrDefault(service =>
+                service.RefOrganisationId == source.OrganisationId);
+            
+            if (eceService == null)
+                throw new ApplicationException($"Ece service '{source.OrganisationId} could not be found");
+            
+            const int opaCaseId = 1;
+            return new OpaRequest<OperationalFundingBaseRequest>
+            {
+                Outcomes = OpaOperationalFundingOutcomeParameters,
+                Cases = new List<OperationalFundingBaseRequest>
+                {
+                    new OperationalFundingBaseRequest
+                    {
+                        Id = $"Case {opaCaseId}",
+                        ApplicationType = OpaApplicationType.Rs7,
+                        IsAttested = source.IsAttested ? "Y" : "N",
+                        FundingYear = source.FundingYear,
+                        FundingPeriod = GetOpaFundingPeriod(source.FundingPeriodMonth),
+                        EntitlementMonths = GetOpaEntitlementMonths(source),
+                        AdvanceMonths = GetOpaAdvanceMonths(source),
+                        ServiceProfiles = GetServiceProfiles(eceService)
+                    }
+                }
+            };
+        }
+
+        private ICollection<EntitlementMonth> GetOpaEntitlementMonths(CreateOperationalFundingRequest source)
+        {
+            var opaEntitlementMonths = new List<EntitlementMonth>();
+            var opaId = 1;
+
+            if (source.EntitlementMonths != null)
+            {
+                foreach (var entitlementMonth in source.EntitlementMonths)
+                {
+                    var matchingAdvanceMonth = _documentSession.Query<OperationalFundingRequest>()
+                        .GetEntitlementAdvancedMonth(source.OrganisationId, entitlementMonth.Year, entitlementMonth.MonthNumber);
+
+                    opaEntitlementMonths.Add(new EntitlementMonth
+                    {
+                        Id = $"relEntitlementMonth- {opaId}",
+                        MonthNumber = entitlementMonth.MonthNumber,
+                        MonthFundsAdvancedUnder2 = matchingAdvanceMonth?.AmountPayableUnderTwo,
+                        MonthFundsAdvanced2AndOver = matchingAdvanceMonth?.AmountPayableTwoAndOver,
+                        MonthFundsAdvanced20Hours = matchingAdvanceMonth?.AmountPayableTwentyHours,
+                        MonthFundsAdvancedPlus10 = matchingAdvanceMonth?.AmountPayablePlusTen,
+                        EntitlementDays = GetOpaEntitlementDays(entitlementMonth)
+                    });
+                    opaId++;
+                }
+            }
+
+            return opaEntitlementMonths;
+        }
+
+        private ICollection<EntitlementDay> GetOpaEntitlementDays(Rs7EntitlementMonth rs7EntitlementMonth)
+        {
+            var opaEntitlementDays = new List<EntitlementDay>();
+
+          
+                foreach (var submittedDay in rs7EntitlementMonth.Days)
+                {
+                    opaEntitlementDays.Add(new EntitlementDay
+                    {
+                        Id = $"relEntitlementDay {_opaEntitlementDaysId}",
+                        Number = submittedDay.DayNumber,
+                        FCHUnder2 = submittedDay.Under2,
+                        FCH2AndOver = submittedDay.TwoAndOver,
+                        FCH20Hours = submittedDay.Hours20,
+                        FCHPlus10 = submittedDay.Plus10,
+                        CertificatedTeacherHours = submittedDay.Certificated,
+                        NonCertificatedTeacherHours = submittedDay.NonCertificated
+                    });
+                    _opaEntitlementDaysId++;
+                }
+          
+            
+            return opaEntitlementDays;
+        }
+
+        private ICollection<AdvanceMonth> GetOpaAdvanceMonths(CreateOperationalFundingRequest source)
+        {
+            var opaAdvanceMonths = new List<AdvanceMonth>();
+            var opaId = 1;
+
+            if (source.AdvanceMonths != null)
+            {
+                foreach (var submittedAdvanceMonth in source.AdvanceMonths)
+                {
+                    opaAdvanceMonths.Add(new AdvanceMonth
+                    {
+                        Id = opaId,
+                        MonthNumber = submittedAdvanceMonth.MonthNumber,
+                        AllDayWorkingDays = submittedAdvanceMonth.AllDay,
+                        SessionalWorkingDays = submittedAdvanceMonth.Sessional,
+                        ParentLedWorkingDays = submittedAdvanceMonth.ParentLed
+                    });
+                    opaId++;
+                }
+            }
+
+            return opaAdvanceMonths;
+        }
+
+        private ICollection<ServiceProfile> GetServiceProfiles(EceService eceService)
+        {
+            var serviceProfiles = new List<ServiceProfile>();
+
+            // TODO: Load ALL THE DATA IN ONE GO....
+            AddOrganisationTypeHistory(eceService, serviceProfiles);
+            AddQualityLevelHistory(eceService, serviceProfiles);
+            AddEquityIndexHistory(eceService, serviceProfiles);
+            AddIsolationIndexHistory(eceService, serviceProfiles);
+            AddServiceProvisionHistory(eceService, serviceProfiles);
+            AddPrimaryLanguageHistory(eceService, serviceProfiles);
+            AddOperatingSessionHistory(eceService, serviceProfiles);
+            
+            return serviceProfiles;
+        }
+
+        private void AddOrganisationTypeHistory(EceService eceService, List<ServiceProfile> serviceProfiles)
+        {
+            var history = _referenceDataContext.EceServiceDateRangedParameters
+                .GetHistory(eceService.RefOrganisationId, HistoryAttribute.OrganisationType)
+                .ToList();
+
+            if (history.Count == 0)
+            {
+                serviceProfiles.Add(
+                    GetServiceProfile(OpaServiceProfileType.OrganisationType, eceService.OrganisationTypeId.ToString()));
+            }
+            else
+            {
+                serviceProfiles.AddRange(history
+                    .Select(entity => GetServiceProfile(
+                        OpaServiceProfileType.OrganisationType,
+                        entity.Value,
+                        entity.EffectiveFromDate.ToNzDateTimeOffSet(),
+                        entity.EffectiveToDate?.ToNzDateTimeOffSet()))
+                    .ToList());
+            }
+        }
+
+        private void AddQualityLevelHistory(EceService eceService, List<ServiceProfile> serviceProfiles)
+        {
+            var history = _referenceDataContext.EceServiceDateRangedParameters
+                .GetHistory(eceService.RefOrganisationId, HistoryAttribute.QualityLevel)
+                .ToList();
+
+            if (history.Count() == 0)
+            {
+                serviceProfiles.Add(
+                    GetServiceProfile(OpaServiceProfileType.QualityLevel, eceService.EcQualityLevelId.ToString()));
+            }
+            else
+            {
+                serviceProfiles.AddRange(history
+                    .Select(entity => GetServiceProfile(
+                        OpaServiceProfileType.QualityLevel,
+                        entity.Value,
+                        entity.EffectiveFromDate.ToNzDateTimeOffSet(),
+                        entity.EffectiveToDate?.ToNzDateTimeOffSet()))
+                    .ToList());
+            }
+        }
+
+        private void AddEquityIndexHistory(EceService eceService, List<ServiceProfile> serviceProfiles)
+        {
+            var history = _referenceDataContext.EceServiceDateRangedParameters
+                .GetHistory(eceService.RefOrganisationId, HistoryAttribute.EquityIndex)
+                .ToList();
+
+            if (history.Count() == 0)
+            {
+                serviceProfiles.Add(
+                    GetServiceProfile(OpaServiceProfileType.EquityIndex, eceService.EquityIndexId.ToString()));
+            }
+            else
+            {
+                serviceProfiles.AddRange(history
+                    .Select(entity => GetServiceProfile(
+                        OpaServiceProfileType.EquityIndex,
+                        entity.Value,
+                        entity.EffectiveFromDate.ToNzDateTimeOffSet(),
+                        entity.EffectiveToDate?.ToNzDateTimeOffSet()))
+                    .ToList());
+            }
+        }
+
+        private void AddIsolationIndexHistory(EceService eceService, List<ServiceProfile> serviceProfiles)
+        {
+            var history = _referenceDataContext.EceServiceDateRangedParameters
+                .GetHistory(eceService.RefOrganisationId, HistoryAttribute.IsolationIndex)
+                .ToList();
+
+            if (history.Count() == 0)
+            {
+                serviceProfiles.Add(
+                    GetServiceProfile(OpaServiceProfileType.IsolationIndex, eceService.IsolationIndex.ToString()));
+            }
+            else
+            {
+                serviceProfiles.AddRange(history
+                    .Select(entity => GetServiceProfile(
+                        OpaServiceProfileType.IsolationIndex,
+                        entity.Value,
+                        entity.EffectiveFromDate.ToNzDateTimeOffSet(),
+                        entity.EffectiveToDate?.ToNzDateTimeOffSet()))
+                    .ToList());
+            }
+        }
+
+        private void AddServiceProvisionHistory(EceService eceService, List<ServiceProfile> serviceProfiles)
+        {
+            var history = _referenceDataContext.EceLicencingDetailDateRangedParameters
+                .GetLicencingDetailHistory(eceService.RefOrganisationId)
+                .ToList();
+
+            if (history.Count() == 0)
+            {
+                serviceProfiles.Add(
+                    GetServiceProfile(OpaServiceProfileType.ServiceProvision, eceService.ServiceProvisionTypeId.ToString()));
+            }
+            else
+            {
+                serviceProfiles.AddRange(history
+                    .Select(entity => GetServiceProfile(
+                        OpaServiceProfileType.ServiceProvision,
+                        entity.ServiceProvisionTypeId.ToString(),
+                        entity.EffectiveFromDate.ToNzDateTimeOffSet(),
+                        entity.EffectiveToDate?.ToNzDateTimeOffSet()))
+                    .ToList());
+            }
+        }
+
+        private void AddPrimaryLanguageHistory(EceService eceService, List<ServiceProfile> serviceProfiles)
+        {
+            var history = _referenceDataContext.EceServiceDateRangedParameters
+                .GetHistory(eceService.RefOrganisationId, HistoryAttribute.PrimaryLanguage)
+                .ToList();
+
+            if (history.Count() == 0)
+            {
+                serviceProfiles.Add(
+                    GetServiceProfile(OpaServiceProfileType.PrimaryLanguage, eceService.PrimaryLanguageId.ToString()));
+            }
+            else
+            {
+                serviceProfiles.AddRange(history
+                    .Select(entity => GetServiceProfile(
+                        OpaServiceProfileType.PrimaryLanguage,
+                        entity.Value,
+                        entity.EffectiveFromDate.ToNzDateTimeOffSet(),
+                        entity.EffectiveToDate?.ToNzDateTimeOffSet()))
+                    .ToList());
+            }
+        }
+
+        private void AddOperatingSessionHistory(EceService eceService, List<ServiceProfile> serviceProfiles)
+        {
+            var operatingSessions = new Dictionary<int, OperatingSession>
+            {
+                {1, new OperatingSession {ProfileType = OpaServiceProfileType.MondaySessionType, HistoryAttribute = HistoryAttribute.MondaySession, ServiceValue = eceService.MondaySessionType} },
+                {2, new OperatingSession {ProfileType = OpaServiceProfileType.TuesdaySessionType, HistoryAttribute = HistoryAttribute.TuesdaySession, ServiceValue = eceService.TuesdaySessionType} },
+                {3, new OperatingSession {ProfileType = OpaServiceProfileType.WednesdaySessionType, HistoryAttribute = HistoryAttribute.WednesdaySession, ServiceValue = eceService.WednesdaySessionType} },
+                {4, new OperatingSession {ProfileType = OpaServiceProfileType.ThursdaySessionType, HistoryAttribute = HistoryAttribute.ThursdaySession, ServiceValue = eceService.ThursdaySessionType} },
+                {5, new OperatingSession {ProfileType = OpaServiceProfileType.FridaySessionType, HistoryAttribute = HistoryAttribute.FridaySession, ServiceValue = eceService.FridaySessionType} },
+                {6, new OperatingSession {ProfileType = OpaServiceProfileType.SaturdaySessionType, HistoryAttribute = HistoryAttribute.SaturdaySession, ServiceValue = eceService.SaturdaySessionType} },
+                {7, new OperatingSession {ProfileType = OpaServiceProfileType.SundaySessionType, HistoryAttribute = HistoryAttribute.SundaySession, ServiceValue = eceService.SundaySessionType} },
+            };
+
+            foreach (var index in Enumerable.Range(1, 7))
+            {
+                var history = _referenceDataContext.EceOperatingSessionDateRangedParameters
+                    .GetOperatingSessionHistory(eceService.RefOrganisationId, operatingSessions[index].HistoryAttribute)
+                    .ToList();
+
+                if (history.Count == 0)
+                {
+                    serviceProfiles.Add(
+                        GetServiceProfile(operatingSessions[index].ProfileType, operatingSessions[index].ServiceValue.ToString()));
+                }
+                else
+                {
+                    serviceProfiles.AddRange(history
+                        .GroupBy(entity => new
+                        {
+                            entity.SessionDayId,
+                            entity.SessionTypeId,
+                            entity.SessionProvisionTypeId,
+                            entity.EffectiveFromDate,
+                            entity.EffectiveToDate
+                        })
+                        .Select(entity => GetServiceProfile(
+                            operatingSessions[index].ProfileType,
+                            entity.First().SessionTypeId.ToString(),
+                            entity.First().EffectiveFromDate.ToNzDateTimeOffSet(),
+                            entity.First().EffectiveToDate?.ToNzDateTimeOffSet()))
+                        .ToList());
+                }
+            }
+        }
+
+        private ServiceProfile GetServiceProfile(
+            string profileType, 
+            string? value,
+            DateTimeOffset? fromDate = null,
+            DateTimeOffset? toDate = null)
+        {
+            return new ServiceProfile
+            {
+                Id = $"relServiceProfile-{_opaServiceProfilesId++}",
+                Description = profileType,
+                ValueID = value,
+                EffectiveFromDate = fromDate?.ToNzDateTimeOffSet(),
+                EffectiveToDate = toDate?.ToNzDateTimeOffSet()
+            };
+        }
+
+        private int? GetOpaFundingPeriod(FundingPeriodMonth? fundingPeriodMonth)
+        {
+            switch (fundingPeriodMonth)
+            {
+                case FundingPeriodMonth.March:
+                    return 3;
+
+                case FundingPeriodMonth.July:
+                    return 1;
+
+                case FundingPeriodMonth.November:
+                    return 2;
+
+                default:
+                    return null;
+            }
+        }
+
+        private static class OpaApplicationType
+        {
+            public const string Rs7 = "RS7";
+        }
+
+        private static class OpaServiceProfileType
+        {
+            public const string OrganisationType = "ORGANISATIONTYPE";
+            public const string ServiceProvision = "SERVICEPROVISION";
+            public const string MondaySessionType = "MONDAYSESSIONTYPE";
+            public const string TuesdaySessionType = "TUESDAYSESSIONTYPE";
+            public const string WednesdaySessionType = "WEDNESDAYSESSIONTYPE";
+            public const string ThursdaySessionType = "THURSDAYSESSIONTYPE";
+            public const string FridaySessionType = "FRIDAYSESSIONTYPE";
+            public const string SaturdaySessionType = "SATURDAYSESSIONTYPE";
+            public const string SundaySessionType = "SUNDAYSESSIONTYPE";
+            public const string QualityLevel = "QUALITYLEVEL";
+            public const string EquityIndex = "EQUITYINDEX";
+            public const string IsolationIndex = "ISOLATIONINDEX";
+            public const string PrimaryLanguage = "PRIMARYLANGUAGE";
+            public const string Attestation = "ATTESTATION";
+        }
+    }
+
+    public class OperatingSession
+    {
+        public string ProfileType { get; set; } = string.Empty;
+        public string HistoryAttribute { get; set; } = string.Empty;
+        public decimal? ServiceValue { get; set; }
+    }
+}

@@ -11,6 +11,8 @@ using MoE.ECE.Web.Infrastructure.Authorisation;
 using MoE.ECE.Web.Infrastructure.Authorisation.Resources;
 using Moe.Library.Cqrs;
 using System;
+using MoE.ECE.Domain.Query;
+
 namespace MoE.ECE.Web.Controllers
 {
     [Authorize]

@@ -11,7 +11,8 @@ using Moe.Library.Cqrs;
 
 namespace MoE.ECE.Domain.Query
 {
-    public class GetOperationalFundingRequestWashupHandler : IQueryHandler<GetOperationalFundingRequestWashup, ICollection<OperationalFundingRequestModel>>
+    public class GetOperationalFundingRequestWashupHandler : IQueryHandler<GetOperationalFundingRequestWashup,
+        ICollection<OperationalFundingRequestModel>>
     {
         private readonly IDocumentSession _documentSession;
         private readonly IMapper _mapper;
@@ -24,24 +25,20 @@ namespace MoE.ECE.Domain.Query
             _mapper = mapper;
         }
 
-        public async Task<ICollection<OperationalFundingRequestModel>> Handle(GetOperationalFundingRequestWashup query, CancellationToken cancellationToken)
+        public async Task<ICollection<OperationalFundingRequestModel>> Handle(GetOperationalFundingRequestWashup query,
+            CancellationToken cancellationToken)
         {
             var operationalFundingRequestsQuery = _documentSession.Query<OperationalFundingRequest>()
                 .Where(request => request.BusinessEntityId == query.BusinessEntityId);
 
             if (query.RevisionNumber.HasValue)
-            {
                 operationalFundingRequestsQuery = operationalFundingRequestsQuery
                     .Where(request => request.RevisionNumber == query.RevisionNumber);
-            }
-                        
+
             var operationalFundingRequests = await operationalFundingRequestsQuery
                 .ToListAsync(cancellationToken);
 
-            if (operationalFundingRequests.Count == 0)
-            {
-                return new List<OperationalFundingRequestModel>();
-            }
+            if (operationalFundingRequests.Count == 0) return new List<OperationalFundingRequestModel>();
 
             var operationalFundingRequestModel = operationalFundingRequests
                 .OrderByDescending(request => request.Id)
@@ -56,18 +53,20 @@ namespace MoE.ECE.Domain.Query
                     TotalAdvance = request.TotalAdvance,
                     AdvanceMonths = _mapper.Map<ICollection<AdvanceMonthFundingComponentModel>>(request.AdvanceMonths),
                     MatchingAdvanceMonths = GetMatchingAdvanceMonthFundingComponents(request),
-                    EntitlementMonths = _mapper.Map<ICollection<EntitlementMonthFundingComponentModel>>(request.EntitlementMonths)
+                    EntitlementMonths =
+                        _mapper.Map<ICollection<EntitlementMonthFundingComponentModel>>(request.EntitlementMonths)
                 }).ToList();
 
             return operationalFundingRequestModel;
         }
 
-        private ICollection<AdvanceMonthFundingComponentModel> GetMatchingAdvanceMonthFundingComponents(OperationalFundingRequest request)
+        private ICollection<AdvanceMonthFundingComponentModel> GetMatchingAdvanceMonthFundingComponents(
+            OperationalFundingRequest request)
         {
             var advanceMonths = new List<AdvanceMonthFundingComponentModel>();
 
             if (request.EntitlementMonths == null) return advanceMonths;
-            
+
             foreach (var entitlementMonth in request.EntitlementMonths)
             {
                 //TODO: CAN WE MAKE THIS MORE 
@@ -77,16 +76,14 @@ namespace MoE.ECE.Domain.Query
                             request.OrganisationId, entitlementMonth.Year, entitlementMonth.MonthNumber);
 
                 if (matchingAdvanceMonth != null)
-                {
                     advanceMonths.Add(_mapper.Map<AdvanceMonthFundingComponentModel>(matchingAdvanceMonth));
-                }
             }
 
             return advanceMonths;
         }
 
         private ICollection<WashupFundingComponentModel> GetWashupFundingComponents(
-            EntitlementMonthFundingComponent entitlementMonth, 
+            EntitlementMonthFundingComponent entitlementMonth,
             AdvanceMonthFundingComponent? advanceMonth)
         {
             var washupFundingComponents = new List<WashupFundingComponentModel>();
@@ -95,19 +92,17 @@ namespace MoE.ECE.Domain.Query
 
             var advancedFundingComponents = GetAdvanceFundingComponents(advanceMonth);
 
-            if (advancedFundingComponents != null)
-            {
-                washupFundingComponents.AddRange(advancedFundingComponents);    
-            }
+            washupFundingComponents.AddRange(advancedFundingComponents);
 
             return washupFundingComponents;
         }
 
-        private List<WashupFundingComponentModel> GetEntitlementFundingComponents(EntitlementMonthFundingComponent entitlementMonth)
+        private List<WashupFundingComponentModel> GetEntitlementFundingComponents(
+            EntitlementMonthFundingComponent entitlementMonth)
         {
             return
                 entitlementMonth.EntitlementFundingComponents.Select(entitlementFunding =>
-                    new WashupFundingComponentModel()
+                    new WashupFundingComponentModel
                     {
                         EntitlementAmount = entitlementFunding?.Amount,
                         EntitlementFundedChildHours = entitlementFunding?.FundedChildHours,
@@ -117,21 +112,20 @@ namespace MoE.ECE.Domain.Query
                     }).ToList();
         }
 
-        private List<WashupFundingComponentModel>? GetAdvanceFundingComponents(AdvanceMonthFundingComponent? advanceMonth)
+        private static List<WashupFundingComponentModel> GetAdvanceFundingComponents(
+            AdvanceMonthFundingComponent? advanceMonth)
         {
             var washupFundingComponents = new List<WashupFundingComponentModel>();
             if (advanceMonth != null)
-            {
                 washupFundingComponents = advanceMonth.AdvanceFundingComponents.Select(advanceFunding =>
-                    new WashupFundingComponentModel()
+                    new WashupFundingComponentModel
                     {
                         AdvanceAmount = advanceFunding?.Amount,
                         AdvanceFundedChildHours = advanceFunding?.FundedChildHours,
                         AdvanceFundingComponentTypeId = advanceFunding?.FundingComponentTypeId,
                         AdvanceRate = advanceFunding?.Rate,
-                        AdvanceSessionTypeId = advanceFunding?.SessionTypeId,
+                        AdvanceSessionTypeId = advanceFunding?.SessionTypeId
                     }).ToList();
-            }
 
             return washupFundingComponents;
         }
