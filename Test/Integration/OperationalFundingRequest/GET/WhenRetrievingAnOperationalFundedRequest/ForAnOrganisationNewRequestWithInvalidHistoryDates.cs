@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Bard;
 using MoE.ECE.Domain.Read.Model.OperationalFunding;
 using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
@@ -18,30 +19,19 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
         }
 
         private Guid _businessEntityId;
-        private int _revisionNumber;
 
         protected override void Arrange()
         {
             Given
-                .An__rs7_application_with_invalid_serviceprofile_dates_has_been_received()
-                .UseResult(created =>
-                {
-                    _businessEntityId = created.BusinessEntityId;
-                    _revisionNumber = created.RevisionNumber;
-                });
-
-            And
-                .An__rs7_application_with_invalid_serviceprofile_dates_has_been_received(updated =>
-                {
-                    updated.BusinessEntityId = _businessEntityId;
-                    updated.RevisionNumber = _revisionNumber + 1;
-                });
+                .A_rs7_has_been_created()
+                .An_rs7_is_ready_for_internal_ministry_review()
+                .GetResult(data => _businessEntityId = data.Rs7Model.BusinessEntityId.GetValueOrDefault());
         }
 
         protected override void Act()
         {
             When.Get(
-                $"api/operational-funding-requests?business-entity-id={_businessEntityId}&revision-number={_revisionNumber}");
+                $"api/operational-funding-requests?business-entity-id={_businessEntityId}&revision-number=1");
         }
 
         [Fact]

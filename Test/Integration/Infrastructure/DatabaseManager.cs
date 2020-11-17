@@ -18,17 +18,15 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         private const string DockerDatabaseContainerName = "ece_local_db";
         private const string UserName = "ece_api_docker_user";
 
-        private static readonly Checkpoint Checkpoint = new Checkpoint
+        private static readonly Checkpoint _checkpoint = new Checkpoint
         {
-            SchemasToInclude = new[]
-            {
-                "referencedata"
-            },
+            SchemasToInclude = new[] {"referencedata"},
             TablesToIgnore = new[]
             {
-                "__EFMigrationsHistory", "ece_service", "ece_licencing_detail_date_ranged_parameter",
-                "ece_operating_session", "ece_operating_session_date_ranged_parameter",
-                "ece_service_date_ranged_parameter", "lookup", "lookup_type"
+                "__EFMigrationsHistory",
+                // "ece_service", "ece_licencing_detail_date_ranged_parameter",
+                // "ece_operating_session", "ece_operating_session_date_ranged_parameter",
+                // "ece_service_date_ranged_parameter", "lookup", "lookup_type"
             },
             DbAdapter = DbAdapter.Postgres
         };
@@ -37,16 +35,13 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         private readonly IDocumentStore _documentStore;
 
-        public DatabaseManager(IDocumentStore documentStore)
-        {
-            _documentStore = documentStore;
-        }
+        public DatabaseManager(IDocumentStore documentStore) => _documentStore = documentStore;
 
         private static bool IsRunningOnBuildServer =>
             Environment.GetEnvironmentVariable("BUILD_DEFINITIONNAME") != null;
 
         private static string ConnectionString =>
-            $"host={HostIp};port={PortNumber};database={DockerDatabaseContainerName};password={Password};username={UserName};Pooling=true;";
+            $"host={HostIp};port={PortNumber};database={DockerDatabaseContainerName};password={Password};username={UserName};Pooling=true;Include Error Detail=true;";
 
         private static string HostIp => IsRunningOnBuildServer == false || _hostIp == null ? "localhost" : _hostIp;
 
@@ -69,26 +64,11 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             Console.WriteLine(Environment.CurrentDirectory);
             AsyncHelper.RunSync(() => Program.Main(new[]
             {
-                "migrate",
-                "-cs",
-                databaseConnectionString,
-                "-md",
+                "migrate", "-cs", databaseConnectionString, "-md",
                 $"{Environment.CurrentDirectory}/../../../../../CLI/migrations"
             }));
 
-            AsyncHelper.RunSync(() => Program.Main(new[]
-            {
-                "migrate-reference-data",
-                "-cs",
-                databaseConnectionString
-            }));
-
-            AsyncHelper.RunSync(() => Program.Main(new[]
-            {
-                "seed",
-                "-cs",
-                databaseConnectionString
-            }));
+            AsyncHelper.RunSync(() => Program.Main(new[] {"migrate-reference-data", "-cs", databaseConnectionString}));
         }
 
         public void ResetDatabase()
@@ -97,11 +77,13 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             {
                 await using var conn = new NpgsqlConnection(ConnectionString);
                 await conn.OpenAsync();
-                await Checkpoint.Reset(conn);
+                await _checkpoint.Reset(conn);
             });
 
             _documentStore.Advanced.Clean.DeleteAllDocuments();
             _documentStore.Advanced.Clean.DeleteAllEventData();
+            
+            AsyncHelper.RunSync(() => Program.Main(new[] {"seed", "-cs", ConnectionString}));
         }
     }
 }

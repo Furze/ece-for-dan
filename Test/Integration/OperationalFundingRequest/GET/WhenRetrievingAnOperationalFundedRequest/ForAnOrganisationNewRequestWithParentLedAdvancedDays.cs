@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bard;
 using MoE.ECE.Domain.Read.Model.OperationalFunding;
 using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
@@ -12,50 +13,36 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
 {
     public class ForAnOrganisationNewRequestWithParentLedAdvancedDays : IntegrationTestBase<ECEStoryBook, ECEStoryData>
     {
+        public ForAnOrganisationNewRequestWithParentLedAdvancedDays(RunOnceBeforeAllTests testSetUp,
+            ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output,
+            testState)
+        {
+        }
+
         private Guid _businessEntityId;
-        private int _revisionNumber;
 
-        protected override void Arrange()
-        {
+        protected override void Arrange() =>
             Given
-                .An__rs7_application_with_parentled_advanced_days()
-                .UseResult(created =>
-                {
-                    _businessEntityId = created.BusinessEntityId;
-                    _revisionNumber = created.RevisionNumber;
-                });
+                .A_rs7_has_been_created()
+                .An_rs7_is_ready_for_internal_ministry_review()
+                .GetResult(data => _businessEntityId = data.Rs7Model.BusinessEntityId.GetValueOrDefault());
 
-            And
-                .An__rs7_application_with_parentled_advanced_days(updated =>
-            {
-                updated.BusinessEntityId = _businessEntityId;
-                updated.RevisionNumber = _revisionNumber + 1;
-            });
-        }
-
-        protected override void Act()
-        {
-            When.Get($"api/operational-funding-requests?business-entity-id={_businessEntityId}&revision-number={_revisionNumber}");
-        }
+        protected override void Act() =>
+            When.Get($"api/operational-funding-requests?business-entity-id={_businessEntityId}&revision-number=1");
 
         [Fact]
-        public void ThenTheResponseShouldBeOk()
-        {
-            Then.Response.ShouldBe.Ok();
-        }
+        public void ThenTheResponseShouldBeOk() => Then.Response.ShouldBe.Ok();
 
         [Fact]
         public void ThenTheResponseShouldContain1Item()
         {
             var result = Then.Response.Content<ICollection<OperationalFundingRequestModel>>();
-            
+
+            result.ShouldNotBeNull();
             result.Count.ShouldBe(1);
-
-            result.ElementAt(0).AdvanceMonths.ElementAt(0).ParentLedWorkingDays.ShouldBe(4);
-        }
-
-        public ForAnOrganisationNewRequestWithParentLedAdvancedDays(RunOnceBeforeAllTests testSetUp, ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output, testState)
-        {
+            result.ElementAt(0).AdvanceMonths.ShouldNotBeNull();
+            result.ElementAt(0).AdvanceMonths?.ElementAt(0).ParentLedWorkingDays.ShouldNotBeNull();
+            result.ElementAt(0).AdvanceMonths?.ElementAt(0).ParentLedWorkingDays.ShouldBe(4);
         }
     }
 }

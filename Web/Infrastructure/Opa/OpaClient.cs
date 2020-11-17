@@ -5,7 +5,6 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Infrastructure.Services.Opa;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -33,7 +32,7 @@ namespace MoE.ECE.Web.Infrastructure.Opa
             var accessToken = await _tokenGenerator.GenerateAsync();
 
             if (accessToken == null)
-                throw new ECEApplicationException("Unable to obtain access token from OPA.");
+                throw new ApplicationException("Unable to obtain access token from OPA.");
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken.TokenValue);
 
@@ -56,6 +55,7 @@ namespace MoE.ECE.Web.Infrastructure.Opa
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
+                
                 //OPA sometimes returns invalid json where it returns an empty object instead of 0 or null
                 //which breaks the Deserializing
                 if (responseContent.Contains("{}"))
@@ -67,7 +67,9 @@ namespace MoE.ECE.Web.Infrastructure.Opa
                 try
                 {
                     _logger.LogInformation($"Request response received from OPA: {responseContent}");
-                    return JsonConvert.DeserializeObject<OpaResponse<TResponse>>(responseContent);
+                    var opaResponse = JsonConvert.DeserializeObject<OpaResponse<TResponse>>(responseContent);
+                    opaResponse.OriginalResponse = responseContent;
+                    return opaResponse;
                 }
                 catch (Exception ex)
                 {
@@ -76,7 +78,7 @@ namespace MoE.ECE.Web.Infrastructure.Opa
                     //will leave this here until we can figure out why
                     _logger.LogError($"Received a {response.StatusCode} but failed to deserialize the OPA response with error {ex.Message}. OPA raw response: {responseContent}. OPA request: {serializedRequest}");
 
-                    throw new ECEApplicationException($"Received a {response.StatusCode} but failed to deserialize the OPA response with error {ex.Message}. OPA raw response: {responseContent}. OPA request: {serializedRequest}");
+                    throw new ApplicationException($"Received a {response.StatusCode} but failed to deserialize the OPA response with error {ex.Message}. OPA raw response: {responseContent}. OPA request: {serializedRequest}");
                 }
             }
 
@@ -94,11 +96,12 @@ namespace MoE.ECE.Web.Infrastructure.Opa
             _logger.LogError("OPA request error", new
             {
                 ResponseStatus = response.StatusCode, 
-                ResponseBody = opaResponseBody,
+                ResponseBody=opaResponseBody,
                 Request = request
             }, applicationException);
             
             throw applicationException;
         }
     }
+   
 }

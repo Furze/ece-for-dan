@@ -45,7 +45,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         protected TStoryBook And => Given;
         protected TestState<TStoryBook, TStoryData> TestState { get; }
 
-        private IServiceProvider Services { get; }
+        protected IServiceProvider Services { get; }
 
         private LogWriter Output { get; }
 

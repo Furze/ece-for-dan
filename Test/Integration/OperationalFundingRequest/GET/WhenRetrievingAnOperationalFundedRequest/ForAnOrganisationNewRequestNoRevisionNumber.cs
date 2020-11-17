@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Bard;
 using MoE.ECE.Domain.Read.Model.OperationalFunding;
 using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
@@ -21,14 +22,11 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
         protected override void Arrange()
         {
             Given
-                .An_rs7_application_has_been_received()
-                .UseResult(created => { _businessEntityId = created.BusinessEntityId; });
-
-            And.An_rs7_application_has_been_received(updated =>
-            {
-                updated.BusinessEntityId = _businessEntityId;
-                updated.RevisionNumber = 2;
-            });
+                .A_rs7_has_been_created()
+                .An_rs7_is_ready_for_internal_ministry_review()
+                .And_the_rs7_has_been_returned()
+                .An_rs7_is_ready_for_internal_ministry_review()
+                .GetResult(data => _businessEntityId = data.Rs7Model.BusinessEntityId.GetValueOrDefault());
         }
 
         protected override void Act()

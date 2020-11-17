@@ -134,51 +134,36 @@ namespace MoE.ECE.Domain.Model.ReferenceData
             OrganisationTypeId == OrganisationType.EducationAndCare ||
             OrganisationTypeId == OrganisationType.Hospitalbased;
 
-        public bool IsParentLed
-        {
-            get
+        public bool IsParentLed =>
+            OrganisationTypeId switch
             {
-                return OrganisationTypeId switch
-                {
-                    OrganisationType.Playcentre => LicenceClassId != LicenceClass.Mixed,
-                    _ => false
-                };
-            }
-        }
+                OrganisationType.Playcentre => LicenceClassId != LicenceClass.Mixed,
+                _ => false
+            };
 
-        public bool IsAllDays
-        {
-            get
+        public bool IsAllDays =>
+            OrganisationTypeId switch
             {
-                return OrganisationTypeId switch
-                {
-                    OrganisationType.CasualEducationAndCare => LicenceClassId != LicenceClass.Sessional,
-                    OrganisationType.EducationAndCare => LicenceClassId != LicenceClass.Sessional,
-                    OrganisationType.Hospitalbased => LicenceClassId != LicenceClass.Sessional,
-                    OrganisationType.FreeKindergarten => LicenceClassId != LicenceClass.Sessional,
-                    OrganisationType.Playcentre => false,
-                    OrganisationType.HomebasedNetwork => true,
-                    _ => true
-                };
-            }
-        }
+                OrganisationType.CasualEducationAndCare => LicenceClassId != LicenceClass.Sessional,
+                OrganisationType.EducationAndCare => LicenceClassId != LicenceClass.Sessional,
+                OrganisationType.Hospitalbased => LicenceClassId != LicenceClass.Sessional,
+                OrganisationType.FreeKindergarten => LicenceClassId != LicenceClass.Sessional,
+                OrganisationType.Playcentre => false,
+                OrganisationType.HomebasedNetwork => true,
+                _ => true
+            };
 
-        public bool IsSessional
-        {
-            get
+        public bool IsSessional =>
+            OrganisationTypeId switch
             {
-                return OrganisationTypeId switch
-                {
-                    OrganisationType.CasualEducationAndCare => LicenceClassId != LicenceClass.AllDay,
-                    OrganisationType.EducationAndCare => LicenceClassId != LicenceClass.AllDay,
-                    OrganisationType.Hospitalbased => LicenceClassId != LicenceClass.AllDay,
-                    OrganisationType.FreeKindergarten => LicenceClassId != LicenceClass.AllDay,
-                    OrganisationType.Playcentre => false,
-                    OrganisationType.HomebasedNetwork => false,
-                    _ => true
-                };
-            }
-        }
+                OrganisationType.CasualEducationAndCare => LicenceClassId != LicenceClass.AllDay,
+                OrganisationType.EducationAndCare => LicenceClassId != LicenceClass.AllDay,
+                OrganisationType.Hospitalbased => LicenceClassId != LicenceClass.AllDay,
+                OrganisationType.FreeKindergarten => LicenceClassId != LicenceClass.AllDay,
+                OrganisationType.Playcentre => false,
+                OrganisationType.HomebasedNetwork => false,
+                _ => true
+            };
 
         public int MondaySessionType => GetSessionTypeForDay(SessionDay.Monday);
         public int TuesdaySessionType => GetSessionTypeForDay(SessionDay.Tuesday);
@@ -188,28 +173,73 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public int SaturdaySessionType => GetSessionTypeForDay(SessionDay.Saturday);
         public int SundaySessionType => GetSessionTypeForDay(SessionDay.Sunday);
 
-        public int ParentLedMaxFundingDays(int month, int year)
+        public bool CanClaimSubsidyFundedHours
         {
-            return CalculateMaximumFundingDays(IsParentLed, month, year, SessionType.Sessional);
+            get
+            {
+                switch (OrganisationTypeId)
+                {
+                    case OrganisationType.Hospitalbased:
+                        return true;
+                    //TODO (StuC) TECHDEBT: Can be true if this service is based on notional roll but don't know that currently.
+                    default: return true;
+                }
+            }
         }
 
-        public int AllDaysMaxFundingDays(int month, int year)
+        public bool CanClaimTeacherHours =>
+            OrganisationTypeId switch
+            {
+                OrganisationType.HomebasedNetwork => false,
+                OrganisationType.Playcentre => false,
+                OrganisationType.TeKohangaReo => false,
+                OrganisationType.FreeKindergarten =>
+                    // All Day & Mixed we capture teacher hours. Sessional we don't
+                    LicenceClassId != LicenceClass.Sessional,
+                var _ => true
+            };
+
+        public bool CanClaim20ChildFundedHours
         {
-            return CalculateMaximumFundingDays(IsAllDays, month, year, SessionType.AllDay);
+            get
+            {
+                if (OrganisationTypeId == OrganisationType.TeKohangaReo)
+                {
+                    return ServiceProvisionTypeId switch
+                    {
+                        ServiceProvisionType.ParentLed => ParentLedEligibleToOfferFree.GetValueOrDefault(),
+                        ServiceProvisionType.TeacherLed => TeacherLedEligibleToOfferFree.GetValueOrDefault(),
+                        var _ => true
+                    };
+                }
+
+                return true;
+            }
         }
 
-        public int SessionalMaxFundingDays(int month, int year)
-        {
-            return CalculateMaximumFundingDays(IsSessional, month, year, SessionType.Sessional);
-        }
+        public int ParentLedMaxFundingDays(int month, int year) =>
+            CalculateMaximumFundingDays(IsParentLed, month, year, SessionType.Sessional);
+
+        public int AllDaysMaxFundingDays(int month, int year) =>
+            CalculateMaximumFundingDays(IsAllDays, month, year, SessionType.AllDay);
+
+        public int SessionalMaxFundingDays(int month, int year) =>
+            CalculateMaximumFundingDays(IsSessional, month, year, SessionType.Sessional);
 
         public int CalculateMaximumFundingDays(bool isServiceEligible,
             int month, int year,
             int sessionTypeId
         )
         {
-            if (isServiceEligible == false) return 0;
-            if (month < 1 || month > 12 || year < 1 || year > 9999) return 0;
+            if (isServiceEligible == false)
+            {
+                return 0;
+            }
+
+            if (month < 1 || month > 12 || year < 1 || year > 9999)
+            {
+                return 0;
+            }
 
             var numberOfDaysInMonth = DateTime.DaysInMonth(year, month);
 
@@ -219,7 +249,10 @@ namespace MoE.ECE.Domain.Model.ReferenceData
 
             var availableDays = 0;
 
-            if (!daysOfWeekWithSessions.Any()) return availableDays;
+            if (!daysOfWeekWithSessions.Any())
+            {
+                return availableDays;
+            }
 
             for (var dayOfMonth = 1; dayOfMonth <= numberOfDaysInMonth; dayOfMonth++)
             {
@@ -232,7 +265,9 @@ namespace MoE.ECE.Domain.Model.ReferenceData
 
                 // Check whether the day of the week is allowed a session on that day of the week.
                 if (daysOfWeekWithSessions.Any(session => session.DayOfWeek == dayOfWeek))
+                {
                     availableDays++;
+                }
             }
 
             return availableDays;
