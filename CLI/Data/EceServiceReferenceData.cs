@@ -667,6 +667,128 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = false,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                    },
+                    new EceService
+                    {
+                        RefOrganisationId = 10541,
+                        OrganisationName = "Family Ties Educare - Eskvale",
+                        OrganisationNumber = FamilyTiesOrganisationNumber,
+                        OrganisationTypeId = OrganisationType.EducationAndCare,
+                        OrganisationTypeDescription = EducationAndCareDescription,
+                        EceServiceProviderNumber = "ECA357",
+                        OrganisationStatusId = OrganisationStatus.Open,
+                        OrganisationStatusDescription = "Open",
+                        LicenceStatusId = LicenceStatus.Cancelled,
+                        LicenceStatusDescription = "Cancelled",
+                        OperatingSessions = new List<EceOperatingSession>
+                        {
+                            new EceOperatingSession
+                            {
+                                SessionDayId = 344335, SessionDayDescription = "Monday", MaxChildren = 25,
+                                MaxChildrenUnder2 = 10,
+                                SessionTypeId = 25000, SessionTypeDescription = "All Day",
+                                SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led",
+                                FundedHours = 6,
+                                OperatingHours = 10
+                            },
+                            new EceOperatingSession
+                            {
+                                SessionDayId = 344336, SessionDayDescription = "Tuesday", MaxChildren = 25,
+                                MaxChildrenUnder2 = 10,
+                                SessionTypeId = 25000, SessionTypeDescription = "All Day",
+                                SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led",
+                                FundedHours = 6,
+                                OperatingHours = 10
+                            },
+                            new EceOperatingSession
+                            {
+                                SessionDayId = 344337, SessionDayDescription = "Wednesday", MaxChildren = 25,
+                                MaxChildrenUnder2 = 10,
+                                SessionTypeId = 25000, SessionTypeDescription = "All Day",
+                                SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led",
+                                FundedHours = 6,
+                                OperatingHours = 10
+                            },
+                            new EceOperatingSession
+                            {
+                                SessionDayId = 344338, SessionDayDescription = "Thursday", MaxChildren = 25,
+                                MaxChildrenUnder2 = 10,
+                                SessionTypeId = 25000, SessionTypeDescription = "All Day",
+                                SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led",
+                                FundedHours = 6,
+                                OperatingHours = 10
+                            },
+                            new EceOperatingSession
+                            {
+                                SessionDayId = 344339, SessionDayDescription = "Friday", MaxChildren = 25,
+                                MaxChildrenUnder2 = 10,
+                                SessionTypeId = 25000, SessionTypeDescription = "All Day",
+                                SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led",
+                                FundedHours = 6,
+                                OperatingHours = 10,
+                            }
+                        }
+                    },
+                    new EceService
+                    {
+                        RefOrganisationId = 120874,
+                        OrganisationName = "Nurture Me 2",
+                        OrganisationNumber = NurtureMe2OrganisationNumber,
+                        OrganisationTypeId = OrganisationType.HomebasedNetwork,
+                        OrganisationTypeDescription = EducationAndCareDescription,
+                        EceServiceProviderNumber = "ECA2558",
+                        OrganisationStatusId = OrganisationStatus.Open,
+                        OrganisationStatusDescription = "Open",
+                        LicenceStatusId = LicenceStatus.Suspended,
+                        LicenceStatusDescription = "Suspended",
+                        OperatingSessions = new List<EceOperatingSession>
+                        {
+                            new EceOperatingSession
+                            {
+                                SessionDayId = 339999, SessionDayDescription = "Monday", MaxChildren = 80,
+                                MaxChildrenUnder2 = 80,
+                                SessionTypeId = 25000, SessionTypeDescription = "All Day",
+                                SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led",
+                                FundedHours = 6,
+                                OperatingHours = 13
+                            },
+                            new EceOperatingSession
+                            {
+                                SessionDayId = 340000, SessionDayDescription = "Tuesday", MaxChildren = 80,
+                                MaxChildrenUnder2 = 80,
+                                SessionTypeId = 25000, SessionTypeDescription = "All Day",
+                                SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led",
+                                FundedHours = 6,
+                                OperatingHours = 13
+                            },
+                            new EceOperatingSession
+                            {
+                                SessionDayId = 340001, SessionDayDescription = "Wednesday", MaxChildren = 80,
+                                MaxChildrenUnder2 = 80,
+                                SessionTypeId = 25000, SessionTypeDescription = "All Day",
+                                SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led",
+                                FundedHours = 6,
+                                OperatingHours = 13
+                            },
+                            new EceOperatingSession
+                            {
+                                SessionDayId = 340002, SessionDayDescription = "Thursday", MaxChildren = 80,
+                                MaxChildrenUnder2 = 80,
+                                SessionTypeId = 25000, SessionTypeDescription = "All Day",
+                                SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led",
+                                FundedHours = 6,
+                                OperatingHours = 13
+                            },
+                            new EceOperatingSession
+                            {
+                                SessionDayId = 340003, SessionDayDescription = "Friday", MaxChildren = 80,
+                                MaxChildrenUnder2 = 80,
+                                SessionTypeId = 25000, SessionTypeDescription = "All Day",
+                                SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led",
+                                FundedHours = 6,
+                                OperatingHours = 13
+                            }
+                        }
                     }
                 };
             }

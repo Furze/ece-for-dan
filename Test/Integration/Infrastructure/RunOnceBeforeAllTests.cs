@@ -58,7 +58,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(LogEventLevel.Verbose)
-                //.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("Hangfire", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty("Environment", "ECE API Integration Test")
