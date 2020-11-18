@@ -1,15 +1,17 @@
 ﻿using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using MoE.ECE.Domain.Infrastructure.EntityFramework;
 using MoE.ECE.Domain.Infrastructure.Extensions;
 using MoE.ECE.Domain.Model.ReferenceData;
 using MoE.ECE.Domain.Read.Model;
 using MoE.ECE.Domain.Read.Model.Services;
 using Moe.Library.Cqrs;
-
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 namespace MoE.ECE.Domain.Query
 {
     public class FindServicesHandler : IQueryHandler<FindServices, CollectionModel<SearchEceServiceModel>>
@@ -26,7 +28,7 @@ namespace MoE.ECE.Domain.Query
         public Task<CollectionModel<SearchEceServiceModel>> Handle(FindServices query, CancellationToken cancellationToken)
         {
             // //sanitise the given search term. trimming, lowercase, and taking the input back to pure ASCII (no macrons)
-            // //NOTE: alternatively, would've preffered to use sanitisedSearchTerm = query.SearchTerm.Trim().ToLower().Normalize() 
+            // //NOTE: alternatively, would've preferred to use sanitisedSearchTerm = query.SearchTerm.Trim().ToLower().Normalize() 
             // // but to work, it would require the query to use StringComparison.Ordinal with either StartsWith(), Contains() or Equals().
             // // Unfortunately those Linq overloads are not supported by EntityFramework.
             // Encoding encoding = Encoding.GetEncoding(1252);
@@ -37,12 +39,12 @@ namespace MoE.ECE.Domain.Query
                 
             IQueryable<EceService> searchQuery = _referenceDataContext.EceServices;
 
+            //Npgsql.EntityFrameworkCore.PostgreSQL.Utilities
             if (sanitisedSearchTerm != string.Empty)
                 searchQuery = searchQuery
-                    .Where(service =>
-                        service.OrganisationName.StartsWith(sanitisedSearchTerm)
-                        || service.OrganisationNumber.ToLower().StartsWith(sanitisedSearchTerm)
-                        || service.EceServiceProviderNumber != null && service.EceServiceProviderNumber.ToLower().StartsWith(sanitisedSearchTerm)
+                    .Where(service => ReferenceDataContext.Unaccent(service.OrganisationName.ToLower()).StartsWith(ReferenceDataContext.Unaccent(sanitisedSearchTerm))
+                                      || service.OrganisationNumber.ToLower().StartsWith(sanitisedSearchTerm)
+                                      || service.EceServiceProviderNumber != null && service.EceServiceProviderNumber.ToLower().StartsWith(sanitisedSearchTerm)
                     );
 
             var serviceModelQuery = searchQuery

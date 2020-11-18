@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Marten;
+using Microsoft.EntityFrameworkCore;
 using MoE.ECE.Domain.Command;
 using MoE.ECE.Domain.Infrastructure.EntityFramework;
 using MoE.ECE.Domain.Infrastructure.Extensions;
@@ -100,7 +101,9 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
             OpaRequest<OperationalFundingBaseRequest> destination,
             ResolutionContext context)
         {
-            var eceService = _referenceDataContext.EceServices.SingleOrDefault(service =>
+            var eceService = _referenceDataContext.EceServices
+                .Include(service => service.OperatingSessions)
+                .SingleOrDefault(service =>
                 service.RefOrganisationId == source.OrganisationId);
             
             if (eceService == null)

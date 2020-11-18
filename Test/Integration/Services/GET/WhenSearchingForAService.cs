@@ -109,6 +109,7 @@ namespace MoE.ECE.Integration.Tests.Services.GET
         {
             When.Get("api/services?search-term=te%20k%C5%8Dhanga%20reo%20o");
 
+            Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data.ShouldNotBeEmpty();
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data[0].ServiceName
                 .ShouldBe("Te Kohanga Reo o Mana Tamariki");
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data[1].ServiceName

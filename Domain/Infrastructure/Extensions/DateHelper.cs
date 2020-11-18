@@ -27,10 +27,8 @@ namespace MoE.ECE.Domain.Infrastructure.Extensions
 
         public static DateTimeOffset ToNzDateTimeOffSet(this DateTime dateTime)
         {
-            var nzDateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime.ToUniversalTime(), NzTimeZone);
-
-            var nzDateTimeOffset = new DateTimeOffset(nzDateTime, NzTimeZone.BaseUtcOffset);
-
+            var nzDateTimeOffset = new DateTimeOffset(dateTime, NzTimeZone.GetUtcOffset(dateTime));
+         
             return nzDateTimeOffset;
         }
 

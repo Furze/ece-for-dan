@@ -11,7 +11,7 @@ namespace MoE.ECE.Domain.Read.Model.Services
         public ECEServiceModelMapping()
         {
             CreateMap<DateTimeOffset?, DateTimeOffset?>().ConvertUsing(s =>
-                s != null && s.Value.Year == 1858 && s.Value.Month == 11 && s.Value.Day == 16 ? (DateTimeOffset?) null : s
+                s != null && s.Value.Year == 1858 && s.Value.Month == 11 && s.Value.Day == 17 ? (DateTimeOffset?) null : s
             );
 
             CreateMap<ICollection<EceOperatingSession>, List<DailySessionModel>>()
