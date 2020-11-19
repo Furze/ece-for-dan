@@ -1,17 +1,15 @@
 ﻿using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
 using MoE.ECE.Domain.Infrastructure.EntityFramework;
 using MoE.ECE.Domain.Infrastructure.Extensions;
 using MoE.ECE.Domain.Model.ReferenceData;
 using MoE.ECE.Domain.Read.Model;
 using MoE.ECE.Domain.Read.Model.Services;
 using Moe.Library.Cqrs;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
+
 namespace MoE.ECE.Domain.Query
 {
     public class FindServicesHandler : IQueryHandler<FindServices, CollectionModel<SearchEceServiceModel>>

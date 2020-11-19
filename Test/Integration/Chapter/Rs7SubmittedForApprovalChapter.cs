@@ -1,9 +1,10 @@
-﻿using Bard;
+﻿using System;
+using Bard;
 using Events.Integration.Protobuf.Workflow;
 using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Event;
 using Moe.ECE.Events.Integration;
-using ProtoBuf.Bcl;
+using Guid = ProtoBuf.Bcl.Guid;
 
 namespace MoE.ECE.Integration.Tests.Chapter
 {
@@ -59,6 +60,27 @@ namespace MoE.ECE.Integration.Tests.Chapter
 
                 context.StoryData.Rs7Model = context.GetDomainEvent<Rs7DeclarationUpdated>();
             }).End();
+        }
+
+        public Rs7PeerRejectedChapter And_the_rs7_has_been_returned(Action<Returned>? setUpCommand = null)
+        {
+            return When(context =>
+                {
+                    var integrationEvent = new Returned
+                    {
+                        BusinessEntityId = new Guid(context.StoryData.Rs7Model.BusinessEntityId.GetValueOrDefault()),
+                        BusinessEntityType = Constants.BusinessEntityTypes.Rs7
+                    };
+
+                    setUpCommand?.Invoke(integrationEvent);
+                
+                    context.PublishIntegrationEvent(integrationEvent);
+                
+                    var domainEvent = context.GetDomainEvent<Rs7PeerRejected>();
+
+                    context.StoryData.Rs7Model = domainEvent;
+                })
+                .ProceedToChapter<Rs7PeerRejectedChapter>();
         }
     }
 }

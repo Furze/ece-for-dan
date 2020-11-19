@@ -27,7 +27,7 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
         protected override void Arrange() =>
             Given
                 .A_rs7_has_been_created()
-                .An_rs7_is_ready_for_internal_ministry_review()
+                .The_rs7_has_been_submitted_for_peer_approval()
                 .And_the_rs7_has_been_returned()
                 .An_rs7_is_ready_for_internal_ministry_review()
                 .GetResult(data => _businessEntityId = data.Rs7Model.BusinessEntityId.GetValueOrDefault());

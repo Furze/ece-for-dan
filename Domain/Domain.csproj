@@ -24,7 +24,6 @@
 
     <ItemGroup>
       <Folder Include="Model\OperationalFunding" />
-      <Folder Include="Read.Model\OperationalFunding" />
     </ItemGroup>
 
 </Project>

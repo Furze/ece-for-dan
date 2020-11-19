@@ -84,6 +84,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             _documentStore.Advanced.Clean.DeleteAllEventData();
             
             AsyncHelper.RunSync(() => Program.Main(new[] {"seed", "-cs", ConnectionString}));
+            AsyncHelper.RunSync(() => Program.Main(new[] {"test-data", "-cs", ConnectionString}));
         }
     }
 }

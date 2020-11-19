@@ -66,9 +66,9 @@ namespace MoE.ECE.Integration.Tests.Services.GET
             var mondaySession = result.DailySessions.SingleOrDefault(model => model.Day == SessionDay.Monday);
 
             mondaySession.ShouldNotBeNull();
-            mondaySession.DayOfWeek.ShouldBe(1);
-            mondaySession.FundedHours.ShouldBe(6);
-            mondaySession.OperatingHours.GetValueOrDefault().ShouldBe(9);
+            mondaySession?.DayOfWeek.ShouldBe(1);
+            mondaySession?.FundedHours.ShouldBe(6);
+            mondaySession?.OperatingHours.GetValueOrDefault().ShouldBe(9);
         }
 
         [Fact]
@@ -84,19 +84,19 @@ namespace MoE.ECE.Integration.Tests.Services.GET
 
             mondaySession.ShouldNotBeNull();
 
-            mondaySession.OperatingTimes.ShouldNotBeEmpty();
-            mondaySession.OperatingTimes.Count.ShouldBe(2);
+            mondaySession?.OperatingTimes.ShouldNotBeEmpty();
+            mondaySession?.OperatingTimes.Count.ShouldBe(2);
 
-            mondaySession.OperatingTimes[0].StartTime.ShouldNotBeNull();
-            mondaySession.OperatingTimes[0].StartTime.Hour.ShouldBe(6);
-            mondaySession.OperatingTimes[0].StartTime.Minute.ShouldBe(30);
+            mondaySession?.OperatingTimes[0].StartTime.ShouldNotBeNull();
+            mondaySession?.OperatingTimes[0].StartTime.Hour.ShouldBe(6);
+            mondaySession?.OperatingTimes[0].StartTime.Minute.ShouldBe(30);
 
-            mondaySession.OperatingTimes[0].EndTime.ShouldNotBeNull();
-            mondaySession.OperatingTimes[0].EndTime.Hour.ShouldBe(12);
-            mondaySession.OperatingTimes[0].EndTime.Minute.ShouldBe(0);
+            mondaySession?.OperatingTimes[0].EndTime.ShouldNotBeNull();
+            mondaySession?.OperatingTimes[0].EndTime.Hour.ShouldBe(12);
+            mondaySession?.OperatingTimes[0].EndTime.Minute.ShouldBe(0);
 
-            mondaySession.OperatingTimes[0].MaxChildren.ShouldBe(35);
-            mondaySession.OperatingTimes[0].MaxChildrenUnder2.ShouldBe(8);
+            mondaySession?.OperatingTimes[0].MaxChildren.ShouldBe(35);
+            mondaySession?.OperatingTimes[0].MaxChildrenUnder2.ShouldBe(8);
         }
 
         [Fact]

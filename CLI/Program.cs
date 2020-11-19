@@ -71,6 +71,7 @@ namespace MoE.ECE.CLI
                 evolveCommands.Repair,
                 entityFrameworkCommands.MigrateReferenceData,
                 entityFrameworkCommands.CreateSeedCommand(),
+                entityFrameworkCommands.AddTestData(),
                 authorisationReportCommands.AuthorisationReportCommand,
             };
 

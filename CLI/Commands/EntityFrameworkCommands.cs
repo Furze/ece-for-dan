@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
+using Marten;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MoE.ECE.CLI.Data;
 using MoE.ECE.Domain.Infrastructure;
 using MoE.ECE.Domain.Infrastructure.EntityFramework;
+using MoE.ECE.Web.Bootstrap;
 
 namespace MoE.ECE.CLI.Commands
 {
@@ -49,6 +51,17 @@ namespace MoE.ECE.CLI.Commands
             seed.Handler = CommandHandler.Create<string?>(SeedData);
             return seed;
         }
+        
+        public Command AddTestData()
+        {
+            var testData = new Command("test-data", "Add the test data to the database.")
+            {
+                new Option<string?>(new[] {"-cs", "--connection-string"},
+                    "The connection string to use (optional)")
+            };
+            testData.Handler = CommandHandler.Create<string?>(TestData);
+            return testData;
+        }
 
         private void ApplyReferenceDataMigrations(string? connectionString)
         {
@@ -67,14 +80,45 @@ namespace MoE.ECE.CLI.Commands
         private void SeedData(string? connectionString)
         {
             var referenceDataContext = CreateReferenceDataContext(connectionString);
+            
+            var documentStore = BuildDocumentStore(connectionString);
 
-            var referenceData = new ReferenceData(referenceDataContext);
+            using var session = documentStore.LightweightSession();
+            
+            var referenceData = new ReferenceData(referenceDataContext, session);
             
             referenceData.SeedData();
 
             referenceDataContext.SaveChanges();
         }
 
+        private void TestData(string? connectionString)
+        {
+            var referenceDataContext = CreateReferenceDataContext(connectionString);
+            
+            var documentStore = BuildDocumentStore(connectionString);
+
+            using var session = documentStore.LightweightSession();
+            
+            var referenceData = new ReferenceData(referenceDataContext, session);
+            
+            referenceData.TestData();
+        }
+
+        private IDocumentStore BuildDocumentStore(string? connectionString = null)
+        {
+            var martenSettings = _configuration.BindFor<MartenSettings>();
+
+            if (string.IsNullOrEmpty(connectionString))
+                connectionString = martenSettings.ConnectionString;
+
+            martenSettings.ConnectionString = connectionString;
+
+            Migrations.EnsureDatabaseExists(connectionString);
+
+            return DocumentStore.For(
+                options => EceMartenRegistry.ApplyDefaultConfiguration(options, martenSettings));
+        }
         private ReferenceDataContext CreateReferenceDataContext(string? connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
