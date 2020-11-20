@@ -4,6 +4,6 @@ namespace MoE.ECE.Web.Infrastructure.Opa
 {
     public interface IOpaTokenGenerator
     {
-        Task<OpaAccessToken?> GenerateAsync();
+        Task<OpaAccessToken?> GetTokenAsync();
     }
 }

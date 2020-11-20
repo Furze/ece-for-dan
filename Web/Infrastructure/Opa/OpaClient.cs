@@ -30,7 +30,7 @@ namespace MoE.ECE.Web.Infrastructure.Opa
 
         public async Task<OpaResponse<TResponse>> PostRequest<TRequest, TResponse>(OpaRequest<TRequest> request, string endpointUrl) where TResponse : class
         {
-            var accessToken = await _tokenGenerator.GenerateAsync();
+            var accessToken = await _tokenGenerator.GetTokenAsync();
 
             if (accessToken == null)
                 throw new ECEApplicationException("Unable to obtain access token from OPA.");
