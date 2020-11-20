@@ -51,4 +51,16 @@ namespace ProtoBuf.Bcl
             return new Decimal(units, nanos);
         }
     }
+    
+    /// <summary>
+    /// Add support for casting to nullable decimal
+    /// </summary>
+    public partial class Decimal
+    {
+        public static implicit operator decimal?(Decimal grpcDecimal)
+        {
+            return grpcDecimal.Units + grpcDecimal.Nanos / NanoFactor;
+        }
+    }
+    
 }
