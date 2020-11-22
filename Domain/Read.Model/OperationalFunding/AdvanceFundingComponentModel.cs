@@ -1,6 +1,6 @@
 ﻿namespace MoE.ECE.Domain.Read.Model.OperationalFunding
 {
-    public class AdvanceFundingComponentModel : ECEFundingComponentModel
+    public class AdvanceFundingComponentModel : FundingComponentModel
     {
     }
 }
