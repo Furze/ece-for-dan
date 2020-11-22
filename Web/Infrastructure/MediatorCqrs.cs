@@ -82,7 +82,7 @@ namespace MoE.ECE.Web.Infrastructure
 
         private void LogQueryResponse(object? response)
         {
-            Log("Query Response", response, QueryResponse);
+            Log("[Query Response]", response, QueryResponse);
         }
 
         private void Log(string message, object? objectToLog, string cqrsType)

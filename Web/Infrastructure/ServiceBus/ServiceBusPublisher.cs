@@ -46,10 +46,10 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
 
         private void Log(IMessageWrapper message)
         {
-            const string formattedMessage = "[Service Bus Message Published] :{objectType} {objectJson}";
+            const string formattedMessage = "[Service Bus Message Published] :{objectType} {objectJson} {cqrsType}";
 
             _logger.LogDebug(formattedMessage, message.PayloadType.Name,
-                JsonSerializer.Serialize(message.Payload, new JsonSerializerOptions {WriteIndented = true}));
+                JsonSerializer.Serialize(message.Payload, new JsonSerializerOptions {WriteIndented = true}), "Integration Event");
         }
     }
 }
