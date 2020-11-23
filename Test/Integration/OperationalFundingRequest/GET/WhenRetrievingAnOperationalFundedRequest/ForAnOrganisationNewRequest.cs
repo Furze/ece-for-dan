@@ -105,5 +105,9 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
             result.ElementAt(0).EntitlementMonths?.ElementAt(0).FundingComponents?.ElementAt(0).FundingComponentType
                 .ShouldBe(FundingComponent.UnderTwo);
         }
+        
+        [Fact]
+        public void Then_the_response_snapshot_should_be_ok() =>
+            Then.Snapshot().Match<ICollection<OperationalFundingRequestModel>>(IgnoreFieldsFor.CollectionOperationalFundingRequestModel);
     }
 }

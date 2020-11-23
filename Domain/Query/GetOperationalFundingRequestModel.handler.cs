@@ -44,6 +44,7 @@ namespace MoE.ECE.Domain.Query
                 .OrderByDescending(request => request.Id)
                 .Select(request => new OperationalFundingRequestModel
                 {
+                    RequestId = request.RequestId,
                     BusinessEntityId = request.BusinessEntityId,
                     RevisionNumber = request.RevisionNumber,
                     OrganisationId = request.OrganisationId,

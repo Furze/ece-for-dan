@@ -1,0 +1,471 @@
+﻿[
+  {
+    "EntitlementMonths": [
+      {
+        "MonthName": "February 2020",
+        "MonthNumber": 2,
+        "Year": 2020,
+        "AllDayCertificatedTeacherHours": 20,
+        "AllDayNonCertificatedTeacherHours": 40,
+        "SessionalCertificatedTeacherHours": 0,
+        "SessionalNonCertificatedTeacherHours": 0,
+        "TotalWorkingDays": 20,
+        "WashUpPlusTen": -611.2,
+        "WashUpUnderTwo": -6045.75,
+        "WashUpTwoAndOver": -4864.55,
+        "WashUpTwentyHours": -7750.05,
+        "TotalEntitlement": 5582.4,
+        "TotalFundsAdvanced": 24853.95,
+        "TotalEntitlementUnderTwo": 3297.6,
+        "TotalEntitlementTwoAndOver": 95.2,
+        "TotalEntitlementTwentyHours": 0.0,
+        "TotalEntitlementPlusTen": 2189.6,
+        "TotalWashUp": -19271.55,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "2020-02-03T00:00:00",
+            "Amount": 3297.6,
+            "Rate": 9.16,
+            "RateName": "Under2ADTLcentrebased25-49",
+            "FundedChildHours": 360,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "2020-02-03T00:00:00",
+            "Amount": 95.2,
+            "Rate": 4.76,
+            "RateName": "2AndOverADTLcentrebased25-49",
+            "FundedChildHours": 20,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "2020-02-03T00:00:00",
+            "Amount": 2189.6,
+            "Rate": 4.76,
+            "RateName": "Plus10ADTLcentrebased25-49",
+            "FundedChildHours": 460,
+            "OperatingDays": 20
+          }
+        ]
+      },
+      {
+        "MonthName": "March 2020",
+        "MonthNumber": 3,
+        "Year": 2020,
+        "AllDayCertificatedTeacherHours": 22,
+        "AllDayNonCertificatedTeacherHours": 44,
+        "SessionalCertificatedTeacherHours": 0,
+        "SessionalNonCertificatedTeacherHours": 0,
+        "TotalWorkingDays": 22,
+        "WashUpPlusTen": 2408.56,
+        "WashUpUnderTwo": 3627.36,
+        "WashUpTwoAndOver": 104.72,
+        "WashUpTwentyHours": 0.0,
+        "TotalEntitlement": 6140.64,
+        "TotalFundsAdvanced": 0.0,
+        "TotalEntitlementUnderTwo": 3627.36,
+        "TotalEntitlementTwoAndOver": 104.72,
+        "TotalEntitlementTwentyHours": 0.0,
+        "TotalEntitlementPlusTen": 2408.56,
+        "TotalWashUp": 6140.64,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "2020-03-02T00:00:00",
+            "Amount": 3627.36,
+            "Rate": 9.16,
+            "RateName": "Under2ADTLcentrebased25-49",
+            "FundedChildHours": 396,
+            "OperatingDays": 22
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "2020-03-02T00:00:00",
+            "Amount": 104.72,
+            "Rate": 4.76,
+            "RateName": "2AndOverADTLcentrebased25-49",
+            "FundedChildHours": 22,
+            "OperatingDays": 22
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "2020-03-02T00:00:00",
+            "Amount": 2408.56,
+            "Rate": 4.76,
+            "RateName": "Plus10ADTLcentrebased25-49",
+            "FundedChildHours": 506,
+            "OperatingDays": 22
+          }
+        ]
+      },
+      {
+        "MonthName": "April 2020",
+        "MonthNumber": 4,
+        "Year": 2020,
+        "AllDayCertificatedTeacherHours": 22,
+        "AllDayNonCertificatedTeacherHours": 44,
+        "SessionalCertificatedTeacherHours": 0,
+        "SessionalNonCertificatedTeacherHours": 0,
+        "TotalWorkingDays": 22,
+        "WashUpPlusTen": 2408.56,
+        "WashUpUnderTwo": 3627.36,
+        "WashUpTwoAndOver": 104.72,
+        "WashUpTwentyHours": 0.0,
+        "TotalEntitlement": 6140.64,
+        "TotalFundsAdvanced": 0.0,
+        "TotalEntitlementUnderTwo": 3627.36,
+        "TotalEntitlementTwoAndOver": 104.72,
+        "TotalEntitlementTwentyHours": 0.0,
+        "TotalEntitlementPlusTen": 2408.56,
+        "TotalWashUp": 6140.64,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "2020-04-01T00:00:00",
+            "Amount": 3627.36,
+            "Rate": 9.16,
+            "RateName": "Under2ADTLcentrebased25-49",
+            "FundedChildHours": 396,
+            "OperatingDays": 22
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "2020-04-01T00:00:00",
+            "Amount": 104.72,
+            "Rate": 4.76,
+            "RateName": "2AndOverADTLcentrebased25-49",
+            "FundedChildHours": 22,
+            "OperatingDays": 22
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "2020-04-01T00:00:00",
+            "Amount": 2408.56,
+            "Rate": 4.76,
+            "RateName": "Plus10ADTLcentrebased25-49",
+            "FundedChildHours": 506,
+            "OperatingDays": 22
+          }
+        ]
+      },
+      {
+        "MonthName": "May 2020",
+        "MonthNumber": 5,
+        "Year": 2020,
+        "AllDayCertificatedTeacherHours": 21,
+        "AllDayNonCertificatedTeacherHours": 42,
+        "SessionalCertificatedTeacherHours": 0,
+        "SessionalNonCertificatedTeacherHours": 0,
+        "TotalWorkingDays": 21,
+        "WashUpPlusTen": 2299.08,
+        "WashUpUnderTwo": 3462.48,
+        "WashUpTwoAndOver": 99.96,
+        "WashUpTwentyHours": 0.0,
+        "TotalEntitlement": 5861.52,
+        "TotalFundsAdvanced": 0.0,
+        "TotalEntitlementUnderTwo": 3462.48,
+        "TotalEntitlementTwoAndOver": 99.96,
+        "TotalEntitlementTwentyHours": 0.0,
+        "TotalEntitlementPlusTen": 2299.08,
+        "TotalWashUp": 5861.52,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "2020-05-01T00:00:00",
+            "Amount": 3462.48,
+            "Rate": 9.16,
+            "RateName": "Under2ADTLcentrebased25-49",
+            "FundedChildHours": 378,
+            "OperatingDays": 21
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "2020-05-01T00:00:00",
+            "Amount": 99.96,
+            "Rate": 4.76,
+            "RateName": "2AndOverADTLcentrebased25-49",
+            "FundedChildHours": 21,
+            "OperatingDays": 21
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "2020-05-01T00:00:00",
+            "Amount": 2299.08,
+            "Rate": 4.76,
+            "RateName": "Plus10ADTLcentrebased25-49",
+            "FundedChildHours": 483,
+            "OperatingDays": 21
+          }
+        ]
+      }
+    ],
+    "OrganisationId": 114895,
+    "BusinessEntityId": "0a33b806-d746-4e76-8e96-dbb5507d92be",
+    "RequestId": "102003",
+    "FundingPeriodMonth": "July",
+    "FundingYear": 2021,
+    "RevisionNumber": 1,
+    "TotalWashUp": -1128.75,
+    "TotalAdvance": 2055.92,
+    "AdvanceMonths": [
+      {
+        "MonthName": "July 2020",
+        "MonthNumber": 7,
+        "Year": 2020,
+        "ParentLedWorkingDays": 0,
+        "AllDayWorkingDays": 2,
+        "SessionalWorkingDays": null,
+        "AmountPayablePlusTen": 201.62,
+        "AmountPayableUnderTwo": 303.59,
+        "AmountPayableTwoAndOver": 8.77,
+        "AmountPayableTwentyHours": 0.0,
+        "TotalDays": 2,
+        "TotalAdvance": 513.98,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "2020-07-01T00:00:00",
+            "Amount": 303.59,
+            "Rate": 9.37,
+            "RateName": "Under2ADTLcentrebased25-49",
+            "FundedChildHours": 36,
+            "OperatingDays": 2
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "2020-07-01T00:00:00",
+            "Amount": 8.77,
+            "Rate": 4.87,
+            "RateName": "2AndOverADTLcentrebased25-49",
+            "FundedChildHours": 2,
+            "OperatingDays": 2
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "2020-07-01T00:00:00",
+            "Amount": 201.62,
+            "Rate": 4.87,
+            "RateName": "Plus10ADTLcentrebased25-49",
+            "FundedChildHours": 46,
+            "OperatingDays": 2
+          }
+        ]
+      },
+      {
+        "MonthName": "August 2020",
+        "MonthNumber": 8,
+        "Year": 2020,
+        "ParentLedWorkingDays": 0,
+        "AllDayWorkingDays": 2,
+        "SessionalWorkingDays": null,
+        "AmountPayablePlusTen": 201.62,
+        "AmountPayableUnderTwo": 303.59,
+        "AmountPayableTwoAndOver": 8.77,
+        "AmountPayableTwentyHours": 0.0,
+        "TotalDays": 2,
+        "TotalAdvance": 513.98,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "2020-08-03T00:00:00",
+            "Amount": 303.59,
+            "Rate": 9.37,
+            "RateName": "Under2ADTLcentrebased25-49",
+            "FundedChildHours": 36,
+            "OperatingDays": 2
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "2020-08-03T00:00:00",
+            "Amount": 8.77,
+            "Rate": 4.87,
+            "RateName": "2AndOverADTLcentrebased25-49",
+            "FundedChildHours": 2,
+            "OperatingDays": 2
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "2020-08-03T00:00:00",
+            "Amount": 201.62,
+            "Rate": 4.87,
+            "RateName": "Plus10ADTLcentrebased25-49",
+            "FundedChildHours": 46,
+            "OperatingDays": 2
+          }
+        ]
+      },
+      {
+        "MonthName": "September 2020",
+        "MonthNumber": 9,
+        "Year": 2020,
+        "ParentLedWorkingDays": 0,
+        "AllDayWorkingDays": 2,
+        "SessionalWorkingDays": null,
+        "AmountPayablePlusTen": 201.62,
+        "AmountPayableUnderTwo": 303.59,
+        "AmountPayableTwoAndOver": 8.77,
+        "AmountPayableTwentyHours": 0.0,
+        "TotalDays": 2,
+        "TotalAdvance": 513.98,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "2020-09-01T00:00:00",
+            "Amount": 303.59,
+            "Rate": 9.37,
+            "RateName": "Under2ADTLcentrebased25-49",
+            "FundedChildHours": 36,
+            "OperatingDays": 2
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "2020-09-01T00:00:00",
+            "Amount": 8.77,
+            "Rate": 4.87,
+            "RateName": "2AndOverADTLcentrebased25-49",
+            "FundedChildHours": 2,
+            "OperatingDays": 2
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "2020-09-01T00:00:00",
+            "Amount": 201.62,
+            "Rate": 4.87,
+            "RateName": "Plus10ADTLcentrebased25-49",
+            "FundedChildHours": 46,
+            "OperatingDays": 2
+          }
+        ]
+      },
+      {
+        "MonthName": "October 2020",
+        "MonthNumber": 10,
+        "Year": 2020,
+        "ParentLedWorkingDays": 0,
+        "AllDayWorkingDays": 2,
+        "SessionalWorkingDays": null,
+        "AmountPayablePlusTen": 201.62,
+        "AmountPayableUnderTwo": 303.59,
+        "AmountPayableTwoAndOver": 8.77,
+        "AmountPayableTwentyHours": 0.0,
+        "TotalDays": 2,
+        "TotalAdvance": 513.98,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "2020-10-01T00:00:00",
+            "Amount": 303.59,
+            "Rate": 9.37,
+            "RateName": "Under2ADTLcentrebased25-49",
+            "FundedChildHours": 36,
+            "OperatingDays": 2
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "2020-10-01T00:00:00",
+            "Amount": 8.77,
+            "Rate": 4.87,
+            "RateName": "2AndOverADTLcentrebased25-49",
+            "FundedChildHours": 2,
+            "OperatingDays": 2
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "2020-10-01T00:00:00",
+            "Amount": 201.62,
+            "Rate": 4.87,
+            "RateName": "Plus10ADTLcentrebased25-49",
+            "FundedChildHours": 46,
+            "OperatingDays": 2
+          }
+        ]
+      }
+    ],
+    "MatchingAdvanceMonths": [
+      {
+        "MonthName": "February",
+        "MonthNumber": 2,
+        "Year": 2020,
+        "ParentLedWorkingDays": null,
+        "AllDayWorkingDays": 20,
+        "SessionalWorkingDays": 0,
+        "AmountPayablePlusTen": 2800.8,
+        "AmountPayableUnderTwo": 9343.35,
+        "AmountPayableTwoAndOver": 4959.75,
+        "AmountPayableTwentyHours": 7750.05,
+        "TotalDays": null,
+        "TotalAdvance": null,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 2800.8,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 9343.35,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 4959.75,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwentyHours",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 7750.05,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          }
+        ]
+      }
+    ],
+    "Equity": null
+  }
+]

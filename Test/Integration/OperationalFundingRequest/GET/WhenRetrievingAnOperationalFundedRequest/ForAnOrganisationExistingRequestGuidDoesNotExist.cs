@@ -41,5 +41,11 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
 
             result.Count.ShouldBe(0);
         }
+        
+        [Fact]
+        public void Then_the_response_snapshot_should_be_ok()
+        {
+            Then.Snapshot().Match<ICollection<OperationalFundingRequestModel>>();
+        }
     }
 }

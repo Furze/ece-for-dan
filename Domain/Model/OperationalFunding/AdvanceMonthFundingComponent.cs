@@ -2,12 +2,8 @@
 
 namespace MoE.ECE.Domain.Model.OperationalFunding
 {
-    public class AdvanceMonthFundingComponent : DomainEntity
+    public class AdvanceMonthFundingComponent 
     {
-        public int OperationalFundingId { get; set; }
-
-        public FundingRequest OperationalFunding { get; set; } = new OperationalFundingRequest();
-
         public string? MonthName { get; set; }
 
         public int? MonthNumber { get; set; }

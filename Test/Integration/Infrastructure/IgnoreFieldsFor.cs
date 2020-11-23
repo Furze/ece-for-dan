@@ -2,8 +2,13 @@
 
 namespace MoE.ECE.Integration.Tests.Infrastructure
 {
-    public class IgnoreFieldsFor
+    public static class IgnoreFieldsFor
     {
+        public static MatchOptions CollectionOperationalFundingRequestModel(MatchOptions options)
+        {
+            return options
+                    .IgnoreFields("[*].BusinessEntityId");
+        }
         public static MatchOptions Rs7Model(MatchOptions options)
         {
             return options

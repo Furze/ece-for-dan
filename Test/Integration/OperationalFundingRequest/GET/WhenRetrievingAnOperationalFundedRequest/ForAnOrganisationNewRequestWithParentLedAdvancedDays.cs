@@ -14,13 +14,13 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
 {
     public class ForAnOrganisationNewRequestWithParentLedAdvancedDays : IntegrationTestBase<ECEStoryBook, ECEStoryData>
     {
+        private Guid _businessEntityId;
+
         public ForAnOrganisationNewRequestWithParentLedAdvancedDays(RunOnceBeforeAllTests testSetUp,
             ITestOutputHelper output, TestState<ECEStoryBook, ECEStoryData> testState) : base(testSetUp, output,
             testState)
         {
         }
-
-        private Guid _businessEntityId;
 
         protected override void Arrange() =>
             Given
@@ -59,5 +59,11 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
             result.ElementAt(0).AdvanceMonths?.ElementAt(0).ParentLedWorkingDays.ShouldNotBeNull();
             result.ElementAt(0).AdvanceMonths?.ElementAt(0).ParentLedWorkingDays.ShouldBe(5);
         }
+
+        [Fact]
+        public void Then_the_response_snapshot_should_be_ok() =>
+            Then.Snapshot()
+                .Match<ICollection<OperationalFundingRequestModel>>(IgnoreFieldsFor
+                    .CollectionOperationalFundingRequestModel);
     }
 }

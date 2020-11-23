@@ -4,8 +4,6 @@ namespace MoE.ECE.Domain.Read.Model.OperationalFunding
 {
     public class EntitlementMonthFundingComponentModel 
     {
-        public int Id { get; set; }
-
         public string? MonthName { get; set; }
 
         public int? MonthNumber { get; set; }

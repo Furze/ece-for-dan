@@ -2,10 +2,8 @@
 
 namespace MoE.ECE.Domain.Model.OperationalFunding
 {
-    public class EntitlementMonthFundingComponent : DomainEntity
+    public class EntitlementMonthFundingComponent
     {
-        public FundingRequest OperationalFunding { get; set; } = new OperationalFundingRequest();
-
         public string? MonthName { get; set; }
 
         public int? MonthNumber { get; set; }
@@ -44,6 +42,7 @@ namespace MoE.ECE.Domain.Model.OperationalFunding
 
         public decimal? TotalWashUp { get; set; }
 
-        public ICollection<EntitlementFundingComponent> FundingComponents { get; set; } = new List<EntitlementFundingComponent>();
+        public ICollection<EntitlementFundingComponent> FundingComponents { get; set; } =
+            new List<EntitlementFundingComponent>();
     }
 }
