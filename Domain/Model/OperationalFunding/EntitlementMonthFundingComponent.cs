@@ -44,6 +44,7 @@ namespace MoE.ECE.Domain.Model.OperationalFunding
 
         public decimal? TotalWashUp { get; set; }
 
+        //TODO: RENAME TO FundingComponents
         public ICollection<EntitlementFundingComponent> EntitlementFundingComponents { get; set; } = new List<EntitlementFundingComponent>();
     }
 }
