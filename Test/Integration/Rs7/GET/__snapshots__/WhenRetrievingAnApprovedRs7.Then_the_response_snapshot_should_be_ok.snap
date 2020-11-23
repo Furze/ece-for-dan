@@ -1,15 +1,15 @@
 ﻿{
-  "Id": 18003,
-  "BusinessEntityId": "62633c92-8404-4fe7-9f6f-634d3f8dc3c8",
+  "Id": 76083,
+  "BusinessEntityId": "7caa64ee-de32-4d18-8678-622a97821db8",
   "OrganisationId": 114895,
   "FundingPeriod": "July",
   "FundingYear": 2021,
   "FundingPeriodYear": 2020,
   "IsZeroReturn": false,
   "RollStatus": "InternalApproved",
-  "ReceivedDate": "2020-11-13T10:01:46.7154831+13:00",
+  "ReceivedDate": "2020-11-23T14:27:18.6603795+13:00",
   "RevisionNumber": 1,
-  "RevisionDate": "2020-11-13T10:01:46.7154776+13:00",
+  "RevisionDate": "2020-11-23T14:27:19.2299594+13:00",
   "AdvanceMonths": [
     {
       "MonthNumber": 7,
@@ -47,264 +47,264 @@
       "Days": [
         {
           "DayNumber": 1,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 2,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 3,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 4,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 5,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 6,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 7,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 8,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 9,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 10,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 11,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 12,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 13,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 14,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 15,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 16,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 17,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 18,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 19,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 20,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 21,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 22,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 23,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 24,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 25,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 26,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 27,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 28,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 29,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         }
       ]
     },
@@ -314,282 +314,282 @@
       "Days": [
         {
           "DayNumber": 1,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 2,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 3,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 4,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 5,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 6,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 7,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 8,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 9,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 10,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 11,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 12,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 13,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 14,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 15,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 16,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 17,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 18,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 19,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 20,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 21,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 22,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 23,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 24,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 25,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 26,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 27,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 28,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 29,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 30,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 31,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         }
       ]
     },
@@ -599,273 +599,273 @@
       "Days": [
         {
           "DayNumber": 1,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 2,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 3,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 4,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 5,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 6,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 7,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 8,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 9,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 10,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 11,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 12,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 13,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 14,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 15,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 16,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 17,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 18,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 19,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 20,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 21,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 22,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 23,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 24,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 25,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 26,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 27,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 28,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 29,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 30,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         }
       ]
     },
@@ -875,282 +875,282 @@
       "Days": [
         {
           "DayNumber": 1,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 2,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 3,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 4,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 5,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 6,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 7,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 8,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 9,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 10,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 11,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 12,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 13,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 14,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 15,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 16,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 17,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 18,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 19,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 20,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 21,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 22,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 23,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 24,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 25,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 26,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 27,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 28,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 29,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 30,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         },
         {
           "DayNumber": 31,
-          "Under2": null,
-          "TwoAndOver": null,
+          "Under2": 18,
+          "TwoAndOver": 1,
           "Hours20": null,
-          "Plus10": null,
-          "Certificated": null,
-          "NonCertificated": null
+          "Plus10": 23,
+          "Certificated": 1,
+          "NonCertificated": 2
         }
       ]
     }
@@ -1162,5 +1162,5 @@
     "Role": "President",
     "IsDeclaredTrue": true
   },
-  "RequestId": "18003"
+  "RequestId": "76083"
 }

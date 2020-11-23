@@ -5,9 +5,9 @@ using Moe.Library.Cqrs;
 
 namespace MoE.ECE.Domain.Query
 {
-    public class GetOperationalFundingRequestWashup : PaginationParameters, IQuery<ICollection<OperationalFundingRequestModel>>
+    public class GetOperationalFundingRequestModel : PaginationParameters, IQuery<ICollection<OperationalFundingRequestModel>>
     {
-        public GetOperationalFundingRequestWashup(
+        public GetOperationalFundingRequestModel(
             Guid businessEntityId,
             int? revisionNumber)
         {

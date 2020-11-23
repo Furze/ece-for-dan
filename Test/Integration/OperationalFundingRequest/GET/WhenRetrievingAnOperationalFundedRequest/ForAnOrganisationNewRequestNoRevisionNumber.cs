@@ -23,9 +23,10 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
         {
             Given
                 .A_rs7_has_been_created()
-                .The_rs7_has_been_submitted_for_peer_approval()
-                .And_the_rs7_has_been_returned()
+                
+                
                 .An_rs7_is_ready_for_internal_ministry_review()
+                
                 .GetResult(data => _businessEntityId = data.Rs7Model.BusinessEntityId.GetValueOrDefault());
         }
 
@@ -41,11 +42,11 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
         }
 
         [Fact]
-        public void ThenTheResponseShouldContain2Items()
+        public void ThenTheResponseShouldContain1Items()
         {
             var result = Then.Response.Content<ICollection<OperationalFundingRequestModel>>();
 
-            result.Count.ShouldBe(2);
+            result.Count.ShouldBe(1);
         }
     }
 }

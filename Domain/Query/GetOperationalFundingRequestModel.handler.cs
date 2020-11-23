@@ -11,13 +11,13 @@ using Moe.Library.Cqrs;
 
 namespace MoE.ECE.Domain.Query
 {
-    public class GetOperationalFundingRequestWashupHandler : IQueryHandler<GetOperationalFundingRequestWashup,
+    public class GetOperationalFundingRequestModelHandler : IQueryHandler<GetOperationalFundingRequestModel,
         ICollection<OperationalFundingRequestModel>>
     {
         private readonly IDocumentSession _documentSession;
         private readonly IMapper _mapper;
 
-        public GetOperationalFundingRequestWashupHandler(
+        public GetOperationalFundingRequestModelHandler(
             IDocumentSession documentSession,
             IMapper mapper)
         {
@@ -25,7 +25,7 @@ namespace MoE.ECE.Domain.Query
             _mapper = mapper;
         }
 
-        public async Task<ICollection<OperationalFundingRequestModel>> Handle(GetOperationalFundingRequestWashup query,
+        public async Task<ICollection<OperationalFundingRequestModel>> Handle(GetOperationalFundingRequestModel query,
             CancellationToken cancellationToken)
         {
             var operationalFundingRequestsQuery = _documentSession.Query<OperationalFundingRequest>()

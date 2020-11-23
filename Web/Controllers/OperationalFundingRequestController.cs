@@ -37,7 +37,7 @@ namespace MoE.ECE.Web.Controllers
             [FromQuery(Name = "revision-number")] int? revisionNumber,
             CancellationToken cancellationToken = default)
         {
-            var query = new GetOperationalFundingRequestWashup(businessEntityId, revisionNumber);
+            var query = new GetOperationalFundingRequestModel(businessEntityId, revisionNumber);
 
             var operationalFundingRequests = await _cqrs.QueryAsync(query, cancellationToken);
 

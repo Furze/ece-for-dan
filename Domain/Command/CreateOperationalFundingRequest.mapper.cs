@@ -11,6 +11,10 @@ namespace MoE.ECE.Domain.Command
             CreateMap<Rs7Updated, CreateOperationalFundingRequest>()
                 .Map(d => d.Rs7Id, s => s.Id)
                 .Map(d => d.FundingPeriodMonth, s => s.FundingPeriod);
+
+            CreateMap<Rs7ZeroReturnCreated, CreateOperationalFundingRequest>()
+                .Map(d => d.Rs7Id, s => s.Id)
+                .Map(d => d.FundingPeriodMonth, s => s.FundingPeriod);
         }
     }
 }

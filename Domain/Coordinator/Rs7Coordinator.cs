@@ -8,7 +8,7 @@ using Moe.Library.Cqrs;
 
 namespace MoE.ECE.Domain.Coordinator
 {
-    public class Rs7Coordinator : IDomainEventHandler<Rs7Updated>
+    public class Rs7Coordinator : IDomainEventHandler<Rs7Updated>, IDomainEventHandler<Rs7ZeroReturnCreated>
     {
         private readonly ICqrs _cqrs;
         private readonly IMapper _mapper;
@@ -31,6 +31,15 @@ namespace MoE.ECE.Domain.Coordinator
 
             //TODO: Maybe look at implementing compensating transaction here...??
             return Task.CompletedTask;
+        }
+
+        public Task Handle(Rs7ZeroReturnCreated domainEvent, CancellationToken cancellationToken)
+        {
+            var createRs7 = _mapper.Map<CreateOperationalFundingRequest>(domainEvent);
+
+            return _cqrs.ExecuteAsync(
+                createRs7,
+                cancellationToken);
         }
     }
 }

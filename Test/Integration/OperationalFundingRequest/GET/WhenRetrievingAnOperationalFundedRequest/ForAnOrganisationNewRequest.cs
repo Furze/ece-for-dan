@@ -26,15 +26,23 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
 
         protected override void Arrange() =>
             Given
-                .A_rs7_has_been_created()
-                .The_rs7_has_been_submitted_for_peer_approval()
-                .And_the_rs7_has_been_returned()
-                .An_rs7_is_ready_for_internal_ministry_review()
+                .A_rs7_has_been_created(rs7 =>
+                {
+                    //rs7.FundingPeriodYear = 2020;
+                    rs7.FundingPeriod = FundingPeriodMonth.March;
+
+                })
+               //.The_rs7_has_been_submitted_for_peer_approval()
+               // .And_the_rs7_has_been_returned()
+                .An_rs7_is_ready_for_internal_ministry_review(rs7 =>
+                {
+                    
+                })
                 .GetResult(data => _businessEntityId = data.Rs7Model.BusinessEntityId.GetValueOrDefault());
 
         protected override void Act() =>
             When.Get(
-                $"api/operational-funding-requests?business-entity-id={_businessEntityId}&revision-number={2}");
+                $"api/operational-funding-requests?business-entity-id={_businessEntityId}&revision-number={1}");
 
         [Fact]
         public void ThenADomainEventShouldBePublished() =>
@@ -73,9 +81,12 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
             result.ElementAt(0).MatchingAdvanceMonths.ShouldNotBeNull();
             result.ElementAt(0).MatchingAdvanceMonths?.Count.ShouldBe(4);
             result.ElementAt(0).MatchingAdvanceMonths?.ElementAt(0).MonthNumber.ShouldBe(10);
+            result.ElementAt(0).EntitlementMonths.ShouldNotBeNull();
+            result.ElementAt(0).EntitlementMonths.ShouldNotBeEmpty();
             result.ElementAt(0).EntitlementMonths?.ElementAt(0).FundingComponents.ShouldNotBeNull();
+            result.ElementAt(0).EntitlementMonths?.ElementAt(0).FundingComponents.ShouldNotBeEmpty();
             result.ElementAt(0).EntitlementMonths?.ElementAt(0).FundingComponents?.ElementAt(0).FundingComponentType
-                .ShouldBe(FundingComponent.TwentyHours);
+                .ShouldBe(FundingComponent.UnderTwo);
         }
 
         [Fact]
@@ -88,11 +99,11 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
             result.ShouldNotBeEmpty();
             result.ElementAt(0).MatchingAdvanceMonths.ShouldNotBeNull();
 
-            result.ElementAt(0).AdvanceMonths?.ElementAt(0).TotalAdvance.ShouldBe(5887.67M);
+            result.ElementAt(0).AdvanceMonths?.ElementAt(0).TotalAdvance.ShouldBe(418.68m);
             result.ElementAt(0).EntitlementMonths.ShouldNotBeNull();
             result.ElementAt(0).EntitlementMonths?.ElementAt(0).FundingComponents.ShouldNotBeNull();
             result.ElementAt(0).EntitlementMonths?.ElementAt(0).FundingComponents?.ElementAt(0).FundingComponentType
-                .ShouldBe(FundingComponent.TwentyHours);
+                .ShouldBe(FundingComponent.UnderTwo);
         }
     }
 }
