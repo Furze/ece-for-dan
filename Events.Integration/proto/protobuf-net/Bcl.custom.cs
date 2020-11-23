@@ -57,10 +57,12 @@ namespace ProtoBuf.Bcl
     /// </summary>
     public partial class Decimal
     {
-        public static implicit operator decimal?(Decimal grpcDecimal)
+        public static implicit operator decimal?(Decimal? grpcDecimal)
         {
+            if (grpcDecimal == null)
+                return null;
+            
             return grpcDecimal.Units + grpcDecimal.Nanos / NanoFactor;
         }
     }
-    
 }
