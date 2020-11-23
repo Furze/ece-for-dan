@@ -55,7 +55,7 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
                         TotalEntitlementTwentyHours = opaEntitlementMonth.TotalEntitlementTwentyHours,
                         TotalEntitlementTwoAndOver = opaEntitlementMonth.TotalEntitlementTwoAndOver,
                         TotalEntitlementUnderTwo = opaEntitlementMonth.TotalEntitlementUnderTwo,
-                        EntitlementFundingComponents = GetEntitlementFundingComponents(opaEntitlementMonth.EntitlementAmounts)
+                        FundingComponents = GetEntitlementFundingComponents(opaEntitlementMonth.EntitlementAmounts)
                     });
                 }
             }

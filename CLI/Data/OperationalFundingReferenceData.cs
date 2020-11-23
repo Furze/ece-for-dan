@@ -678,7 +678,7 @@ namespace MoE.ECE.CLI.Data
                                 WashUpPlusTen = 275.89m,
                                 WashUpUnderTwo = 747.05m,
                                 TotalWashUp = 2246.11m,
-                                EntitlementFundingComponents = new List<EntitlementFundingComponent>
+                                FundingComponents = new List<EntitlementFundingComponent>
                                 {
                                     new EntitlementFundingComponent
                                     {
@@ -733,7 +733,7 @@ namespace MoE.ECE.CLI.Data
                                 WashUpPlusTen = 64.57m,
                                 WashUpUnderTwo = 44.60m,
                                 TotalWashUp = 392.44m,
-                                EntitlementFundingComponents = new List<EntitlementFundingComponent>
+                                FundingComponents = new List<EntitlementFundingComponent>
                                 {
                                     new EntitlementFundingComponent
                                     {
@@ -788,7 +788,7 @@ namespace MoE.ECE.CLI.Data
                                 WashUpPlusTen = 0.00m,
                                 WashUpUnderTwo = 0.00m,
                                 TotalWashUp = 0.00m,
-                                EntitlementFundingComponents = new List<EntitlementFundingComponent>
+                                FundingComponents = new List<EntitlementFundingComponent>
                                 {
                                     new EntitlementFundingComponent
                                     {
