@@ -7,7 +7,8 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         public static MatchOptions CollectionOperationalFundingRequestModel(MatchOptions options)
         {
             return options
-                    .IgnoreFields("[*].BusinessEntityId");
+                    .IgnoreFields("[*].BusinessEntityId")
+                    .IgnoreFields("[*].RequestId");
         }
         public static MatchOptions Rs7Model(MatchOptions options)
         {

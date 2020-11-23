@@ -6,6 +6,18 @@ namespace MoE.ECE.Domain.Infrastructure.Filters
 {
     public static class ReferenceDataFilters
     {
+        public static IQueryable<EceServiceDateRangedParameter> GetHistory2(
+            this IQueryable<EceServiceDateRangedParameter> dateRangedParams,
+            int organisationId,
+             params string[] attributes)
+        {
+            var result = dateRangedParams
+                .Where(entity =>
+                    entity.RefOrganisationId == organisationId &&
+                    attributes.Contains(entity.Attribute));
+
+            return result;
+        }
         public static IQueryable<EceServiceDateRangedParameter> GetHistory(
             this IQueryable<EceServiceDateRangedParameter> dateRangedParams,
             int organisationId,

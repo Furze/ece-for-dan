@@ -212,23 +212,32 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
         {
             var serviceProfiles = new List<ServiceProfile>();
 
+            var history =  _referenceDataContext.EceServiceDateRangedParameters
+                .GetHistory2(eceService.RefOrganisationId, HistoryAttribute.OrganisationType, HistoryAttribute.QualityLevel, HistoryAttribute.EquityIndex, 
+                    HistoryAttribute.IsolationIndex, HistoryAttribute.PrimaryLanguage)
+                .ToList();
             // TODO: Load ALL THE DATA IN ONE GO....
-            AddOrganisationTypeHistory(eceService, serviceProfiles);
+            AddOrganisationTypeHistory2(eceService, serviceProfiles, history);
             AddQualityLevelHistory(eceService, serviceProfiles);
             AddEquityIndexHistory(eceService, serviceProfiles);
             AddIsolationIndexHistory(eceService, serviceProfiles);
-            AddServiceProvisionHistory(eceService, serviceProfiles);
             AddPrimaryLanguageHistory(eceService, serviceProfiles);
+            
+            
+            
+            AddServiceProvisionHistory(eceService, serviceProfiles);
+            
             AddOperatingSessionHistory(eceService, serviceProfiles);
             
             return serviceProfiles;
         }
 
-        private void AddOrganisationTypeHistory(EceService eceService, List<ServiceProfile> serviceProfiles)
+        private void AddOrganisationTypeHistory(EceService eceService, List<ServiceProfile> serviceProfiles,
+            List<EceServiceDateRangedParameter> history)
         {
-            var history = _referenceDataContext.EceServiceDateRangedParameters
-                .GetHistory(eceService.RefOrganisationId, HistoryAttribute.OrganisationType)
-                .ToList();
+            // var history = _referenceDataContext.EceServiceDateRangedParameters
+            //     .GetHistory2(eceService.RefOrganisationId, HistoryAttribute.OrganisationType)
+            //     .ToList();
 
             if (history.Count == 0)
             {
@@ -250,10 +259,10 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
         private void AddQualityLevelHistory(EceService eceService, List<ServiceProfile> serviceProfiles)
         {
             var history = _referenceDataContext.EceServiceDateRangedParameters
-                .GetHistory(eceService.RefOrganisationId, HistoryAttribute.QualityLevel)
+                .GetHistory2(eceService.RefOrganisationId, HistoryAttribute.QualityLevel)
                 .ToList();
 
-            if (history.Count() == 0)
+            if (history.Count == 0)
             {
                 serviceProfiles.Add(
                     GetServiceProfile(OpaServiceProfileType.QualityLevel, eceService.EcQualityLevelId.ToString()));
@@ -273,7 +282,7 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
         private void AddEquityIndexHistory(EceService eceService, List<ServiceProfile> serviceProfiles)
         {
             var history = _referenceDataContext.EceServiceDateRangedParameters
-                .GetHistory(eceService.RefOrganisationId, HistoryAttribute.EquityIndex)
+                .GetHistory2(eceService.RefOrganisationId, HistoryAttribute.EquityIndex)
                 .ToList();
 
             if (history.Count() == 0)
@@ -296,7 +305,7 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
         private void AddIsolationIndexHistory(EceService eceService, List<ServiceProfile> serviceProfiles)
         {
             var history = _referenceDataContext.EceServiceDateRangedParameters
-                .GetHistory(eceService.RefOrganisationId, HistoryAttribute.IsolationIndex)
+                .GetHistory2(eceService.RefOrganisationId, HistoryAttribute.IsolationIndex)
                 .ToList();
 
             if (history.Count() == 0)
