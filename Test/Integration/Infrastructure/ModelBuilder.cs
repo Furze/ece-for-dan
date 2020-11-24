@@ -153,16 +153,18 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             {
                 foreach (var entitlementMonth in command.EntitlementMonths)
                 {
-                    if (entitlementMonth.Days != null)
+                    if (entitlementMonth.Days == null)
                     {
-                        foreach (var day in entitlementMonth.Days)
-                        {
-                            day.Under2 = 18;
-                            day.Plus10 = 23;
-                            day.Certificated = 1;
-                            day.TwoAndOver = 1;
-                            day.NonCertificated = 2;
-                        }
+                        continue;
+                    }
+
+                    foreach (var day in entitlementMonth.Days)
+                    {
+                        day.Under2 = 18;
+                        day.Plus10 = 23;
+                        day.Certificated = 1;
+                        day.TwoAndOver = 1;
+                        day.NonCertificated = 2;
                     }
                 }
             }
