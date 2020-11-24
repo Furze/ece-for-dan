@@ -1,6 +1,6 @@
 ﻿namespace MoE.ECE.Domain.Services.Opa
 {
-    public static class paConstants
+    public static class OpaConstants
     {
         public static class OpaApplicationType
         {

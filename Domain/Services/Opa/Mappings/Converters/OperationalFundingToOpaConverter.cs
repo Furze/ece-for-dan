@@ -19,7 +19,7 @@ using ServiceProfile = MoE.ECE.Domain.Services.Opa.Request.ServiceProfile;
 
 namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
 {
-    public class OperationalFundingToOpaConverter : ITypeConverter<CreateOperationalFundingRequest,
+    public partial class OperationalFundingToOpaConverter : ITypeConverter<CreateOperationalFundingRequest,
         OpaRequest<OperationalFundingBaseRequest>>
     {
         private readonly IDocumentSession _documentSession;
@@ -122,7 +122,7 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
                     new OperationalFundingBaseRequest
                     {
                         Id = $"Case {opaCaseId}",
-                        ApplicationType = OpaApplicationType.Rs7,
+                        ApplicationType = OpaConstants.OpaApplicationType.Rs7,
                         IsAttested = source.IsAttested ? "Y" : "N",
                         FundingYear = source.FundingYear,
                         FundingPeriod = GetOpaFundingPeriod(source.FundingPeriodMonth),
@@ -408,29 +408,6 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
                 FundingPeriodMonth.November => 2,
                 var _ => null
             };
-
-        private static class OpaApplicationType
-        {
-            public const string Rs7 = "RS7";
-        }
-
-        private static class OpaServiceProfileType
-        {
-            public const string OrganisationType = "ORGANISATIONTYPE";
-            public const string ServiceProvision = "SERVICEPROVISION";
-            public const string MondaySessionType = "MONDAYSESSIONTYPE";
-            public const string TuesdaySessionType = "TUESDAYSESSIONTYPE";
-            public const string WednesdaySessionType = "WEDNESDAYSESSIONTYPE";
-            public const string ThursdaySessionType = "THURSDAYSESSIONTYPE";
-            public const string FridaySessionType = "FRIDAYSESSIONTYPE";
-            public const string SaturdaySessionType = "SATURDAYSESSIONTYPE";
-            public const string SundaySessionType = "SUNDAYSESSIONTYPE";
-            public const string QualityLevel = "QUALITYLEVEL";
-            public const string EquityIndex = "EQUITYINDEX";
-            public const string IsolationIndex = "ISOLATIONINDEX";
-            public const string PrimaryLanguage = "PRIMARYLANGUAGE";
-            public const string Attestation = "ATTESTATION";
-        }
     }
 
     public class OperatingSession
