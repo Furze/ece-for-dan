@@ -51,11 +51,7 @@ namespace MoE.ECE.Domain.Saga
 
             if (operationalFundingOpaResponse.Cases.Any(entity => entity.Errors != null))
                 throw new ApplicationException("Received an error from OPA for the operational funding request");
-
-            var serializeSettings = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
+           
             var firstResponseRecord = operationalFundingOpaResponse.Cases.First();
             var operationalFunding = _mapper.Map<OperationalFundingRequest>(firstResponseRecord);
 
@@ -63,10 +59,9 @@ namespace MoE.ECE.Domain.Saga
             operationalFunding.OrganisationId = command.OrganisationId;
             operationalFunding.BusinessEntityId = command.BusinessEntityId;
             operationalFunding.RequestId = command.RequestId;
-            operationalFunding.SerializedRequestSent =
-                JsonConvert.SerializeObject(operationalFundingOpaRequest, serializeSettings);
-            operationalFunding.SerializedResponseReceived =
-                JsonConvert.SerializeObject(firstResponseRecord, serializeSettings);
+            operationalFunding.OpaRequest = operationalFundingOpaRequest;
+
+            operationalFunding.OpaResponse = operationalFundingOpaResponse;
             operationalFunding.RevisionNumber = command.RevisionNumber;
             operationalFunding.CreationDate = _systemClock.UtcNow;
 

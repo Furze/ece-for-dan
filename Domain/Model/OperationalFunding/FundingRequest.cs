@@ -24,15 +24,9 @@ namespace MoE.ECE.Domain.Model.OperationalFunding
 
         public DateTimeOffset? AssignedOn { get; set; }
 
-        public string? SerializedRequestSent { get; set; }
-
-        public string? SerializedResponseReceived { get; set; }
-
         public string Status { get; set; } = string.Empty;
 
         public ICollection<AdvanceMonthFundingComponent> AdvanceMonths { get; set; } = new List<AdvanceMonthFundingComponent>();
-
-        public ICollection<EquityFundingComponent> Equity { get; set; } = new List<EquityFundingComponent>();
 
         public DateTimeOffset CreationDate { get; set; }
         
