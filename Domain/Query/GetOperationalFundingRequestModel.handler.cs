@@ -82,53 +82,5 @@ namespace MoE.ECE.Domain.Query
 
             return advanceMonths;
         }
-
-        // private ICollection<WashupFundingComponentModel> GetWashUpFundingComponents(
-        //     EntitlementMonthFundingComponent entitlementMonth,
-        //     AdvanceMonthFundingComponent? advanceMonth)
-        // {
-        //     var washUpFundingComponents = new List<WashupFundingComponentModel>();
-        //
-        //     washUpFundingComponents.AddRange(GetEntitlementFundingComponents(entitlementMonth));
-        //
-        //     var advancedFundingComponents = GetAdvanceFundingComponents(advanceMonth);
-        //
-        //     washUpFundingComponents.AddRange(advancedFundingComponents);
-        //
-        //     return washUpFundingComponents;
-        // }
-
-        // private List<WashupFundingComponentModel> GetEntitlementFundingComponents(
-        //     EntitlementMonthFundingComponent entitlementMonth)
-        // {
-        //     return
-        //         entitlementMonth.EntitlementFundingComponents.Select(entitlementFunding =>
-        //             new WashupFundingComponentModel
-        //             {
-        //                 EntitlementAmount = entitlementFunding?.Amount,
-        //                 EntitlementFundedChildHours = entitlementFunding?.FundedChildHours,
-        //                 EntitlementFundingComponentTypeId = entitlementFunding?.FundingComponentTypeId,
-        //                 EntitlementRate = entitlementFunding?.Rate,
-        //                 EntitlementSessionTypeId = entitlementFunding?.SessionTypeId
-        //             }).ToList();
-        // }
-
-        // private static List<WashupFundingComponentModel> GetAdvanceFundingComponents(
-        //     AdvanceMonthFundingComponent? advanceMonth)
-        // {
-        //     var washUpFundingComponents = new List<WashupFundingComponentModel>();
-        //     if (advanceMonth != null)
-        //         washUpFundingComponents = advanceMonth.AdvanceFundingComponents.Select(advanceFunding =>
-        //             new WashupFundingComponentModel
-        //             {
-        //                 AdvanceAmount = advanceFunding?.Amount,
-        //                 AdvanceFundedChildHours = advanceFunding?.FundedChildHours,
-        //                 AdvanceFundingComponentTypeId = advanceFunding?.FundingComponentTypeId,
-        //                 AdvanceRate = advanceFunding?.Rate,
-        //                 AdvanceSessionTypeId = advanceFunding?.SessionTypeId
-        //             }).ToList();
-        //
-        //     return washUpFundingComponents;
-        // }
     }
 }

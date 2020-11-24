@@ -220,7 +220,7 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
             var serviceProfiles = new List<ServiceProfile>();
 
             var serviceHistory = _referenceDataContext.EceServiceDateRangedParameters
-                .GetHistory2(eceService.RefOrganisationId, HistoryAttribute.OrganisationType,
+                .GetHistory(eceService.RefOrganisationId, HistoryAttribute.OrganisationType,
                     HistoryAttribute.QualityLevel, HistoryAttribute.EquityIndex,
                     HistoryAttribute.IsolationIndex, HistoryAttribute.PrimaryLanguage);
 
