@@ -45,12 +45,10 @@ namespace MoE.ECE.CLI.Data
         public void TestData()
         {
             var businessEntityIds = OperationalFunding.Data.Select(request => $"'{request.BusinessEntityId.ToString().ToLower()}'").ToArray();
-            var foo = string.Join(',', businessEntityIds);
+            var commaSeparatedIds = string.Join(',', businessEntityIds);
             
             var existingRequests = _documentSession
-                .Query<OperationalFundingRequest>($"data->> 'BusinessEntityId' in ({foo})");
-                
-                //.Where(request => businessEntityIds.Contains(request.BusinessEntityId)).ToList();
+                .Query<OperationalFundingRequest>($"data->> 'BusinessEntityId' in ({commaSeparatedIds})");
 
             foreach (var entity in OperationalFunding.Data)
             {

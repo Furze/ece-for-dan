@@ -8,6 +8,7 @@ namespace MoE.ECE.Domain.Event.OperationalFunding
     {
         public OperationalFundingRequestCreatedMapping()
         {
+            //TODO: STUC remove ignores
             CreateMap<OperationalFundingRequest, OperationalFundingRequestCreated>()
                 .Ignore(d => d.Equity)
                 .Ignore(d => d.AdvanceMonths)

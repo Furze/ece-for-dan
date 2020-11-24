@@ -15,8 +15,9 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework
         }
 
         [DbFunction("unaccent")]
-        public static string Unaccent(string text)
+        public static string Unaccent(string term)
         {
+            // This is fine this is how you register PostgreSQL function
             throw new NotSupportedException();
         }
         

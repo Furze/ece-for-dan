@@ -280,7 +280,7 @@ namespace MoE.ECE.Domain.Model.ReferenceData
             // If the session type is 'All Day' then only one will be returned.
             var operatingSession = OperatingSessions.FirstOrDefault(session => session.SessionDayDescription == day);
 
-            return operatingSession?.SessionTypeId ?? 25002;
+            return operatingSession?.SessionTypeId ?? SessionType.DoesNotOperate;
         }
     }
 }

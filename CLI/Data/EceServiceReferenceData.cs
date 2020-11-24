@@ -221,7 +221,7 @@ namespace MoE.ECE.CLI.Data
                             {
                                 SessionDayId = 325091, SessionDayDescription = "Saturday", MaxChildren = 35,
                                 MaxChildrenUnder2 = 8,
-                                SessionTypeId = 25002, SessionTypeDescription = "does not operate",
+                                SessionTypeId = SessionType.DoesNotOperate, SessionTypeDescription = "does not operate",
                                 SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led", 
                                 FundedHours = 6,
                                 OperatingHours = 9,
@@ -232,7 +232,7 @@ namespace MoE.ECE.CLI.Data
                             {
                                 SessionDayId = 325091, SessionDayDescription = "Sunday", MaxChildren = 35,
                                 MaxChildrenUnder2 = 8,
-                                SessionTypeId = 25002, SessionTypeDescription = "does not operate",
+                                SessionTypeId = SessionType.DoesNotOperate, SessionTypeDescription = "does not operate",
                                 SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led", //check this with Carmelle
                                 FundedHours = 6,
                                 OperatingHours = 9,
@@ -334,7 +334,7 @@ namespace MoE.ECE.CLI.Data
                                 SessionDayId = 325088, SessionDayDescription = "Tuesday",
                                 MaxChildren = 10,
                                 MaxChildrenUnder2 = 2,
-                                SessionTypeId = 25002, SessionTypeDescription = "Parent Led",
+                                SessionTypeId = SessionType.DoesNotOperate, SessionTypeDescription = "Parent Led",
                                 SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led",
                                 FundedHours = 6,
                                 OperatingHours = 9,
@@ -356,7 +356,7 @@ namespace MoE.ECE.CLI.Data
                             {
                                 SessionDayId = 325090, SessionDayDescription = "Thursday", MaxChildren = 35,
                                 MaxChildrenUnder2 = 8,
-                                SessionTypeId = 25002, SessionTypeDescription = "Parent Led",
+                                SessionTypeId = SessionType.DoesNotOperate, SessionTypeDescription = "Parent Led",
                                 SessionProvisionTypeId = 24001, SessionProvisionTypeDescription = "Teacher Led",
                                 FundedHours = 6,
                                 OperatingHours = 9,

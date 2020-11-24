@@ -13,8 +13,6 @@ using MoE.ECE.Domain.Model.OperationalFunding;
 using MoE.ECE.Domain.Services;
 using MoE.ECE.Domain.Services.Opa.Request;
 using Moe.Library.Cqrs;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace MoE.ECE.Domain.Saga
 {
@@ -53,17 +51,13 @@ namespace MoE.ECE.Domain.Saga
                 throw new ApplicationException("Received an error from OPA for the operational funding request");
            
             var firstResponseRecord = operationalFundingOpaResponse.Cases.First();
-            var operationalFunding = _mapper.Map<OperationalFundingRequest>(firstResponseRecord);
 
-            // TODO: tidy this up...
-            operationalFunding.OrganisationId = command.OrganisationId;
-            operationalFunding.BusinessEntityId = command.BusinessEntityId;
-            operationalFunding.RequestId = command.RequestId;
+            var operationalFunding = new OperationalFundingRequest(command, _systemClock.UtcNow);
+            
+            _mapper.Map(firstResponseRecord, operationalFundingOpaRequest);
+
             operationalFunding.OpaRequest = operationalFundingOpaRequest;
-
             operationalFunding.OpaResponse = operationalFundingOpaResponse;
-            operationalFunding.RevisionNumber = command.RevisionNumber;
-            operationalFunding.CreationDate = _systemClock.UtcNow;
 
             _documentSession.Insert(operationalFunding);
 
