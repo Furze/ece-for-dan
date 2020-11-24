@@ -144,7 +144,7 @@ namespace MoE.ECE.CLI.Commands
             }
         }
 
-        private async Task<int> BuildPatchFiles(string patchName, string migrationsDirectory, string schemaObjects,
+        private static async Task<int> BuildPatchFiles(string patchName, string migrationsDirectory, string schemaObjects,
             string transactional, IDocumentStore store)
         {
             var scriptSchemaCreationFlag = bool.Parse(schemaObjects);
@@ -183,7 +183,7 @@ namespace MoE.ECE.CLI.Commands
             return Directory.GetFiles(baseMigrationsDirectory, $"*{patchName}{Migrations.SqlFileExtension}").Length > 1;
         }
 
-        private string GetPatchFileName(string migrationsDirectory, string patchName)
+        private static string GetPatchFileName(string migrationsDirectory, string patchName)
         {
             var maxMigration = Migrations.GetMigrationFiles(migrationsDirectory)
                 .Select(GetVersionPrefixOfFileName)

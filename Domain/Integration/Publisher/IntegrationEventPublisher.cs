@@ -89,7 +89,7 @@ namespace MoE.ECE.Domain.Integration.Publisher
             var integrationEvent = _mapper.Map<IntegrationEvents.Entitlement.EntitlementCalculated>(domainEvent);
 
             return _serviceBus.PublishAsync(
-                integrationEvent ,
+                integrationEvent,
                 Constants.Topic.ECE,
                 cancellationToken);
         }

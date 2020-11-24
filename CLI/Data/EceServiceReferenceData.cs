@@ -808,6 +808,9 @@ namespace MoE.ECE.CLI.Data
         public EceService LeestonPlaycentre =>
             Data.Single(service => service.OrganisationNumber == LeestonPlaycentreOrganisationNumber);
 
+        public EceService TeKohangaReoOWaikare =>
+            Data.Single(service => service.OrganisationNumber == TeKohangaReoOWaikareOrganisationNumber);
+        
         public EceService GetByType(int organisationTypeId) =>
             Data.First(service => service.OrganisationTypeId == organisationTypeId);
 

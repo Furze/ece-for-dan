@@ -18,15 +18,12 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         private const string DockerDatabaseContainerName = "ece_local_db";
         private const string UserName = "ece_api_docker_user";
 
-        private static readonly Checkpoint _checkpoint = new Checkpoint
+        private static readonly Checkpoint _referenceDataCheckpoint = new Checkpoint
         {
             SchemasToInclude = new[] {"referencedata"},
             TablesToIgnore = new[]
             {
-                "__EFMigrationsHistory",
-                // "ece_service", "ece_licencing_detail_date_ranged_parameter",
-                // "ece_operating_session", "ece_operating_session_date_ranged_parameter",
-                // "ece_service_date_ranged_parameter", "lookup", "lookup_type"
+                "__EFMigrationsHistory"
             },
             DbAdapter = DbAdapter.Postgres
         };
@@ -73,18 +70,21 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         public void ResetDatabase()
         {
-            AsyncHelper.RunSync(async () =>
-            {
-                await using var conn = new NpgsqlConnection(ConnectionString);
-                await conn.OpenAsync();
-                await _checkpoint.Reset(conn);
-            });
-
             _documentStore.Advanced.Clean.DeleteAllDocuments();
             _documentStore.Advanced.Clean.DeleteAllEventData();
             
-            AsyncHelper.RunSync(() => Program.Main(new[] {"seed", "-cs", ConnectionString}));
             AsyncHelper.RunSync(() => Program.Main(new[] {"test-data", "-cs", ConnectionString}));
+        }
+
+        public static void ReloadReferenceData()
+        {
+            AsyncHelper.RunSync(async () =>
+            {
+                await using var conn = new NpgsqlConnection(ConnectionString);
+                await conn.OpenAsync(); 
+                await _referenceDataCheckpoint.Reset(conn);
+            });
+            AsyncHelper.RunSync(() => Program.Main(new[] {"seed", "-cs", ConnectionString}));
         }
     }
 }

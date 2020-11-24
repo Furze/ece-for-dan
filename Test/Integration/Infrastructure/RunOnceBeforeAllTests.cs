@@ -27,6 +27,8 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
         public RunOnceBeforeAllTests()
         {
             _connectionString = DatabaseManager.Start();
+            
+            DatabaseManager.ReloadReferenceData();
 
             Host = CreateHost();
 

@@ -20,11 +20,22 @@ namespace MoE.ECE.CLI.Data
 
         public static EceServiceReferenceData EceServices => new EceServiceReferenceData();
 
+        public static EceServiceDateRangedParameterReferenceData EceServiceDateRangedParameters => new EceServiceDateRangedParameterReferenceData();
+
+        public static EceLicencingDetailDateRangedParameterReferenceData EceLicencingDetailDateRangedParameters => new EceLicencingDetailDateRangedParameterReferenceData();
+
+        public static EceOperatingSessionDateRangedParameterReferenceData EceOperatingSessionDateRangedParameters => new EceOperatingSessionDateRangedParameterReferenceData();
+
+        
         public static OperationalFundingReferenceData OperationalFunding => new OperationalFundingReferenceData();
 
         public void SeedData()
         {
             _referenceDataContext.EceServices.AddRange(EceServices.Data);
+            _referenceDataContext.EceServiceDateRangedParameters.AddRange(EceServiceDateRangedParameters.Data);
+            _referenceDataContext.EceLicencingDetailDateRangedParameters.AddRange(EceLicencingDetailDateRangedParameters.Data);
+            _referenceDataContext.EceOperatingSessionDateRangedParameters.AddRange(EceOperatingSessionDateRangedParameters.Data);
+
             _referenceDataContext.SaveChanges();
         }
 
