@@ -18,7 +18,7 @@ namespace MoE.ECE.CLI.Data
                     {
                         LicencingDetailHistoryId = 1,
                         RefOrganisationId = ReferenceData.EceServices.TeKohangaReoOWaikare.RefOrganisationId,
-                        SessionDayDescription = HistoryAttribute.MondaySession,
+                        SessionDayDescription = SessionDay.Monday,
                         SessionTypeId = 25000,
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,
@@ -30,7 +30,7 @@ namespace MoE.ECE.CLI.Data
                     {
                         LicencingDetailHistoryId = 2,
                         RefOrganisationId = ReferenceData.EceServices.TeKohangaReoOWaikare.RefOrganisationId,
-                        SessionDayDescription = HistoryAttribute.MondaySession,
+                        SessionDayDescription = SessionDay.Monday,
                         SessionTypeId = 25000,
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,
@@ -42,7 +42,7 @@ namespace MoE.ECE.CLI.Data
                     {
                         LicencingDetailHistoryId = 5,
                         RefOrganisationId = ReferenceData.EceServices.TeKohangaReoOWaikare.RefOrganisationId,
-                        SessionDayDescription = HistoryAttribute.MondaySession,
+                        SessionDayDescription = SessionDay.Monday,
                         SessionTypeId = 25000,
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,
@@ -54,7 +54,7 @@ namespace MoE.ECE.CLI.Data
                     {
                         LicencingDetailHistoryId = 6,
                         RefOrganisationId = ReferenceData.EceServices.TeKohangaReoOWaikare.RefOrganisationId,
-                        SessionDayDescription = HistoryAttribute.MondaySession,
+                        SessionDayDescription = SessionDay.Monday,
                         SessionTypeId = 25000,
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,
@@ -66,7 +66,7 @@ namespace MoE.ECE.CLI.Data
                     {
                         LicencingDetailHistoryId = 7,
                         RefOrganisationId = ReferenceData.EceServices.TeKohangaReoOWaikare.RefOrganisationId,
-                        SessionDayDescription = HistoryAttribute.MondaySession,
+                        SessionDayDescription = SessionDay.Monday,
                         SessionTypeId = 25000,
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,
@@ -78,7 +78,7 @@ namespace MoE.ECE.CLI.Data
                     {
                         LicencingDetailHistoryId = 3,
                         RefOrganisationId = 9933,
-                        SessionDayDescription = HistoryAttribute.MondaySession,
+                        SessionDayDescription = SessionDay.Monday,
                         SessionTypeId = 25000,
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,
@@ -90,7 +90,7 @@ namespace MoE.ECE.CLI.Data
                     {
                         LicencingDetailHistoryId = 4,
                         RefOrganisationId = 9933,
-                        SessionDayDescription = HistoryAttribute.MondaySession,
+                        SessionDayDescription = SessionDay.Monday,
                         SessionTypeId = 25000,
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,

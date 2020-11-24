@@ -70,7 +70,7 @@ namespace MoE.ECE.Domain.Query
 
             foreach (var entitlementMonth in request.EntitlementMonths)
             {
-                //TODO: CAN WE MAKE THIS MORE 
+                // TODO: CAN WE MAKE PUSH THIS INTO THE DOMAIN SO WE CAN REUSE THIS LOGIC ELSEWHERE
                 var matchingAdvanceMonth =
                     _documentSession.Query<OperationalFundingRequest>()
                         .GetEntitlementAdvancedMonth(

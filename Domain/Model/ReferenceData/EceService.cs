@@ -173,19 +173,12 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public int SaturdaySessionType => GetSessionTypeForDay(SessionDay.Saturday);
         public int SundaySessionType => GetSessionTypeForDay(SessionDay.Sunday);
 
-        public bool CanClaimSubsidyFundedHours
-        {
-            get
+        public bool CanClaimSubsidyFundedHours =>
+            OrganisationTypeId switch
             {
-                switch (OrganisationTypeId)
-                {
-                    case OrganisationType.Hospitalbased:
-                        return true;
-                    //TODO (StuC) TECHDEBT: Can be true if this service is based on notional roll but don't know that currently.
-                    default: return true;
-                }
-            }
-        }
+                OrganisationType.Hospitalbased => true,
+                var _ => true
+            };
 
         public bool CanClaimTeacherHours =>
             OrganisationTypeId switch

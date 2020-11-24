@@ -10,7 +10,8 @@ namespace MoE.ECE.Domain.Infrastructure.Filters
             int? entitlementYear, 
             int? monthNumber)
         {
-            //TODO : CAN WE MOVE THIS TO THE DOMAIN?
+            //TODO : WE NEED TO MOVE THIS TO THE DOMAIN SO WE DON'T HAVE TO LOOK IT UP CURRENTLY OUR DOMAIN EVENT DOES NOT HAVE
+            // THIS POPULATED.
             var result = fundingRequests
                 .Where(funding => funding.OrganisationId == organisationId)
                 .OrderByDescending(funding => funding.RevisionNumber)

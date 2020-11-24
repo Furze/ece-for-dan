@@ -30,34 +30,36 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
         private ICollection<EntitlementMonthFundingComponent> GetOperationalFundingEntitlementMonths(OperationalFundingBaseResponse source)
         {
             var operationalFundingEntitlementMonths = new List<EntitlementMonthFundingComponent>();
-            if (source.EntitlementMonths != null)
+            if (source.EntitlementMonths == null)
             {
-                foreach (var opaEntitlementMonth in source.EntitlementMonths)
+                return operationalFundingEntitlementMonths;
+            }
+
+            foreach (var opaEntitlementMonth in source.EntitlementMonths)
+            {
+                operationalFundingEntitlementMonths.Add(new EntitlementMonthFundingComponent
                 {
-                    operationalFundingEntitlementMonths.Add(new EntitlementMonthFundingComponent
-                    {
-                        MonthName = opaEntitlementMonth.MonthName,
-                        MonthNumber = opaEntitlementMonth.MonthNumber,
-                        Year = opaEntitlementMonth.Year,
-                        AllDayCertificatedTeacherHours = opaEntitlementMonth.AllDayCertificatedTeacherHours,
-                        AllDayNonCertificatedTeacherHours = opaEntitlementMonth.AllDayNonCertificatedTeacherHours,
-                        SessionalCertificatedTeacherHours = opaEntitlementMonth.SessionalCertificatedTeacherHours,
-                        SessionalNonCertificatedTeacherHours = opaEntitlementMonth.SessionalNonCertificatedTeacherHours,
-                        TotalWorkingDays = opaEntitlementMonth.TotalWorkingDays,
-                        WashUpPlusTen = opaEntitlementMonth.WashUpPlusTen,
-                        WashUpUnderTwo = opaEntitlementMonth.WashUpUnderTwo,
-                        WashUpTwoAndOver = opaEntitlementMonth.WashUpTwoAndOver,
-                        WashUpTwentyHours = opaEntitlementMonth.WashUpTwentyHours,
-                        TotalWashUp = opaEntitlementMonth.TotalWashUp,
-                        TotalEntitlement = opaEntitlementMonth.TotalEntitlement,
-                        TotalFundsAdvanced = opaEntitlementMonth.TotalFundsAdvanced,
-                        TotalEntitlementPlusTen = opaEntitlementMonth.TotalEntitlementPlusTen,
-                        TotalEntitlementTwentyHours = opaEntitlementMonth.TotalEntitlementTwentyHours,
-                        TotalEntitlementTwoAndOver = opaEntitlementMonth.TotalEntitlementTwoAndOver,
-                        TotalEntitlementUnderTwo = opaEntitlementMonth.TotalEntitlementUnderTwo,
-                        FundingComponents = GetEntitlementFundingComponents(opaEntitlementMonth.EntitlementAmounts)
-                    });
-                }
+                    MonthName = opaEntitlementMonth.MonthName,
+                    MonthNumber = opaEntitlementMonth.MonthNumber,
+                    Year = opaEntitlementMonth.Year,
+                    AllDayCertificatedTeacherHours = opaEntitlementMonth.AllDayCertificatedTeacherHours,
+                    AllDayNonCertificatedTeacherHours = opaEntitlementMonth.AllDayNonCertificatedTeacherHours,
+                    SessionalCertificatedTeacherHours = opaEntitlementMonth.SessionalCertificatedTeacherHours,
+                    SessionalNonCertificatedTeacherHours = opaEntitlementMonth.SessionalNonCertificatedTeacherHours,
+                    TotalWorkingDays = opaEntitlementMonth.TotalWorkingDays,
+                    WashUpPlusTen = opaEntitlementMonth.WashUpPlusTen,
+                    WashUpUnderTwo = opaEntitlementMonth.WashUpUnderTwo,
+                    WashUpTwoAndOver = opaEntitlementMonth.WashUpTwoAndOver,
+                    WashUpTwentyHours = opaEntitlementMonth.WashUpTwentyHours,
+                    TotalWashUp = opaEntitlementMonth.TotalWashUp,
+                    TotalEntitlement = opaEntitlementMonth.TotalEntitlement,
+                    TotalFundsAdvanced = opaEntitlementMonth.TotalFundsAdvanced,
+                    TotalEntitlementPlusTen = opaEntitlementMonth.TotalEntitlementPlusTen,
+                    TotalEntitlementTwentyHours = opaEntitlementMonth.TotalEntitlementTwentyHours,
+                    TotalEntitlementTwoAndOver = opaEntitlementMonth.TotalEntitlementTwoAndOver,
+                    TotalEntitlementUnderTwo = opaEntitlementMonth.TotalEntitlementUnderTwo,
+                    FundingComponents = GetEntitlementFundingComponents(opaEntitlementMonth.EntitlementAmounts)
+                });
             }
 
             return operationalFundingEntitlementMonths;
@@ -67,27 +69,29 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
         {
             var operationalFundingAdvancedMonths = new List<AdvanceMonthFundingComponent>();
 
-            if (source.AdvanceMonths != null)
+            if (source.AdvanceMonths == null)
             {
-                foreach (var opaAdvanceMonth in source.AdvanceMonths)
+                return operationalFundingAdvancedMonths;
+            }
+
+            foreach (var opaAdvanceMonth in source.AdvanceMonths)
+            {
+                operationalFundingAdvancedMonths.Add(new AdvanceMonthFundingComponent
                 {
-                    operationalFundingAdvancedMonths.Add(new AdvanceMonthFundingComponent
-                    {
-                        MonthName = opaAdvanceMonth.MonthName,
-                        MonthNumber = opaAdvanceMonth.MonthNumber,
-                        Year = opaAdvanceMonth.Year,
-                        AllDayWorkingDays = opaAdvanceMonth.EstimateAllDayDays,
-                        SessionalWorkingDays = opaAdvanceMonth.EstimateSessionalDays,
-                        ParentLedWorkingDays = opaAdvanceMonth.EstimateParentLedDays,
-                        AdvanceFundingComponents = GetAdvanceFundingComponents(opaAdvanceMonth.AdvanceAmounts),
-                        AmountPayableTwentyHours = opaAdvanceMonth.PayableTwentyHours,
-                        AmountPayableTwoAndOver = opaAdvanceMonth.PayableTwoAndOver,
-                        AmountPayablePlusTen = opaAdvanceMonth.PayablePlusTen,
-                        AmountPayableUnderTwo = opaAdvanceMonth.PayableUnderTwo,
-                        TotalDays = opaAdvanceMonth.TotalDays,
-                        TotalAdvance = opaAdvanceMonth.TotalAdvance
-                    });
-                }
+                    MonthName = opaAdvanceMonth.MonthName,
+                    MonthNumber = opaAdvanceMonth.MonthNumber,
+                    Year = opaAdvanceMonth.Year,
+                    AllDayWorkingDays = opaAdvanceMonth.EstimateAllDayDays,
+                    SessionalWorkingDays = opaAdvanceMonth.EstimateSessionalDays,
+                    ParentLedWorkingDays = opaAdvanceMonth.EstimateParentLedDays,
+                    AdvanceFundingComponents = GetAdvanceFundingComponents(opaAdvanceMonth.AdvanceAmounts),
+                    AmountPayableTwentyHours = opaAdvanceMonth.PayableTwentyHours,
+                    AmountPayableTwoAndOver = opaAdvanceMonth.PayableTwoAndOver,
+                    AmountPayablePlusTen = opaAdvanceMonth.PayablePlusTen,
+                    AmountPayableUnderTwo = opaAdvanceMonth.PayableUnderTwo,
+                    TotalDays = opaAdvanceMonth.TotalDays,
+                    TotalAdvance = opaAdvanceMonth.TotalAdvance
+                });
             }
 
             return operationalFundingAdvancedMonths;
@@ -96,25 +100,27 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
         private ICollection<EntitlementFundingComponent> GetEntitlementFundingComponents(ICollection<EntitlementAmount>? entitlementAmounts)
         {
             var results = new List<EntitlementFundingComponent>();
-            if (entitlementAmounts != null)
+            if (entitlementAmounts == null)
             {
-                foreach (var entitlement in entitlementAmounts)
+                return results;
+            }
+
+            foreach (var entitlement in entitlementAmounts)
+            {
+                var sessionType = GetSessionType(entitlement.SessionType);
+                if (sessionType != Session.Unknown)
                 {
-                    var sessionType = GetSessionType(entitlement.SessionType);
-                    if (sessionType != Session.Unknown)
+                    results.Add(new EntitlementFundingComponent
                     {
-                        results.Add(new EntitlementFundingComponent
-                        {
-                            SessionTypeId = sessionType,
-                            FundingComponentTypeId = GetFundingComponent(entitlement.ComponentType),
-                            StartDate = entitlement.StartDate,
-                            Amount = entitlement.Amount,
-                            Rate = entitlement.Rate,
-                            RateName = entitlement.RateName,
-                            FundedChildHours = entitlement.Fch,
-                            OperatingDays = entitlement.Days
-                        });
-                    }
+                        SessionTypeId = sessionType,
+                        FundingComponentTypeId = GetFundingComponent(entitlement.ComponentType),
+                        StartDate = entitlement.StartDate,
+                        Amount = entitlement.Amount,
+                        Rate = entitlement.Rate,
+                        RateName = entitlement.RateName,
+                        FundedChildHours = entitlement.Fch,
+                        OperatingDays = entitlement.Days
+                    });
                 }
             }
 
@@ -124,25 +130,27 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
         private ICollection<AdvanceFundingComponent> GetAdvanceFundingComponents(ICollection<AdvanceAmount>? advanceAmounts)
         {
             var results = new List<AdvanceFundingComponent>();
-            if (advanceAmounts != null)
+            if (advanceAmounts == null)
             {
-                foreach (var advance in advanceAmounts)
+                return results;
+            }
+
+            foreach (var advance in advanceAmounts)
+            {
+                var sessionType = GetSessionType(advance.SessionType);
+                if (sessionType != Session.Unknown)
                 {
-                    var sessionType = GetSessionType(advance.SessionType);
-                    if (sessionType != Session.Unknown)
+                    results.Add(new AdvanceFundingComponent
                     {
-                        results.Add(new AdvanceFundingComponent
-                        {
-                            SessionTypeId = sessionType,
-                            FundingComponentTypeId = GetFundingComponent(advance.ComponentType),
-                            StartDate = advance.StartDate,
-                            Amount = advance.Amount,
-                            Rate = advance.Rate,
-                            RateName = advance.RateName,
-                            FundedChildHours = advance.Fch,
-                            OperatingDays = advance.Days
-                        });
-                    }
+                        SessionTypeId = sessionType,
+                        FundingComponentTypeId = GetFundingComponent(advance.ComponentType),
+                        StartDate = advance.StartDate,
+                        Amount = advance.Amount,
+                        Rate = advance.Rate,
+                        RateName = advance.RateName,
+                        FundedChildHours = advance.Fch,
+                        OperatingDays = advance.Days
+                    });
                 }
             }
 
@@ -151,56 +159,35 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
 
         private FundingPeriodMonth? GetFundingPeriodMonth(int period)
         {
-            switch (period)
+            return period switch
             {
-                case 1:
-                    return FundingPeriodMonth.July;
-
-                case 2:
-                    return FundingPeriodMonth.November;
-
-                case 3:
-                    return FundingPeriodMonth.March;
-
-                default:
-                    throw new ApplicationException($"No funding period month found for period {period}");
-            }
+                1 => FundingPeriodMonth.July,
+                2 => FundingPeriodMonth.November,
+                3 => FundingPeriodMonth.March,
+                var _ => throw new ApplicationException($"No funding period month found for period {period}")
+            };
         }
 
-        private FundingComponent? GetFundingComponent(string? component)
+        private static FundingComponent? GetFundingComponent(string? component)
         {
-            switch (component)
+            return component switch
             {
-                case "Under 2":
-                    return FundingComponent.UnderTwo;
-
-                case "2 And Over":
-                    return FundingComponent.TwoAndOver;
-
-                case "Plus 10":
-                    return FundingComponent.PlusTen;
-
-                case "20 Hours":
-                    return FundingComponent.TwentyHours;
-
-                default:
-                    return FundingComponent.Unknown;
-            }
+                "Under 2" => FundingComponent.UnderTwo,
+                "2 And Over" => FundingComponent.TwoAndOver,
+                "Plus 10" => FundingComponent.PlusTen,
+                "20 Hours" => FundingComponent.TwentyHours,
+                var _ => FundingComponent.Unknown
+            };
         }
 
         private Session? GetSessionType(string? session)
         {
-            switch (session)
+            return session switch
             {
-                case "All Day":
-                    return Session.AllDay;
-
-                case "Sessional":
-                    return Session.Sessional;
-
-                default:
-                    return Session.Unknown;
-            }
+                "All Day" => Session.AllDay,
+                "Sessional" => Session.Sessional,
+                var _ => Session.Unknown
+            };
         }
     }
 }

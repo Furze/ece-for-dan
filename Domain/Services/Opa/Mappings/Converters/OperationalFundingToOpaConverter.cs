@@ -293,7 +293,7 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
                     new OperatingSession
                     {
                         ProfileType = OpaServiceProfileType.MondaySessionType,
-                        HistoryAttribute = HistoryAttribute.MondaySession,
+                        HistoryAttribute = SessionDay.Monday,
                         ServiceValue = eceService.MondaySessionType
                     }
                 },
@@ -302,7 +302,7 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
                     new OperatingSession
                     {
                         ProfileType = OpaServiceProfileType.TuesdaySessionType,
-                        HistoryAttribute = HistoryAttribute.TuesdaySession,
+                        HistoryAttribute = SessionDay.Tuesday,
                         ServiceValue = eceService.TuesdaySessionType
                     }
                 },
@@ -311,7 +311,7 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
                     new OperatingSession
                     {
                         ProfileType = OpaServiceProfileType.WednesdaySessionType,
-                        HistoryAttribute = HistoryAttribute.WednesdaySession,
+                        HistoryAttribute = SessionDay.Wednesday,
                         ServiceValue = eceService.WednesdaySessionType
                     }
                 },
@@ -320,7 +320,7 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
                     new OperatingSession
                     {
                         ProfileType = OpaServiceProfileType.ThursdaySessionType,
-                        HistoryAttribute = HistoryAttribute.ThursdaySession,
+                        HistoryAttribute = SessionDay.Thursday,
                         ServiceValue = eceService.ThursdaySessionType
                     }
                 },
@@ -329,7 +329,7 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
                     new OperatingSession
                     {
                         ProfileType = OpaServiceProfileType.FridaySessionType,
-                        HistoryAttribute = HistoryAttribute.FridaySession,
+                        HistoryAttribute = SessionDay.Friday,
                         ServiceValue = eceService.FridaySessionType
                     }
                 },
@@ -338,7 +338,7 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
                     new OperatingSession
                     {
                         ProfileType = OpaServiceProfileType.SaturdaySessionType,
-                        HistoryAttribute = HistoryAttribute.SaturdaySession,
+                        HistoryAttribute = SessionDay.Saturday,
                         ServiceValue = eceService.SaturdaySessionType
                     }
                 },
@@ -347,7 +347,7 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
                     new OperatingSession
                     {
                         ProfileType = OpaServiceProfileType.SundaySessionType,
-                        HistoryAttribute = HistoryAttribute.SundaySession,
+                        HistoryAttribute = SessionDay.Sunday,
                         ServiceValue = eceService.SundaySessionType
                     }
                 }
