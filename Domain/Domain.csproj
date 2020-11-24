@@ -22,8 +22,4 @@
       <ProjectReference Include="..\Events.Integration\Events.Integration.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Model\OperationalFunding" />
-    </ItemGroup>
-
 </Project>

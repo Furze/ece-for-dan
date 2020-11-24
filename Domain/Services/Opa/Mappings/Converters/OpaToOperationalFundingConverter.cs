@@ -7,27 +7,28 @@ using MoE.ECE.Domain.Services.Opa.Response;
 
 namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
 {
-    public class OpaToOperationalFundingConverter : ITypeConverter<OperationalFundingBaseResponse, FundingRequest>
+    public class
+        OpaToOperationalFundingConverter : ITypeConverter<OperationalFundingBaseResponse, OperationalFundingRequest>
     {
-        public FundingRequest Convert(
+        public OperationalFundingRequest Convert(
             OperationalFundingBaseResponse source,
-            FundingRequest destination,
+            OperationalFundingRequest? destination,
             ResolutionContext context)
         {
-            var operationalFunding = new OperationalFundingRequest
-            {
-                FundingYear = source.FundingYear,
-                FundingPeriodMonth = GetFundingPeriodMonth(source.FundingPeriod),
-                EntitlementMonths = GetOperationalFundingEntitlementMonths(source),
-                AdvanceMonths = GetOperationalFundingAdvanceMonths(source),
-                TotalWashUp = source.TotalWashUp,
-                TotalAdvance = source.TotalAdvance
-            };
+            destination ??= new OperationalFundingRequest();
 
-            return operationalFunding;
+            destination.FundingYear = source.FundingYear;
+            destination.FundingPeriodMonth = GetFundingPeriodMonth(source.FundingPeriod);
+            destination.EntitlementMonths = GetOperationalFundingEntitlementMonths(source);
+            destination.AdvanceMonths = GetOperationalFundingAdvanceMonths(source);
+            destination.TotalWashUp = source.TotalWashUp;
+            destination.TotalAdvance = source.TotalAdvance;
+
+            return destination;
         }
 
-        private ICollection<EntitlementMonthFundingComponent> GetOperationalFundingEntitlementMonths(OperationalFundingBaseResponse source)
+        private ICollection<EntitlementMonthFundingComponent> GetOperationalFundingEntitlementMonths(
+            OperationalFundingBaseResponse source)
         {
             var operationalFundingEntitlementMonths = new List<EntitlementMonthFundingComponent>();
             if (source.EntitlementMonths == null)
@@ -65,7 +66,8 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
             return operationalFundingEntitlementMonths;
         }
 
-        private ICollection<AdvanceMonthFundingComponent> GetOperationalFundingAdvanceMonths(OperationalFundingBaseResponse source)
+        private ICollection<AdvanceMonthFundingComponent> GetOperationalFundingAdvanceMonths(
+            OperationalFundingBaseResponse source)
         {
             var operationalFundingAdvancedMonths = new List<AdvanceMonthFundingComponent>();
 
@@ -97,7 +99,8 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
             return operationalFundingAdvancedMonths;
         }
 
-        private ICollection<EntitlementFundingComponent> GetEntitlementFundingComponents(ICollection<EntitlementAmount>? entitlementAmounts)
+        private ICollection<EntitlementFundingComponent> GetEntitlementFundingComponents(
+            ICollection<EntitlementAmount>? entitlementAmounts)
         {
             var results = new List<EntitlementFundingComponent>();
             if (entitlementAmounts == null)
@@ -127,7 +130,8 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
             return results;
         }
 
-        private ICollection<AdvanceFundingComponent> GetAdvanceFundingComponents(ICollection<AdvanceAmount>? advanceAmounts)
+        private ICollection<AdvanceFundingComponent> GetAdvanceFundingComponents(
+            ICollection<AdvanceAmount>? advanceAmounts)
         {
             var results = new List<AdvanceFundingComponent>();
             if (advanceAmounts == null)

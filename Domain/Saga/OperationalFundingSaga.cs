@@ -54,6 +54,7 @@ namespace MoE.ECE.Domain.Saga
 
             var operationalFunding = new OperationalFundingRequest(command, _systemClock.UtcNow);
             
+            var f00 = _mapper.Map<OperationalFundingRequest>(firstResponseRecord);
             _mapper.Map(firstResponseRecord, operationalFunding);
 
             operationalFunding.OpaRequest = operationalFundingOpaRequest;
