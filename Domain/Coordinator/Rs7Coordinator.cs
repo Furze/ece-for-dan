@@ -18,19 +18,19 @@ namespace MoE.ECE.Domain.Coordinator
             _cqrs = cqrs;
             _mapper = mapper;
         }
+
         public Task Handle(Rs7Updated domainEvent, CancellationToken cancellationToken)
         {
-            if (domainEvent.RollStatus == RollStatus.InternalReadyForReview)
+            if (domainEvent.RollStatus != RollStatus.InternalReadyForReview)
             {
-                var createRs7 = _mapper.Map<CreateOperationalFundingRequest>(domainEvent);
-
-                return _cqrs.ExecuteAsync(
-                    createRs7,
-                    cancellationToken);
+                return Task.CompletedTask;
             }
 
-            //TODO: Maybe look at implementing compensating transaction here...??
-            return Task.CompletedTask;
+            var createRs7 = _mapper.Map<CreateOperationalFundingRequest>(domainEvent);
+
+            return _cqrs.ExecuteAsync(
+                createRs7,
+                cancellationToken);
         }
 
         public Task Handle(Rs7ZeroReturnCreated domainEvent, CancellationToken cancellationToken)
