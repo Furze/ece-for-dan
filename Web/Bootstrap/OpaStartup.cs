@@ -19,7 +19,7 @@ namespace MoE.ECE.Web.Bootstrap
 
             services.AddHttpClient<IOpaClient, OpaClient>();
             services.AddHttpClient();
-            services.AddScoped<IOpaTokenGenerator, OpaTokenGenerator>();
+            services.AddSingleton<IOpaTokenGenerator, OpaTokenGenerator>();
         }
     }
 }
