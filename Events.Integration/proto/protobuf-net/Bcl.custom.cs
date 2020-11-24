@@ -59,9 +59,6 @@ namespace ProtoBuf.Bcl
     {
         public static implicit operator decimal?(Decimal? grpcDecimal)
         {
-            if (grpcDecimal == null)
-                return null;
-            
             return grpcDecimal.Units + grpcDecimal.Nanos / NanoFactor;
         }
     }
