@@ -17,7 +17,7 @@ namespace MoE.ECE.Integration.Tests.Services.GET
         }
 
         [Fact]
-        public void IfAFullECANumberIsProvidedFourServicesShouldBeReturned()
+        public void IfAFullEcaNumberIsProvidedFourServicesShouldBeReturned()
         {
             When.Get("api/services?search-term=ECA445");
 
@@ -30,6 +30,8 @@ namespace MoE.ECE.Integration.Tests.Services.GET
                 .ShouldBe("Te Kōhanga Reo o Tararua ki Paraparaumu");
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data[3].ServiceName
                 .ShouldBe("Te Kōhanga Reo o Waikare");
+            
+            Then.Snapshot().Match<CollectionModel<SearchEceServiceModel>>();
         }
 
         [Fact]
@@ -40,6 +42,8 @@ namespace MoE.ECE.Integration.Tests.Services.GET
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data.Length.ShouldBe(1);
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data.First().ServiceName
                 .ShouldBe("Simply Kids Preschool");
+            
+            Then.Snapshot().Match<CollectionModel<SearchEceServiceModel>>();
         }
 
         [Fact]
@@ -56,6 +60,8 @@ namespace MoE.ECE.Integration.Tests.Services.GET
                 .ShouldBe("Te Kōhanga Reo o Tararua ki Paraparaumu");
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data[3].ServiceName
                 .ShouldBe("Te Kōhanga Reo o Waikare");
+            
+            Then.Snapshot().Match<CollectionModel<SearchEceServiceModel>>();
         }
 
         [Fact]
@@ -66,6 +72,8 @@ namespace MoE.ECE.Integration.Tests.Services.GET
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data.Length.ShouldBe(1);
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data.First().ServiceName
                 .ShouldBe("Simply Kids Preschool");
+            
+            Then.Snapshot().Match<CollectionModel<SearchEceServiceModel>>();
         }
 
         [Fact]
@@ -76,6 +84,8 @@ namespace MoE.ECE.Integration.Tests.Services.GET
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data.Length.ShouldBe(1);
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data.First().ServiceName
                 .ShouldBe("Aurora Tamariki Early Years Care and Kindergarten");
+            
+            Then.Snapshot().Match<CollectionModel<SearchEceServiceModel>>();
         }
 
         [Fact]
@@ -86,6 +96,8 @@ namespace MoE.ECE.Integration.Tests.Services.GET
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data.Length.ShouldBe(1);
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data.First().ServiceName
                 .ShouldBe("Simply Kids Preschool");
+            
+            Then.Snapshot().Match<CollectionModel<SearchEceServiceModel>>();
         }
 
         [Fact]
@@ -102,6 +114,8 @@ namespace MoE.ECE.Integration.Tests.Services.GET
                 .ShouldBe("Te Kōhanga Reo o Tararua ki Paraparaumu");
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data[3].ServiceName
                 .ShouldBe("Te Kōhanga Reo o Waikare");
+            
+            Then.Snapshot().Match<CollectionModel<SearchEceServiceModel>>();
         }
 
         [Fact]
@@ -118,6 +132,8 @@ namespace MoE.ECE.Integration.Tests.Services.GET
                 .ShouldBe("Te Kōhanga Reo o Tararua ki Paraparaumu");
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data[3].ServiceName
                 .ShouldBe("Te Kōhanga Reo o Waikare");
+            
+            Then.Snapshot().Match<CollectionModel<SearchEceServiceModel>>();
         }
 
         [Fact]
@@ -133,6 +149,8 @@ namespace MoE.ECE.Integration.Tests.Services.GET
                 .ShouldBe("Te Kōhanga Reo o Tararua ki Paraparaumu");
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data[3].ServiceName
                 .ShouldBe("Te Kōhanga Reo o Waikare");
+            
+            Then.Snapshot().Match<CollectionModel<SearchEceServiceModel>>();
         }
 
         [Fact]
@@ -143,6 +161,8 @@ namespace MoE.ECE.Integration.Tests.Services.GET
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data.Length.ShouldBe(1);
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data.First().ServiceName
                 .ShouldBe("Simply Kids Preschool");
+            
+            Then.Snapshot().Match<CollectionModel<SearchEceServiceModel>>();
         }
 
         [Fact]
@@ -151,6 +171,8 @@ namespace MoE.ECE.Integration.Tests.Services.GET
             When.Get("api/services");
 
             Then.Response.Content<CollectionModel<SearchEceServiceModel>>().Data.Length.ShouldBeGreaterThan(0);
+            
+            Then.Snapshot().Match<CollectionModel<SearchEceServiceModel>>();
         }
     }
 }

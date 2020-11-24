@@ -1,0 +1,33 @@
+﻿{
+  "Data": [
+    {
+      "OrganisationId": 42483,
+      "OrganisationNumber": "50099",
+      "ServiceName": "Te Kohanga Reo o Mana Tamariki",
+      "ServiceProviderNumber": "ECA445"
+    },
+    {
+      "OrganisationId": 10817,
+      "OrganisationNumber": "10071",
+      "ServiceName": "Te Kōhanga Reo o Tahuri Mai",
+      "ServiceProviderNumber": "ECA445"
+    },
+    {
+      "OrganisationId": 10397,
+      "OrganisationNumber": "64058",
+      "ServiceName": "Te Kōhanga Reo o Tararua ki Paraparaumu",
+      "ServiceProviderNumber": "ECA445"
+    },
+    {
+      "OrganisationId": 258,
+      "OrganisationNumber": "18350",
+      "ServiceName": "Te Kōhanga Reo o Waikare",
+      "ServiceProviderNumber": "ECA445"
+    }
+  ],
+  "Pagination": {
+    "PageSize": 10,
+    "PageNumber": 1,
+    "Count": 4
+  }
+}
