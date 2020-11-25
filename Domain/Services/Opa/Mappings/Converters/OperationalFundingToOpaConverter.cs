@@ -6,6 +6,7 @@ using AutoMapper;
 using Marten;
 using Microsoft.EntityFrameworkCore;
 using MoE.ECE.Domain.Command;
+using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Infrastructure.EntityFramework;
 using MoE.ECE.Domain.Infrastructure.Extensions;
 using MoE.ECE.Domain.Infrastructure.Filters;
@@ -110,7 +111,7 @@ namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
 
             if (eceService == null)
             {
-                throw new ApplicationException($"Ece service '{source.OrganisationId} could not be found");
+                throw new ECEApplicationException($"Ece service '{source.OrganisationId} could not be found");
             }
 
             const int opaCaseId = 1;

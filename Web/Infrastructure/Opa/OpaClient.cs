@@ -5,6 +5,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Infrastructure.Services.Opa;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -32,7 +33,7 @@ namespace MoE.ECE.Web.Infrastructure.Opa
             var accessToken = await _tokenGenerator.GetTokenAsync();
 
             if (accessToken == null)
-                throw new ApplicationException("Unable to obtain access token from OPA.");
+                throw new ECEApplicationException("Unable to obtain access token from OPA.");
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken.TokenValue);
 
@@ -78,7 +79,7 @@ namespace MoE.ECE.Web.Infrastructure.Opa
                     //will leave this here until we can figure out why
                     _logger.LogError($"Received a {response.StatusCode} but failed to deserialize the OPA response with error {ex.Message}. OPA raw response: {responseContent}. OPA request: {serializedRequest}");
 
-                    throw new ApplicationException($"Received a {response.StatusCode} but failed to deserialize the OPA response with error {ex.Message}. OPA raw response: {responseContent}. OPA request: {serializedRequest}");
+                    throw new ECEApplicationException($"Received a {response.StatusCode} but failed to deserialize the OPA response with error {ex.Message}. OPA raw response: {responseContent}. OPA request: {serializedRequest}");
                 }
             }
 
@@ -92,16 +93,15 @@ namespace MoE.ECE.Web.Infrastructure.Opa
                 // NOOP
             }
             
-            var applicationException = new ApplicationException($"Received a {response.StatusCode} response from OPA.");
+            var applicationException = new ECEApplicationException($"Received a {response.StatusCode} response from OPA.");
             _logger.LogError("OPA request error", new
             {
                 ResponseStatus = response.StatusCode, 
-                ResponseBody=opaResponseBody,
+                ResponseBody = opaResponseBody,
                 Request = request
             }, applicationException);
             
             throw applicationException;
         }
     }
-   
 }

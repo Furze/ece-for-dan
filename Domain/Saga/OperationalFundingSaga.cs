@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.Internal;
 using MoE.ECE.Domain.Command;
 using MoE.ECE.Domain.Event.OperationalFunding;
+using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Infrastructure.Services.Opa;
 using MoE.ECE.Domain.Model.OperationalFunding;
 using MoE.ECE.Domain.Services;
@@ -45,10 +45,10 @@ namespace MoE.ECE.Domain.Saga
                 await _operationalFundingCalculator.CalculateAsync(operationalFundingOpaRequest);
 
             if (operationalFundingOpaResponse == null)
-                throw new ApplicationException("Received a null operational funding response from OPA");
+                throw new ECEApplicationException("Received a null operational funding response from OPA");
 
             if (operationalFundingOpaResponse.Cases.Any(entity => entity.Errors != null))
-                throw new ApplicationException("Received an error from OPA for the operational funding request");
+                throw new ECEApplicationException("Received an error from OPA for the operational funding request");
            
             var firstResponseRecord = operationalFundingOpaResponse.Cases.First();
 

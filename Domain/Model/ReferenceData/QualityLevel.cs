@@ -1,6 +1,6 @@
 ﻿namespace MoE.ECE.Domain.Model.ReferenceData
 {
-    public class QualityLevel
+    public static class QualityLevel
     {
         public const string QualityLevelTKR = "Quality Level (TKR)";
         public const string StandardLevelTKR = "Standard Level (TKR)";

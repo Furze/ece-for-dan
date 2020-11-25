@@ -44,8 +44,6 @@ namespace MoE.ECE.Web.Controllers
             [FromQuery(Name = "page-number")] int? pageNumber = 1,
             CancellationToken cancellationToken = default)
         {
-            //TODO: Need to Add Auth Checks to make to this endpoint.
-            
             var query = new FindServices(searchTerm ?? string.Empty)
             {
                 PageSize = pageSize.GetValueOrDefault(),

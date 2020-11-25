@@ -6,9 +6,9 @@ using MoE.ECE.Domain.Model.ReferenceData;
 
 namespace MoE.ECE.Domain.Read.Model.Services
 {
-    public class ECEServiceModelMapping : Profile
+    public class EceServiceModelMapping : Profile
     {
-        public ECEServiceModelMapping()
+        public EceServiceModelMapping()
         {
             CreateMap<DateTimeOffset?, DateTimeOffset?>().ConvertUsing(s =>
                 s != null && s.Value.ToUniversalTime().Year == 1858 && s.Value.ToUniversalTime().Month == 11 && s.Value.ToUniversalTime().Day == 16 ? (DateTimeOffset?)null : s

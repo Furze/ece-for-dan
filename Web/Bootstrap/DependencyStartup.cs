@@ -49,13 +49,6 @@ namespace MoE.ECE.Web.Bootstrap
 
             services.AddMediatR(typeof(Domain.IAssemblyMarker));
 
-            // services.Scan(scan => scan
-            //     .FromAssembliesOf(
-            //         typeof(Domain.IAssemblyMarker), typeof(IAssemblyMarker))
-            //     .AddClasses()
-            //     .AsImplementedInterfaces()
-            //     .WithScopedLifetime());
-
             services.AddScoped<IOperationalFundingCalculator, OpaOperationalFundingCalculator>();
         }
 

@@ -3,7 +3,7 @@ using MoE.ECE.Domain.Model.ValueObject;
 
 namespace MoE.ECE.Domain.Model.OperationalFunding
 {
-    public abstract class ECEFundingComponent 
+    public abstract class EceFundingComponent 
     {
         public Session? SessionTypeId { get; set; }
 

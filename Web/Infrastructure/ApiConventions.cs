@@ -14,6 +14,7 @@ namespace MoE.ECE.Web.Infrastructure
                                 ApiConventionTypeMatch(ApiConventionTypeMatchBehavior.Any)]
             object id)
         {
+            // No implementation required.
         }
 
         [ProducesResponseType(200)]
@@ -24,6 +25,7 @@ namespace MoE.ECE.Web.Infrastructure
                                  ApiConventionTypeMatch(ApiConventionTypeMatchBehavior.Any)]
             object id)
         {
+            // No implementation required.
         }
 
         [ProducesResponseType(200)]
@@ -34,6 +36,7 @@ namespace MoE.ECE.Web.Infrastructure
                                 ApiConventionTypeMatch(ApiConventionTypeMatchBehavior.Any)]
             object id)
         {
+            // No implementation required.
         }
 
         [ProducesResponseType(201)]
@@ -46,6 +49,7 @@ namespace MoE.ECE.Web.Infrastructure
                            ApiConventionTypeMatch(ApiConventionTypeMatchBehavior.Any)]
             object cancellationToken)
         {
+            // No implementation required.
         }
         
         [ProducesResponseType(201)]
@@ -62,6 +66,7 @@ namespace MoE.ECE.Web.Infrastructure
                            ApiConventionTypeMatch(ApiConventionTypeMatchBehavior.Any)]
             object cancellationToken)
         {
+            // No implementation required.
         }
 
         [ProducesResponseType(204)]
@@ -77,6 +82,7 @@ namespace MoE.ECE.Web.Infrastructure
                            ApiConventionTypeMatch(ApiConventionTypeMatchBehavior.Any)]
             object cancellationToken)
         {
+            // No implementation required.
         }
         
         [ProducesResponseType(204)]
@@ -90,6 +96,7 @@ namespace MoE.ECE.Web.Infrastructure
                         ApiConventionTypeMatch(ApiConventionTypeMatchBehavior.Any)]
             object model)
         {
+            // No implementation required.
         }
     }
 }

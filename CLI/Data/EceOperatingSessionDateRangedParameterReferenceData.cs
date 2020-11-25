@@ -23,7 +23,7 @@ namespace MoE.ECE.CLI.Data
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,
                         SessionProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.NzTimeZone.BaseUtcOffset),
+                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
                         EffectiveToDate = null
                     },
                     new EceOperatingSessionDateRangedParameter
@@ -35,7 +35,7 @@ namespace MoE.ECE.CLI.Data
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,
                         SessionProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(2020, 01, 31, 11, 00, 0, DateHelper.NzTimeZone.BaseUtcOffset),
+                        EffectiveFromDate = new DateTimeOffset(2020, 01, 31, 11, 00, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
                         EffectiveToDate = null
                     },
                     new EceOperatingSessionDateRangedParameter
@@ -47,7 +47,7 @@ namespace MoE.ECE.CLI.Data
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,
                         SessionProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(2020, 01, 31, 11, 00, 0, DateHelper.NzTimeZone.BaseUtcOffset),
+                        EffectiveFromDate = new DateTimeOffset(2020, 01, 31, 11, 00, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
                         EffectiveToDate = null
                     },
                     new EceOperatingSessionDateRangedParameter
@@ -59,7 +59,7 @@ namespace MoE.ECE.CLI.Data
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,
                         SessionProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(2020, 01, 31, 11, 00, 0, DateHelper.NzTimeZone.BaseUtcOffset),
+                        EffectiveFromDate = new DateTimeOffset(2020, 01, 31, 11, 00, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
                         EffectiveToDate = null
                     },
                     new EceOperatingSessionDateRangedParameter
@@ -71,7 +71,7 @@ namespace MoE.ECE.CLI.Data
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,
                         SessionProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(2020, 01, 31, 11, 00, 0, DateHelper.NzTimeZone.BaseUtcOffset),
+                        EffectiveFromDate = new DateTimeOffset(2020, 01, 31, 11, 00, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
                         EffectiveToDate = null
                     },
                     new EceOperatingSessionDateRangedParameter
@@ -83,7 +83,7 @@ namespace MoE.ECE.CLI.Data
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,
                         SessionProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.NzTimeZone.BaseUtcOffset),
+                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
                         EffectiveToDate = null
                     },
                     new EceOperatingSessionDateRangedParameter
@@ -95,7 +95,7 @@ namespace MoE.ECE.CLI.Data
                         SessionTypeDescription = "All Day",
                         SessionProvisionTypeId = 136001,
                         SessionProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.NzTimeZone.BaseUtcOffset),
+                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
                         EffectiveToDate = null
                     }
                 };
