@@ -97,8 +97,6 @@ namespace MoE.ECE.Integration.Tests.Services.GET
 
             mondaySession?.OperatingTimes[0].MaxChildren.ShouldBe(35);
             mondaySession?.OperatingTimes[0].MaxChildrenUnder2.ShouldBe(8);
-            
-            
         }
 
         [Fact]

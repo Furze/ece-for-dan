@@ -32,6 +32,13 @@ namespace MoE.ECE.Domain.Infrastructure.Extensions
             return nzDateTimeOffset;
         }
 
+        public static DateTimeOffset? ToNzDateTimeOffSet(this DateTimeOffset? dateTimeOffset)
+        {
+            return dateTimeOffset.HasValue
+                ? (DateTimeOffset?)TimeZoneInfo.ConvertTime(dateTimeOffset.Value, NzTimeZone)
+                : null;
+        }
+        
         public static DateTimeOffset ToNzDateTimeOffSet(this DateTimeOffset dateTimeOffset)
         {
             return TimeZoneInfo.ConvertTime(dateTimeOffset, NzTimeZone);

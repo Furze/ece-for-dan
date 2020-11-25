@@ -1,5 +1,6 @@
 using System;
 using AutoMapper;
+using MoE.ECE.Domain.Infrastructure.Extensions;
 
 namespace MoE.ECE.Domain.Read.Model.Services
 {
@@ -16,10 +17,11 @@ namespace MoE.ECE.Domain.Read.Model.Services
     {
         public SessionTimeModel Convert(DateTimeOffset? source, SessionTimeModel destination, ResolutionContext context)
         {
+            var nzDateTime = source.ToNzDateTimeOffSet();
             return new SessionTimeModel
             {
-                Hour = source?.Hour ?? 0,
-                Minute = source?.Minute ?? 0,
+                Hour = nzDateTime?.Hour ?? 0,
+                Minute = nzDateTime?.Minute ?? 0,
             };
         }
     }
