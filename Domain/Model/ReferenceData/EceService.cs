@@ -6,10 +6,9 @@ namespace MoE.ECE.Domain.Model.ReferenceData
 {
     public class EceService
     {
-        // Fields from Organisation
         public int RefOrganisationId { get; set; }
-        public string OrganisationName { get; set; } = null!;
-        public string OrganisationNumber { get; set; } = null!;
+        public string OrganisationName { get; set; } = string.Empty;
+        public string OrganisationNumber { get; set; } = string.Empty;
         public int OrganisationTypeId { get; set; }
         public string? OrganisationTypeDescription { get; set; }
         public int? OrganisationSectorRoleId { get; set; }
@@ -134,86 +133,120 @@ namespace MoE.ECE.Domain.Model.ReferenceData
             OrganisationTypeId == OrganisationType.CasualEducationAndCare ||
             OrganisationTypeId == OrganisationType.EducationAndCare ||
             OrganisationTypeId == OrganisationType.Hospitalbased;
-        
-        public bool IsParentLed 
+
+        public bool IsParentLed =>
+            OrganisationTypeId switch
+            {
+                OrganisationType.Playcentre => LicenceClassId != LicenceClass.Mixed,
+                _ => false
+            };
+
+        public bool IsAllDays =>
+            OrganisationTypeId switch
+            {
+                OrganisationType.CasualEducationAndCare => LicenceClassId != LicenceClass.Sessional,
+                OrganisationType.EducationAndCare => LicenceClassId != LicenceClass.Sessional,
+                OrganisationType.Hospitalbased => LicenceClassId != LicenceClass.Sessional,
+                OrganisationType.FreeKindergarten => LicenceClassId != LicenceClass.Sessional,
+                OrganisationType.Playcentre => false,
+                OrganisationType.HomebasedNetwork => true,
+                _ => true
+            };
+
+        public bool IsSessional =>
+            OrganisationTypeId switch
+            {
+                OrganisationType.CasualEducationAndCare => LicenceClassId != LicenceClass.AllDay,
+                OrganisationType.EducationAndCare => LicenceClassId != LicenceClass.AllDay,
+                OrganisationType.Hospitalbased => LicenceClassId != LicenceClass.AllDay,
+                OrganisationType.FreeKindergarten => LicenceClassId != LicenceClass.AllDay,
+                OrganisationType.Playcentre => false,
+                OrganisationType.HomebasedNetwork => false,
+                _ => true
+            };
+
+        public int MondaySessionType => GetSessionTypeForDay(SessionDay.Monday);
+        public int TuesdaySessionType => GetSessionTypeForDay(SessionDay.Tuesday);
+        public int WednesdaySessionType => GetSessionTypeForDay(SessionDay.Wednesday);
+        public int ThursdaySessionType => GetSessionTypeForDay(SessionDay.Thursday);
+        public int FridaySessionType => GetSessionTypeForDay(SessionDay.Friday);
+        public int SaturdaySessionType => GetSessionTypeForDay(SessionDay.Saturday);
+        public int SundaySessionType => GetSessionTypeForDay(SessionDay.Sunday);
+
+        public bool CanClaimSubsidyFundedHours =>
+            OrganisationTypeId switch
+            {
+                OrganisationType.Hospitalbased => true,
+                var _ => true
+            };
+
+        public bool CanClaimTeacherHours =>
+            OrganisationTypeId switch
+            {
+                OrganisationType.HomebasedNetwork => false,
+                OrganisationType.Playcentre => false,
+                OrganisationType.TeKohangaReo => false,
+                OrganisationType.FreeKindergarten =>
+                    // All Day & Mixed we capture teacher hours. Sessional we don't
+                    LicenceClassId != LicenceClass.Sessional,
+                var _ => true
+            };
+
+        public bool CanClaim20ChildFundedHours
         {
             get
             {
-                return OrganisationTypeId switch
+                if (OrganisationTypeId == OrganisationType.TeKohangaReo)
                 {
-                    OrganisationType.Playcentre => LicenceClassId != LicenceClass.Mixed,
-                    _ => false
-                };
+                    return ServiceProvisionTypeId switch
+                    {
+                        ServiceProvisionType.ParentLed => ParentLedEligibleToOfferFree.GetValueOrDefault(),
+                        ServiceProvisionType.TeacherLed => TeacherLedEligibleToOfferFree.GetValueOrDefault(),
+                        var _ => true
+                    };
+                }
+
+                return true;
             }
         }
 
-        public bool IsAllDays
-        {
-            get
-            {
-                return OrganisationTypeId switch
-                {
-                    OrganisationType.CasualEducationAndCare => LicenceClassId != LicenceClass.Sessional,
-                    OrganisationType.EducationAndCare => LicenceClassId != LicenceClass.Sessional,
-                    OrganisationType.Hospitalbased => LicenceClassId != LicenceClass.Sessional,
-                    OrganisationType.FreeKindergarten => LicenceClassId != LicenceClass.Sessional,
-                    OrganisationType.Playcentre => false,
-                    OrganisationType.HomebasedNetwork => true,
-                    _ => true
-                };
-            }
-        }
-        
-        public bool IsSessional
-        {
-            get
-            {
-                return OrganisationTypeId switch
-                {
-                    OrganisationType.CasualEducationAndCare => LicenceClassId != LicenceClass.AllDay,
-                    OrganisationType.EducationAndCare => LicenceClassId != LicenceClass.AllDay,
-                    OrganisationType.Hospitalbased => LicenceClassId != LicenceClass.AllDay,
-                    OrganisationType.FreeKindergarten => LicenceClassId != LicenceClass.AllDay,
-                    OrganisationType.Playcentre => false,
-                    OrganisationType.HomebasedNetwork => false,
-                    _ => true
-                };
-            }
-        }
+        public int ParentLedMaxFundingDays(int month, int year) =>
+            CalculateMaximumFundingDays(IsParentLed, month, year, SessionType.Sessional);
 
-        public int ParentLedMaxFundingDays(int month, int year)
-        {
-            return CalculateMaximumFundingDays(IsParentLed, month, year, SessionType.Sessional);
-        }
-        
-        public int AllDaysMaxFundingDays(int month, int year)
-        {
-            return CalculateMaximumFundingDays(IsAllDays, month, year, SessionType.AllDay);
-        }
-        
-        public int SessionalMaxFundingDays(int month, int year)
-        {
-            return CalculateMaximumFundingDays(IsSessional, month, year, SessionType.Sessional);
-        }
-        
+        public int AllDaysMaxFundingDays(int month, int year) =>
+            CalculateMaximumFundingDays(IsAllDays, month, year, SessionType.AllDay);
+
+        public int SessionalMaxFundingDays(int month, int year) =>
+            CalculateMaximumFundingDays(IsSessional, month, year, SessionType.Sessional);
+
         public int CalculateMaximumFundingDays(bool isServiceEligible,
             int month, int year,
             int sessionTypeId
         )
         {
-            if (isServiceEligible == false) return 0;
-            if (month < 1 || month > 12 || year < 1 || year > 9999) return 0;
-            
+            if (isServiceEligible == false)
+            {
+                return 0;
+            }
+
+            if (month < 1 || month > 12 || year < 1 || year > 9999)
+            {
+                return 0;
+            }
+
             var numberOfDaysInMonth = DateTime.DaysInMonth(year, month);
-            
+
             var daysOfWeekWithSessions = OperatingSessions.Where(operatingSession =>
-                operatingSession.SessionTypeId == sessionTypeId)
+                    operatingSession.SessionTypeId == sessionTypeId)
                 .ToArray();
-            
+
             var availableDays = 0;
 
-            if (!daysOfWeekWithSessions.Any()) return availableDays;
-            
+            if (!daysOfWeekWithSessions.Any())
+            {
+                return availableDays;
+            }
+
             for (var dayOfMonth = 1; dayOfMonth <= numberOfDaysInMonth; dayOfMonth++)
             {
                 // Get the day of the week eg. Sunday = 0, Monday = 1 etc..
@@ -225,10 +258,22 @@ namespace MoE.ECE.Domain.Model.ReferenceData
 
                 // Check whether the day of the week is allowed a session on that day of the week.
                 if (daysOfWeekWithSessions.Any(session => session.DayOfWeek == dayOfWeek))
+                {
                     availableDays++;
+                }
             }
 
             return availableDays;
+        }
+
+        private int GetSessionTypeForDay(string day)
+        {
+            // We can have multiple sessions for the same day, when the session type is 'Sessional'
+            // however they will always be the same type (So FirstOrDefault is safe to use here).
+            // If the session type is 'All Day' then only one will be returned.
+            var operatingSession = OperatingSessions.FirstOrDefault(session => session.SessionDayDescription == day);
+
+            return operatingSession?.SessionTypeId ?? SessionType.DoesNotOperate;
         }
     }
 }

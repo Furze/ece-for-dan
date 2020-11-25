@@ -139,6 +139,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             };
 
             if (command.AdvanceMonths != null)
+            {
                 foreach (var advanceMonth in command.AdvanceMonths)
                 {
                     // Default organisation Montessori little hands cannot capture Sessional & Parent Led Days
@@ -146,6 +147,27 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                     advanceMonth.Sessional = null;
                     advanceMonth.ParentLed = null;
                 }
+            }
+
+            if (command.EntitlementMonths != null)
+            {
+                foreach (var entitlementMonth in command.EntitlementMonths)
+                {
+                    if (entitlementMonth.Days == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (var day in entitlementMonth.Days)
+                    {
+                        day.Under2 = 18;
+                        day.Plus10 = 23;
+                        day.Certificated = 1;
+                        day.TwoAndOver = 1;
+                        day.NonCertificated = 2;
+                    }
+                }
+            }
 
             applyCustomSetup?.Invoke(command);
 

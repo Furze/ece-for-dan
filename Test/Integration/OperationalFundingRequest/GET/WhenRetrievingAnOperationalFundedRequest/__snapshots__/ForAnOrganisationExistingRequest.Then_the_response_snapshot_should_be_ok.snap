@@ -1,0 +1,453 @@
+﻿[
+  {
+    "EntitlementMonths": [
+      {
+        "MonthName": "October 2019",
+        "MonthNumber": 10,
+        "Year": 2019,
+        "AllDayCertificatedTeacherHours": 54,
+        "AllDayNonCertificatedTeacherHours": 46,
+        "SessionalCertificatedTeacherHours": 0,
+        "SessionalNonCertificatedTeacherHours": 0,
+        "TotalWorkingDays": 3,
+        "WashUpPlusTen": 275.89,
+        "WashUpUnderTwo": 747.05,
+        "WashUpTwoAndOver": 440.25,
+        "WashUpTwentyHours": 782.92,
+        "TotalEntitlement": null,
+        "TotalFundsAdvanced": null,
+        "TotalEntitlementUnderTwo": null,
+        "TotalEntitlementTwoAndOver": null,
+        "TotalEntitlementTwentyHours": null,
+        "TotalEntitlementPlusTen": null,
+        "TotalWashUp": 2246.11,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 747.05,
+            "Rate": 11.15,
+            "RateName": "",
+            "FundedChildHours": 67,
+            "OperatingDays": 3
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 440.25,
+            "Rate": 5.87,
+            "RateName": "",
+            "FundedChildHours": 75,
+            "OperatingDays": 3
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwentyHours",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 782.92,
+            "Rate": 10.58,
+            "RateName": "",
+            "FundedChildHours": 74,
+            "OperatingDays": 3
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 275.89,
+            "Rate": 5.87,
+            "RateName": "",
+            "FundedChildHours": 47,
+            "OperatingDays": 3
+          }
+        ]
+      },
+      {
+        "MonthName": "November 2019",
+        "MonthNumber": 11,
+        "Year": 2019,
+        "AllDayCertificatedTeacherHours": 7,
+        "AllDayNonCertificatedTeacherHours": 13,
+        "SessionalCertificatedTeacherHours": 0,
+        "SessionalNonCertificatedTeacherHours": 0,
+        "TotalWorkingDays": 3,
+        "WashUpPlusTen": 64.57,
+        "WashUpUnderTwo": 44.6,
+        "WashUpTwoAndOver": 29.35,
+        "WashUpTwentyHours": 253.922,
+        "TotalEntitlement": null,
+        "TotalFundsAdvanced": null,
+        "TotalEntitlementUnderTwo": null,
+        "TotalEntitlementTwoAndOver": null,
+        "TotalEntitlementTwentyHours": null,
+        "TotalEntitlementPlusTen": null,
+        "TotalWashUp": 392.44,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 44.6,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 4,
+            "OperatingDays": 1
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 29.35,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 5,
+            "OperatingDays": 1
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwentyHours",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 253.92,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 24,
+            "OperatingDays": 1
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 64.57,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 11,
+            "OperatingDays": 1
+          }
+        ]
+      },
+      {
+        "MonthName": "December 2019",
+        "MonthNumber": 12,
+        "Year": 2019,
+        "AllDayCertificatedTeacherHours": 0,
+        "AllDayNonCertificatedTeacherHours": 0,
+        "SessionalCertificatedTeacherHours": 0,
+        "SessionalNonCertificatedTeacherHours": 0,
+        "TotalWorkingDays": 0,
+        "WashUpPlusTen": 0.0,
+        "WashUpUnderTwo": 0.0,
+        "WashUpTwoAndOver": 0.005,
+        "WashUpTwentyHours": 0.0,
+        "TotalEntitlement": null,
+        "TotalFundsAdvanced": null,
+        "TotalEntitlementUnderTwo": null,
+        "TotalEntitlementTwoAndOver": null,
+        "TotalEntitlementTwentyHours": null,
+        "TotalEntitlementPlusTen": null,
+        "TotalWashUp": 0.0,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 44.6,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 4,
+            "OperatingDays": 1
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 29.35,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 5,
+            "OperatingDays": 1
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwentyHours",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 253.92,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 24,
+            "OperatingDays": 1
+          },
+          {
+            "SessionType": "Sessional",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 64.57,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 11,
+            "OperatingDays": 1
+          }
+        ]
+      },
+      {
+        "MonthName": "January 2020",
+        "MonthNumber": 1,
+        "Year": 2020,
+        "AllDayCertificatedTeacherHours": 0,
+        "AllDayNonCertificatedTeacherHours": 0,
+        "SessionalCertificatedTeacherHours": 0,
+        "SessionalNonCertificatedTeacherHours": 0,
+        "TotalWorkingDays": 0,
+        "WashUpPlusTen": 0.0,
+        "WashUpUnderTwo": 0.0,
+        "WashUpTwoAndOver": 0.005,
+        "WashUpTwentyHours": 0.0,
+        "TotalEntitlement": null,
+        "TotalFundsAdvanced": null,
+        "TotalEntitlementUnderTwo": null,
+        "TotalEntitlementTwoAndOver": null,
+        "TotalEntitlementTwentyHours": null,
+        "TotalEntitlementPlusTen": null,
+        "TotalWashUp": 0.0,
+        "FundingComponents": []
+      }
+    ],
+    "OrganisationId": 114895,
+    "BusinessEntityId": "c8ee3a99-1994-44e4-94e1-ab222589f1ac",
+    "RequestId": null,
+    "FundingPeriodMonth": "March",
+    "FundingYear": 2020,
+    "RevisionNumber": 0,
+    "TotalWashUp": null,
+    "TotalAdvance": null,
+    "AdvanceMonths": [],
+    "MatchingAdvanceMonths": [
+      {
+        "MonthName": "October",
+        "MonthNumber": 10,
+        "Year": 2019,
+        "ParentLedWorkingDays": null,
+        "AllDayWorkingDays": 20,
+        "SessionalWorkingDays": 0,
+        "AmountPayablePlusTen": 2800.8,
+        "AmountPayableUnderTwo": 9343.35,
+        "AmountPayableTwoAndOver": 4959.75,
+        "AmountPayableTwentyHours": 7750.05,
+        "TotalDays": null,
+        "TotalAdvance": null,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 2800.8,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 9343.35,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 4959.75,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwentyHours",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 7750.05,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          }
+        ]
+      },
+      {
+        "MonthName": "November",
+        "MonthNumber": 11,
+        "Year": 2019,
+        "ParentLedWorkingDays": null,
+        "AllDayWorkingDays": 20,
+        "SessionalWorkingDays": 0,
+        "AmountPayablePlusTen": 2800.8,
+        "AmountPayableUnderTwo": 9343.35,
+        "AmountPayableTwoAndOver": 4959.75,
+        "AmountPayableTwentyHours": 7750.05,
+        "TotalDays": null,
+        "TotalAdvance": null,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 2800.8,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 9343.35,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 4959.75,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwentyHours",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 7750.05,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          }
+        ]
+      },
+      {
+        "MonthName": "December",
+        "MonthNumber": 12,
+        "Year": 2019,
+        "ParentLedWorkingDays": null,
+        "AllDayWorkingDays": 20,
+        "SessionalWorkingDays": 0,
+        "AmountPayablePlusTen": 2800.8,
+        "AmountPayableUnderTwo": 9343.35,
+        "AmountPayableTwoAndOver": 4959.75,
+        "AmountPayableTwentyHours": 7750.05,
+        "TotalDays": null,
+        "TotalAdvance": null,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 2800.8,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 9343.35,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 4959.75,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwentyHours",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 7750.05,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          }
+        ]
+      },
+      {
+        "MonthName": "January",
+        "MonthNumber": 1,
+        "Year": 2020,
+        "ParentLedWorkingDays": null,
+        "AllDayWorkingDays": 20,
+        "SessionalWorkingDays": 0,
+        "AmountPayablePlusTen": 2800.8,
+        "AmountPayableUnderTwo": 9343.35,
+        "AmountPayableTwoAndOver": 4959.75,
+        "AmountPayableTwentyHours": 7750.05,
+        "TotalDays": null,
+        "TotalAdvance": null,
+        "FundingComponents": [
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "PlusTen",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 2800.8,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "UnderTwo",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 9343.35,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwoAndOver",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 4959.75,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          },
+          {
+            "SessionType": "AllDay",
+            "FundingComponentType": "TwentyHours",
+            "StartDate": "0001-01-01T00:00:00",
+            "Amount": 7750.05,
+            "Rate": 10.1,
+            "RateName": "",
+            "FundedChildHours": 30,
+            "OperatingDays": 20
+          }
+        ]
+      }
+    ],
+    "Equity": null
+  }
+]

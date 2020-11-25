@@ -21,6 +21,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
 
         protected override void Arrange()
         {
+            
             Given
                 .A_rs7_has_been_created()
                 .The_rs7_has_been_submitted_for_peer_approval()
@@ -34,7 +35,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
         }
 
         [Fact]
-        public void ThenTheRollStatusIsUpdatedToPendingApproval()
+        public void ThenTheRollStatusIsUpdatedToInternalReadyForReview()
         {
             Then
                 .Response.Content<Rs7Model>().RollStatus.ShouldBe(RollStatus.InternalReadyForReview);

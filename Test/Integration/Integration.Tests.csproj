@@ -48,8 +48,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="OperationalFundingRequest" />
+      <Folder Include="OperationalFundingRequest\GET\WhenRetrievingAnOperationalFundedRequest\__snapshots__\__mismatch__" />
       <Folder Include="Rs7\GET\For_an_externally_created_rs7\__snapshots__\__mismatch__" />
       <Folder Include="Rs7\GET\For_a_rs7_that_has_been_peer_approved\__snapshots__\__mismatch__" />
+      <Folder Include="Rs7\GET\__snapshots__\__mismatch__" />
     </ItemGroup>
 
 </Project>

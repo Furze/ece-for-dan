@@ -1,0 +1,15 @@
+﻿{
+  "Data": [
+    {
+      "OrganisationId": 135077,
+      "OrganisationNumber": "47091",
+      "ServiceName": "Aurora Tamariki Early Years Care and Kindergarten",
+      "ServiceProviderNumber": "ECA2936"
+    }
+  ],
+  "Pagination": {
+    "PageSize": 10,
+    "PageNumber": 1,
+    "Count": 1
+  }
+}

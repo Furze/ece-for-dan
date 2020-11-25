@@ -7,7 +7,7 @@
     },
     "CLI Patch": {
       "commandName": "Project",
-      "commandLineArgs": "patch -pn initial_migration -md ../../../"
+      "commandLineArgs": "patch -pn add_mt_doc_operationalfundingrequest_table -md ../../../"
     }
   }
 }

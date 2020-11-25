@@ -7,6 +7,7 @@ namespace MoE.ECE.Domain.Infrastructure.Services.Opa
         [Required]
         public string AuthorisationUrl { get; set; } = string.Empty;
 
+        [Required]
         public string RuleBaseUrl { get; set; } = string.Empty;
 
         [Required]

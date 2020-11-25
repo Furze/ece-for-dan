@@ -1,6 +1,10 @@
-﻿using Bard;
+﻿using System;
+using Bard;
+using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Event;
+using MoE.ECE.Domain.Model.ValueObject;
 using Moe.ECE.Events.Integration.ELI;
+using MoE.ECE.Integration.Tests.Infrastructure;
 
 namespace MoE.ECE.Integration.Tests.Chapter
 {
@@ -12,6 +16,19 @@ namespace MoE.ECE.Integration.Tests.Chapter
             context.PublishIntegrationEvent(integrationEvent);
 
             context.StoryData.Rs7Model = context.GetDomainEvent<Rs7CreatedFromExternal>();
+        }
+
+        public static void AnRs7IsReadyForInternalMinistryReview(ScenarioContext<ECEStoryData> context,
+            Action<UpdateRs7>? setUpCommand)
+        {
+            var command = ModelBuilder.UpdateRs7(context.StoryData.Rs7Model,
+                rs7 => { rs7.RollStatus = RollStatus.InternalReadyForReview; });
+
+            setUpCommand?.Invoke(command);
+
+            context.CqrsExecute(command);
+
+            context.StoryData.Rs7Model = context.GetDomainEvent<Rs7Updated>();
         }
     }
 }

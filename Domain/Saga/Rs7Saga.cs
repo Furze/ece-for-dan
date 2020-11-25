@@ -242,7 +242,7 @@ namespace MoE.ECE.Domain.Saga
             return rs7;
         }
         
-        private async Task SaveAndRaiseAsync<TDomainEvent>(Rs7 rs7, CancellationToken cancellationToken)where TDomainEvent: IDomainEvent
+        private async Task SaveAndRaiseAsync<TDomainEvent>(Rs7 rs7, CancellationToken cancellationToken) where TDomainEvent : IDomainEvent
         {
             await _documentSession.SaveChangesAsync(cancellationToken);
 

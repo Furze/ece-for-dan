@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using MoE.ECE.Domain.Model.ReferenceData;
@@ -13,6 +14,13 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework
             _configurations = configurations;
         }
 
+        [DbFunction("unaccent")]
+        public static string Unaccent(string term)
+        {
+            // This is fine this is how you register PostgreSQL function
+            throw new NotSupportedException();
+        }
+        
         private readonly IEnumerable<IEntityConfiguration> _configurations;
 
         public DbSet<EceService> EceServices { get; set; } = null!;
@@ -32,6 +40,14 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             _configurations.ToList().ForEach(c => c.ApplyConfiguration(modelBuilder));
+
+            modelBuilder.HasPostgresExtension("unaccent");
+            var method = typeof(ReferenceDataContext).GetMethod("Unaccent");
+
+            if (method != null)
+            {
+                modelBuilder.HasDbFunction(method);
+            }
         }
     }
 }

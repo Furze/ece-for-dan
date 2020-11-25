@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using MoE.ECE.Domain.Event;
+using MoE.ECE.Domain.Event.OperationalFunding;
 using Moe.ECE.Events.Integration;
 using Moe.Library.Cqrs;
 using IntegrationEvents = Events.Integration.Protobuf;
@@ -15,7 +16,8 @@ namespace MoE.ECE.Domain.Integration.Publisher
         IDomainEventHandler<Rs7EntitlementMonthUpdated>,
         IDomainEventHandler<Rs7SubmittedForApproval>,
         IDomainEventHandler<Rs7PeerApproved>,
-        IDomainEventHandler<Rs7PeerRejected>
+        IDomainEventHandler<Rs7PeerRejected>,
+        IDomainEventHandler<OperationalFundingRequestCreated>
     {
         private readonly IServiceBus _serviceBus;
         private readonly IMapper _mapper;
@@ -80,6 +82,16 @@ namespace MoE.ECE.Domain.Integration.Publisher
             var integrationEvent = _mapper.Map<IntegrationEvents.Roll.Rs7Updated>(domainEvent);
 
             return _serviceBus.PublishAsync(integrationEvent, Constants.Topic.ECE, cancellationToken);
+        }
+        
+        public Task Handle(OperationalFundingRequestCreated domainEvent, CancellationToken cancellationToken)
+        {
+            var integrationEvent = _mapper.Map<IntegrationEvents.Entitlement.EntitlementCalculated>(domainEvent);
+
+            return _serviceBus.PublishAsync(
+                integrationEvent,
+                Constants.Topic.ECE,
+                cancellationToken);
         }
     }
 }
