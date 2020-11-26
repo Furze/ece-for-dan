@@ -14,31 +14,8 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
             migrationBuilder.EnsureSchema(
                 name: "referencedata");
 
-            migrationBuilder.CreateTable(
-                name: "ece_licencing_detail_date_ranged_parameter",
-                schema: "referencedata",
-                columns: table => new
-                {
-                    licencing_detail_history_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ref_organisation_id = table.Column<int>(nullable: false),
-                    application_status_id = table.Column<int>(nullable: false),
-                    application_status_description = table.Column<string>(nullable: true),
-                    licence_status_id = table.Column<int>(nullable: false),
-                    licence_status_description = table.Column<string>(nullable: true),
-                    licence_class_id = table.Column<int>(nullable: true),
-                    licence_class_description = table.Column<string>(nullable: true),
-                    service_provision_type_id = table.Column<int>(nullable: true),
-                    service_provision_type_description = table.Column<string>(nullable: true),
-                    effective_from_date = table.Column<DateTimeOffset>(nullable: false),
-                    effective_to_date = table.Column<DateTimeOffset>(nullable: true),
-                    created_date = table.Column<DateTimeOffset>(nullable: false),
-                    modified_date = table.Column<DateTimeOffset>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_ece_licencing_detail_date_ranged_parameters", x => x.licencing_detail_history_id);
-                });
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:unaccent", ",,");
 
             migrationBuilder.CreateTable(
                 name: "ece_service",
@@ -164,6 +141,86 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "lookup_type",
+                schema: "referencedata",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    description = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_lookup_types", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ece_licencing_detail_date_ranged_parameter",
+                schema: "referencedata",
+                columns: table => new
+                {
+                    licencing_detail_history_id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ref_organisation_id = table.Column<int>(nullable: false),
+                    application_status_id = table.Column<int>(nullable: false),
+                    application_status_description = table.Column<string>(nullable: true),
+                    licence_status_id = table.Column<int>(nullable: false),
+                    licence_status_description = table.Column<string>(nullable: true),
+                    licence_class_id = table.Column<int>(nullable: true),
+                    licence_class_description = table.Column<string>(nullable: true),
+                    service_provision_type_id = table.Column<int>(nullable: true),
+                    service_provision_type_description = table.Column<string>(nullable: true),
+                    effective_from_date = table.Column<DateTimeOffset>(nullable: false),
+                    effective_to_date = table.Column<DateTimeOffset>(nullable: true),
+                    created_date = table.Column<DateTimeOffset>(nullable: false),
+                    modified_date = table.Column<DateTimeOffset>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_ece_licencing_detail_date_ranged_parameters", x => x.licencing_detail_history_id);
+                    table.ForeignKey(
+                        name: "fk_ece_licencing_detail_date_ranged_parameter_ece_services_ref",
+                        column: x => x.ref_organisation_id,
+                        principalSchema: "referencedata",
+                        principalTable: "ece_service",
+                        principalColumn: "ref_organisation_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ece_operating_session",
+                schema: "referencedata",
+                columns: table => new
+                {
+                    operating_session_id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ref_organisation_id = table.Column<int>(nullable: false),
+                    session_day_id = table.Column<int>(nullable: true),
+                    session_day_description = table.Column<string>(nullable: true),
+                    start_time = table.Column<DateTimeOffset>(nullable: true),
+                    end_time = table.Column<DateTimeOffset>(nullable: true),
+                    max_children = table.Column<int>(nullable: true),
+                    max_children_under2 = table.Column<int>(nullable: true),
+                    session_type_id = table.Column<int>(nullable: true),
+                    session_type_description = table.Column<string>(nullable: true),
+                    session_provision_type_id = table.Column<int>(nullable: true),
+                    session_provision_type_description = table.Column<string>(nullable: true),
+                    funded_hours = table.Column<int>(nullable: false),
+                    operating_hours = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_ece_operating_sessions", x => x.operating_session_id);
+                    table.ForeignKey(
+                        name: "fk_ece_operating_session_ece_services_ref_organisation_id",
+                        column: x => x.ref_organisation_id,
+                        principalSchema: "referencedata",
+                        principalTable: "ece_service",
+                        principalColumn: "ref_organisation_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ece_service_date_ranged_parameter",
                 schema: "referencedata",
                 columns: table => new
@@ -183,20 +240,39 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_ece_service_date_ranged_parameters", x => new { x.history_id, x.attribute_source });
+                    table.ForeignKey(
+                        name: "fk_ece_service_date_ranged_parameters_ece_services_ece_service",
+                        column: x => x.ref_organisation_id,
+                        principalSchema: "referencedata",
+                        principalTable: "ece_service",
+                        principalColumn: "ref_organisation_id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "lookup_type",
+                name: "lookup",
                 schema: "referencedata",
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    description = table.Column<string>(nullable: false)
+                    description = table.Column<string>(nullable: false),
+                    lookup_type_id = table.Column<int>(nullable: false),
+                    edumis_code = table.Column<string>(nullable: true),
+                    parent_lookup_id = table.Column<int>(nullable: true),
+                    effective_from_date = table.Column<DateTimeOffset>(nullable: false),
+                    effective_to_date = table.Column<DateTimeOffset>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_lookup_types", x => x.id);
+                    table.PrimaryKey("pk_lookups", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_lookups_lookup_types_lookup_type_id",
+                        column: x => x.lookup_type_id,
+                        principalSchema: "referencedata",
+                        principalTable: "lookup_type",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -234,65 +310,6 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "ece_operating_session",
-                schema: "referencedata",
-                columns: table => new
-                {
-                    operating_session_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ref_organisation_id = table.Column<int>(nullable: false),
-                    session_day_id = table.Column<int>(nullable: true),
-                    session_day_description = table.Column<string>(nullable: true),
-                    start_time = table.Column<DateTimeOffset>(nullable: true),
-                    end_time = table.Column<DateTimeOffset>(nullable: true),
-                    max_children = table.Column<int>(nullable: true),
-                    max_children_under2 = table.Column<int>(nullable: true),
-                    session_type_id = table.Column<int>(nullable: true),
-                    session_type_description = table.Column<string>(nullable: true),
-                    session_provision_type_id = table.Column<int>(nullable: true),
-                    session_provision_type_description = table.Column<string>(nullable: true),
-                    funded_hours = table.Column<int>(nullable: false),
-                    operating_hours = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_ece_operating_sessions", x => x.operating_session_id);
-                    table.ForeignKey(
-                        name: "fk_ece_operating_session_ece_services_ece_service_ref_organisa",
-                        column: x => x.ref_organisation_id,
-                        principalSchema: "referencedata",
-                        principalTable: "ece_service",
-                        principalColumn: "ref_organisation_id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "lookup",
-                schema: "referencedata",
-                columns: table => new
-                {
-                    id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    description = table.Column<string>(nullable: false),
-                    lookup_type_id = table.Column<int>(nullable: false),
-                    edumis_code = table.Column<string>(nullable: true),
-                    parent_lookup_id = table.Column<int>(nullable: true),
-                    effective_from_date = table.Column<DateTimeOffset>(nullable: false),
-                    effective_to_date = table.Column<DateTimeOffset>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_lookups", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_lookups_lookup_types_lookup_type_id",
-                        column: x => x.lookup_type_id,
-                        principalSchema: "referencedata",
-                        principalTable: "lookup_type",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "ix_ece_licencing_detail_date_ranged_parameters_ref_organisatio",
                 schema: "referencedata",
@@ -300,15 +317,9 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                 column: "ref_organisation_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_ece_operating_session_ref_organisation_id",
+                name: "ix_ece_operating_sessions_ref_organisation_id",
                 schema: "referencedata",
                 table: "ece_operating_session",
-                column: "ref_organisation_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_ece_operating_session_date_ranged_parameters_ref_organisati",
-                schema: "referencedata",
-                table: "ece_operating_session_date_ranged_parameter",
                 column: "ref_organisation_id");
 
             migrationBuilder.CreateIndex(
@@ -343,15 +354,15 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                 schema: "referencedata");
 
             migrationBuilder.DropTable(
-                name: "ece_service",
-                schema: "referencedata");
-
-            migrationBuilder.DropTable(
                 name: "ece_licencing_detail_date_ranged_parameter",
                 schema: "referencedata");
 
             migrationBuilder.DropTable(
                 name: "lookup_type",
+                schema: "referencedata");
+
+            migrationBuilder.DropTable(
+                name: "ece_service",
                 schema: "referencedata");
         }
     }

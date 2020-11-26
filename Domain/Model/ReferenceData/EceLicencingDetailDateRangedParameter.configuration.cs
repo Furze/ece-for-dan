@@ -10,11 +10,9 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         {
             builder.HasKey(entity => entity.LicencingDetailHistoryId);
 
-            builder.HasMany(entity => entity.EceOperatingSessionDateRangedParameters)
-                .WithOne(entity => entity.EceLicencingDetailDateRangedParameter)
-                .HasForeignKey(p => p.LicencingDetailHistoryId);
-
-            builder.HasIndex(entity => entity.RefOrganisationId);
+            builder.HasOne(entity => entity.EceService)
+                .WithMany(entity => entity.EceLicencingDetailDateRangedParameters)
+                .HasForeignKey(entity => entity.RefOrganisationId);
 
             builder.ToTable("ece_licencing_detail_date_ranged_parameter", "referencedata");
         }
