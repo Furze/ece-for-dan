@@ -128,6 +128,8 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public string? EceServiceProviderOwnershipTypeDescription { get; set; }
 
         public virtual ICollection<EceOperatingSession> OperatingSessions { get; set; } = null!;
+        public virtual ICollection<EceServiceDateRangedParameter> EceServiceDateRangedParameters { get; set; } = null!;
+        public virtual ICollection<EceLicencingDetailDateRangedParameter> EceLicencingDetailDateRangedParameters { get; set; } = null!;
 
         public bool IsAttestationRequired =>
             OrganisationTypeId == OrganisationType.CasualEducationAndCare ||

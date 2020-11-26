@@ -15,5 +15,7 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public DateTimeOffset? EffectiveToDate { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset ModifiedDate { get; set; }
+
+        public virtual EceService EceService { get; set; } = null!;
     }
 }
