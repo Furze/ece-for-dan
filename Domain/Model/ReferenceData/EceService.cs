@@ -127,9 +127,9 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public int? EceServiceProviderOwnershipTypeId { get; set; }
         public string? EceServiceProviderOwnershipTypeDescription { get; set; }
 
-        public virtual ICollection<EceOperatingSession> OperatingSessions { get; set; } = null!;
-        public virtual ICollection<EceServiceDateRangedParameter> EceServiceDateRangedParameters { get; set; } = null!;
-        public virtual ICollection<EceLicencingDetailDateRangedParameter> EceLicencingDetailDateRangedParameters { get; set; } = null!;
+        public virtual ICollection<EceOperatingSession> OperatingSessions { get; set; } = new HashSet<EceOperatingSession>();
+        public virtual ICollection<EceServiceDateRangedParameter> EceServiceDateRangedParameters { get; set; } = new HashSet<EceServiceDateRangedParameter>();
+        public virtual ICollection<EceLicencingDetailDateRangedParameter> EceLicencingDetailDateRangedParameters { get; set; } = new HashSet<EceLicencingDetailDateRangedParameter>();
 
         public bool IsAttestationRequired =>
             OrganisationTypeId == OrganisationType.CasualEducationAndCare ||
