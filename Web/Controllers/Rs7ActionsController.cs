@@ -77,7 +77,7 @@ namespace MoE.ECE.Web.Controllers
         }
 
         /// <summary>
-        /// Submits a RS7 for approval by an authoriser
+        /// Submits a RS7 for approval by an authorizer
         /// </summary>
         /// <remarks>
         /// Experimental

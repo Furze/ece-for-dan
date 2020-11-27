@@ -1,0 +1,15 @@
+﻿{
+  "Data": [
+    {
+      "OrganisationId": 283,
+      "OrganisationNumber": "10227",
+      "ServiceName": "Simply Kids Preschool",
+      "ServiceProviderNumber": "010227"
+    }
+  ],
+  "Pagination": {
+    "PageSize": 10,
+    "PageNumber": 1,
+    "Count": 1
+  }
+}

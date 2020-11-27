@@ -1,0 +1,69 @@
+﻿{
+  "Data": [
+    {
+      "OrganisationId": 135077,
+      "OrganisationNumber": "47091",
+      "ServiceName": "Aurora Tamariki Early Years Care and Kindergarten",
+      "ServiceProviderNumber": "ECA2936"
+    },
+    {
+      "OrganisationId": 9018,
+      "OrganisationNumber": "25150",
+      "ServiceName": "AUT Centre for Refugee Education Early Childhood Centre",
+      "ServiceProviderNumber": "025150"
+    },
+    {
+      "OrganisationId": 10541,
+      "OrganisationNumber": "83070",
+      "ServiceName": "Family Ties Educare - Eskvale",
+      "ServiceProviderNumber": "ECA357"
+    },
+    {
+      "OrganisationId": 5297,
+      "OrganisationNumber": "70078",
+      "ServiceName": "Leeston Playcentre",
+      "ServiceProviderNumber": "ECA3333"
+    },
+    {
+      "OrganisationId": 7764,
+      "OrganisationNumber": "5331",
+      "ServiceName": "Maungaraki Kindergarten",
+      "ServiceProviderNumber": "ECA030"
+    },
+    {
+      "OrganisationId": 114895,
+      "OrganisationNumber": "46543",
+      "ServiceName": "Montessori Little Hands",
+      "ServiceProviderNumber": "ECA3216"
+    },
+    {
+      "OrganisationId": 120874,
+      "OrganisationNumber": "46811",
+      "ServiceName": "Nurture Me 2",
+      "ServiceProviderNumber": "ECA2558"
+    },
+    {
+      "OrganisationId": 301,
+      "OrganisationNumber": "30143",
+      "ServiceName": "PORSE Nelson/Marlborough/West Coast S1",
+      "ServiceProviderNumber": "ECA344"
+    },
+    {
+      "OrganisationId": 284,
+      "OrganisationNumber": "16144",
+      "ServiceName": "Rawene Playcentre",
+      "ServiceProviderNumber": "ECA3333"
+    },
+    {
+      "OrganisationId": 283,
+      "OrganisationNumber": "10227",
+      "ServiceName": "Simply Kids Preschool",
+      "ServiceProviderNumber": "010227"
+    }
+  ],
+  "Pagination": {
+    "PageSize": 10,
+    "PageNumber": 1,
+    "Count": 18
+  }
+}

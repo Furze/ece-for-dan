@@ -6,8 +6,12 @@
       "commandLineArgs": "migrate  -md ../../../../CLI/migrations"
     },
     "CLI Patch": {
+        "commandName": "Project",
+        "commandLineArgs": "patch -pn add_mt_doc_operationalfundingrequest_table -md ../../../"
+    },
+    "CLI Migrate Reference Data": {
       "commandName": "Project",
-      "commandLineArgs": "patch -pn initial_migration -md ../../../"
+      "commandLineArgs": "migrate-reference-data"
     }
   }
 }

@@ -30,7 +30,7 @@ namespace MoE.ECE.Web.Infrastructure.Opa
 
         public async Task<OpaResponse<TResponse>> PostRequest<TRequest, TResponse>(OpaRequest<TRequest> request, string endpointUrl) where TResponse : class
         {
-            var accessToken = await _tokenGenerator.GenerateAsync();
+            var accessToken = await _tokenGenerator.GetTokenAsync();
 
             if (accessToken == null)
                 throw new ECEApplicationException("Unable to obtain access token from OPA.");
@@ -56,6 +56,7 @@ namespace MoE.ECE.Web.Infrastructure.Opa
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
+                
                 //OPA sometimes returns invalid json where it returns an empty object instead of 0 or null
                 //which breaks the Deserializing
                 if (responseContent.Contains("{}"))
@@ -67,7 +68,9 @@ namespace MoE.ECE.Web.Infrastructure.Opa
                 try
                 {
                     _logger.LogInformation($"Request response received from OPA: {responseContent}");
-                    return JsonConvert.DeserializeObject<OpaResponse<TResponse>>(responseContent);
+                    var opaResponse = JsonConvert.DeserializeObject<OpaResponse<TResponse>>(responseContent);
+                    opaResponse.OriginalResponse = responseContent;
+                    return opaResponse;
                 }
                 catch (Exception ex)
                 {
@@ -90,7 +93,7 @@ namespace MoE.ECE.Web.Infrastructure.Opa
                 // NOOP
             }
             
-            var applicationException = new ApplicationException($"Received a {response.StatusCode} response from OPA.");
+            var applicationException = new ECEApplicationException($"Received a {response.StatusCode} response from OPA.");
             _logger.LogError("OPA request error", new
             {
                 ResponseStatus = response.StatusCode, 

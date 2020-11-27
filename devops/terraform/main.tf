@@ -101,7 +101,11 @@ resource "azurerm_resource_group" "app" {
 resource "random_password" "psqlpassword" {
   length           = 16
   special          = true
-  override_special = "_%<>|#~{}+-"
+  min_special      = 2
+  min_upper        = 2
+  min_lower        = 2
+  min_numeric      = 2
+  override_special = "_%<>|#~+-"
 }
 
 # Save SQL Password to Keyvault

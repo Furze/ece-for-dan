@@ -1,9 +1,12 @@
 ﻿using System;
 using AutoMapper;
+using Events.Integration.Protobuf.Entitlement;
 using Google.Protobuf.WellKnownTypes;
 using MoE.ECE.Domain.Event;
+using MoE.ECE.Domain.Event.OperationalFunding;
 using MoE.ECE.Domain.Infrastructure.Extensions;
 using MoE.ECE.Domain.Read.Model.Rs7;
+using Moe.ECE.Events.Integration;
 using IntegrationEvents = Events.Integration.Protobuf;
 
 namespace MoE.ECE.Domain.Integration
@@ -38,6 +41,9 @@ namespace MoE.ECE.Domain.Integration
             
             CreateMap<Rs7EntitlementDayModel, IntegrationEvents.Roll.Rs7EntitlementDay>()
                 .Map(d => d.Over1, s => s.TwoAndOver);
+
+            CreateMap<OperationalFundingRequestCreated, EntitlementCalculated>()
+                .Map(d => d.BusinessEntityType, s => Constants.BusinessEntityTypes.Rs7);
         }
     }
 }

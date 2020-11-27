@@ -13,10 +13,6 @@ namespace MoE.ECE.Domain.Model.ReferenceData
             builder.Property(entity => entity.IsolationIndex)
                 .HasColumnType("decimal(12, 2)");
 
-            builder.HasMany(entity => entity.OperatingSessions)
-                .WithOne(entity => entity.EceService)
-                .HasForeignKey(os => os.RefOrganisationId);
-
             builder.ToTable("ece_service", "referencedata");
         }
     }

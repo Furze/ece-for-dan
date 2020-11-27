@@ -10,10 +10,14 @@ namespace MoE.ECE.Domain.Model.FundingPeriod
         public JulyFundingPeriod(Date date) : base(CalendarMonth.July, date)
         {
             FundingPeriodMonths = new[]
-                {CalendarMonth.June, CalendarMonth.July, CalendarMonth.August, CalendarMonth.September};
+            {
+                CalendarMonth.June, CalendarMonth.July, CalendarMonth.August, CalendarMonth.September
+            };
 
             if (FundingPeriodMonths.Any(month => month.Id == date.Month) == false)
+            {
                 throw new ECEApplicationException($"Date - {date} is invalid for {nameof(JulyFundingPeriod)}");
+            }
         }
 
         protected override Dictionary<CalendarMonth, MonthYear[]> CalendarMonthAdvancePeriods =>
@@ -59,6 +63,10 @@ namespace MoE.ECE.Domain.Model.FundingPeriod
                 }
             };
 
-        public override Date NextPeriodStartDate => new Date(1, CalendarMonth.November.Id, StartDate.Year);
+        public override FundingPeriod PreviousFundingPeriod
+            => new MarchFundingPeriod(new Date(1, CalendarMonth.March.Id, StartDate.Year));
+
+        public override FundingPeriod NextFundingPeriod
+            => new NovemberFundingPeriod(new Date(1, CalendarMonth.November.Id, StartDate.Year));
     }
 }

@@ -10,6 +10,10 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         {
             builder.HasKey(entity => entity.OperatingSessionId);
 
+            builder.HasOne(entity => entity.EceService)
+                .WithMany(entity => entity.OperatingSessions)
+                .HasForeignKey(entity => entity.RefOrganisationId);
+
             builder.ToTable("ece_operating_session", "referencedata");
         }
     }

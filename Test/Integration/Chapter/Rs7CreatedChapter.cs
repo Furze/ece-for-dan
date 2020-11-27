@@ -41,33 +41,25 @@ namespace MoE.ECE.Integration.Tests.Chapter
 
         public Rs7UpdatedChapter An_rs7_is_ready_for_internal_ministry_review(Action<UpdateRs7>? setUpCommand = null)
         {
-            return When(context =>
-            {
-                var command = ModelBuilder.UpdateRs7(context.StoryData.Rs7Model,
-                    rs7 => { rs7.RollStatus = RollStatus.InternalReadyForReview; });
-
-                setUpCommand?.Invoke(command);
-
-                context.CqrsExecute(command);
-
-                context.StoryData.Rs7Model = context.GetDomainEvent<Rs7Updated>();
-            }).ProceedToChapter<Rs7UpdatedChapter>();
+            return When(context => Rs7Stories.AnRs7IsReadyForInternalMinistryReview(context, setUpCommand))
+                .ProceedToChapter<Rs7UpdatedChapter>();
         }
 
-        public Rs7SubmittedForApprovalChapter The_rs7_has_been_submitted_for_peer_approval(Action<SubmitRs7ForApproval>? setUpCommand = null)
+        public Rs7SubmittedForApprovalChapter The_rs7_has_been_submitted_for_peer_approval(
+            Action<SubmitRs7ForApproval>? setUpCommand = null)
         {
             return When(context =>
-            {
-                var command = ModelBuilder.SubmitRs7ForApproval(context.StoryData.Rs7Model);
+                {
+                    var command = ModelBuilder.SubmitRs7ForApproval(context.StoryData.Rs7Model);
 
-                setUpCommand?.Invoke(command);
+                    setUpCommand?.Invoke(command);
 
-                context.CqrsExecute(command);
+                    context.CqrsExecute(command);
 
-                var domainEVent = context.GetDomainEvent<Rs7SubmittedForApproval>();
+                    var domainEVent = context.GetDomainEvent<Rs7SubmittedForApproval>();
 
-                context.StoryData.Rs7Model = domainEVent;
-            })
+                    context.StoryData.Rs7Model = domainEVent;
+                })
                 .ProceedToChapter<Rs7SubmittedForApprovalChapter>();
         }
     }

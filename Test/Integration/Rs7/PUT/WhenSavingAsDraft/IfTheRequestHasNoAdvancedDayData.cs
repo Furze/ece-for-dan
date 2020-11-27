@@ -17,12 +17,10 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
 
         private const string Url = "api/rs7";
 
-        protected override void Arrange()
-        {
+        protected override void Arrange() =>
             Given
                 .A_rs7_has_been_created()
                 .GetResult(created => Rs7 = created.Rs7Model);
-        }
 
         private Rs7Model Rs7
         {
@@ -30,13 +28,15 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
             set => TestData.Rs7Model = value;
         }
 
-        protected override void Act()
-        {
+        protected override void Act() =>
             // Act
             When.Put($"{Url}/{Rs7.Id}", ModelBuilder.UpdateRs7(Rs7, rs7 =>
             {
                 rs7.RollStatus = RollStatus.InternalReadyForReview;
-                if (rs7.AdvanceMonths == null) return;
+                if (rs7.AdvanceMonths == null)
+                {
+                    return;
+                }
 
                 foreach (var rs7AdvanceMonth in rs7.AdvanceMonths)
                 {
@@ -45,17 +45,14 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
                     rs7AdvanceMonth.ParentLed = null;
                 }
             }));
-        }
 
         /// <summary>
         ///     This is a valid scenario just checking that we don't trip up our max min validation.
         /// </summary>
         [Fact]
-        public void ThenTheResponseShouldBeNoContent()
-        {
+        public void ThenTheResponseShouldBeNoContent() =>
             Then.Response
                 .ShouldBe
                 .NoContent();
-        }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.DependencyInjection;
 using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Infrastructure;
+using MoE.ECE.Domain.Model.OperationalFunding;
 using MoE.ECE.Domain.Model.Rs7;
 
 namespace MoE.ECE.Web.Bootstrap
@@ -15,6 +16,8 @@ namespace MoE.ECE.Web.Bootstrap
         public EceMartenRegistry()
         {
             For<Rs7>().Identity(rs7 => rs7.Id);
+            
+            For<OperationalFundingRequest>().Identity(opf => opf.Id);
         }
 
         public static void ApplyDefaultConfiguration(StoreOptions storeOptions, MartenSettings settings,

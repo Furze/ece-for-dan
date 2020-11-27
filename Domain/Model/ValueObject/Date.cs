@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MoE.ECE.Domain.Model.ValueObject
 {
-    public class Date : IComparable<Date>, IEquatable<Date>
+    public class Date : IComparable<Date>, IEquatable<Date>, IEqualityComparer<Date>
     {
         public Date(int day, int month, int year)
         {
@@ -81,6 +82,36 @@ namespace MoE.ECE.Domain.Model.ValueObject
         public static bool operator <=(Date? a, Date? b)
         {
             return CompareTo(a, b) <= 0;
+        }
+
+        public bool Equals(Date? x, Date? y)
+        {
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(x, null))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(y, null))
+            {
+                return false;
+            }
+
+            if (x.GetType() != y.GetType())
+            {
+                return false;
+            }
+
+            return x.Day == y.Day && x.Month == y.Month && x.Year == y.Year;
+        }
+
+        public int GetHashCode(Date obj)
+        {
+            return HashCode.Combine(obj.Day, obj.Month, obj.Year);
         }
     }
 }

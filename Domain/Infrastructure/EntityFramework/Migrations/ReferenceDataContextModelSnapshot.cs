@@ -2,18 +2,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using MoE.ECE.Domain.Infrastructure.EntityFramework;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(ReferenceDataContext))]
-    // ReSharper disable once PartialTypeWithSinglePart
     partial class ReferenceDataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("Npgsql:PostgresExtension:unaccent", ",,")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
@@ -84,7 +86,7 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasIndex("RefOrganisationId")
                         .HasName("ix_ece_licencing_detail_date_ranged_parameters_ref_organisatio");
 
-                    b.ToTable("ece_licencing_detail_date_ranged_parameter", "referencedata");
+                    b.ToTable("ece_licencing_detail_date_ranged_parameter","referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceOperatingSession", b =>
@@ -151,9 +153,9 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         .HasName("pk_ece_operating_sessions");
 
                     b.HasIndex("RefOrganisationId")
-                        .HasName("ix_ece_operating_session_ref_organisation_id");
+                        .HasName("ix_ece_operating_sessions_ref_organisation_id");
 
-                    b.ToTable("ece_operating_session", "referencedata");
+                    b.ToTable("ece_operating_session","referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceOperatingSessionDateRangedParameter", b =>
@@ -229,10 +231,7 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasKey("LicencingDetailHistoryId", "OperatingSessionId")
                         .HasName("pk_ece_operating_session_date_ranged_parameters");
 
-                    b.HasIndex("RefOrganisationId")
-                        .HasName("ix_ece_operating_session_date_ranged_parameters_ref_organisati");
-
-                    b.ToTable("ece_operating_session_date_ranged_parameter", "referencedata");
+                    b.ToTable("ece_operating_session_date_ranged_parameter","referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceService", b =>
@@ -251,6 +250,34 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         .HasColumnName("application_status_id")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("AreaUnitId")
+                        .HasColumnName("area_unit_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("AreaUnitName")
+                        .HasColumnName("area_unit_name")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("BlockedFromOfferingFreeEce")
+                        .HasColumnName("blocked_from_offering_free_ece")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("BulkFundingRateDescription")
+                        .HasColumnName("bulk_funding_rate_description")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("BulkFundingRateId")
+                        .HasColumnName("bulk_funding_rate_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("ClosedFunding")
+                        .HasColumnName("closed_funding")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("EarliestOpenDate")
+                        .HasColumnName("earliest_open_date")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("EcQualityLevelDescription")
                         .HasColumnName("ec_quality_level_description")
                         .HasColumnType("text");
@@ -258,6 +285,14 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.Property<int?>("EcQualityLevelId")
                         .HasColumnName("ec_quality_level_id")
                         .HasColumnType("integer");
+
+                    b.Property<string>("EceCulturalCharacterDescriptions")
+                        .HasColumnName("ece_cultural_character_descriptions")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EceCulturalCharacterIds")
+                        .HasColumnName("ece_cultural_character_ids")
+                        .HasColumnType("text");
 
                     b.Property<int?>("EceServiceProviderId")
                         .HasColumnName("ece_service_provider_id")
@@ -291,9 +326,21 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         .HasColumnName("ece_service_status_reason_id")
                         .HasColumnType("integer");
 
+                    b.Property<string>("EducationPhilosophyDescriptions")
+                        .HasColumnName("education_philosophy_descriptions")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EducationPhilosophyIds")
+                        .HasColumnName("education_philosophy_ids")
+                        .HasColumnType("text");
+
                     b.Property<string>("Email")
                         .HasColumnName("email")
                         .HasColumnType("text");
+
+                    b.Property<int?>("EmailLocatorId")
+                        .HasColumnName("email_locator_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("EquityIndexDescription")
                         .HasColumnName("equity_index_description")
@@ -307,8 +354,44 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         .HasColumnName("external_provider_id")
                         .HasColumnType("text");
 
+                    b.Property<int?>("FaxLocatorId")
+                        .HasColumnName("fax_locator_id")
+                        .HasColumnType("integer");
+
                     b.Property<string>("FaxNumber")
                         .HasColumnName("fax_number")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("FundingContactId")
+                        .HasColumnName("funding_contact_id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("FundingDate")
+                        .HasColumnName("funding_date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("GeneralElectoralDistrictId")
+                        .HasColumnName("general_electoral_district_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("GeneralElectoralDistrictName")
+                        .HasColumnName("general_electoral_district_name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("InstallmentPaymentReasonDescriptions")
+                        .HasColumnName("installment_payment_reason_descriptions")
+                        .HasColumnType("text");
+
+                    b.Property<string>("InstallmentPaymentReasonIds")
+                        .HasColumnName("installment_payment_reason_ids")
+                        .HasColumnType("text");
+
+                    b.Property<string>("InstallmentPaymentWithheldReasonDescriptions")
+                        .HasColumnName("installment_payment_withheld_reason_descriptions")
+                        .HasColumnType("text");
+
+                    b.Property<string>("InstallmentPaymentWithheldReasonIds")
+                        .HasColumnName("installment_payment_withheld_reason_ids")
                         .HasColumnType("text");
 
                     b.Property<bool?>("InstallmentPayments")
@@ -317,6 +400,14 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
 
                     b.Property<bool?>("IsFunded")
                         .HasColumnName("is_funded")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("IsNotionalRoleUsed")
+                        .HasColumnName("is_notional_role_used")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("IsPoIndicator")
+                        .HasColumnName("is_po_indicator")
                         .HasColumnType("boolean");
 
                     b.Property<decimal?>("IsolationIndex")
@@ -339,6 +430,18 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         .HasColumnName("licence_status_id")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("LocalOfficeId")
+                        .HasColumnName("local_office_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LocalOfficeName")
+                        .HasColumnName("local_office_name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LocalOfficeNumber")
+                        .HasColumnName("local_office_number")
+                        .HasColumnType("text");
+
                     b.Property<string>("LocationAddressLine1")
                         .HasColumnName("location_address_line1")
                         .HasColumnType("text");
@@ -353,6 +456,42 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
 
                     b.Property<string>("LocationAddressLine4")
                         .HasColumnName("location_address_line4")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("LocationShortAddressId")
+                        .HasColumnName("location_short_address_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("MaoriElectoralDistrictId")
+                        .HasColumnName("maori_electoral_district_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("MaoriElectoralDistrictName")
+                        .HasColumnName("maori_electoral_district_name")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("MeshBlockId")
+                        .HasColumnName("mesh_block_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("MeshBlockNumber")
+                        .HasColumnName("mesh_block_number")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("MoeContact")
+                        .HasColumnName("moe_contact")
+                        .HasColumnType("text");
+
+                    b.Property<string>("MoeContactName")
+                        .HasColumnName("moe_contact_name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NotFundedReasonDescriptions")
+                        .HasColumnName("not_funded_reason_descriptions")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NotFundedReasonIds")
+                        .HasColumnName("not_funded_reason_ids")
                         .HasColumnType("text");
 
                     b.Property<long?>("Nzbn")
@@ -401,9 +540,25 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         .HasColumnName("other_email")
                         .HasColumnType("text");
 
+                    b.Property<int?>("OtherEmailLocatorId")
+                        .HasColumnName("other_email_locator_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("OtherLanguageDescription")
+                        .HasColumnName("other_language_description")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("OtherLanguageId")
+                        .HasColumnName("other_language_id")
+                        .HasColumnType("integer");
+
                     b.Property<bool?>("ParentLedEligibleToOfferFree")
                         .HasColumnName("parent_led_eligible_to_offer_free")
                         .HasColumnType("boolean");
+
+                    b.Property<int?>("PhoneLocatorId")
+                        .HasColumnName("phone_locator_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnName("phone_number")
@@ -425,6 +580,10 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         .HasColumnName("postal_address_line4")
                         .HasColumnType("text");
 
+                    b.Property<int?>("PostalShortAddressId")
+                        .HasColumnName("postal_short_address_id")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PrimaryLanguageDescription")
                         .HasColumnName("primary_language_description")
                         .HasColumnType("text");
@@ -433,12 +592,40 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         .HasColumnName("primary_language_id")
                         .HasColumnType("integer");
 
+                    b.Property<bool?>("ProtectedRate")
+                        .HasColumnName("protected_rate")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("RegionDescription")
                         .HasColumnName("region_description")
                         .HasColumnType("text");
 
                     b.Property<int?>("RegionId")
                         .HasColumnName("region_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("RegionalCouncilId")
+                        .HasColumnName("regional_council_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RegionalCouncilName")
+                        .HasColumnName("regional_council_name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ReligiousAffiliationDescriptions")
+                        .HasColumnName("religious_affiliation_descriptions")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ReligiousAffiliationIds")
+                        .HasColumnName("religious_affiliation_ids")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SeDistrictDescription")
+                        .HasColumnName("se_district_description")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("SeDistrictId")
+                        .HasColumnName("se_district_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("ServiceProvisionTypeDescription")
@@ -449,18 +636,58 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         .HasColumnName("service_provision_type_id")
                         .HasColumnType("integer");
 
+                    b.Property<string>("SpecialistServiceDescriptions")
+                        .HasColumnName("specialist_service_descriptions")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SpecialistServiceIds")
+                        .HasColumnName("specialist_service_ids")
+                        .HasColumnType("text");
+
                     b.Property<bool?>("TeacherLedEligibleToOfferFree")
                         .HasColumnName("teacher_led_eligible_to_offer_free")
                         .HasColumnType("boolean");
+
+                    b.Property<int?>("TerritorialAuthorityId")
+                        .HasColumnName("territorial_authority_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TerritorialAuthorityName")
+                        .HasColumnName("territorial_authority_name")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("UrbanAreaId")
+                        .HasColumnName("urban_area_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UrbanAreaName")
+                        .HasColumnName("urban_area_name")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("WardId")
+                        .HasColumnName("ward_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("WardName")
+                        .HasColumnName("ward_name")
+                        .HasColumnType("text");
 
                     b.Property<string>("Website")
                         .HasColumnName("website")
                         .HasColumnType("text");
 
+                    b.Property<int?>("WebsiteLocatorId")
+                        .HasColumnName("website_locator_id")
+                        .HasColumnType("integer");
+
+                    b.Property<bool?>("WithholdPayments")
+                        .HasColumnName("withhold_payments")
+                        .HasColumnType("boolean");
+
                     b.HasKey("RefOrganisationId")
                         .HasName("pk_ece_services");
 
-                    b.ToTable("ece_service", "referencedata");
+                    b.ToTable("ece_service","referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceServiceDateRangedParameter", b =>
@@ -515,7 +742,7 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasIndex("RefOrganisationId")
                         .HasName("ix_ece_service_date_ranged_parameters_ref_organisation_id");
 
-                    b.ToTable("ece_service_date_ranged_parameter", "referencedata");
+                    b.ToTable("ece_service_date_ranged_parameter","referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.Lookup", b =>
@@ -557,7 +784,7 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasIndex("LookupTypeId")
                         .HasName("ix_lookups_lookup_type_id");
 
-                    b.ToTable("lookup", "referencedata");
+                    b.ToTable("lookup","referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.LookupType", b =>
@@ -576,7 +803,17 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasKey("Id")
                         .HasName("pk_lookup_types");
 
-                    b.ToTable("lookup_type", "referencedata");
+                    b.ToTable("lookup_type","referencedata");
+                });
+
+            modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceLicencingDetailDateRangedParameter", b =>
+                {
+                    b.HasOne("MoE.ECE.Domain.Model.ReferenceData.EceService", "EceService")
+                        .WithMany("EceLicencingDetailDateRangedParameters")
+                        .HasForeignKey("RefOrganisationId")
+                        .HasConstraintName("fk_ece_licencing_detail_date_ranged_parameter_ece_services_ref")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceOperatingSession", b =>
@@ -584,7 +821,7 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasOne("MoE.ECE.Domain.Model.ReferenceData.EceService", "EceService")
                         .WithMany("OperatingSessions")
                         .HasForeignKey("RefOrganisationId")
-                        .HasConstraintName("fk_ece_operating_session_ece_services_ece_service_ref_organisa")
+                        .HasConstraintName("fk_ece_operating_session_ece_services_ref_organisation_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -595,6 +832,16 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         .WithMany("EceOperatingSessionDateRangedParameters")
                         .HasForeignKey("LicencingDetailHistoryId")
                         .HasConstraintName("fk_ece_operating_session_date_ranged_parameters_ece_licencing_")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceServiceDateRangedParameter", b =>
+                {
+                    b.HasOne("MoE.ECE.Domain.Model.ReferenceData.EceService", "EceService")
+                        .WithMany("EceServiceDateRangedParameters")
+                        .HasForeignKey("RefOrganisationId")
+                        .HasConstraintName("fk_ece_service_date_ranged_parameters_ece_services_ece_service")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

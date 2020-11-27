@@ -14,10 +14,10 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
 {
     public class ServiceBusPublisher : IServiceBus
     {
-        private readonly ILogger<ServiceBusConsumer> _logger;
+        private readonly ILogger<ServiceBusPublisher> _logger;
         private readonly string _serviceBusConnectionString;
 
-        public ServiceBusPublisher(IOptions<ConnectionStrings> options, ILogger<ServiceBusConsumer> logger)
+        public ServiceBusPublisher(IOptions<ConnectionStrings> options, ILogger<ServiceBusPublisher> logger)
         {
             _logger = logger;
             _serviceBusConnectionString = options.Value.ServiceBus;
@@ -46,10 +46,10 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
 
         private void Log(IMessageWrapper message)
         {
-            const string formattedMessage = "[Service Bus Message Published] :{objectType} {objectJson}";
+            const string formattedMessage = "[Service Bus Message Published] :{objectType} {objectJson} {cqrsType}";
 
             _logger.LogDebug(formattedMessage, message.PayloadType.Name,
-                JsonSerializer.Serialize(message.Payload, new JsonSerializerOptions {WriteIndented = true}));
+                JsonSerializer.Serialize(message.Payload, new JsonSerializerOptions {WriteIndented = true}), "Integration Event");
         }
     }
 }

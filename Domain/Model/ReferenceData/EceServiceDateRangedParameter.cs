@@ -2,7 +2,7 @@
 
 namespace MoE.ECE.Domain.Model.ReferenceData
 {
-    public class EceServiceDateRangedParameter
+    public class EceServiceDateRangedParameter 
     {
         public int HistoryId { get; set; }
         public int RefOrganisationId { get; set; }
@@ -15,5 +15,7 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public DateTimeOffset? EffectiveToDate { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset ModifiedDate { get; set; }
+
+        public virtual EceService EceService { get; set; } = null!;
     }
 }

@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using MoE.ECE.Domain.Infrastructure.Services.Opa;
 using MoE.ECE.Web.Infrastructure.Extensions;
 using MoE.ECE.Web.Infrastructure.Opa;
-using OpaSettings = MoE.ECE.Web.Infrastructure.Settings.OpaSettings;
 
 namespace MoE.ECE.Web.Bootstrap
 {
@@ -17,9 +16,10 @@ namespace MoE.ECE.Web.Bootstrap
         {
             services
                 .ConfigureFor<OpaSettings>(Configuration);
+
             services.AddHttpClient<IOpaClient, OpaClient>();
             services.AddHttpClient();
-            services.AddScoped<IOpaTokenGenerator, OpaTokenGenerator>();
+            services.AddSingleton<IOpaTokenGenerator, OpaTokenGenerator>();
         }
     }
 }
