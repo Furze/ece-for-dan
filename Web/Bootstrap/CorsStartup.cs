@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using MoE.ECE.Web.Infrastructure.Extensions;
 using MoE.ECE.Web.Infrastructure.Settings;
@@ -11,46 +12,93 @@ namespace MoE.ECE.Web.Bootstrap
         public override void ConfigureServices(IServiceCollection services)
         {
             var settings = Configuration.BindFor<CorsSettings>();
+
             services.AddCors(options =>
             {
                 options.AddPolicy(
                     "default",
                     builder =>
                     {
-                        if (settings.ExposedHeaders != null) builder.WithExposedHeaders(settings.ExposedHeaders);
+                        ConfigureExposedHeaders(settings, builder);
 
-                        if (settings.AllowedHeaders != null)
-                        {
-                            if (settings.AllowedHeaders.Contains("*"))
-                                builder.AllowAnyHeader();
-                            else
-                                builder.WithHeaders(settings.AllowedHeaders);
-                        }
+                        ConfigureAllowedHeaders(settings, builder);
 
-                        if (settings.AllowedMethods != null)
-                        {
-                            if (settings.AllowedMethods.Contains("*"))
-                                builder.AllowAnyMethod();
-                            else
-                                builder.WithMethods(settings.AllowedMethods);
-                        }
+                        ConfigureAllowedMethods(settings, builder);
 
-                        if (settings.AllowedOrigins != null)
-                        {
-                            if (settings.AllowedOrigins.Contains("*"))
-                                builder.AllowAnyOrigin();
-                            else
-                                builder.WithOrigins(settings.AllowedOrigins);
-                        }
+                        ConfigureAllowedOrigins(settings, builder);
 
-                        if (settings.AllowCredentials) builder.AllowCredentials();
+                        ConfigureAllowedCredentials(settings, builder);
                     });
             });
         }
 
-        public override void Configure(IApplicationBuilder app)
+        public override void Configure(IApplicationBuilder app) => app.UseCors("default");
+        
+        private static void ConfigureExposedHeaders(CorsSettings settings, CorsPolicyBuilder builder)
         {
-            app.UseCors("default");
+            if (settings.ExposedHeaders != null)
+            {
+                builder.WithExposedHeaders(settings.ExposedHeaders);
+            }
+        }
+
+        private static void ConfigureAllowedCredentials(CorsSettings settings, CorsPolicyBuilder builder)
+        {
+            if (settings.AllowCredentials)
+            {
+                builder.AllowCredentials();
+            }
+        }
+
+        private static void ConfigureAllowedOrigins(CorsSettings settings, CorsPolicyBuilder builder)
+        {
+            if (settings.AllowedOrigins == null)
+            {
+                return;
+            }
+
+            if (settings.AllowedOrigins.Contains("*"))
+            {
+                builder.AllowAnyOrigin();
+            }
+            else
+            {
+                builder.WithOrigins(settings.AllowedOrigins);
+            }
+        }
+
+        private static void ConfigureAllowedMethods(CorsSettings settings, CorsPolicyBuilder builder)
+        {
+            if (settings.AllowedMethods == null)
+            {
+                return;
+            }
+
+            if (settings.AllowedMethods.Contains("*"))
+            {
+                builder.AllowAnyMethod();
+            }
+            else
+            {
+                builder.WithMethods(settings.AllowedMethods);
+            }
+        }
+
+        private static void ConfigureAllowedHeaders(CorsSettings settings, CorsPolicyBuilder builder)
+        {
+            if (settings.AllowedHeaders == null)
+            {
+                return;
+            }
+
+            if (settings.AllowedHeaders.Contains("*"))
+            {
+                builder.AllowAnyHeader();
+            }
+            else
+            {
+                builder.WithHeaders(settings.AllowedHeaders);
+            }
         }
     }
 }
