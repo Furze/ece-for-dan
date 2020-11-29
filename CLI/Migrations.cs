@@ -16,6 +16,9 @@ namespace MoE.ECE.CLI
 
         public static IEnumerable<string> GetMigrationFiles(string migrationDirectory)
         {
+            if(Directory.Exists(migrationDirectory) == false)
+                Console.WriteLine($"Directory does not exist: '{migrationDirectory}'");
+            
             return Directory.GetFiles(migrationDirectory)
                 // ReSharper disable once ConstantNullCoalescingCondition
                 .Select(f => Path.GetFileName(f) ?? "")
