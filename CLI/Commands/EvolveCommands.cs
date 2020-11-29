@@ -152,7 +152,7 @@ namespace MoE.ECE.CLI.Commands
             return evolve;
         }
 
-        private bool NoMigrationDirectoryPassed(string? migrationsDirectory)
+        private static bool NoMigrationDirectoryPassed(string? migrationsDirectory)
         {
             if (migrationsDirectory != null)
                 return false;
