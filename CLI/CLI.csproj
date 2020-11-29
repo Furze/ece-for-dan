@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Web\Web.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="migrations" />
     <Folder Include="migrations\drop\" />
     <Folder Include="Data\" />
   </ItemGroup>
@@ -36,6 +37,9 @@
     <None Remove="Properties\launchSettings.json" />
     <Content Include="Properties\launchSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="migrations\*.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 </Project>
