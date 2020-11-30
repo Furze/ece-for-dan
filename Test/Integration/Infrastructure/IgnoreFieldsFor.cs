@@ -29,5 +29,13 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                 .IgnoreFields("Data.[*].RevisionDate")
                 .IgnoreFields("Data.[*].RequestId");
         }
+
+        public static MatchOptions CollectionModelRollModel(MatchOptions options)
+        {
+            return options
+                .IgnoreFields("Data.[*].Id")
+                .IgnoreFields("Data.[*].BusinessEntityId")
+                .IgnoreFields("Data.[*].Received");
+        }
     }
 }

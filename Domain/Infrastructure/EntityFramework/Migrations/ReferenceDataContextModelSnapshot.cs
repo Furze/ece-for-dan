@@ -2,14 +2,12 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MoE.ECE.Domain.Infrastructure.EntityFramework;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(ReferenceDataContext))]
-    partial class ReferenceDataContextModelSnapshot : ModelSnapshot
+    class ReferenceDataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

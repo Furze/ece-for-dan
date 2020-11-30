@@ -2,10 +2,10 @@
 {
     public class PaginationModel
     {
-        public int PageSize { get; set; }
+        public long PageSize { get; set; }
 
-        public int PageNumber { get; set; }
+        public long PageNumber { get; set; }
 
-        public int Count { get; set; }
+        public long Count { get; set; }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace MoE.ECE.Domain.Read.Model
+﻿using System.Linq;
+using Marten.Pagination;
+
+namespace MoE.ECE.Domain.Read.Model
 {
     public class CollectionModel<T>
     {
@@ -18,6 +21,18 @@
             };
 
             Data = data;
+        }
+        
+        public CollectionModel(IPagedList<T> data)
+        {
+            Pagination = new PaginationModel
+            {
+                PageSize = data.PageSize,
+                PageNumber = data.PageNumber,
+                Count = data.TotalItemCount
+            };
+
+            Data = data.ToArray();
         }
 
         public T[] Data { get; set; }

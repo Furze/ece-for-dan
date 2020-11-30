@@ -20,7 +20,7 @@ using ServiceProfile = MoE.ECE.Domain.Services.Opa.Request.ServiceProfile;
 
 namespace MoE.ECE.Domain.Services.Opa.Mappings.Converters
 {
-    public partial class OperationalFundingToOpaConverter : ITypeConverter<CreateOperationalFundingRequest,
+    public class OperationalFundingToOpaConverter : ITypeConverter<CreateOperationalFundingRequest,
         OpaRequest<OperationalFundingBaseRequest>>
     {
         private readonly IDocumentSession _documentSession;
