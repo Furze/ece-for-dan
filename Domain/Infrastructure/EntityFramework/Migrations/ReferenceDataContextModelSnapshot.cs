@@ -84,7 +84,7 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasIndex("RefOrganisationId")
                         .HasName("ix_ece_licencing_detail_date_ranged_parameters_ref_organisatio");
 
-                    b.ToTable("ece_licencing_detail_date_ranged_parameter","referencedata");
+                    b.ToTable("ece_licencing_detail_date_ranged_parameter", "referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceOperatingSession", b =>
@@ -153,7 +153,7 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasIndex("RefOrganisationId")
                         .HasName("ix_ece_operating_sessions_ref_organisation_id");
 
-                    b.ToTable("ece_operating_session","referencedata");
+                    b.ToTable("ece_operating_session", "referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceOperatingSessionDateRangedParameter", b =>
@@ -229,7 +229,7 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasKey("LicencingDetailHistoryId", "OperatingSessionId")
                         .HasName("pk_ece_operating_session_date_ranged_parameters");
 
-                    b.ToTable("ece_operating_session_date_ranged_parameter","referencedata");
+                    b.ToTable("ece_operating_session_date_ranged_parameter", "referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceService", b =>
@@ -685,7 +685,7 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasKey("RefOrganisationId")
                         .HasName("pk_ece_services");
 
-                    b.ToTable("ece_service","referencedata");
+                    b.ToTable("ece_service", "referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceServiceDateRangedParameter", b =>
@@ -740,7 +740,7 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasIndex("RefOrganisationId")
                         .HasName("ix_ece_service_date_ranged_parameters_ref_organisation_id");
 
-                    b.ToTable("ece_service_date_ranged_parameter","referencedata");
+                    b.ToTable("ece_service_date_ranged_parameter", "referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.Lookup", b =>
@@ -782,7 +782,7 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasIndex("LookupTypeId")
                         .HasName("ix_lookups_lookup_type_id");
 
-                    b.ToTable("lookup","referencedata");
+                    b.ToTable("lookup", "referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.LookupType", b =>
@@ -801,7 +801,7 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasKey("Id")
                         .HasName("pk_lookup_types");
 
-                    b.ToTable("lookup_type","referencedata");
+                    b.ToTable("lookup_type", "referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceLicencingDetailDateRangedParameter", b =>
