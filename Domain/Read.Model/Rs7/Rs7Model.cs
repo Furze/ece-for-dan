@@ -16,7 +16,7 @@ namespace MoE.ECE.Domain.Read.Model.Rs7
 
         [ReadOnly(true)]
         public int? OrganisationId { get; set; }
-
+        
         [ReadOnly(true)]
         [JsonConverter(typeof(JsonNoEnumConverter<FundingPeriodMonth>))]
         public FundingPeriodMonth FundingPeriod { get; set; }
