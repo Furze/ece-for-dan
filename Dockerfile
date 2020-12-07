@@ -10,6 +10,9 @@ COPY . .
 ARG buildno
 ARG ERSNUGETFEED_ACCESSTOKEN
 
+# Fix for 401 timeout issue against nuget feed (Support case #120110523002341)
+ENV NUGET_PLUGIN_HANDSHAKE_TIMEOUT_IN_SECONDS 120
+ENV NUGET_PLUGIN_REQUEST_TIMEOUT_IN_SECONDS 120
 ENV VSS_NUGET_EXTERNAL_FEED_ENDPOINTS \
     "{\"endpointCredentials\": [{\"endpoint\":\"https://moeedunz.pkgs.visualstudio.com/ERS/_packaging/api-library/nuget/v3/index.json\", \"username\":\"docker\", \"password\":\"${ERSNUGETFEED_ACCESSTOKEN}\"}]}"
 
