@@ -26,18 +26,21 @@ namespace Events.Integration.Protobuf.Entitlement {
           string.Concat(
             "CidlbnRpdGxlbWVudC9FbnRpdGxlbWVudENhbGN1bGF0ZWQucHJvdG8aFnBy",
             "b3RvYnVmLW5ldC9iY2wucHJvdG8aH3NoYXJlZC9GdW5kaW5nUGVyaW9kTW9u",
-            "dGgucHJvdG8ihAIKFUVudGl0bGVtZW50Q2FsY3VsYXRlZBIjChBCdXNpbmVz",
+            "dGgucHJvdG8iygIKFUVudGl0bGVtZW50Q2FsY3VsYXRlZBIjChBCdXNpbmVz",
             "c0VudGl0eUlkGAEgASgLMgkuYmNsLkd1aWQSFgoOT3JnYW5pc2F0aW9uSWQY",
             "AiABKAUSEQoJUmVxdWVzdElkGAMgASgJEhoKEkJ1c2luZXNzRW50aXR5VHlw",
             "ZRgEIAEoCRIvChJGdW5kaW5nUGVyaW9kTW9udGgYBSABKA4yEy5GdW5kaW5n",
             "UGVyaW9kTW9udGgSEwoLRnVuZGluZ1llYXIYBiABKAUSFgoOUmV2aXNpb25O",
             "dW1iZXIYByABKAUSIQoLVG90YWxXYXNoVXAYCCABKAsyDC5iY2wuRGVjaW1h",
-            "bEIqqgInRXZlbnRzLkludGVncmF0aW9uLlByb3RvYnVmLkVudGl0bGVtZW50",
-            "YgZwcm90bzM="));
+            "bBIpCgpFeGNlcHRpb25zGAkgAygLMhUuRW50aXRsZW1lbnRFeGNlcHRpb24S",
+            "GQoRRnVuZGluZ1BlcmlvZFllYXIYCiABKAUiFgoURW50aXRsZW1lbnRFeGNl",
+            "cHRpb25CKqoCJ0V2ZW50cy5JbnRlZ3JhdGlvbi5Qcm90b2J1Zi5FbnRpdGxl",
+            "bWVudGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::ProtoBuf.Bcl.BclReflection.Descriptor, global::Events.Integration.Protobuf.Shared.FundingPeriodMonthReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Entitlement.EntitlementCalculated), global::Events.Integration.Protobuf.Entitlement.EntitlementCalculated.Parser, new[]{ "BusinessEntityId", "OrganisationId", "RequestId", "BusinessEntityType", "FundingPeriodMonth", "FundingYear", "RevisionNumber", "TotalWashUp" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Entitlement.EntitlementCalculated), global::Events.Integration.Protobuf.Entitlement.EntitlementCalculated.Parser, new[]{ "BusinessEntityId", "OrganisationId", "RequestId", "BusinessEntityType", "FundingPeriodMonth", "FundingYear", "RevisionNumber", "TotalWashUp", "Exceptions", "FundingPeriodYear" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Entitlement.EntitlementException), global::Events.Integration.Protobuf.Entitlement.EntitlementException.Parser, null, null, null, null, null)
           }));
     }
     #endregion
@@ -84,6 +87,8 @@ namespace Events.Integration.Protobuf.Entitlement {
       fundingYear_ = other.fundingYear_;
       revisionNumber_ = other.revisionNumber_;
       totalWashUp_ = other.totalWashUp_ != null ? other.totalWashUp_.Clone() : null;
+      exceptions_ = other.exceptions_.Clone();
+      fundingPeriodYear_ = other.fundingPeriodYear_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -180,6 +185,27 @@ namespace Events.Integration.Protobuf.Entitlement {
       }
     }
 
+    /// <summary>Field number for the "Exceptions" field.</summary>
+    public const int ExceptionsFieldNumber = 9;
+    private static readonly pb::FieldCodec<global::Events.Integration.Protobuf.Entitlement.EntitlementException> _repeated_exceptions_codec
+        = pb::FieldCodec.ForMessage(74, global::Events.Integration.Protobuf.Entitlement.EntitlementException.Parser);
+    private readonly pbc::RepeatedField<global::Events.Integration.Protobuf.Entitlement.EntitlementException> exceptions_ = new pbc::RepeatedField<global::Events.Integration.Protobuf.Entitlement.EntitlementException>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::Events.Integration.Protobuf.Entitlement.EntitlementException> Exceptions {
+      get { return exceptions_; }
+    }
+
+    /// <summary>Field number for the "FundingPeriodYear" field.</summary>
+    public const int FundingPeriodYearFieldNumber = 10;
+    private int fundingPeriodYear_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int FundingPeriodYear {
+      get { return fundingPeriodYear_; }
+      set {
+        fundingPeriodYear_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as EntitlementCalculated);
@@ -201,6 +227,8 @@ namespace Events.Integration.Protobuf.Entitlement {
       if (FundingYear != other.FundingYear) return false;
       if (RevisionNumber != other.RevisionNumber) return false;
       if (!object.Equals(TotalWashUp, other.TotalWashUp)) return false;
+      if(!exceptions_.Equals(other.exceptions_)) return false;
+      if (FundingPeriodYear != other.FundingPeriodYear) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -215,6 +243,8 @@ namespace Events.Integration.Protobuf.Entitlement {
       if (FundingYear != 0) hash ^= FundingYear.GetHashCode();
       if (RevisionNumber != 0) hash ^= RevisionNumber.GetHashCode();
       if (totalWashUp_ != null) hash ^= TotalWashUp.GetHashCode();
+      hash ^= exceptions_.GetHashCode();
+      if (FundingPeriodYear != 0) hash ^= FundingPeriodYear.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -263,6 +293,11 @@ namespace Events.Integration.Protobuf.Entitlement {
         output.WriteRawTag(66);
         output.WriteMessage(TotalWashUp);
       }
+      exceptions_.WriteTo(output, _repeated_exceptions_codec);
+      if (FundingPeriodYear != 0) {
+        output.WriteRawTag(80);
+        output.WriteInt32(FundingPeriodYear);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -304,6 +339,11 @@ namespace Events.Integration.Protobuf.Entitlement {
         output.WriteRawTag(66);
         output.WriteMessage(TotalWashUp);
       }
+      exceptions_.WriteTo(ref output, _repeated_exceptions_codec);
+      if (FundingPeriodYear != 0) {
+        output.WriteRawTag(80);
+        output.WriteInt32(FundingPeriodYear);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -336,6 +376,10 @@ namespace Events.Integration.Protobuf.Entitlement {
       }
       if (totalWashUp_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(TotalWashUp);
+      }
+      size += exceptions_.CalculateSize(_repeated_exceptions_codec);
+      if (FundingPeriodYear != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(FundingPeriodYear);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -377,6 +421,10 @@ namespace Events.Integration.Protobuf.Entitlement {
           TotalWashUp = new global::ProtoBuf.Bcl.Decimal();
         }
         TotalWashUp.MergeFrom(other.TotalWashUp);
+      }
+      exceptions_.Add(other.exceptions_);
+      if (other.FundingPeriodYear != 0) {
+        FundingPeriodYear = other.FundingPeriodYear;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -428,6 +476,14 @@ namespace Events.Integration.Protobuf.Entitlement {
               TotalWashUp = new global::ProtoBuf.Bcl.Decimal();
             }
             input.ReadMessage(TotalWashUp);
+            break;
+          }
+          case 74: {
+            exceptions_.AddEntriesFrom(input, _repeated_exceptions_codec);
+            break;
+          }
+          case 80: {
+            FundingPeriodYear = input.ReadInt32();
             break;
           }
         }
@@ -482,6 +538,150 @@ namespace Events.Integration.Protobuf.Entitlement {
             input.ReadMessage(TotalWashUp);
             break;
           }
+          case 74: {
+            exceptions_.AddEntriesFrom(ref input, _repeated_exceptions_codec);
+            break;
+          }
+          case 80: {
+            FundingPeriodYear = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class EntitlementException : pb::IMessage<EntitlementException>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<EntitlementException> _parser = new pb::MessageParser<EntitlementException>(() => new EntitlementException());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<EntitlementException> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Events.Integration.Protobuf.Entitlement.EntitlementCalculatedReflection.Descriptor.MessageTypes[1]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public EntitlementException() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public EntitlementException(EntitlementException other) : this() {
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public EntitlementException Clone() {
+      return new EntitlementException(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as EntitlementException);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(EntitlementException other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(EntitlementException other) {
+      if (other == null) {
+        return;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
         }
       }
     }

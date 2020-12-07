@@ -43,7 +43,9 @@ namespace MoE.ECE.Domain.Integration
                 .Map(d => d.Over1, s => s.TwoAndOver);
 
             CreateMap<OperationalFundingRequestCreated, EntitlementCalculated>()
-                .Map(d => d.BusinessEntityType, s => Constants.BusinessEntityTypes.Rs7);
+                .Map(d => d.BusinessEntityType, s => Constants.BusinessEntityTypes.Rs7)
+                .Ignore(d => d.FundingPeriodYear)
+                .Ignore(d => d.Exceptions);
         }
     }
 }
