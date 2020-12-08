@@ -7,9 +7,9 @@
         "Year": 2020,
         "AllDayCertificatedTeacherHours": 0,
         "AllDayNonCertificatedTeacherHours": 0,
-        "SessionalCertificatedTeacherHours": 12,
-        "SessionalNonCertificatedTeacherHours": 24,
-        "TotalWorkingDays": 12,
+        "SessionalCertificatedTeacherHours": 8,
+        "SessionalNonCertificatedTeacherHours": 16,
+        "TotalWorkingDays": 8,
         "WashUpPlusTen": 0.0,
         "WashUpUnderTwo": 0.0,
         "WashUpTwoAndOver": 0.0,
@@ -25,32 +25,32 @@
           {
             "SessionType": "Sessional",
             "FundingComponentType": "UnderTwo",
-            "StartDate": "2020-02-03T00:00:00",
+            "StartDate": "2020-02-06T00:00:00",
             "Amount": 0.0,
             "Rate": 0.0,
             "RateName": "",
-            "FundedChildHours": 216,
-            "OperatingDays": 12
+            "FundedChildHours": 144,
+            "OperatingDays": 8
           },
           {
             "SessionType": "Sessional",
             "FundingComponentType": "TwoAndOver",
-            "StartDate": "2020-02-03T00:00:00",
+            "StartDate": "2020-02-06T00:00:00",
             "Amount": 0.0,
             "Rate": 0.0,
             "RateName": "",
-            "FundedChildHours": 12,
-            "OperatingDays": 12
+            "FundedChildHours": 8,
+            "OperatingDays": 8
           },
           {
             "SessionType": "Sessional",
             "FundingComponentType": "PlusTen",
-            "StartDate": "2020-02-03T00:00:00",
+            "StartDate": "2020-02-06T00:00:00",
             "Amount": 0.0,
             "Rate": 0.0,
             "RateName": "",
-            "FundedChildHours": 276,
-            "OperatingDays": 12
+            "FundedChildHours": 184,
+            "OperatingDays": 8
           }
         ]
       },
@@ -60,9 +60,9 @@
         "Year": 2020,
         "AllDayCertificatedTeacherHours": 0,
         "AllDayNonCertificatedTeacherHours": 0,
-        "SessionalCertificatedTeacherHours": 13,
-        "SessionalNonCertificatedTeacherHours": 26,
-        "TotalWorkingDays": 13,
+        "SessionalCertificatedTeacherHours": 8,
+        "SessionalNonCertificatedTeacherHours": 16,
+        "TotalWorkingDays": 8,
         "WashUpPlusTen": 0.0,
         "WashUpUnderTwo": 0.0,
         "WashUpTwoAndOver": 0.0,
@@ -78,32 +78,32 @@
           {
             "SessionType": "Sessional",
             "FundingComponentType": "UnderTwo",
-            "StartDate": "2020-03-02T00:00:00",
+            "StartDate": "2020-03-05T00:00:00",
             "Amount": 0.0,
             "Rate": 0.0,
             "RateName": "",
-            "FundedChildHours": 234,
-            "OperatingDays": 13
+            "FundedChildHours": 144,
+            "OperatingDays": 8
           },
           {
             "SessionType": "Sessional",
             "FundingComponentType": "TwoAndOver",
-            "StartDate": "2020-03-02T00:00:00",
+            "StartDate": "2020-03-05T00:00:00",
             "Amount": 0.0,
             "Rate": 0.0,
             "RateName": "",
-            "FundedChildHours": 13,
-            "OperatingDays": 13
+            "FundedChildHours": 8,
+            "OperatingDays": 8
           },
           {
             "SessionType": "Sessional",
             "FundingComponentType": "PlusTen",
-            "StartDate": "2020-03-02T00:00:00",
+            "StartDate": "2020-03-05T00:00:00",
             "Amount": 0.0,
             "Rate": 0.0,
             "RateName": "",
-            "FundedChildHours": 299,
-            "OperatingDays": 13
+            "FundedChildHours": 184,
+            "OperatingDays": 8
           }
         ]
       },
@@ -113,9 +113,9 @@
         "Year": 2020,
         "AllDayCertificatedTeacherHours": 0,
         "AllDayNonCertificatedTeacherHours": 0,
-        "SessionalCertificatedTeacherHours": 13,
-        "SessionalNonCertificatedTeacherHours": 26,
-        "TotalWorkingDays": 13,
+        "SessionalCertificatedTeacherHours": 9,
+        "SessionalNonCertificatedTeacherHours": 18,
+        "TotalWorkingDays": 9,
         "WashUpPlusTen": 0.0,
         "WashUpUnderTwo": 0.0,
         "WashUpTwoAndOver": 0.0,
@@ -131,32 +131,32 @@
           {
             "SessionType": "Sessional",
             "FundingComponentType": "UnderTwo",
-            "StartDate": "2020-04-01T00:00:00",
+            "StartDate": "2020-04-02T00:00:00",
             "Amount": 0.0,
             "Rate": 0.0,
             "RateName": "",
-            "FundedChildHours": 234,
-            "OperatingDays": 13
+            "FundedChildHours": 162,
+            "OperatingDays": 9
           },
           {
             "SessionType": "Sessional",
             "FundingComponentType": "TwoAndOver",
-            "StartDate": "2020-04-01T00:00:00",
+            "StartDate": "2020-04-02T00:00:00",
             "Amount": 0.0,
             "Rate": 0.0,
             "RateName": "",
-            "FundedChildHours": 13,
-            "OperatingDays": 13
+            "FundedChildHours": 9,
+            "OperatingDays": 9
           },
           {
             "SessionType": "Sessional",
             "FundingComponentType": "PlusTen",
-            "StartDate": "2020-04-01T00:00:00",
+            "StartDate": "2020-04-02T00:00:00",
             "Amount": 0.0,
             "Rate": 0.0,
             "RateName": "",
-            "FundedChildHours": 299,
-            "OperatingDays": 13
+            "FundedChildHours": 207,
+            "OperatingDays": 9
           }
         ]
       },
@@ -166,9 +166,9 @@
         "Year": 2020,
         "AllDayCertificatedTeacherHours": 0,
         "AllDayNonCertificatedTeacherHours": 0,
-        "SessionalCertificatedTeacherHours": 13,
-        "SessionalNonCertificatedTeacherHours": 26,
-        "TotalWorkingDays": 13,
+        "SessionalCertificatedTeacherHours": 9,
+        "SessionalNonCertificatedTeacherHours": 18,
+        "TotalWorkingDays": 9,
         "WashUpPlusTen": 0.0,
         "WashUpUnderTwo": 0.0,
         "WashUpTwoAndOver": 0.0,
@@ -188,8 +188,8 @@
             "Amount": 0.0,
             "Rate": 0.0,
             "RateName": "",
-            "FundedChildHours": 234,
-            "OperatingDays": 13
+            "FundedChildHours": 162,
+            "OperatingDays": 9
           },
           {
             "SessionType": "Sessional",
@@ -198,8 +198,8 @@
             "Amount": 0.0,
             "Rate": 0.0,
             "RateName": "",
-            "FundedChildHours": 13,
-            "OperatingDays": 13
+            "FundedChildHours": 9,
+            "OperatingDays": 9
           },
           {
             "SessionType": "Sessional",
@@ -208,15 +208,15 @@
             "Amount": 0.0,
             "Rate": 0.0,
             "RateName": "",
-            "FundedChildHours": 299,
-            "OperatingDays": 13
+            "FundedChildHours": 207,
+            "OperatingDays": 9
           }
         ]
       }
     ],
-    "OrganisationId": 5297,
-    "BusinessEntityId": "f542e39b-b57d-47d5-b22f-a8f5ced6535f",
-    "RequestId": "138004",
+    "OrganisationId": 10007,
+    "BusinessEntityId": "b22238b3-06f1-453d-ad42-9bd7c2608114",
+    "RequestId": "141122",
     "FundingPeriodMonth": "July",
     "FundingYear": 2021,
     "RevisionNumber": 1,
@@ -227,14 +227,14 @@
         "MonthName": "July 2020",
         "MonthNumber": 7,
         "Year": 2020,
-        "ParentLedWorkingDays": 5,
-        "AllDayWorkingDays": null,
+        "ParentLedWorkingDays": null,
+        "AllDayWorkingDays": 0,
         "SessionalWorkingDays": 0,
         "AmountPayablePlusTen": 0.0,
         "AmountPayableUnderTwo": 0.0,
         "AmountPayableTwoAndOver": 0.0,
         "AmountPayableTwentyHours": 0.0,
-        "TotalDays": 5,
+        "TotalDays": 0,
         "TotalAdvance": 0.0,
         "FundingComponents": []
       },
@@ -242,14 +242,14 @@
         "MonthName": "August 2020",
         "MonthNumber": 8,
         "Year": 2020,
-        "ParentLedWorkingDays": 5,
-        "AllDayWorkingDays": null,
+        "ParentLedWorkingDays": null,
+        "AllDayWorkingDays": 0,
         "SessionalWorkingDays": 0,
         "AmountPayablePlusTen": 0.0,
         "AmountPayableUnderTwo": 0.0,
         "AmountPayableTwoAndOver": 0.0,
         "AmountPayableTwentyHours": 0.0,
-        "TotalDays": 5,
+        "TotalDays": 0,
         "TotalAdvance": 0.0,
         "FundingComponents": []
       },
@@ -257,14 +257,14 @@
         "MonthName": "September 2020",
         "MonthNumber": 9,
         "Year": 2020,
-        "ParentLedWorkingDays": 5,
-        "AllDayWorkingDays": null,
+        "ParentLedWorkingDays": null,
+        "AllDayWorkingDays": 0,
         "SessionalWorkingDays": 0,
         "AmountPayablePlusTen": 0.0,
         "AmountPayableUnderTwo": 0.0,
         "AmountPayableTwoAndOver": 0.0,
         "AmountPayableTwentyHours": 0.0,
-        "TotalDays": 5,
+        "TotalDays": 0,
         "TotalAdvance": 0.0,
         "FundingComponents": []
       },
@@ -272,20 +272,25 @@
         "MonthName": "October 2020",
         "MonthNumber": 10,
         "Year": 2020,
-        "ParentLedWorkingDays": 5,
-        "AllDayWorkingDays": null,
+        "ParentLedWorkingDays": null,
+        "AllDayWorkingDays": 0,
         "SessionalWorkingDays": 0,
         "AmountPayablePlusTen": 0.0,
         "AmountPayableUnderTwo": 0.0,
         "AmountPayableTwoAndOver": 0.0,
         "AmountPayableTwentyHours": 0.0,
-        "TotalDays": 5,
+        "TotalDays": 0,
         "TotalAdvance": 0.0,
         "FundingComponents": []
       }
     ],
     "MatchingAdvanceMonths": [],
     "Equity": null,
-    "BusinessExceptions": []
+    "BusinessExceptions": [
+      {
+        "Key": "FundingWithheld",
+        "Description": "This service is not funded"
+      }
+    ]
   }
 ]

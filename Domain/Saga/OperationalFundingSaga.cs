@@ -8,6 +8,7 @@ using Microsoft.Extensions.Internal;
 using MoE.ECE.Domain.Command;
 using MoE.ECE.Domain.Event.OperationalFunding;
 using MoE.ECE.Domain.Exceptions;
+using MoE.ECE.Domain.Infrastructure.EntityFramework;
 using MoE.ECE.Domain.Infrastructure.Services.Opa;
 using MoE.ECE.Domain.Model.OperationalFunding;
 using MoE.ECE.Domain.Services;
@@ -23,18 +24,20 @@ namespace MoE.ECE.Domain.Saga
 
         private readonly IDocumentSession _documentSession;
         private readonly IMapper _mapper;
+        private readonly ReferenceDataContext _referenceDataContext;
         private readonly IOperationalFundingCalculator _operationalFundingCalculator;
         private readonly ISystemClock _systemClock;
 
         public OperationalFundingSaga(IDocumentSession documentSession, ICqrs cqrs,
             IOperationalFundingCalculator operationalFundingCalculator,
-            ISystemClock systemClock, IMapper mapper)
+            ISystemClock systemClock, IMapper mapper, ReferenceDataContext referenceDataContext)
         {
             _documentSession = documentSession;
             _cqrs = cqrs;
             _operationalFundingCalculator = operationalFundingCalculator;
             _systemClock = systemClock;
             _mapper = mapper;
+            _referenceDataContext = referenceDataContext;
         }
 
         public async Task<Unit> Handle(CreateOperationalFundingRequest command, CancellationToken cancellationToken)
@@ -59,6 +62,8 @@ namespace MoE.ECE.Domain.Saga
             operationalFunding.OpaRequest = operationalFundingOpaRequest;
             operationalFunding.OpaResponse = operationalFundingOpaResponse;
 
+            await AddBusinessExceptionsAsync(operationalFunding);
+            
             _documentSession.Insert(operationalFunding);
 
             await _documentSession.SaveChangesAsync(cancellationToken);
@@ -68,6 +73,21 @@ namespace MoE.ECE.Domain.Saga
             await _cqrs.RaiseEventAsync(domainEvent, cancellationToken);
 
             return Unit.Value;
+        }
+
+        private async Task AddBusinessExceptionsAsync(OperationalFundingRequest operationalFunding)
+        {
+            var organisation = await _referenceDataContext.EceServices.FindAsync(operationalFunding.OrganisationId);
+
+            if (organisation.IsFunded == false)
+            {
+                operationalFunding.AddBusinessException<FundingWithheldBusinessException>();
+            }
+
+            if (organisation.InstallmentPayments == true)
+            {
+                operationalFunding.AddBusinessException<ServiceMonthlyFundingBusinessException>();
+            }
         }
     }
 }

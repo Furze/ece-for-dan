@@ -37,7 +37,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
         protected override void Arrange()
         {
             Given
-                .A_rs7_has_been_created(setup =>
+                .A_rs7_skeleton_has_been_created(setup =>
                 {
                     setup.OrganisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId;
                     setup.FundingPeriod = FundingPeriodMonth.July;

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Marten;
+using MoE.ECE.Domain.Infrastructure.Extensions;
 using MoE.ECE.Domain.Infrastructure.Filters;
 using MoE.ECE.Domain.Model.OperationalFunding;
 using MoE.ECE.Domain.Read.Model.OperationalFunding;
@@ -36,51 +37,42 @@ namespace MoE.ECE.Domain.Query
                     .Where(request => request.RevisionNumber == query.RevisionNumber);
 
             var operationalFundingRequests = await operationalFundingRequestsQuery
+                .OrderByDescending(request => request.Id)
                 .ToListAsync(cancellationToken);
 
             if (operationalFundingRequests.Count == 0) return new List<OperationalFundingRequestModel>();
 
-            var operationalFundingRequestModel = operationalFundingRequests
-                .OrderByDescending(request => request.Id)
-                .Select(request => new OperationalFundingRequestModel
-                {
-                    RequestId = request.RequestId,
-                    BusinessEntityId = request.BusinessEntityId,
-                    RevisionNumber = request.RevisionNumber,
-                    OrganisationId = request.OrganisationId,
-                    FundingYear = request.FundingYear,
-                    FundingPeriodMonth = request.FundingPeriodMonth,
-                    TotalWashUp = request.TotalWashUp,
-                    TotalAdvance = request.TotalAdvance,
-                    AdvanceMonths = _mapper.Map<ICollection<AdvanceMonthFundingComponentModel>>(request.AdvanceMonths),
-                    MatchingAdvanceMonths = GetMatchingAdvanceMonthFundingComponents(request),
-                    EntitlementMonths =
-                        _mapper.Map<ICollection<EntitlementMonthFundingComponentModel>>(request.EntitlementMonths)
-                }).ToList();
+            var operationalFundingRequestModels = _mapper.MapToList<OperationalFundingRequestModel>(operationalFundingRequests);
 
-            return operationalFundingRequestModel;
+            foreach (var operationalFundingRequestModel in operationalFundingRequestModels)
+            {
+                GetMatchingAdvanceMonthFundingComponents(operationalFundingRequestModel);
+            }
+
+            return operationalFundingRequestModels;
         }
 
-        private ICollection<AdvanceMonthFundingComponentModel> GetMatchingAdvanceMonthFundingComponents(
-            OperationalFundingRequest request)
+        private void GetMatchingAdvanceMonthFundingComponents(
+            OperationalFundingRequestModel model)
         {
             var advanceMonths = new List<AdvanceMonthFundingComponentModel>();
 
-            if (request.EntitlementMonths == null) return advanceMonths;
-
-            foreach (var entitlementMonth in request.EntitlementMonths)
+            if (model.EntitlementMonths != null)
             {
-                // TODO: CAN WE MAKE PUSH THIS INTO THE DOMAIN SO WE CAN REUSE THIS LOGIC ELSEWHERE
-                var matchingAdvanceMonth =
-                    _documentSession.Query<OperationalFundingRequest>()
-                        .GetEntitlementAdvancedMonth(
-                            request.OrganisationId, entitlementMonth.Year, entitlementMonth.MonthNumber);
+                foreach (var entitlementMonth in model.EntitlementMonths)
+                {
+                    // TODO: CAN WE MAKE PUSH THIS INTO THE DOMAIN SO WE CAN REUSE THIS LOGIC ELSEWHERE
+                    var matchingAdvanceMonth =
+                        _documentSession.Query<OperationalFundingRequest>()
+                            .GetEntitlementAdvancedMonth(
+                                model.OrganisationId, entitlementMonth.Year, entitlementMonth.MonthNumber);
 
-                if (matchingAdvanceMonth != null)
-                    advanceMonths.Add(_mapper.Map<AdvanceMonthFundingComponentModel>(matchingAdvanceMonth));
+                    if (matchingAdvanceMonth != null)
+                        advanceMonths.Add(_mapper.Map<AdvanceMonthFundingComponentModel>(matchingAdvanceMonth));
+                }
             }
 
-            return advanceMonths;
+            model.MatchingAdvanceMonths = advanceMonths;
         }
     }
 }

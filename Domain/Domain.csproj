@@ -22,4 +22,8 @@
       <ProjectReference Include="..\Events.Integration\Events.Integration.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Model\ReferenceData\ValueObject" />
+    </ItemGroup>
+
 </Project>

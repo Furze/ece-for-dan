@@ -12,6 +12,8 @@ namespace MoE.ECE.CLI.Data
     /// </summary>
     public class EceServiceReferenceData
     {
+        private const string PorseMarlboroughOrganisationNumber = "30143";
+        private const string FoxtonPlaycentreOrganisationNumber = "52001";
         private const string EducationAndCareDescription = "Education & Care Service";
         private const string MontessoriOrganisationNumber = "46543";
         private const string ThreeKingsOrganisationNumber = "20557";
@@ -57,6 +59,7 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = false,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,   
+                        IsFunded = true,
                         OperatingSessions = new List<EceOperatingSession>
                         {
                             new EceOperatingSession
@@ -148,6 +151,7 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = false,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true,
                         OperatingSessions = new List<EceOperatingSession>
                         {
                             new EceOperatingSession
@@ -261,6 +265,7 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = false,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true
                     },
                     new EceService
                     {
@@ -282,6 +287,7 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = true,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true
                     },
                     new EceService
                     {
@@ -305,6 +311,7 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = true,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true,
                         OperatingSessions = new List<EceOperatingSession>
                         {
                             new EceOperatingSession
@@ -399,6 +406,7 @@ namespace MoE.ECE.CLI.Data
                         EquityIndexId = 19001,
                         EquityIndexDescription = "EQ 1",
                         IsolationIndex = 1.93m,
+                        IsFunded = true,
                         OperatingSessions = new List<EceOperatingSession>
                         {
                             new EceOperatingSession
@@ -478,6 +486,7 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = false,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true,
                     },
                     new EceService
                     {
@@ -499,6 +508,7 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = false,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true,
                     },
                     new EceService
                     {
@@ -520,6 +530,7 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = true,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true,
                     },
                     new EceService
                     {
@@ -541,6 +552,7 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = false,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true,
                     },
                     new EceService
                     {
@@ -562,6 +574,7 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = false,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true,
                     },
                     new EceService
                     {
@@ -583,6 +596,7 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = false,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true,
                     },
                     new EceService
                     {
@@ -604,6 +618,7 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = false,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true,
                     },
                     new EceService
                     {
@@ -625,11 +640,12 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = false,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true,
                     },
                     new EceService
                     {
                         RefOrganisationId = 301,
-                        OrganisationNumber = "30143",
+                        OrganisationNumber = PorseMarlboroughOrganisationNumber,
                         OrganisationName = "PORSE Nelson/Marlborough/West Coast S1",
                         EceServiceProviderNumber = "ECA344",
                         OrganisationTypeId = OrganisationType.HomebasedNetwork,
@@ -646,6 +662,8 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = false,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true,
+                        InstallmentPayments = true
                     },
                     new EceService
                     {
@@ -667,6 +685,7 @@ namespace MoE.ECE.CLI.Data
                         ParentLedEligibleToOfferFree = false,
                         EcQualityLevelDescription = QualityLevel.NotApplicable,
                         EcQualityLevelId = 21002,
+                        IsFunded = true,
                     },
                     new EceService
                     {
@@ -680,6 +699,7 @@ namespace MoE.ECE.CLI.Data
                         OrganisationStatusDescription = "Open",
                         LicenceStatusId = LicenceStatus.Cancelled,
                         LicenceStatusDescription = "Cancelled",
+                        IsFunded = true,
                         OperatingSessions = new List<EceOperatingSession>
                         {
                             new EceOperatingSession
@@ -741,6 +761,7 @@ namespace MoE.ECE.CLI.Data
                         OrganisationStatusDescription = "Open",
                         LicenceStatusId = LicenceStatus.Suspended,
                         LicenceStatusDescription = "Suspended",
+                        IsFunded = true,
                         OperatingSessions = new List<EceOperatingSession>
                         {
                             new EceOperatingSession
@@ -789,7 +810,42 @@ namespace MoE.ECE.CLI.Data
                                 OperatingHours = 13
                             }
                         }
-                    }
+                    },
+                     new EceService
+                    {
+                        RefOrganisationId = 10007,
+                        OrganisationName = "Foxton Playcentre",
+                        OrganisationNumber = FoxtonPlaycentreOrganisationNumber,
+                        OrganisationTypeId = OrganisationType.Playcentre,
+                        OrganisationTypeDescription = PlaycentreTypeDescription,
+                        EceServiceProviderNumber = "ECA3333",
+                        OrganisationStatusId = OrganisationStatus.Open,
+                        OrganisationStatusDescription = "Open",
+                        LicenceStatusId = LicenceStatus.Full,
+                        LicenceStatusDescription = "Full",
+                        IsFunded = false,
+                        OperatingSessions = new List<EceOperatingSession>
+                        {
+                            new EceOperatingSession
+                            {
+                                SessionDayId = 26003, SessionDayDescription = "Thursday", MaxChildren = 25,
+                                MaxChildrenUnder2 = 15,
+                                SessionTypeId = 25001, SessionTypeDescription = "Sessional",
+                                SessionProvisionTypeId = 136001, SessionProvisionTypeDescription = "Parent Led",
+                                FundedHours = 3,
+                                OperatingHours = 3
+                            },
+                            new EceOperatingSession
+                            {
+                                SessionDayId = 26004, SessionDayDescription = "Friday", MaxChildren = 25,
+                                MaxChildrenUnder2 = 15,
+                                SessionTypeId = 25001, SessionTypeDescription = "Sessional",
+                                SessionProvisionTypeId = 136001, SessionProvisionTypeDescription = "Parent Led",
+                                FundedHours = 2,
+                                OperatingHours = 2
+                            }
+                        }
+                    },
                 };
             }
         }
@@ -810,6 +866,18 @@ namespace MoE.ECE.CLI.Data
 
         public EceService TeKohangaReoOWaikare =>
             Data.Single(service => service.OrganisationNumber == TeKohangaReoOWaikareOrganisationNumber);
+        
+        /// <summary>
+        /// This playcentre is not funded.
+        /// </summary>
+        public EceService FoxtonPlaycentre =>
+            Data.Single(service => service.OrganisationNumber == FoxtonPlaycentreOrganisationNumber);
+
+        /// <summary>
+        /// This service receives monthly/installment payments.
+        /// </summary>
+        public EceService PorseMarlboroughHomebasedNetwork =>
+            Data.Single(service => service.OrganisationNumber == PorseMarlboroughOrganisationNumber);
         
         public EceService GetByType(int organisationTypeId) =>
             Data.First(service => service.OrganisationTypeId == organisationTypeId);

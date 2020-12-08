@@ -20,7 +20,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenSubmittingForApproval
         protected override void Arrange()
         {
             Given
-                .A_rs7_has_been_created()
+                .A_rs7_skeleton_has_been_created()
                 .rs7_submitted_for_approval()
                 .GetResult(created => Rs7 = created.Rs7Model);
         }

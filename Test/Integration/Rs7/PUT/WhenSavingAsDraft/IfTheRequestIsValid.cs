@@ -24,7 +24,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         protected override void Arrange()
         {
             Given
-                .A_rs7_has_been_created()
+                .A_rs7_skeleton_has_been_created()
                 .GetResult(result => Rs7Model = result.Rs7Model);
 
             SaveAsDraftCommand = ModelBuilder.SaveAsDraft(Rs7Model, rs7 => rs7.RollStatus = RollStatus.ExternalDraft);

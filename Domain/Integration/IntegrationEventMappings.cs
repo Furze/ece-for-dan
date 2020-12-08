@@ -5,6 +5,7 @@ using Google.Protobuf.WellKnownTypes;
 using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Event.OperationalFunding;
 using MoE.ECE.Domain.Infrastructure.Extensions;
+using MoE.ECE.Domain.Read.Model.OperationalFunding;
 using MoE.ECE.Domain.Read.Model.Rs7;
 using Moe.ECE.Events.Integration;
 using IntegrationEvents = Events.Integration.Protobuf;
@@ -44,8 +45,10 @@ namespace MoE.ECE.Domain.Integration
 
             CreateMap<OperationalFundingRequestCreated, EntitlementCalculated>()
                 .Map(d => d.BusinessEntityType, s => Constants.BusinessEntityTypes.Rs7)
-                .Ignore(d => d.FundingPeriodYear)
-                .Ignore(d => d.Exceptions);
+                .Map(d => d.Exceptions, s => s.BusinessExceptions)
+                .Ignore(d => d.FundingPeriodYear);
+
+            CreateMap<BusinessExceptionModel, EntitlementException>();
         }
     }
 }

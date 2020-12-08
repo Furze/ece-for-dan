@@ -11,7 +11,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bard" Version="4.7.2-alpha.0.7" />
+        <PackageReference Include="Bard" Version="4.8.1" />
         <PackageReference Include="Bard.db" Version="1.1.0" />
         <PackageReference Include="Marten" Version="3.13.2" />
         <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.1.9" />

@@ -25,7 +25,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         {
             //Externally Created, Submitted, Approved. Internal user updates
             Given
-                .A_rs7_has_been_created()
+                .A_rs7_skeleton_has_been_created()
                 .An_rs7_is_ready_for_internal_ministry_review(updateRs7 =>
                 {
                     updateRs7.Declaration = new DeclarationModel

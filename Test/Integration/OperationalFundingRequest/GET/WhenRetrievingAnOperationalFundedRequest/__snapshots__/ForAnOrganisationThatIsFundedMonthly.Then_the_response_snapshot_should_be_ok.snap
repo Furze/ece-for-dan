@@ -10,17 +10,17 @@
         "SessionalCertificatedTeacherHours": 0,
         "SessionalNonCertificatedTeacherHours": 0,
         "TotalWorkingDays": 0,
-        "WashUpPlusTen": -2800.8,
-        "WashUpUnderTwo": -9343.35,
-        "WashUpTwoAndOver": -4959.75,
-        "WashUpTwentyHours": -7750.05,
+        "WashUpPlusTen": 0.0,
+        "WashUpUnderTwo": 0.0,
+        "WashUpTwoAndOver": 0.0,
+        "WashUpTwentyHours": 0.0,
         "TotalEntitlement": 0.0,
-        "TotalFundsAdvanced": 24853.95,
+        "TotalFundsAdvanced": 0.0,
         "TotalEntitlementUnderTwo": 0.0,
         "TotalEntitlementTwoAndOver": 0.0,
         "TotalEntitlementTwentyHours": 0.0,
         "TotalEntitlementPlusTen": 0.0,
-        "TotalWashUp": -24853.95,
+        "TotalWashUp": 0.0,
         "FundingComponents": []
       },
       {
@@ -90,13 +90,13 @@
         "FundingComponents": []
       }
     ],
-    "OrganisationId": 114895,
-    "BusinessEntityId": "38af5eb1-64ec-44b6-993f-0e3b21b20009",
-    "RequestId": "137005",
+    "OrganisationId": 301,
+    "BusinessEntityId": "d19c21e7-ce7c-468c-ad2f-2a186b1a279e",
+    "RequestId": "145120",
     "FundingPeriodMonth": "July",
     "FundingYear": 2021,
     "RevisionNumber": 1,
-    "TotalWashUp": -24853.95,
+    "TotalWashUp": 0.0,
     "TotalAdvance": 0.0,
     "AdvanceMonths": [
       {
@@ -104,7 +104,7 @@
         "MonthNumber": 7,
         "Year": 2020,
         "ParentLedWorkingDays": 0,
-        "AllDayWorkingDays": null,
+        "AllDayWorkingDays": 0,
         "SessionalWorkingDays": null,
         "AmountPayablePlusTen": 0.0,
         "AmountPayableUnderTwo": 0.0,
@@ -119,7 +119,7 @@
         "MonthNumber": 8,
         "Year": 2020,
         "ParentLedWorkingDays": 0,
-        "AllDayWorkingDays": null,
+        "AllDayWorkingDays": 0,
         "SessionalWorkingDays": null,
         "AmountPayablePlusTen": 0.0,
         "AmountPayableUnderTwo": 0.0,
@@ -134,7 +134,7 @@
         "MonthNumber": 9,
         "Year": 2020,
         "ParentLedWorkingDays": 0,
-        "AllDayWorkingDays": null,
+        "AllDayWorkingDays": 0,
         "SessionalWorkingDays": null,
         "AmountPayablePlusTen": 0.0,
         "AmountPayableUnderTwo": 0.0,
@@ -149,7 +149,7 @@
         "MonthNumber": 10,
         "Year": 2020,
         "ParentLedWorkingDays": 0,
-        "AllDayWorkingDays": null,
+        "AllDayWorkingDays": 0,
         "SessionalWorkingDays": null,
         "AmountPayablePlusTen": 0.0,
         "AmountPayableUnderTwo": 0.0,
@@ -160,65 +160,13 @@
         "FundingComponents": []
       }
     ],
-    "MatchingAdvanceMonths": [
-      {
-        "MonthName": "February",
-        "MonthNumber": 2,
-        "Year": 2020,
-        "ParentLedWorkingDays": null,
-        "AllDayWorkingDays": 20,
-        "SessionalWorkingDays": 0,
-        "AmountPayablePlusTen": 2800.8,
-        "AmountPayableUnderTwo": 9343.35,
-        "AmountPayableTwoAndOver": 4959.75,
-        "AmountPayableTwentyHours": 7750.05,
-        "TotalDays": null,
-        "TotalAdvance": null,
-        "FundingComponents": [
-          {
-            "SessionType": "AllDay",
-            "FundingComponentType": "PlusTen",
-            "StartDate": "0001-01-01T00:00:00",
-            "Amount": 2800.8,
-            "Rate": 10.1,
-            "RateName": "",
-            "FundedChildHours": 30,
-            "OperatingDays": 20
-          },
-          {
-            "SessionType": "AllDay",
-            "FundingComponentType": "UnderTwo",
-            "StartDate": "0001-01-01T00:00:00",
-            "Amount": 9343.35,
-            "Rate": 10.1,
-            "RateName": "",
-            "FundedChildHours": 30,
-            "OperatingDays": 20
-          },
-          {
-            "SessionType": "AllDay",
-            "FundingComponentType": "TwoAndOver",
-            "StartDate": "0001-01-01T00:00:00",
-            "Amount": 4959.75,
-            "Rate": 10.1,
-            "RateName": "",
-            "FundedChildHours": 30,
-            "OperatingDays": 20
-          },
-          {
-            "SessionType": "AllDay",
-            "FundingComponentType": "TwentyHours",
-            "StartDate": "0001-01-01T00:00:00",
-            "Amount": 7750.05,
-            "Rate": 10.1,
-            "RateName": "",
-            "FundedChildHours": 30,
-            "OperatingDays": 20
-          }
-        ]
-      }
-    ],
+    "MatchingAdvanceMonths": [],
     "Equity": null,
-    "BusinessExceptions": []
+    "BusinessExceptions": [
+      {
+        "Key": "MonthlyFunding",
+        "Description": "This service is funded monthly"
+      }
+    ]
   }
 ]
