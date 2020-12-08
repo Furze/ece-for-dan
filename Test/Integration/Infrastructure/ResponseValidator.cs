@@ -8,7 +8,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
     {
         public override IBadRequestProvider ForProperty(string propertyName)
         {
-            Content().Errors.ShouldContain(error => error.Property != null && error.Property.Contains(propertyName));
+            Content().Errors?.ShouldContain(error => error.Property != null && error.Property.Contains(propertyName));
 
             return this;
         }
@@ -21,7 +21,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 
         public override IBadRequestProvider WithErrorCode(string errorCode)
         {
-            Content().Errors.ShouldContain(error => error.ErrorCode == errorCode);
+            Content().Errors?.ShouldContain(error => error.ErrorCode == errorCode);
 
             return this;
         }

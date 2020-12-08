@@ -87,9 +87,8 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
             var rs7AndRevision = Then.Response
                 .Content<Rs7Model>();
 
-            rs7AndRevision.RevisionNumber.ShouldNotBeNull();
-            rs7AndRevision.RevisionDate.ShouldNotBeNull();
-
+            rs7AndRevision.RevisionNumber.ShouldBeGreaterThan(0);
+            
             rs7AndRevision.AdvanceMonths.ShouldNotBeNull();
             rs7AndRevision.EntitlementMonths.ShouldNotBeNull();
             rs7AndRevision.IsAttested.ShouldNotBeNull();

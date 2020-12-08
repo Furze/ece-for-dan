@@ -101,7 +101,6 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
         public void ThenDomainEventShouldOnlyHaveOriginalRevision()
         {
             DomainEvent.RevisionNumber.ShouldBe(1);
-            DomainEvent.RevisionDate.ShouldNotBeNull();
         }
 
         [Fact]

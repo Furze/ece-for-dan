@@ -57,7 +57,6 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 
             domainEvent.RevisionId.ShouldNotBe(0);
             domainEvent.RevisionNumber.ShouldBe(1);
-            domainEvent.RevisionDate.ShouldNotBeNull();
 
             domainEvent.AdvanceMonths.ShouldNotBeNull();
             if (domainEvent.AdvanceMonths == null)

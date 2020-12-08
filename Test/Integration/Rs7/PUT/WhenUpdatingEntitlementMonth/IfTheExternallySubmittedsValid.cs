@@ -83,7 +83,6 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
 
             domainEvent.Source.ShouldBe(Source.Internal);
             domainEvent.RevisionNumber.ShouldBe(2);
-            domainEvent.RevisionDate.ShouldNotBeNull();
         }
 
         [Fact]

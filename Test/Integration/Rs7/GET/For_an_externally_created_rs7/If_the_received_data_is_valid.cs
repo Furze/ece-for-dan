@@ -55,11 +55,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
 
             firstAdvanceMonth.ShouldNotBeNull();
 
-            firstAdvanceMonth?.MonthNumber.ShouldBe(7);
-            firstAdvanceMonth?.Year.ShouldBe(2020);
-            firstAdvanceMonth?.AllDay.ShouldBe(2);
-            firstAdvanceMonth?.ParentLed.ShouldBe(4);
-            firstAdvanceMonth?.Sessional.ShouldBe(6);
+            firstAdvanceMonth.MonthNumber.ShouldBe(7);
+            firstAdvanceMonth.Year.ShouldBe(2020);
+            firstAdvanceMonth.AllDay.ShouldBe(2);
+            firstAdvanceMonth.ParentLed.ShouldBe(4);
+            firstAdvanceMonth.Sessional.ShouldBe(6);
         }
 
         [Fact]
@@ -72,12 +72,12 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
             var entitlementMonth = domainEvent.EntitlementMonths?.FirstOrDefault();
 
             entitlementMonth.ShouldNotBeNull();
-            entitlementMonth?.MonthNumber.ShouldBe(2);
-            entitlementMonth?.Year.ShouldBe(2020);
+            entitlementMonth.MonthNumber.ShouldBe(2);
+            entitlementMonth.Year.ShouldBe(2020);
 
-            entitlementMonth?.Days.ShouldNotBeNull();
+            entitlementMonth.Days.ShouldNotBeNull();
 
-            var entitlementDay = entitlementMonth?.Days?.First();
+            var entitlementDay = entitlementMonth.Days?.First();
             entitlementDay?.DayNumber.ShouldBe(1);
             entitlementDay?.Under2.ShouldBe(5);
             entitlementDay?.TwoAndOver.ShouldBe(3);

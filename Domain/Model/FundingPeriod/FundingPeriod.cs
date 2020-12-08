@@ -111,7 +111,10 @@ namespace MoE.ECE.Domain.Model.FundingPeriod
         public FundingPeriod EarlierFundingPeriod(int count)
         {
             FundingPeriod fundingPeriod = this;
-            for (var i = 0; i < count; i++) fundingPeriod = fundingPeriod.PreviousFundingPeriod;
+            for (var i = 0; i < count; i++)
+            {
+                fundingPeriod = fundingPeriod.PreviousFundingPeriod;
+            }
 
             return fundingPeriod;
         }

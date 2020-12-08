@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Bard;
+﻿using Bard;
 using MoE.ECE.Domain.Read.Model.Rs7;
 using MoE.ECE.Integration.Tests.Chapter;
 using MoE.ECE.Integration.Tests.Infrastructure;
@@ -75,13 +74,12 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
             rs7AndRevision.Id.ShouldBeGreaterThan(0); // Should be Rs7.Id, not Rs7Revision.Id
 
             rs7AndRevision.RevisionNumber.ShouldBe(1);
-            rs7AndRevision.RevisionDate.ShouldNotBeNull();
 
             rs7AndRevision.AdvanceMonths.ShouldNotBeNull();
-            rs7AndRevision.AdvanceMonths?.Count().ShouldBe(4);
+            rs7AndRevision.AdvanceMonths?.Length.ShouldBe(4);
 
             rs7AndRevision.EntitlementMonths.ShouldNotBeNull();
-            rs7AndRevision.EntitlementMonths?.Count().ShouldBe(4);
+            rs7AndRevision.EntitlementMonths?.Length.ShouldBe(4);
 
             rs7AndRevision.IsAttested.ShouldNotBeNull();
         }

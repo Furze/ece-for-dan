@@ -92,14 +92,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 
             domainEvent.RevisionId.ShouldNotBe(0);
             domainEvent.RevisionNumber.ShouldBe(1);
-            domainEvent.RevisionDate.ShouldNotBeNull();
 
             domainEvent.AdvanceMonths.ShouldNotBeNull();
 
-            domainEvent.AdvanceMonths?.Count().ShouldBe(4);
+            domainEvent.AdvanceMonths?.Length.ShouldBe(4);
 
             domainEvent.EntitlementMonths.ShouldNotBeNull();
-            domainEvent.EntitlementMonths?.Count().ShouldBe(4);
+            domainEvent.EntitlementMonths?.Length.ShouldBe(4);
 
             domainEvent.IsAttested.ShouldBe(true);
         }

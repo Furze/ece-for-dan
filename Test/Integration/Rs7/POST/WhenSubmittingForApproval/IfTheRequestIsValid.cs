@@ -61,7 +61,6 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenSubmittingForApproval
 
             domainEvent.RevisionNumber.ShouldBe(1);
             domainEvent.RevisionId.ShouldNotBe(0);
-            domainEvent.RevisionDate.ShouldNotBeNull();
         }
 
         [Fact]

@@ -101,7 +101,6 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
 
             domainEvent.RevisionId.ShouldNotBe(0);
             domainEvent.RevisionNumber.ShouldBe(1);
-            domainEvent.RevisionDate.ShouldNotBeNull();
         }
 
         [Fact]
