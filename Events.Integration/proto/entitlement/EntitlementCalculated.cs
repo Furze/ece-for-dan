@@ -33,14 +33,15 @@ namespace Events.Integration.Protobuf.Entitlement {
             "UGVyaW9kTW9udGgSEwoLRnVuZGluZ1llYXIYBiABKAUSFgoOUmV2aXNpb25O",
             "dW1iZXIYByABKAUSIQoLVG90YWxXYXNoVXAYCCABKAsyDC5iY2wuRGVjaW1h",
             "bBIpCgpFeGNlcHRpb25zGAkgAygLMhUuRW50aXRsZW1lbnRFeGNlcHRpb24S",
-            "GQoRRnVuZGluZ1BlcmlvZFllYXIYCiABKAUiFgoURW50aXRsZW1lbnRFeGNl",
-            "cHRpb25CKqoCJ0V2ZW50cy5JbnRlZ3JhdGlvbi5Qcm90b2J1Zi5FbnRpdGxl",
-            "bWVudGIGcHJvdG8z"));
+            "GQoRRnVuZGluZ1BlcmlvZFllYXIYCiABKAUiOAoURW50aXRsZW1lbnRFeGNl",
+            "cHRpb24SCwoDS2V5GAEgASgJEhMKC0Rlc2NyaXB0aW9uGAIgASgJQiqqAidF",
+            "dmVudHMuSW50ZWdyYXRpb24uUHJvdG9idWYuRW50aXRsZW1lbnRiBnByb3Rv",
+            "Mw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::ProtoBuf.Bcl.BclReflection.Descriptor, global::Events.Integration.Protobuf.Shared.FundingPeriodMonthReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Entitlement.EntitlementCalculated), global::Events.Integration.Protobuf.Entitlement.EntitlementCalculated.Parser, new[]{ "BusinessEntityId", "OrganisationId", "RequestId", "BusinessEntityType", "FundingPeriodMonth", "FundingYear", "RevisionNumber", "TotalWashUp", "Exceptions", "FundingPeriodYear" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Entitlement.EntitlementException), global::Events.Integration.Protobuf.Entitlement.EntitlementException.Parser, null, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Entitlement.EntitlementException), global::Events.Integration.Protobuf.Entitlement.EntitlementException.Parser, new[]{ "Key", "Description" }, null, null, null, null)
           }));
     }
     #endregion
@@ -582,12 +583,36 @@ namespace Events.Integration.Protobuf.Entitlement {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public EntitlementException(EntitlementException other) : this() {
+      key_ = other.key_;
+      description_ = other.description_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public EntitlementException Clone() {
       return new EntitlementException(this);
+    }
+
+    /// <summary>Field number for the "Key" field.</summary>
+    public const int KeyFieldNumber = 1;
+    private string key_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Key {
+      get { return key_; }
+      set {
+        key_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "Description" field.</summary>
+    public const int DescriptionFieldNumber = 2;
+    private string description_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Description {
+      get { return description_; }
+      set {
+        description_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -603,12 +628,16 @@ namespace Events.Integration.Protobuf.Entitlement {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (Key != other.Key) return false;
+      if (Description != other.Description) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
+      if (Key.Length != 0) hash ^= Key.GetHashCode();
+      if (Description.Length != 0) hash ^= Description.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -625,6 +654,14 @@ namespace Events.Integration.Protobuf.Entitlement {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
+      if (Key.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Key);
+      }
+      if (Description.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Description);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -634,6 +671,14 @@ namespace Events.Integration.Protobuf.Entitlement {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Key.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Key);
+      }
+      if (Description.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Description);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -643,6 +688,12 @@ namespace Events.Integration.Protobuf.Entitlement {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
+      if (Key.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Key);
+      }
+      if (Description.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Description);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -653,6 +704,12 @@ namespace Events.Integration.Protobuf.Entitlement {
     public void MergeFrom(EntitlementException other) {
       if (other == null) {
         return;
+      }
+      if (other.Key.Length != 0) {
+        Key = other.Key;
+      }
+      if (other.Description.Length != 0) {
+        Description = other.Description;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -668,6 +725,14 @@ namespace Events.Integration.Protobuf.Entitlement {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
+          case 10: {
+            Key = input.ReadString();
+            break;
+          }
+          case 18: {
+            Description = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -682,6 +747,14 @@ namespace Events.Integration.Protobuf.Entitlement {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
+          case 10: {
+            Key = input.ReadString();
+            break;
+          }
+          case 18: {
+            Description = input.ReadString();
+            break;
+          }
         }
       }
     }
