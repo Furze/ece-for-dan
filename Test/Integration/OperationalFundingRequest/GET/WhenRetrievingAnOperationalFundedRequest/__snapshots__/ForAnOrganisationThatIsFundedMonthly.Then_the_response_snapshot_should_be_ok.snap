@@ -91,8 +91,8 @@
       }
     ],
     "OrganisationId": 301,
-    "BusinessEntityId": "d19c21e7-ce7c-468c-ad2f-2a186b1a279e",
-    "RequestId": "145120",
+    "BusinessEntityId": "db08a527-ba47-4631-b353-b23b67a22050",
+    "RequestId": "149001",
     "FundingPeriodMonth": "July",
     "FundingYear": 2021,
     "RevisionNumber": 1,
@@ -164,8 +164,9 @@
     "Equity": null,
     "BusinessExceptions": [
       {
+        "Classification": "Other",
         "Key": "MonthlyFunding",
-        "Description": "This service is funded monthly"
+        "Description": "Service is on monthly funding"
       }
     ]
   }
