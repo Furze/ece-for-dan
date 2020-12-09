@@ -5,6 +5,7 @@
         <RootNamespace>MoE.ECE.Web</RootNamespace>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
+      <UserSecretsId>FD9A741B-0EC5-48F8-85B3-C01ED5DEF1CA</UserSecretsId>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

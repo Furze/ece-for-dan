@@ -215,7 +215,7 @@
     ],
     "OrganisationId": 114895,
     "BusinessEntityId": "c8ee3a99-1994-44e4-94e1-ab222589f1ac",
-    "RequestId": null,
+    "RequestId": "",
     "FundingPeriodMonth": "March",
     "FundingYear": 2020,
     "RevisionNumber": 0,
@@ -448,6 +448,7 @@
         ]
       }
     ],
-    "Equity": null
+    "Equity": null,
+    "BusinessExceptions": []
   }
 ]

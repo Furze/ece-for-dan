@@ -22,7 +22,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
         protected override void Arrange()
         {
             Given
-                .A_rs7_has_been_created(setup => setup.OrganisationId = _organisationId)
+                .A_rs7_skeleton_has_been_created(setup => setup.OrganisationId = _organisationId)
                 .GetResult(result => _previouslyStartedNewRs7 = result.Rs7Model);
         }
 

@@ -19,6 +19,12 @@
       "ServiceProviderNumber": "ECA357"
     },
     {
+      "OrganisationId": 10007,
+      "OrganisationNumber": "52001",
+      "ServiceName": "Foxton Playcentre",
+      "ServiceProviderNumber": "ECA3333"
+    },
+    {
       "OrganisationId": 5297,
       "OrganisationNumber": "70078",
       "ServiceName": "Leeston Playcentre",
@@ -53,17 +59,11 @@
       "OrganisationNumber": "16144",
       "ServiceName": "Rawene Playcentre",
       "ServiceProviderNumber": "ECA3333"
-    },
-    {
-      "OrganisationId": 283,
-      "OrganisationNumber": "10227",
-      "ServiceName": "Simply Kids Preschool",
-      "ServiceProviderNumber": "010227"
     }
   ],
   "Pagination": {
     "PageSize": 10,
     "PageNumber": 1,
-    "Count": 18
+    "Count": 19
   }
 }

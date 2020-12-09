@@ -20,7 +20,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingDeclaration
         protected override void Arrange()
         {
             Given
-                .A_rs7_has_been_created()
+                .A_rs7_skeleton_has_been_created()
                 .GetResult(storyData => Rs7Model = storyData.Rs7Model);
         }
 

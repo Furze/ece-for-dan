@@ -20,7 +20,7 @@ namespace MoE.ECE.Integration.Tests.Rolls
 
         protected override void Arrange() =>
             Given
-                .A_rs7_has_been_created(submission =>
+                .A_rs7_skeleton_has_been_created(submission =>
                     submission.OrganisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId)
                 .The_rs7_has_been_submitted_for_peer_approval();
 

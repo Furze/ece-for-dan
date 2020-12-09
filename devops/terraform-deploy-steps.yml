@@ -78,6 +78,53 @@ steps:
     terraformVersion: '${{ parameters.terraformVersion }}'
 
 - ${{ if eq(parameters.runTerraformDestroy, true) }}:
+  # Teardown any active sessions to the database before terraform destroy
+  # Create a connection string, revoke access, and terminate any sessions to the database
+  - task: AzureCLI@2
+    displayName: 'Terraform App: Prep PSQL DB for deletion'
+    inputs:
+      azureSubscription: "${{ parameters.azureDevOpsServiceConnection }}"
+      scriptType: pscore
+      scriptLocation: inlineScript
+      failOnStandardError: false
+      powerShellErrorActionPreference: 'silentlyContinue'
+      inlineScript: |
+        $keyvaultName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentNumber }}secrets"
+        $secretName = "${{ parameters.applicationName }}-sqlpassword"
+        $env:PGPASSWORD = az keyvault secret show --vault-name "$keyvaultName" --name "$secretName" -o tsv --query value
+        if ([string]::IsNullOrEmpty($env:PGPASSWORD)) {
+          echo "##vso[task.logissue type=warning] Failed to get database credentials. This is not normal."
+          exit 0
+        }
+        # Use psql client (or CLI?) to revoke and terminate existing DB connections otherwise destroy fails with active sessions
+        echo "Installing postgresql-client.."
+        sudo apt install -y postgresql-client
+        psql -V
+
+        $dbServerName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}"
+        $dbName = "${{ parameters.applicationName }}"
+        $dbEndpoint = "$dbServerName.postgres.database.azure.com"
+        $dbUsername = "psqlserveradmin"
+
+        $dbConnectionString = "host=$dbEndpoint port=5432 user='$dbUsername@$dbServerName' dbname=$dbName sslmode=require"
+        $revokeAccessSqlCommand = @"
+        REVOKE CONNECT ON DATABASE $dbName FROM PUBLIC;
+        SELECT pg_terminate_backend(pid) 
+        FROM pg_stat_activity 
+        WHERE pid <> pg_backend_pid() AND datname = '$dbName';
+        "@
+
+        Write-Output "Command: $revokeAccessSqlCommand"
+        Write-Output "ConnString: $dbConnectionString"
+
+        echo "Revoking access and terminating sessions to db $dbName .."
+        psql -d "$dbConnectionString" -c "$revokeAccessSqlCommand"
+        if ($LASTEXITCODE -ne 0) {
+          Write-Output "Failed to revoke DB access. Try to continue gracefully.."
+          exit 0
+        }
+    continueOnError: true
+
   - task: AzureCLI@2
     condition: succeeded()
     displayName: 'Terraform destroy ECE App'

@@ -27,5 +27,7 @@ namespace MoE.ECE.Domain.Read.Model.OperationalFunding
         public ICollection<AdvanceMonthFundingComponentModel>? MatchingAdvanceMonths { get; set; }
 
         public ICollection<EquityFundingComponentModel>? Equity { get; set; }
+        
+        public BusinessExceptionModel[]? BusinessExceptions { get; set; } = {};
     }
 }

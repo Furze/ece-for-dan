@@ -24,7 +24,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         protected override void Arrange()
         {
             Given
-                .A_rs7_has_been_created()
+                .A_rs7_skeleton_has_been_created()
                 .And_the_rs7_has_been_saved_as_draft()
                 .GetResult(result => Rs7Model = result.Rs7Model);
 
@@ -92,14 +92,13 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 
             domainEvent.RevisionId.ShouldNotBe(0);
             domainEvent.RevisionNumber.ShouldBe(1);
-            domainEvent.RevisionDate.ShouldNotBeNull();
 
             domainEvent.AdvanceMonths.ShouldNotBeNull();
 
-            domainEvent.AdvanceMonths?.Count().ShouldBe(4);
+            domainEvent.AdvanceMonths?.Length.ShouldBe(4);
 
             domainEvent.EntitlementMonths.ShouldNotBeNull();
-            domainEvent.EntitlementMonths?.Count().ShouldBe(4);
+            domainEvent.EntitlementMonths?.Length.ShouldBe(4);
 
             domainEvent.IsAttested.ShouldBe(true);
         }

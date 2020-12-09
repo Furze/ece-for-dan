@@ -91,8 +91,8 @@
       }
     ],
     "OrganisationId": 258,
-    "BusinessEntityId": "9e7411cd-29cd-4e88-b769-6a969807202b",
-    "RequestId": "43001",
+    "BusinessEntityId": "bebed174-f6b7-4115-b540-4639f8c603a2",
+    "RequestId": "136007",
     "FundingPeriodMonth": "July",
     "FundingYear": 2021,
     "RevisionNumber": 1,
@@ -116,6 +116,7 @@
       }
     ],
     "MatchingAdvanceMonths": [],
-    "Equity": null
+    "Equity": null,
+    "BusinessExceptions": []
   }
 ]

@@ -194,7 +194,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             return model;
         }
 
-        public static CreateSkeletonRs7 CreateRs7(Action<CreateSkeletonRs7>? applyCustomSetup = null)
+        public static CreateSkeletonRs7 CreateSkeletonRs7(Action<CreateSkeletonRs7>? applyCustomSetup = null)
         {
             var command = new CreateSkeletonRs7
             {

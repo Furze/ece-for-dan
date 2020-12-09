@@ -37,7 +37,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
         protected override void Arrange()
         {
             Given
-                .A_rs7_has_been_created(setup =>
+                .A_rs7_skeleton_has_been_created(setup =>
                 {
                     setup.OrganisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId;
                     setup.FundingPeriod = FundingPeriodMonth.July;
@@ -78,11 +78,11 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
 
             firstAdvanceMonth.ShouldNotBeNull();
 
-            firstAdvanceMonth?.MonthNumber.ShouldBe(7);
-            firstAdvanceMonth?.Year.ShouldBe(2020);
-            firstAdvanceMonth?.AllDay.ShouldBe(2);
-            firstAdvanceMonth?.ParentLed.ShouldBe(4);
-            firstAdvanceMonth?.Sessional.ShouldBe(6);
+            firstAdvanceMonth.MonthNumber.ShouldBe(7);
+            firstAdvanceMonth.Year.ShouldBe(2020);
+            firstAdvanceMonth.AllDay.ShouldBe(2);
+            firstAdvanceMonth.ParentLed.ShouldBe(4);
+            firstAdvanceMonth.Sessional.ShouldBe(6);
         }
 
         [Fact]
@@ -94,21 +94,21 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
             var entitlementMonth = domainEvent.EntitlementMonths?.FirstOrDefault();
 
             entitlementMonth.ShouldNotBeNull();
-            entitlementMonth?.MonthNumber.ShouldBe(2);
-            entitlementMonth?.Year.ShouldBe(2020);
+            entitlementMonth.MonthNumber.ShouldBe(2);
+            entitlementMonth.Year.ShouldBe(2020);
 
-            entitlementMonth?.Days.ShouldNotBeNull();
+            entitlementMonth.Days.ShouldNotBeNull();
 
-            var entitlementDay = entitlementMonth?.Days?.FirstOrDefault();
+            var entitlementDay = entitlementMonth.Days?.FirstOrDefault();
 
             entitlementDay.ShouldNotBeNull();
-            entitlementDay?.DayNumber.ShouldBe(1);
-            entitlementDay?.Under2.ShouldBe(5);
-            entitlementDay?.TwoAndOver.ShouldBe(3);
-            entitlementDay?.Plus10.ShouldBe(4);
-            entitlementDay?.Hours20.ShouldBe(2);
-            entitlementDay?.Certificated.ShouldBe(5);
-            entitlementDay?.NonCertificated.ShouldBe(6);
+            entitlementDay.DayNumber.ShouldBe(1);
+            entitlementDay.Under2.ShouldBe(5);
+            entitlementDay.TwoAndOver.ShouldBe(3);
+            entitlementDay.Plus10.ShouldBe(4);
+            entitlementDay.Hours20.ShouldBe(2);
+            entitlementDay.Certificated.ShouldBe(5);
+            entitlementDay.NonCertificated.ShouldBe(6);
         }
 
         [Fact]

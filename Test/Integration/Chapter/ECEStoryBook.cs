@@ -10,11 +10,11 @@ namespace MoE.ECE.Integration.Tests.Chapter
 {
     public class ECEStoryBook : StoryBook<ECEStoryData>
     {
-        public Rs7CreatedChapter A_rs7_has_been_created(Action<CreateSkeletonRs7>? setUpCommand = null)
+        public Rs7CreatedChapter A_rs7_skeleton_has_been_created(Action<CreateSkeletonRs7>? setUpCommand = null)
         {
             return When(context =>
             {
-                var command = ModelBuilder.CreateRs7(setUpCommand);
+                var command = ModelBuilder.CreateSkeletonRs7(setUpCommand);
 
                 setUpCommand?.Invoke(command);
 
@@ -29,7 +29,7 @@ namespace MoE.ECE.Integration.Tests.Chapter
         {
             return When(context =>
             {
-                var command = ModelBuilder.CreateRs7(setUpCommand);
+                var command = ModelBuilder.CreateSkeletonRs7(setUpCommand);
 
                 setUpCommand?.Invoke(command);
 

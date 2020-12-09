@@ -9,8 +9,8 @@ namespace MoE.ECE.Domain.Event.OperationalFunding
         public OperationalFundingRequestCreatedMapping()
         {
             CreateMap<OperationalFundingRequest, OperationalFundingRequestCreated>()
-            .Ignore(d => d.Equity)
-            .Ignore(d => d.MatchingAdvanceMonths);
+                .Ignore(d => d.Equity)
+                .Ignore(d => d.MatchingAdvanceMonths);
         }
     }
 }

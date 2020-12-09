@@ -22,7 +22,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
         protected override void Arrange()
         {
             Given
-                .A_rs7_has_been_created()
+                .A_rs7_skeleton_has_been_created()
                 .An_rs7_is_ready_for_internal_ministry_review()
                 .GetResult(storyData => Rs7Model = storyData.Rs7Model);
         }
@@ -87,9 +87,8 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
             var rs7AndRevision = Then.Response
                 .Content<Rs7Model>();
 
-            rs7AndRevision.RevisionNumber.ShouldNotBeNull();
-            rs7AndRevision.RevisionDate.ShouldNotBeNull();
-
+            rs7AndRevision.RevisionNumber.ShouldBeGreaterThan(0);
+            
             rs7AndRevision.AdvanceMonths.ShouldNotBeNull();
             rs7AndRevision.EntitlementMonths.ShouldNotBeNull();
             rs7AndRevision.IsAttested.ShouldNotBeNull();

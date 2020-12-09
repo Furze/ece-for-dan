@@ -13,6 +13,12 @@ stages:
           - checkout: self
             persistCredentials: true
             clean: true
+      
+          # Fix for 401 timeout issue against nuget feed (Support case #120110523002341)
+          - bash: |
+              echo "##vso[task.setvariable variable=NUGET_PLUGIN_HANDSHAKE_TIMEOUT_IN_SECONDS]120"
+              echo "##vso[task.setvariable variable=NUGET_PLUGIN_REQUEST_TIMEOUT_IN_SECONDS]120"
+            displayName: "Set NuGet Auth Timeout Values" 
           
           # Auth to Azure Artifacts where the NuGet feed lives
           - task: NuGetAuthenticate@0

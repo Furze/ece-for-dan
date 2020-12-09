@@ -24,7 +24,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
         protected override void Arrange()
         {
             Given
-                .A_rs7_has_been_created()
+                .A_rs7_skeleton_has_been_created()
                 .GetResult(data => _rs7 = data.Rs7Model);
         }
 

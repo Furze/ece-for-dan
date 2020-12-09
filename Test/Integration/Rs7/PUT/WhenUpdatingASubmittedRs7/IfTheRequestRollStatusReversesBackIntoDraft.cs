@@ -21,7 +21,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingASubmittedRs7
         protected override void Arrange()
         {
             Given
-                .A_rs7_has_been_created()
+                .A_rs7_skeleton_has_been_created()
                 .An_rs7_is_ready_for_internal_ministry_review()
                 .GetResult(storyData => Rs7Model = storyData.Rs7Model);
         }

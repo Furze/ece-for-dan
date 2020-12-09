@@ -22,10 +22,17 @@ namespace MoE.ECE.Domain.Model.OperationalFunding
             CreationDate = now;
         }
 
-        public ICollection<EntitlementMonthFundingComponent>? EntitlementMonths { get; set; } = new List<EntitlementMonthFundingComponent>();
+        public ICollection<EntitlementMonthFundingComponent>? EntitlementMonths { get; set; } =
+            new List<EntitlementMonthFundingComponent>();
 
         public override string FundingDescription => "Existing Service Application for Funding (RS7)";
         public OpaRequest<OperationalFundingBaseRequest>? OpaRequest { get; set; }
         public OpaResponse<OperationalFundingBaseResponse>? OpaResponse { get; set; }
+        public List<BusinessException> BusinessExceptions { get; set; } = new List<BusinessException>();
+
+        public void AddBusinessException<TBusinessException>() where TBusinessException : BusinessException, new()
+        {
+            BusinessExceptions.Add(new TBusinessException());
+        }
     }
 }

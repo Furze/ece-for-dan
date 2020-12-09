@@ -26,7 +26,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.DELETE.WhenARs7IsRejected
         protected override void Arrange()
         {
             Given
-                .A_rs7_has_been_created()
+                .A_rs7_skeleton_has_been_created()
                 .The_rs7_has_been_submitted_for_peer_approval()
                 .The_rs7_has_been_peer_review_rejected()
                 .GetResult(storyData => Rs7Model = storyData.Rs7Model);
