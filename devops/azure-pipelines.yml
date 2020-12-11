@@ -23,6 +23,7 @@ variables:
   versionMajor: 1
   versionMinor: 0
   versionPatch: 0
+  testDevDevOpsServiceConnection: 'DevOps-MOEEDUNZ-ERS-EDU-MOE-ERS-TESTDEV-01-FS'
   terraformVersion: 'latest'
   decomDate: ''
 
