@@ -23,6 +23,10 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework
         
         private readonly IEnumerable<IEntityConfiguration> _configurations;
 
+        public DbSet<EceServiceProvider> EceServiceProviders { get; set; } = null!;
+
+        public DbSet<EceServiceProviderDateRangedParameter> EceServiceProviderDateRangedParameters { get; set; } = null!;
+
         public DbSet<EceService> EceServices { get; set; } = null!;
 
         public DbSet<EceServiceDateRangedParameter> EceServiceDateRangedParameters { get; set; } = null!;

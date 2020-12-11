@@ -18,6 +18,8 @@ namespace MoE.ECE.CLI.Data
 
         public static Rs7Data Rs7Data => new Rs7Data();
 
+        public static EceServiceProviderReferenceData EceServiceProviders => new EceServiceProviderReferenceData();
+
         public static EceServiceReferenceData EceServices => new EceServiceReferenceData();
 
         public static EceServiceDateRangedParameterReferenceData EceServiceDateRangedParameters => new EceServiceDateRangedParameterReferenceData();
@@ -31,6 +33,7 @@ namespace MoE.ECE.CLI.Data
 
         public void SeedData()
         {
+            _referenceDataContext.EceServiceProviders.AddRange(EceServiceProviders.Data);
             _referenceDataContext.EceServices.AddRange(EceServices.Data);
             _referenceDataContext.EceServiceDateRangedParameters.AddRange(EceServiceDateRangedParameters.Data);
             _referenceDataContext.EceLicencingDetailDateRangedParameters.AddRange(EceLicencingDetailDateRangedParameters.Data);
