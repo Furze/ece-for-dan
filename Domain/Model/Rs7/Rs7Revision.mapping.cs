@@ -201,7 +201,7 @@ namespace MoE.ECE.Domain.Model.Rs7
                 throw new InvalidOperationException($"A {nameof(UpdateRs7EntitlementMonth)} mapping must be given a target {nameof(Rs7)} to populate.");
             }
 
-            MappingFunctions.MapEntitlementMonths(new HashSet<Rs7EntitlementMonthModel> {source}
+            MappingFunctions.MapEntitlementMonths(new List<Rs7EntitlementMonthModel> {source}
                 , destination.EntitlementMonths);
 
             return destination;

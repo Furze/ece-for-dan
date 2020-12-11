@@ -21,6 +21,6 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public DateTimeOffset ModifiedDate { get; set; }
 
         public virtual EceService EceService { get; set; } = null!;
-        public virtual ICollection<EceOperatingSessionDateRangedParameter> EceOperatingSessionDateRangedParameters { get; set; } = new HashSet<EceOperatingSessionDateRangedParameter>();
+        public virtual ICollection<EceOperatingSessionDateRangedParameter> EceOperatingSessionDateRangedParameters { get; set; } = new List<EceOperatingSessionDateRangedParameter>();
     }
 }

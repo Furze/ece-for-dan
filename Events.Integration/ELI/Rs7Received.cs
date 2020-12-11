@@ -11,9 +11,9 @@ namespace Moe.ECE.Events.Integration.ELI
 
         public FundingPeriodMonth FundingPeriod { get; set; }
 
-        public IEnumerable<Rs7ReceivedAdvanceMonth> AdvanceMonths { get; set; } = new HashSet<Rs7ReceivedAdvanceMonth>();
+        public IEnumerable<Rs7ReceivedAdvanceMonth> AdvanceMonths { get; set; } = new List<Rs7ReceivedAdvanceMonth>();
 
-        public IEnumerable<Rs7ReceivedEntitlementMonth> EntitlementMonths { get; set; } = new HashSet<Rs7ReceivedEntitlementMonth>();
+        public IEnumerable<Rs7ReceivedEntitlementMonth> EntitlementMonths { get; set; } = new List<Rs7ReceivedEntitlementMonth>();
 
         public Rs7Declaration? Declaration { get; set; }
 
