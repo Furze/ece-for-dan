@@ -4,18 +4,15 @@ using MoE.ECE.Domain.Infrastructure.EntityFramework;
 
 namespace MoE.ECE.Domain.Model.ReferenceData
 {
-    public class EceServiceConfiguration : EntityConfigurationBase<EceService>
+    public class EceServiceProviderConfiguration : EntityConfigurationBase<EceServiceProvider>
     {
-        protected override void ConfigureEntity(EntityTypeBuilder<EceService> builder)
+        protected override void ConfigureEntity(EntityTypeBuilder<EceServiceProvider> builder)
         {
             builder.HasKey(entity => entity.RefOrganisationId);
 
-            builder.Property(entity => entity.IsolationIndex)
-                .HasColumnType("decimal(12, 2)");
-
             builder.HasIndex(entity => entity.OrganisationNumber);
 
-            builder.ToTable("ece_service", "referencedata");
+            builder.ToTable("ece_service_provider", "referencedata");
         }
     }
 }

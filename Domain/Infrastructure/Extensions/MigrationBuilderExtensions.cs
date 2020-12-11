@@ -17,9 +17,11 @@ namespace MoE.ECE.Domain.Infrastructure.Extensions
                 drop table if exists referencedata.ece_operating_session_date_ranged_parameter;
                 drop table if exists referencedata.ece_licencing_detail_date_ranged_parameter;
                 drop table if exists referencedata.ece_service_date_ranged_parameter;
+                drop table if exists referencedata.ece_service_provider_date_ranged_parameter;
 
                 drop table if exists referencedata.ece_operating_session;
-                drop table if exists referencedata.ece_service;";
+                drop table if exists referencedata.ece_service;
+                drop table if exists referencedata.ece_service_provider;";
 
             migrationBuilder.Sql(sql);
         }
