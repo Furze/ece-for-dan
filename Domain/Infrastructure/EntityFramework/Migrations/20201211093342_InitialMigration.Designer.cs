@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(ReferenceDataContext))]
-    [Migration("20201126062051_InitialMigration")]
+    [Migration("20201211093342_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -296,25 +296,19 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         .HasColumnName("ece_cultural_character_ids")
                         .HasColumnType("text");
 
-                    b.Property<int?>("EceServiceProviderId")
+                    b.Property<int>("EceServiceProviderId")
                         .HasColumnName("ece_service_provider_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("EceServiceProviderName")
+                        .IsRequired()
                         .HasColumnName("ece_service_provider_name")
                         .HasColumnType("text");
 
                     b.Property<string>("EceServiceProviderNumber")
+                        .IsRequired()
                         .HasColumnName("ece_service_provider_number")
                         .HasColumnType("text");
-
-                    b.Property<string>("EceServiceProviderOwnershipTypeDescription")
-                        .HasColumnName("ece_service_provider_ownership_type_description")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("EceServiceProviderOwnershipTypeId")
-                        .HasColumnName("ece_service_provider_ownership_type_id")
-                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset?>("EceServiceStatusDate")
                         .HasColumnName("ece_service_status_date")
@@ -689,6 +683,12 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     b.HasKey("RefOrganisationId")
                         .HasName("pk_ece_services");
 
+                    b.HasIndex("EceServiceProviderId")
+                        .HasName("ix_ece_services_ece_service_provider_id");
+
+                    b.HasIndex("OrganisationNumber")
+                        .HasName("ix_ece_services_organisation_number");
+
                     b.ToTable("ece_service","referencedata");
                 });
 
@@ -745,6 +745,156 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         .HasName("ix_ece_service_date_ranged_parameters_ref_organisation_id");
 
                     b.ToTable("ece_service_date_ranged_parameter","referencedata");
+                });
+
+            modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceServiceProvider", b =>
+                {
+                    b.Property<int>("RefOrganisationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ref_organisation_id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("ExternalProviderId")
+                        .HasColumnName("external_provider_id")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsLicensedEceServiceProvider")
+                        .HasColumnName("is_licensed_ece_service_provider")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPlaygroupServiceProvider")
+                        .HasColumnName("is_playgroup_service_provider")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("NumberOfContacts")
+                        .HasColumnName("number_of_contacts")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("NumberOfLicensedEceServices")
+                        .HasColumnName("number_of_licensed_ece_services")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("NumberOfPlaygroups")
+                        .HasColumnName("number_of_playgroups")
+                        .HasColumnType("integer");
+
+                    b.Property<long?>("Nzbn")
+                        .HasColumnName("nzbn")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("OrganisationName")
+                        .IsRequired()
+                        .HasColumnName("organisation_name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OrganisationNumber")
+                        .IsRequired()
+                        .HasColumnName("organisation_number")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OrganisationSectorRoleDescription")
+                        .HasColumnName("organisation_sector_role_description")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("OrganisationSectorRoleId")
+                        .HasColumnName("organisation_sector_role_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("OrganisationStatusDescription")
+                        .HasColumnName("organisation_status_description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("OrganisationStatusId")
+                        .HasColumnName("organisation_status_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("OrganisationTypeDescription")
+                        .HasColumnName("organisation_type_description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("OrganisationTypeId")
+                        .HasColumnName("organisation_type_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("OwnershipTypeDescription")
+                        .HasColumnName("ownership_type_description")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("OwnershipTypeId")
+                        .HasColumnName("ownership_type_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RegionDescription")
+                        .HasColumnName("region_description")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("RegionId")
+                        .HasColumnName("region_id")
+                        .HasColumnType("integer");
+
+                    b.HasKey("RefOrganisationId")
+                        .HasName("pk_ece_service_provider");
+
+                    b.HasIndex("OrganisationNumber")
+                        .HasName("ix_ece_service_provider_organisation_number");
+
+                    b.ToTable("ece_service_provider","referencedata");
+                });
+
+            modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceServiceProviderDateRangedParameter", b =>
+                {
+                    b.Property<int>("HistoryId")
+                        .HasColumnName("history_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("AttributeSource")
+                        .HasColumnName("attribute_source")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Attribute")
+                        .HasColumnName("attribute")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnName("created_date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("EffectiveFromDate")
+                        .HasColumnName("effective_from_date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("EffectiveToDate")
+                        .HasColumnName("effective_to_date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsArray")
+                        .HasColumnName("is_array")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset>("ModifiedDate")
+                        .HasColumnName("modified_date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("RefOrganisationId")
+                        .HasColumnName("ref_organisation_id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Value")
+                        .HasColumnName("value")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ValueDescription")
+                        .HasColumnName("value_description")
+                        .HasColumnType("text");
+
+                    b.HasKey("HistoryId", "AttributeSource")
+                        .HasName("pk_ece_service_provider_date_ranged_parameter");
+
+                    b.HasIndex("RefOrganisationId")
+                        .HasName("ix_ece_service_provider_date_ranged_parameter_ref_organisation");
+
+                    b.ToTable("ece_service_provider_date_ranged_parameter","referencedata");
                 });
 
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.Lookup", b =>
@@ -838,12 +988,32 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceService", b =>
+                {
+                    b.HasOne("MoE.ECE.Domain.Model.ReferenceData.EceServiceProvider", "EceServiceProvider")
+                        .WithMany("EceServices")
+                        .HasForeignKey("EceServiceProviderId")
+                        .HasConstraintName("fk_ece_service_ece_service_provider_ece_service_provider_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceServiceDateRangedParameter", b =>
                 {
                     b.HasOne("MoE.ECE.Domain.Model.ReferenceData.EceService", "EceService")
                         .WithMany("EceServiceDateRangedParameters")
                         .HasForeignKey("RefOrganisationId")
                         .HasConstraintName("fk_ece_service_date_ranged_parameters_ece_services_ece_service")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MoE.ECE.Domain.Model.ReferenceData.EceServiceProviderDateRangedParameter", b =>
+                {
+                    b.HasOne("MoE.ECE.Domain.Model.ReferenceData.EceServiceProvider", "EceServiceProvider")
+                        .WithMany("EceServiceProviderDateRangedParameters")
+                        .HasForeignKey("RefOrganisationId")
+                        .HasConstraintName("fk_ece_service_provider_date_ranged_parameter_ece_service_prov")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

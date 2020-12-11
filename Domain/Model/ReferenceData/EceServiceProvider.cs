@@ -28,5 +28,6 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public int NumberOfPlaygroups { get; set; }
 
         public virtual ICollection<EceService> EceServices { get; set; } = new List<EceService>();
+        public virtual ICollection<EceServiceProviderDateRangedParameter> EceServiceProviderDateRangedParameters { get; set; } = new List<EceServiceProviderDateRangedParameter>();
     }
 }

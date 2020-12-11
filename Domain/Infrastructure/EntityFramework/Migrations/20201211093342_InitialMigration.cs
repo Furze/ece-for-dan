@@ -18,6 +18,52 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                 .Annotation("Npgsql:PostgresExtension:unaccent", ",,");
 
             migrationBuilder.CreateTable(
+                name: "ece_service_provider",
+                schema: "referencedata",
+                columns: table => new
+                {
+                    ref_organisation_id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    organisation_name = table.Column<string>(nullable: false),
+                    organisation_number = table.Column<string>(nullable: false),
+                    organisation_type_id = table.Column<int>(nullable: false),
+                    organisation_type_description = table.Column<string>(nullable: true),
+                    organisation_sector_role_id = table.Column<int>(nullable: true),
+                    organisation_sector_role_description = table.Column<string>(nullable: true),
+                    organisation_status_id = table.Column<int>(nullable: false),
+                    organisation_status_description = table.Column<string>(nullable: true),
+                    external_provider_id = table.Column<string>(nullable: true),
+                    nzbn = table.Column<long>(nullable: true),
+                    region_id = table.Column<int>(nullable: true),
+                    region_description = table.Column<string>(nullable: true),
+                    ownership_type_id = table.Column<int>(nullable: true),
+                    ownership_type_description = table.Column<string>(nullable: true),
+                    is_licensed_ece_service_provider = table.Column<bool>(nullable: false),
+                    is_playgroup_service_provider = table.Column<bool>(nullable: false),
+                    number_of_contacts = table.Column<int>(nullable: false),
+                    number_of_licensed_ece_services = table.Column<int>(nullable: false),
+                    number_of_playgroups = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_ece_service_provider", x => x.ref_organisation_id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "lookup_type",
+                schema: "referencedata",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    description = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_lookup_types", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ece_service",
                 schema: "referencedata",
                 columns: table => new
@@ -89,9 +135,9 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     urban_area_name = table.Column<string>(nullable: true),
                     ward_id = table.Column<int>(nullable: true),
                     ward_name = table.Column<string>(nullable: true),
-                    ece_service_provider_id = table.Column<int>(nullable: true),
-                    ece_service_provider_number = table.Column<string>(nullable: true),
-                    ece_service_provider_name = table.Column<string>(nullable: true),
+                    ece_service_provider_id = table.Column<int>(nullable: false),
+                    ece_service_provider_number = table.Column<string>(nullable: false),
+                    ece_service_provider_name = table.Column<string>(nullable: false),
                     location_short_address_id = table.Column<int>(nullable: true),
                     location_address_line1 = table.Column<string>(nullable: true),
                     location_address_line2 = table.Column<string>(nullable: true),
@@ -131,27 +177,73 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                     parent_led_eligible_to_offer_free = table.Column<bool>(nullable: true),
                     blocked_from_offering_free_ece = table.Column<bool>(nullable: true),
                     is_po_indicator = table.Column<bool>(nullable: true),
-                    is_notional_role_used = table.Column<bool>(nullable: true),
-                    ece_service_provider_ownership_type_id = table.Column<int>(nullable: true),
-                    ece_service_provider_ownership_type_description = table.Column<string>(nullable: true)
+                    is_notional_role_used = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_ece_services", x => x.ref_organisation_id);
+                    table.ForeignKey(
+                        name: "fk_ece_service_ece_service_provider_ece_service_provider_id",
+                        column: x => x.ece_service_provider_id,
+                        principalSchema: "referencedata",
+                        principalTable: "ece_service_provider",
+                        principalColumn: "ref_organisation_id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "lookup_type",
+                name: "ece_service_provider_date_ranged_parameter",
+                schema: "referencedata",
+                columns: table => new
+                {
+                    history_id = table.Column<int>(nullable: false),
+                    attribute_source = table.Column<string>(nullable: false),
+                    ref_organisation_id = table.Column<int>(nullable: false),
+                    attribute = table.Column<string>(nullable: true),
+                    value = table.Column<string>(nullable: true),
+                    value_description = table.Column<string>(nullable: true),
+                    is_array = table.Column<bool>(nullable: false),
+                    effective_from_date = table.Column<DateTimeOffset>(nullable: false),
+                    effective_to_date = table.Column<DateTimeOffset>(nullable: true),
+                    created_date = table.Column<DateTimeOffset>(nullable: false),
+                    modified_date = table.Column<DateTimeOffset>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_ece_service_provider_date_ranged_parameter", x => new { x.history_id, x.attribute_source });
+                    table.ForeignKey(
+                        name: "fk_ece_service_provider_date_ranged_parameter_ece_service_prov",
+                        column: x => x.ref_organisation_id,
+                        principalSchema: "referencedata",
+                        principalTable: "ece_service_provider",
+                        principalColumn: "ref_organisation_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "lookup",
                 schema: "referencedata",
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    description = table.Column<string>(nullable: false)
+                    description = table.Column<string>(nullable: false),
+                    lookup_type_id = table.Column<int>(nullable: false),
+                    edumis_code = table.Column<string>(nullable: true),
+                    parent_lookup_id = table.Column<int>(nullable: true),
+                    effective_from_date = table.Column<DateTimeOffset>(nullable: false),
+                    effective_to_date = table.Column<DateTimeOffset>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_lookup_types", x => x.id);
+                    table.PrimaryKey("pk_lookups", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_lookups_lookup_types_lookup_type_id",
+                        column: x => x.lookup_type_id,
+                        principalSchema: "referencedata",
+                        principalTable: "lookup_type",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -250,32 +342,6 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "lookup",
-                schema: "referencedata",
-                columns: table => new
-                {
-                    id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    description = table.Column<string>(nullable: false),
-                    lookup_type_id = table.Column<int>(nullable: false),
-                    edumis_code = table.Column<string>(nullable: true),
-                    parent_lookup_id = table.Column<int>(nullable: true),
-                    effective_from_date = table.Column<DateTimeOffset>(nullable: false),
-                    effective_to_date = table.Column<DateTimeOffset>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_lookups", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_lookups_lookup_types_lookup_type_id",
-                        column: x => x.lookup_type_id,
-                        principalSchema: "referencedata",
-                        principalTable: "lookup_type",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ece_operating_session_date_ranged_parameter",
                 schema: "referencedata",
                 columns: table => new
@@ -323,9 +389,33 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                 column: "ref_organisation_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_ece_services_ece_service_provider_id",
+                schema: "referencedata",
+                table: "ece_service",
+                column: "ece_service_provider_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_ece_services_organisation_number",
+                schema: "referencedata",
+                table: "ece_service",
+                column: "organisation_number");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_ece_service_date_ranged_parameters_ref_organisation_id",
                 schema: "referencedata",
                 table: "ece_service_date_ranged_parameter",
+                column: "ref_organisation_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_ece_service_provider_organisation_number",
+                schema: "referencedata",
+                table: "ece_service_provider",
+                column: "organisation_number");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_ece_service_provider_date_ranged_parameter_ref_organisation",
+                schema: "referencedata",
+                table: "ece_service_provider_date_ranged_parameter",
                 column: "ref_organisation_id");
 
             migrationBuilder.CreateIndex(
@@ -350,6 +440,10 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
                 schema: "referencedata");
 
             migrationBuilder.DropTable(
+                name: "ece_service_provider_date_ranged_parameter",
+                schema: "referencedata");
+
+            migrationBuilder.DropTable(
                 name: "lookup",
                 schema: "referencedata");
 
@@ -363,6 +457,10 @@ namespace MoE.ECE.Domain.Infrastructure.EntityFramework.Migrations
 
             migrationBuilder.DropTable(
                 name: "ece_service",
+                schema: "referencedata");
+
+            migrationBuilder.DropTable(
+                name: "ece_service_provider",
                 schema: "referencedata");
         }
     }

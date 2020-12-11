@@ -75,9 +75,9 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public string? UrbanAreaName { get; set; }
         public int? WardId { get; set; }
         public string? WardName { get; set; }
-        public int? EceServiceProviderId { get; set; }
-        public string? EceServiceProviderNumber { get; set; }
-        public string? EceServiceProviderName { get; set; }
+        public int EceServiceProviderId { get; set; }
+        public string EceServiceProviderNumber { get; set; } = null!;
+        public string EceServiceProviderName { get; set; } = null!;
         public int? LocationShortAddressId { get; set; }
         public string? LocationAddressLine1 { get; set; }
         public string? LocationAddressLine2 { get; set; }
@@ -123,14 +123,10 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public bool? IsPoIndicator { get; set; }
         public bool? IsNotionalRoleUsed { get; set; }
 
-        // Selective fields from ECEServiceProvider (have added the EceServiceProvider prefix)
-        public int? EceServiceProviderOwnershipTypeId { get; set; }
-        public string? EceServiceProviderOwnershipTypeDescription { get; set; }
-
         public virtual EceServiceProvider EceServiceProvider { get; set; } = null!;
-        public virtual ICollection<EceOperatingSession> OperatingSessions { get; set; } = new HashSet<EceOperatingSession>();
-        public virtual ICollection<EceServiceDateRangedParameter> EceServiceDateRangedParameters { get; set; } = new HashSet<EceServiceDateRangedParameter>();
-        public virtual ICollection<EceLicencingDetailDateRangedParameter> EceLicencingDetailDateRangedParameters { get; set; } = new HashSet<EceLicencingDetailDateRangedParameter>();
+        public virtual ICollection<EceOperatingSession> OperatingSessions { get; set; } = new List<EceOperatingSession>();
+        public virtual ICollection<EceServiceDateRangedParameter> EceServiceDateRangedParameters { get; set; } = new List<EceServiceDateRangedParameter>();
+        public virtual ICollection<EceLicencingDetailDateRangedParameter> EceLicencingDetailDateRangedParameters { get; set; } = new List<EceLicencingDetailDateRangedParameter>();
 
         public bool IsAttestationRequired =>
             OrganisationTypeId == OrganisationType.CasualEducationAndCare ||
