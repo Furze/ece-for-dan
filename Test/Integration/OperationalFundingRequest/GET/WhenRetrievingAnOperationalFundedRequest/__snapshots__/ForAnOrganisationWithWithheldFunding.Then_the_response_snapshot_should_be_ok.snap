@@ -215,8 +215,8 @@
       }
     ],
     "OrganisationId": 10007,
-    "BusinessEntityId": "b22238b3-06f1-453d-ad42-9bd7c2608114",
-    "RequestId": "141122",
+    "BusinessEntityId": "a9d97e30-0cbc-4221-bc02-c7c445e7a5a4",
+    "RequestId": "149002",
     "FundingPeriodMonth": "July",
     "FundingYear": 2021,
     "RevisionNumber": 1,
@@ -288,8 +288,9 @@
     "Equity": null,
     "BusinessExceptions": [
       {
+        "Classification": "High",
         "Key": "FundingWithheld",
-        "Description": "This service is not funded"
+        "Description": "Funding Withheld"
       }
     ]
   }

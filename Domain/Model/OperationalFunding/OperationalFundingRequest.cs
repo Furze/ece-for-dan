@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MoE.ECE.Domain.Command;
 using MoE.ECE.Domain.Infrastructure.Services.Opa;
+using MoE.ECE.Domain.Model.ValueObject;
 using MoE.ECE.Domain.Services.Opa.Request;
 using MoE.ECE.Domain.Services.Opa.Response;
 
