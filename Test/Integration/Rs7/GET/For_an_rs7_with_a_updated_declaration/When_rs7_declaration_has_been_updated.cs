@@ -44,6 +44,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_rs7_with_a_updated_declaratio
                 .Response
                 .Content<Rs7Model>();
 
+            response.Declaration.ShouldNotBeNull();
             response.Declaration?.Role.ShouldBe("role");
             response.Declaration?.ContactPhone.ShouldBe("123");
             response.Declaration?.FullName.ShouldBe("joe bloggs");
