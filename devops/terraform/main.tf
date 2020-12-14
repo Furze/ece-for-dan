@@ -243,12 +243,9 @@ resource "azurerm_key_vault_access_policy" "app" {
   tenant_id    = data.azurerm_subscription.current.tenant_id
   object_id    = local.app_msi_id
 
-  key_permissions = [
-    "get",
-  ]
   secret_permissions = [
-    "get",
-    "list"
+    "Get",
+    "List"
   ]
 }
 
