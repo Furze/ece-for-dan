@@ -4,22 +4,8 @@ using System.Linq;
 
 namespace MoE.ECE.Domain.Model.ReferenceData
 {
-    public class EceService
+    public class EceService : OrganisationBase
     {
-        public int RefOrganisationId { get; set; }
-        public string OrganisationName { get; set; } = string.Empty;
-        public string OrganisationNumber { get; set; } = string.Empty;
-        public int OrganisationTypeId { get; set; }
-        public string? OrganisationTypeDescription { get; set; }
-        public int? OrganisationSectorRoleId { get; set; }
-        public string? OrganisationSectorRoleDescription { get; set; }
-        public int OrganisationStatusId { get; set; }
-        public string? OrganisationStatusDescription { get; set; }
-        public string? ExternalProviderId { get; set; }
-        public long? Nzbn { get; set; }
-        public int? RegionId { get; set; }
-        public string? RegionDescription { get; set; }
-
         // Fields from LicensedECEService (except those already in Organisation)
         // LocalOfficeId added here rather than in the Organisation section since the other 'LocalOffice' fields are here
         public DateTimeOffset? OpenDate { get; set; }
