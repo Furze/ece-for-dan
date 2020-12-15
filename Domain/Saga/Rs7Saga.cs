@@ -149,6 +149,8 @@ namespace MoE.ECE.Domain.Saga
 
             rs7.UpdateDeclaration(command);
 
+            _documentSession.Update(rs7);
+            
             await SaveAndRaiseAsync<Rs7DeclarationUpdated>(rs7, cancellationToken);
            
             return Unit.Value;

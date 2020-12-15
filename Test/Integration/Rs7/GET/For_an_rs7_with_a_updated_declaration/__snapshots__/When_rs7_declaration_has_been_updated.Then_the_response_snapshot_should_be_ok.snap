@@ -1,15 +1,15 @@
 ﻿{
-  "Id": 17009,
-  "BusinessEntityId": "6e1dcd7e-02a5-4ccc-b578-06f49b4e4d7b",
+  "Id": 6001,
+  "BusinessEntityId": "f786cbb9-54e0-4679-acf1-71db45909490",
   "OrganisationId": 114895,
   "FundingPeriod": "July",
   "FundingYear": 2021,
   "FundingPeriodYear": 2020,
   "IsZeroReturn": false,
   "RollStatus": "ExternalSubmittedForApproval",
-  "ReceivedDate": "2020-11-13T10:01:10.4603332+13:00",
+  "ReceivedDate": "2020-12-14T13:08:04.8650679+13:00",
   "RevisionNumber": 1,
-  "RevisionDate": "2020-11-13T10:01:10.5384356+13:00",
+  "RevisionDate": "2020-12-14T13:08:05.2321053+13:00",
   "AdvanceMonths": [
     {
       "MonthNumber": 7,
@@ -1156,6 +1156,11 @@
     }
   ],
   "IsAttested": true,
-  "Declaration": null,
-  "RequestId": "17009"
+  "Declaration": {
+    "FullName": "joe bloggs",
+    "ContactPhone": "123",
+    "Role": "role",
+    "IsDeclaredTrue": true
+  },
+  "RequestId": "6001"
 }
