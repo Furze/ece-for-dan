@@ -12,6 +12,16 @@ namespace ProtoBuf.Bcl
         {
             return System.Guid.Parse(protoGuid.Value);
         }
+
+        public static Guid Parse(string s)
+        {
+            return new Guid(new System.Guid(s));
+        }
+
+        public static Guid NewGuid()
+        {
+            return new Guid(System.Guid.NewGuid());
+        }
     }
 
     /// <summary>
