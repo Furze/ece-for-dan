@@ -127,8 +127,13 @@ namespace MoE.ECE.Domain.Model.Rs7
 
         public bool CanBeDiscarded()
         {
-            return RollStatus == RollStatus.ExternalDraft || RollStatus == RollStatus.ExternalNew ||
-                   RollStatus == RollStatus.ExternalReturnedForEdit;
+            return new[]
+            {
+                RollStatus.ExternalDraft, 
+                RollStatus.ExternalNew,
+                RollStatus.ExternalReturnedForEdit, 
+                RollStatus.ExternalSubmittedForApproval 
+            }.Contains(RollStatus);
         }
 
         public void UpdateDeclaration(UpdateRs7Declaration command)
