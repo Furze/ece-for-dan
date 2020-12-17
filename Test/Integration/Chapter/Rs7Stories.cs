@@ -1,9 +1,9 @@
 ﻿using System;
 using Bard;
+using Events.Integration.Protobuf.Eli;
 using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Model.ValueObject;
-using Moe.ECE.Events.Integration.ELI;
 using MoE.ECE.Integration.Tests.Infrastructure;
 
 namespace MoE.ECE.Integration.Tests.Chapter

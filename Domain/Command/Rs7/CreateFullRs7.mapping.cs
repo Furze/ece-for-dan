@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using AutoMapper;
+using Events.Integration.Protobuf.Eli;
 using MoE.ECE.Domain.Infrastructure.EntityFramework;
 using MoE.ECE.Domain.Read.Model.Rs7;
-using Moe.ECE.Events.Integration.ELI;
 
 namespace MoE.ECE.Domain.Command.Rs7
 {
@@ -31,7 +31,7 @@ namespace MoE.ECE.Domain.Command.Rs7
             
             destination.BusinessEntityId = Guid.NewGuid();
             destination.IsAttested = source.IsAttested;
-            destination.Source = source.Source ?? string.Empty;
+            destination.Source = source.Source;
 
             destination.Declaration = new DeclarationModel
             {
@@ -60,12 +60,12 @@ namespace MoE.ECE.Domain.Command.Rs7
 
             if (advanceMonth != null)
             {
-                return advanceMonth.FundingPeriodYear;
+                return advanceMonth.Year;
             }
 
             var entitlementMonth = source.EntitlementMonths.FirstOrDefault();
 
-            return entitlementMonth?.FundingPeriodYear ?? 0;
+            return entitlementMonth?.Year ?? 0;
         }
     }
 }
