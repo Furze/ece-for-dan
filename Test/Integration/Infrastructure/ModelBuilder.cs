@@ -227,7 +227,7 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                 OrganisationNumber = ReferenceData.EceServices.MontessoriLittleHands.OrganisationNumber,
                 FundingPeriod = Events.Integration.Protobuf.Shared.FundingPeriodMonth.July,
                 IsAttested = true,
-                // TODO Source = "Uranus",
+                Source = "Uranus",
                 AdvanceMonths = 
                 {
                     new Rs7AdvanceMonth

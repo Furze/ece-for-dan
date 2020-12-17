@@ -31,7 +31,7 @@ namespace MoE.ECE.Domain.Command.Rs7
             
             destination.BusinessEntityId = Guid.NewGuid();
             destination.IsAttested = source.IsAttested;
-            // TODO destination.Source = source.Source ?? string.Empty;
+            destination.Source = source.Source;
 
             destination.Declaration = new DeclarationModel
             {
