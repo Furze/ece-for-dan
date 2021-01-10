@@ -21,7 +21,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenSubmittingForApproval
         protected override void Arrange()
         {
             Given
-                .A_rs7_skeleton_has_been_created()
+                .A_rs7_skeleton_has_been_created(setup => setup.FundingPeriodYear = 2020)
                 .GetResult(created => Rs7 = created.Rs7Model);
         }
 

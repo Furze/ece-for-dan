@@ -23,7 +23,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
         {
             
             Given
-                .A_rs7_skeleton_has_been_created()
+                .A_rs7_skeleton_has_been_created(setup => setup.FundingPeriodYear = 2020)
                 .The_rs7_has_been_submitted_for_peer_approval()
                 .The_rs7_has_been_peer_approved()
                 .GetResult(storyData => _rs7Id = storyData.Rs7Model.Id);

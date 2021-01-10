@@ -27,6 +27,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
                 {
                     rs7.OrganisationId = _organisationId;
                     rs7.IsZeroReturn = true;
+                    rs7.FundingPeriodYear = 2020;
                 }));
         }
 

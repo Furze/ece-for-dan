@@ -29,6 +29,7 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
                 .A_rs7_skeleton_has_been_created(rs7 =>
                 {
                     rs7.FundingPeriod = FundingPeriodMonth.March;
+                    rs7.FundingPeriodYear = 2020;
                 })
                 .An_rs7_is_ready_for_internal_ministry_review()
                 .GetResult(data => _businessEntityId = data.Rs7Model.BusinessEntityId.GetValueOrDefault());

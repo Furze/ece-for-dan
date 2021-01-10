@@ -23,7 +23,10 @@ namespace MoE.ECE.Integration.Tests.Rolls
         protected override void Arrange() =>
             Given
                 .A_rs7_skeleton_has_been_created(submission =>
-                    submission.OrganisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId)
+                {
+                    submission.OrganisationId = ReferenceData.EceServices.MontessoriLittleHands.RefOrganisationId;
+                    submission.FundingPeriodYear = 2020;
+                })
                 .The_rs7_has_been_submitted_for_peer_approval();
 
         protected override void Act() => When.Get($"api/rolls?organisation-id={_refOrganisationId}");
