@@ -25,7 +25,7 @@ namespace MoE.ECE.Integration.Tests.OperationalFundingRequest.GET.WhenRetrieving
 
         protected override void Arrange() =>
             Given
-                .A_rs7_zero_return_has_been_created()
+                .A_rs7_zero_return_has_been_created(setup => setup.FundingPeriodYear = 2020)
                 .GetResult(data => _businessEntityId = data.Rs7Model.BusinessEntityId.GetValueOrDefault());
 
         protected override void Act() =>

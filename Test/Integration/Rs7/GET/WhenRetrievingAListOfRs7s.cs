@@ -20,7 +20,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
 
         protected override void Arrange()
         {
-            Given.A_rs7_skeleton_has_been_created();
+            Given.A_rs7_skeleton_has_been_created(setup => setup.FundingPeriodYear = 2020);
         }
 
         protected override void Act()

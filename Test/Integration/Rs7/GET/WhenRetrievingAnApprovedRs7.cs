@@ -23,7 +23,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET
 
         protected override void Arrange() =>
             Given
-                .A_rs7_skeleton_has_been_created()
+                .A_rs7_skeleton_has_been_created(setup => setup.FundingPeriodYear = 2020)
                 .An_rs7_is_ready_for_internal_ministry_review()
                 .And_the_rs7_has_been_approved()
                 .GetResult(storyData => _rs7Id = storyData.Rs7Model.Id);
