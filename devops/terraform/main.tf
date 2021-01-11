@@ -9,7 +9,11 @@ locals {
 
 # Default provider that is based on the active subscription
 provider "azurerm" {
-  features {} # This is required for version 2+
+  features {
+    key_vault {
+      purge_soft_delete_on_destroy = true
+    }
+  } # This is required for version 2+
 }
 
 # Pinned provider to the subscription where ACR and other single instance resources live
