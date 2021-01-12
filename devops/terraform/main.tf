@@ -5,6 +5,18 @@ locals {
   master_resource_group_name = upper("${var.environment_prefix}-ERS-${var.environment_suffix}-MASTER")
   environment_number         = lower(split("-", var.environment)[1])
   environment_name           = lower(split("-", var.environment)[0])
+
+  db_server_resource_group = upper("${var.environment_prefix}-ERS-${var.environment_suffix}-PSQL-DATABASES")
+  db_server_name           = lower("${var.environment_prefix}ers${var.environment_suffix}psqlserver")
+  db_server_endpoint       = "${local.db_server_name}.postgres.database.azure.com"
+  db_username              = lower("${local.resource_base_name}${var.application_name}")
+  db_name                  = lower("${local.resource_base_name}psql${var.application_name}")
+
+  tags = {
+    decomdate    = var.environment_prefix == "MAPA" ? "2999-01-01T00:00:00Z" : var.decom_date == "" ? timeadd(timestamp(), "336h") : "${var.decom_date}T00:00:00Z" # If MAPA sub then never expire. If MATA but no value passed then expire in 2 weeks, else use value passed in. 
+    createdby    = data.azurerm_client_config.current.object_id
+    creationdate = timestamp()
+  }
 }
 
 # Default provider that is based on the active subscription
@@ -65,15 +77,6 @@ data "azurerm_application_insights" "cmn" {
   resource_group_name = local.common_resource_group_name
 }
 
-locals {
-  tags = {
-    decomdate    = var.environment_prefix == "MAPA" ? "2999-01-01T00:00:00Z" : var.decom_date == "" ? timeadd(timestamp(), "336h") : "${var.decom_date}T00:00:00Z" # If MAPA sub then never expire. If MATA but no value passed then expire in 2 weeks, else use value passed in. 
-    createdby    = data.azurerm_client_config.current.object_id
-    creationdate = timestamp()
-  }
-}
-
-
 #                                                                                                 
 #   #####  ######  ####   ####  #    # #####   ####  ######     ####  #####   ####  #    # #####  
 #   #    # #      #      #    # #    # #    # #    # #         #    # #    # #    # #    # #    # 
@@ -92,14 +95,14 @@ resource "azurerm_resource_group" "app" {
   }
 }
 
-#                                                                     
-#    ####   ####  #          ####  ###### #####  #    # ###### #####  
-#   #      #    # #         #      #      #    # #    # #      #    # 
-#    ####  #    # #          ####  #####  #    # #    # #####  #    # 
-#        # #  # # #              # #      #####  #    # #      #####  
-#   #    # #   #  #         #    # #      #   #   #  #  #      #   #  
-#    ####   ### # ######     ####  ###### #    #   ##   ###### #    # 
-#                                                                     
+#                                                                                  
+#    ####   ####  #         #####    ##   #####   ##   #####    ##    ####  ###### 
+#   #      #    # #         #    #  #  #    #    #  #  #    #  #  #  #      #      
+#    ####  #    # #         #    # #    #   #   #    # #####  #    #  ####  #####  
+#        # #  # # #         #    # ######   #   ###### #    # ######      # #      
+#   #    # #   #  #         #    # #    #   #   #    # #    # #    # #    # #      
+#    ####   ### # ######    #####  #    #   #   #    # #####  #    #  ####  ###### 
+#                                                                                  
 
 # Generate random password for Postgres Server
 resource "random_password" "psqlpassword" {
@@ -117,59 +120,16 @@ resource "azurerm_key_vault_secret" "sqlpassword" {
   name         = "${lower(var.application_name)}-sqlpassword"
   value        = random_password.psqlpassword.result
   key_vault_id = data.azurerm_key_vault.master.id
-}
-
-# App Azure SQL Server
-resource "azurerm_postgresql_server" "app" {
-  name                = "${local.resource_base_name}psql${lower(var.application_name)}"
-  resource_group_name = azurerm_resource_group.app.name
-  location            = azurerm_resource_group.app.location
-
-  administrator_login          = "psqlserveradmin"
-  administrator_login_password = random_password.psqlpassword.result
-
-  sku_name   = "B_Gen5_1"
-  version    = var.psql_server_version
-  storage_mb = 5120
-
-  ssl_enforcement_enabled          = true
-  ssl_minimal_tls_version_enforced = "TLS1_2"
-  tags                             = local.tags
-  lifecycle {
-    ignore_changes = [tags]
+  tags = {
+    createdby     = data.azurerm_client_config.current.object_id
+    purgeOnDelete = "true"
   }
 }
 
-resource "azurerm_postgresql_firewall_rule" "app" {
-  name                = "MOE-NET"
-  resource_group_name = azurerm_resource_group.app.name
-  server_name         = azurerm_postgresql_server.app.name
-  start_ip_address    = "202.37.32.1"
-  end_ip_address      = "202.37.39.254"
-}
-
-# Shim to trigger "Allow access to Azure Services" to ON
-resource "azurerm_postgresql_firewall_rule" "azure" {
-  name                = "AllowAllWindowsAzureIps"
-  resource_group_name = azurerm_resource_group.app.name
-  server_name         = azurerm_postgresql_server.app.name
-  start_ip_address    = "0.0.0.0"
-  end_ip_address      = "0.0.0.0"
-}
-
-#                                                                                  
-#    ####   ####  #         #####    ##   #####   ##   #####    ##    ####  ###### 
-#   #      #    # #         #    #  #  #    #    #  #  #    #  #  #  #      #      
-#    ####  #    # #         #    # #    #   #   #    # #####  #    #  ####  #####  
-#        # #  # # #         #    # ######   #   ###### #    # ######      # #      
-#   #    # #   #  #         #    # #    #   #   #    # #    # #    # #    # #      
-#    ####   ### # ######    #####  #    #   #   #    # #####  #    #  ####  ###### 
-#                                                                                  
-
 resource "azurerm_postgresql_database" "app" {
-  name                = lower(var.application_name)
-  resource_group_name = azurerm_resource_group.app.name
-  server_name         = azurerm_postgresql_server.app.name
+  name                = local.db_name
+  resource_group_name = local.db_server_resource_group
+  server_name         = local.db_server_name
   charset             = var.sql_charset
   collation           = var.sql_collation
 }
@@ -206,7 +166,7 @@ resource "azurerm_app_service" "app" {
     OidcSettings__Authority             = "https://${local.resource_base_name}identity.azurewebsites.net/"
     OidcSettings__Issuer                = "https://${local.resource_base_name}identity.azurewebsites.net/"
     KeyVault__Vault                     = data.azurerm_key_vault.master.name
-    MartenSettings__ConnectionString    = "host=${local.resource_base_name}psql${lower(var.application_name)}.postgres.database.azure.com;port=5432;database=${lower(var.application_name)};password={{PASSWORD_FROM_KEYVAULT}};username=psqlserveradmin@${local.resource_base_name}psql${lower(var.application_name)};Pooling=true;Ssl Mode=Require;"
+    MartenSettings__ConnectionString    = "host=${local.db_server_endpoint};port=5432;database=${local.db_name};password={{PASSWORD_FROM_KEYVAULT}};username=${local.db_username}@${local.db_server_name};Pooling=true;Ssl Mode=Require;"
     OpaSettings__AuthorisationUrl       = "${local.opa_authorisation_url}"
     OpaSettings__RuleBaseUrl            = "${local.opa_rulebase_url}"
     ASPNETCORE_FORWARDEDHEADERS_ENABLED = "true"
@@ -252,15 +212,6 @@ resource "azurerm_key_vault_access_policy" "app" {
     "List"
   ]
 }
-
-# Add App Service MSI to SQL Server
-# resource "azurerm_sql_active_directory_administrator" "app" {
-#   server_name         = azurerm_postgresql_server.app.name
-#   resource_group_name = azurerm_resource_group.app.name
-#   login               = var.application_name
-#   tenant_id           = data.azurerm_subscription.current.tenant_id
-#   object_id           = local.app_msi_id
-# }
 
 # Generate a GUID for Web Test
 resource "random_uuid" "webtest" {}

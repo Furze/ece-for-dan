@@ -1,0 +1,87 @@
+parameters:
+  environmentPrefix: ''
+  environmentSuffix: ''
+  environmentName: ''
+  environmentNumber: ''
+  applicationName: ''
+  azureDevOpsServiceConnection: ''
+  imageTag: ''
+
+steps:
+- task: AzureKeyVault@1
+  condition: succeeded()
+  displayName: 'Get App DB Password'
+  inputs:
+      azureSubscription: 'DevOps-MOEEDUNZ-ERS-EDU-MOE-PRODUAT-01-MAPA-MOE-0-0-INIT'
+      keyVaultName: 'mapamoe00init'
+      secretsFilter: 'service-account-srvAzureSQLConfigEducationGovtNzOnMicrosoftCom-userPrincipalName, service-account-srvAzureSQLConfigEducationGovtNzOnMicrosoftCom-password'
+  continueOnError: false   
+
+- task: AzureCLI@2
+  displayName: Add App and Users to database
+  inputs:
+    azureSubscription: "${{ parameters.azureDevOpsServiceConnection }}"
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      KEYVAULT_NAME="${{ parameters.environmentPrefix }}ers${{ parameters.environmentSuffix }}secrets"
+      SECRET_NAME="psqlserveradmin-password"
+      ADMIN_PASSWORD=`az keyvault secret show --vault-name "$KEYVAULT_NAME" --name "$SECRET_NAME" -o tsv --query value`
+      if [ -z "$ADMIN_PASSWORD" ]; then
+          echo "admin db password not found!"
+          exit 1
+      fi
+
+      KEYVAULT_NAME="${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentNumber }}secrets"
+      SECRET_NAME="${{ parameters.applicationName }}-sqlpassword"
+      APPLICATION_PASSWORD=`az keyvault secret show --vault-name "$KEYVAULT_NAME" --name "$SECRET_NAME" -o tsv --query value`
+      if [ -z "$APPLICATION_PASSWORD" ]; then
+          echo "Application db password not found!"
+          exit 1
+      fi
+
+      DB_SERVERNAME="${{ parameters.environmentPrefix }}ers${{ parameters.environmentSuffix }}psqlserver"
+      DB_NAME="${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}"
+      APP_ROLENAME="${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}${{ parameters.applicationName }}"
+
+      # Login as the PSQL server local admin
+      DB_USERNAME="psqlserveradmin@$DB_SERVERNAME"  
+      BaseSqlConnection="host=$DB_SERVERNAME.postgres.database.azure.com;Port=5432;password=\"$ADMIN_PASSWORD\";User Id=$DB_USERNAME;Pooling=true;Ssl Mode=Require;"
+      APP_CONNECTION_STRING="$BaseSqlConnection Database=$DB_NAME;"
+      POSTGRES_DB_CONNECTION_STRING="$BaseSqlConnection Database=postgres;"
+      
+      echo "Allow application role full access to db and its schemas"
+      docker run \
+      -e APP_CONNECTION_STRING="$APP_CONNECTION_STRING" \
+      -e APPLICATION_PASSWORD="$APPLICATION_PASSWORD" \
+      -e APP_ROLENAME="$APP_ROLENAME" \
+      -e POSTGRES_DB_CONNECTION_STRING="$POSTGRES_DB_CONNECTION_STRING" \
+      -e DB_NAME="$DB_NAME" \
+      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+      -c 'cd /cli && chmod +x CLI && ./CLI add-app-login -c "$APP_CONNECTION_STRING" -p "$POSTGRES_DB_CONNECTION_STRING" -r "$APP_ROLENAME" --password "$APPLICATION_PASSWORD" --database $DB_NAME --schema public'
+      if [[ $? -ne 0 ]] ; then
+          exit 1
+      fi
+                              
+      echo "Add Data Reader access as AD server admin"
+      # Login as the PSQL server AD ADMIN group/user (case sensitive)
+      TENANT_ID=`az account show -o tsv --query tenantId`
+      az login -u "srvAzureSQLConfig@educationgovtnz.onmicrosoft.com" -p $(service-account-srvAzureSQLConfigEducationGovtNzOnMicrosoftCom-password) --allow-no-subscriptions
+      PASSWORD=`az account get-access-token --resource-type oss-rdbms | jq -r '.accessToken'`
+      DB_USERNAME="AL PSQL ERS ${{ upper(parameters.environmentSuffix) }} ADMIN@$DB_SERVERNAME"
+      
+      BaseSqlConnection="host=$DB_SERVERNAME.postgres.database.azure.com;Port=5432;password=\"$PASSWORD\";User Id=$DB_USERNAME;Pooling=true;Ssl Mode=Require;"
+      APP_CONNECTION_STRING="$BaseSqlConnection Database=$DB_NAME;"
+      POSTGRES_DB_CONNECTION_STRING="$BaseSqlConnection Database=postgres;"                       
+      USER_ACCESS_GROUP="AL PSQL ERS ${{ upper(parameters.environmentSuffix) }} READER"
+
+      docker run \
+      -e APP_CONNECTION_STRING="$APP_CONNECTION_STRING" \
+      -e POSTGRES_DB_CONNECTION_STRING="$POSTGRES_DB_CONNECTION_STRING" \
+      -e USER_ACCESS_GROUP="$USER_ACCESS_GROUP" \
+      -e DB_NAME="$DB_NAME" \
+      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+      -c 'cd /cli && chmod +x CLI && ./CLI add-user -c "$APP_CONNECTION_STRING" -p "$POSTGRES_DB_CONNECTION_STRING" --name "$USER_ACCESS_GROUP" --database $DB_NAME --schema public'
+      if [[ $? -ne 0 ]] ; then
+          exit 1
+      fi

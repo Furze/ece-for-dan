@@ -89,8 +89,8 @@ steps:
       failOnStandardError: false
       powerShellErrorActionPreference: 'silentlyContinue'
       inlineScript: |
-        $keyvaultName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentNumber }}secrets"
-        $secretName = "${{ parameters.applicationName }}-sqlpassword"
+        $keyvaultName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentSuffix }}secrets"
+        $secretName = "psqlserveradmin-password" 
         $env:PGPASSWORD = az keyvault secret show --vault-name "$keyvaultName" --name "$secretName" -o tsv --query value
         if ([string]::IsNullOrEmpty($env:PGPASSWORD)) {
           echo "##vso[task.logissue type=warning] Failed to get database credentials. This is not normal."
@@ -101,8 +101,8 @@ steps:
         sudo apt install -y postgresql-client
         psql -V
 
-        $dbServerName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}"
-        $dbName = "${{ parameters.applicationName }}"
+        $dbServerName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentSuffix }}psqlserver".ToLower()
+        $dbName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}".ToLower()
         $dbEndpoint = "$dbServerName.postgres.database.azure.com"
         $dbUsername = "psqlserveradmin"
 

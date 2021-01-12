@@ -58,6 +58,7 @@ namespace MoE.ECE.CLI
             var evolveCommands = new EvolveCommands(_configuration);
             var entityFrameworkCommands = new EntityFrameworkCommands(_serviceProvider, _configuration);
             var authorisationReportCommands = new AuthorisationReportCommands();
+            var postgresCommands = new PostgresCommands(_configuration);
 
             // Create a root command with some options
             var rootCommand = new RootCommand
@@ -73,6 +74,9 @@ namespace MoE.ECE.CLI
                 entityFrameworkCommands.CreateSeedCommand(),
                 entityFrameworkCommands.AddTestData(),
                 authorisationReportCommands.AuthorisationReportCommand,
+                postgresCommands.AddUser,
+                postgresCommands.AddManagedIdentity,
+                postgresCommands.AddToSchema
             };
 
             rootCommand.Description = "ECE API Migrations";
