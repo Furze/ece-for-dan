@@ -13,7 +13,7 @@ namespace MoE.ECE.Web.Infrastructure.HealthChecks
     public class ServiceBusPublisherHealthCheck : HealthCheck
     {
         private readonly string _connectionStringFactory;
-        private const string HealthCheckName = "ServiceBus Health Check";
+        private const string HealthCheckName = "Service Bus Topic Check";
 
         public ServiceBusPublisherHealthCheck(IOptions<ConnectionStrings> connectionString) : base(HealthCheckName)
         {
