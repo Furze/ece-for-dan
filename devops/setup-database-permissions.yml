@@ -95,3 +95,13 @@ steps:
       if [[ $? -ne 0 ]] ; then
           exit 1
       fi
+
+      echo "Allow Data Reader role access to the referencedata schema"
+      docker run \
+      -e APP_CONNECTION_STRING="$APP_CONNECTION_STRING" \
+      -e USER_ACCESS_GROUP="$USER_ACCESS_GROUP" \
+      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+      -c 'cd /cli && chmod +x CLI && ./CLI add-access-to-schema -c "$APP_CONNECTION_STRING" -n "$USER_ACCESS_GROUP" --schema referencedata -g "SELECT" -f "SELECT"'
+      if [[ $? -ne 0 ]] ; then
+          exit 1
+      fi
