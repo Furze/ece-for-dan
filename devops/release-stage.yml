@@ -90,17 +90,7 @@ stages:
                       keyVaultName: "${{ parameters.environmentPrefix }}ers${{ parameters.environmentSuffix }}secrets"
                       secretsFilter: 'psqlserveradmin-password'
                     continueOnError: false
-
-                  - template: setup-database-permissions.yml
-                    parameters:
-                      environmentPrefix: '${{ parameters.environmentPrefix }}'
-                      environmentSuffix: '${{ parameters.environmentSuffix }}'
-                      environmentName: '${{ parameters.environmentName }}'
-                      environmentNumber: '${{ parameters.environmentNumber }}'
-                      applicationName: '${{ parameters.applicationName }}'
-                      azureDevOpsServiceConnection: '${{ parameters.azureDevOpsServiceConnection }}'
-                      imageTag: '${{ parameters.imageTag }}'
-
+                      
                   - script: |
                       DB_SERVERNAME="${{ parameters.environmentPrefix }}ers${{ parameters.environmentSuffix }}psqlserver"
                       DB_NAME="${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}"
@@ -157,7 +147,17 @@ stages:
                   #   condition: succeeded()
                   #   displayName: "Apply reconciliation views"
                   #   failOnStderr: false
-                                
+
+                  - template: setup-database-permissions.yml
+                    parameters:
+                      environmentPrefix: '${{ parameters.environmentPrefix }}'
+                      environmentSuffix: '${{ parameters.environmentSuffix }}'
+                      environmentName: '${{ parameters.environmentName }}'
+                      environmentNumber: '${{ parameters.environmentNumber }}'
+                      applicationName: '${{ parameters.applicationName }}'
+                      azureDevOpsServiceConnection: '${{ parameters.azureDevOpsServiceConnection }}'
+                      imageTag: '${{ parameters.imageTag }}'
+
                   - template: container-deployment-steps.yml
                     parameters:
                       environmentName: '${{ parameters.environmentName }}'
