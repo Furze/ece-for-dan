@@ -29,7 +29,8 @@ namespace MoE.ECE.Web.Bootstrap
 
             // Hosted Services
             services.AddHostedService<WorkflowTopicConsumer>();
-            
+            services.AddHostedService<EliTopicConsumer>();
+
             // Singleton
             services.AddSingleton(Configuration);
             services.AddSingleton<IConnectionStringFactory, ConnectionStringFactory>();
