@@ -18,3 +18,54 @@ If you want to learn more about creating good readme files then refer the follow
 - [ASP.NET Core](https://github.com/aspnet/Home)
 - [Visual Studio Code](https://github.com/Microsoft/vscode)
 - [Chakra Core](https://github.com/Microsoft/ChakraCore)
+
+# Connect to Azure instance of PostgreSQL
+
+There are a few steps to this and there are some things you will need to do prior.
+
+#### Pre Reqs ####
+- Log onto [Azure Portal](https://portal.azure.com)
+- Go to the keyvault for the required ResourceGroup for dev02 this is **mataersdev02secrets**
+    - Navigate to secrets
+    - Get the **workflows-sqlpassword** and store it somewhere temporarily.
+- Go to the Workflows resource group for the environment eg. **MATA-ERS-DEV-02-WORKFLOWS**
+- Select the PostgreSQL database
+- Navigate to Connection Security page
+    - Add your client ip address in as a firewall rule (You may need to be on Green network for this to work within the ministry)
+    - Don't forget to save it!!
+- From the Overview page you will need the following values
+    - **Server name**
+    - **Admin username**
+
+### Connect to DB
+- In pgAdmin create a new Server
+- General Tab - specify whatever name you want to be displayed
+- Connection Tab -
+    - Host name/address: enter the ***Server name*** you got from Azure Portal
+    - Port: keep as **5432**
+    - Username: enter **AL PSQL [DEVTEST | PRODUAT] READER@{servername}**
+    - Password: see below on obtaining an azure session token
+
+  Save and connect...
+
+#### Obtaining an Azure session token
+- Install the Azure CLI
+- in a command window run the following commands to gain a session token. This is valid for 1 hour
+
+    - `az login`
+    - `az account get-access-token --resource-type oss-rdbms` and copy the value of "accessToken"
+
+
+#### Notes on Connecting with PGAdmin
+Most tools work well with this connection method.
+It _is_ possible to connect using PgAdmin but you need a little trickery.
+When adding the server the password field is restricted to 2000 characters.
+
+Unfortunately the session token is over 5000. Once the Create Server screen is showing
+- Select the _connection_ tab
+- right click on the **Password** field and select _Inspect_.
+- edit the `maxlength="2000"` to `maxlenghth="6000"` and hit enter
+
+Now you are good to copy your session token in the password field.
+Luckily, now that your server is created, a different pop up is used to prompt you to reenter your password when it fails.
+This password text field does not need to be modified to hold the session token.
