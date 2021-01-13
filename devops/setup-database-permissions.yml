@@ -62,7 +62,17 @@ steps:
       if [[ $? -ne 0 ]] ; then
           exit 1
       fi
-                              
+
+      echo "Allow application role ALL access to the referencedata schema"
+      docker run \
+      -e APP_CONNECTION_STRING="$APP_CONNECTION_STRING" \
+      -e APP_ROLENAME="$APP_ROLENAME" \
+      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+      -c 'cd /cli && chmod +x CLI && ./CLI add-access-to-schema -c "$APP_CONNECTION_STRING" -n "$APP_ROLENAME" --schema referencedata -g "ALL" -f "ALL PRIVILEGES"'
+      if [[ $? -ne 0 ]] ; then
+          exit 1
+      fi
+      
       echo "Add Data Reader access as AD server admin"
       # Login as the PSQL server AD ADMIN group/user (case sensitive)
       TENANT_ID=`az account show -o tsv --query tenantId`
