@@ -224,6 +224,7 @@ namespace MoE.ECE.CLI.Commands
                     $@"DO $$
                        BEGIN
                          IF EXISTS(SELECT 1 FROM information_schema.schemata WHERE schema_name = '{schema}') THEN
+                            GRANT USAGE ON SCHEMA ""{schema}"" to ""{name}"";
                             GRANT {grantOnCurrent} ON ALL TABLES IN SCHEMA ""{schema}"" to ""{name}"";
                             GRANT {grantOnCurrent} ON ALL SEQUENCES IN SCHEMA ""{schema}"" to ""{name}"";
                             ALTER DEFAULT PRIVILEGES IN SCHEMA ""{schema}"" GRANT {grantOnFuture} ON TABLES TO ""{name}"";
