@@ -47,7 +47,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
         [Fact]
         public void Then_the_domain_event_should_have_populated_the_advanced_months_correctly()
         {
-            var domainEvent = A_domain_event_should_be_fired<Rs7CreatedFromExternal>();
+            var domainEvent = A_domain_event_should_be_fired<FullRs7Created>();
 
             domainEvent.AdvanceMonths.ShouldNotBeNull();
 
@@ -65,7 +65,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
         [Fact]
         public void Then_the_domain_event_should_have_populated_the_entitlement_months_correctly()
         {
-            var domainEvent = A_domain_event_should_be_fired<Rs7CreatedFromExternal>();
+            var domainEvent = A_domain_event_should_be_fired<FullRs7Created>();
 
             domainEvent.AdvanceMonths.ShouldNotBeNull();
 
@@ -90,7 +90,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
         [Fact]
         public void Then_the_domain_event_should_have_populated_the_source_correctly()
         {
-            A_domain_event_should_be_fired<Rs7CreatedFromExternal>()
+            A_domain_event_should_be_fired<FullRs7Created>()
                 .Source.ShouldBe("Uranus");
         }
 

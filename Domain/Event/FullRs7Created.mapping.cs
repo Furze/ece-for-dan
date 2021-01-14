@@ -1,26 +1,14 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MoE.ECE.Domain.Infrastructure.Extensions;
 using MoE.ECE.Domain.Model.Rs7;
-using MoE.ECE.Domain.Read.Model.Rs7;
-using Moe.Library.Cqrs;
 
 namespace MoE.ECE.Domain.Event
 {
-    /// <summary>
-    /// Domain event to indicate that an Rs7 return was created, not via data submitted
-    /// directly to Eli cloud, but rather via an external SMS system.
-    /// </summary>
-    public class Rs7CreatedFromExternal : Rs7Model, IDomainEvent
+    public class FullRs7CreatedMapping : Profile
     {
-        public int RevisionId { get; set; }
-        public string? Source { get; set; }
-    }
-    
-    public class Rs7CreatedFromExternalMapping : Profile
-    {
-        public Rs7CreatedFromExternalMapping()
+        public FullRs7CreatedMapping()
         {
-            CreateMap<Rs7, Rs7CreatedFromExternal>()
+            CreateMap<Rs7, FullRs7Created>()
                 .Map(d => d.Id, s => s.Id)
                 .Map(d => d.Source, s => s.CurrentRevision.Source)
                 .Map(d => d.RevisionNumber, s => s.CurrentRevision.RevisionNumber)

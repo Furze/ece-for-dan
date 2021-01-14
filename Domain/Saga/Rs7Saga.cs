@@ -91,7 +91,7 @@ namespace MoE.ECE.Domain.Saga
             // Now map in the details..
             _mapper.Map(command, rs7);
 
-            await SaveAndRaiseAsync<Rs7CreatedFromExternal>(rs7, cancellationToken);
+            await SaveAndRaiseAsync<FullRs7Created>(rs7, cancellationToken);
             
             return Unit.Value;
         }
