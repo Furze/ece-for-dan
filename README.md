@@ -41,10 +41,13 @@ There are a few steps to this and there are some things you will need to do prio
 - In pgAdmin create a new Server
 - General Tab - specify whatever name you want to be displayed
 - Connection Tab -
-    - Host name/address: enter the ***Server name*** you got from Azure Portal
-    - Port: keep as **5432**
-    - Username: enter **AL PSQL [DEVTEST | PRODUAT] READER@{servername}**
-    - Password: see below on obtaining an azure session token
+  - Host name/address: enter the ***Server name*** you got from Azure Portal
+      - e.g. for devtest this would be ***mataersdevtestpsqlserver.postgres.database.azure.com***
+  - Port: keep as **5432**
+  - Username: enter **AL PSQL ERS [DEVTEST | PRODUAT] READER@{servername}**
+      - e.g. for DEVTEST this would be **AL PSQL ERS DEVTEST READER@mataersdevtestpsqlserver**
+      - and yes there are spaces in the AD group name..... don't ask!
+  - Password: see below on obtaining an azure session token
 
   Save and connect...
 
