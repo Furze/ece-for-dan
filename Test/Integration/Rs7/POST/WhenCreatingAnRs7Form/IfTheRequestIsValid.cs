@@ -23,7 +23,10 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7Form
         {
             When.Post(Url,
                 ModelBuilder.Rs7Model(rs7 =>
-                    rs7.OrganisationId = _organisationId));
+                    {
+                        rs7.OrganisationId = _organisationId;
+                        rs7.FundingPeriodYear = 2020;
+                    }));
         }
 
         private Rs7SkeletonCreated DomainEvent => A_domain_event_should_be_fired<Rs7SkeletonCreated>();

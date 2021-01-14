@@ -15,6 +15,7 @@ using MoE.ECE.Web.Infrastructure.Extensions;
 using MoE.ECE.Web.Infrastructure.ServiceBus;
 using MoE.ECE.Web.Infrastructure.Validation;
 using Moe.Library.Cqrs;
+using Moe.Library.ServiceBus;
 using SystemClock = MoE.ECE.Domain.Infrastructure.SystemClock;
 
 namespace MoE.ECE.Web.Bootstrap
@@ -27,10 +28,13 @@ namespace MoE.ECE.Web.Bootstrap
                 .ConfigureFor<OpaSettings>(Configuration);
 
             // Hosted Services
+            services.AddHostedService<WorkflowTopicConsumer>();
+            services.AddHostedService<EliTopicConsumer>();
 
             // Singleton
             services.AddSingleton(Configuration);
             services.AddSingleton<IConnectionStringFactory, ConnectionStringFactory>();
+            services.AddSingleton<IMessageResolver, MessageResolver>();
 
             // Scoped
 

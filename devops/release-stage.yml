@@ -84,16 +84,19 @@ stages:
                 - ${{ if eq(parameters.runTerraformApply, true) }}:
                   - task: AzureKeyVault@1
                     condition: succeeded()
-                    displayName: "Link keyvault with Azure DevOps"
+                    displayName: 'Retrieve PSQL Admin Password'
                     inputs:
                       azureSubscription: "${{ parameters.azureDevOpsServiceConnection }}"
-                      keyVaultName: "${{ parameters.azureKeyvaultInstance }}"
-                      secretsFilter: "*" # Options: editableOptions
+                      keyVaultName: "${{ parameters.environmentPrefix }}ers${{ parameters.environmentSuffix }}secrets"
+                      secretsFilter: 'psqlserveradmin-password'
                     continueOnError: false
-
-
+                      
                   - script: |
-                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(ece-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
+                      DB_SERVERNAME="${{ parameters.environmentPrefix }}ers${{ parameters.environmentSuffix }}psqlserver"
+                      DB_NAME="${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}"
+                      DB_ROLENAME="psqlserveradmin"
+
+                      connectionString="host=$DB_SERVERNAME.postgres.database.azure.com;port=5432;database=$DB_NAME;password=$ADMIN_PASSWORD;username=$DB_ROLENAME@$DB_SERVERNAME;Pooling=true;Ssl Mode=Require;"                      
                       docker run \
                       -e MartenSettings__ConnectionString="$connectionString" \
                       --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
@@ -101,12 +104,18 @@ stages:
                       if [[ $? -ne 0 ]] ; then
                           exit 1
                       fi
+                    env:
+                      ADMIN_PASSWORD: $(psqlserveradmin-password)
                     condition: succeeded()
                     displayName: "Upgrade DB"
                     failOnStderr: false
 
                   - script: |
-                      connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(ece-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
+                      DB_SERVERNAME="${{ parameters.environmentPrefix }}ers${{ parameters.environmentSuffix }}psqlserver"
+                      DB_NAME="${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}"
+                      DB_ROLENAME="psqlserveradmin"
+
+                      connectionString="host=$DB_SERVERNAME.postgres.database.azure.com;port=5432;database=$DB_NAME;password=$ADMIN_PASSWORD;username=$DB_ROLENAME@$DB_SERVERNAME;Pooling=true;Ssl Mode=Require;"                      
                       docker run \
                       -e MartenSettings__ConnectionString="$connectionString" \
                       --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
@@ -114,12 +123,18 @@ stages:
                       if [[ $? -ne 0 ]] ; then
                           exit 1
                       fi
+                    env:
+                      ADMIN_PASSWORD: $(psqlserveradmin-password)
                     condition: succeeded()
                     displayName: "Upgrade DB for reference data"
                     failOnStderr: false
 
                   # - script: |
-                  #     connectionString="host=${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}.postgres.database.azure.com;port=5432;database=${{ parameters.applicationName }};password=$(ece-sqlpassword);username=psqlserveradmin@${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }};Pooling=true;Ssl Mode=Require;"                    
+                  #     DB_SERVERNAME="${{ parameters.environmentPrefix }}ers${{ parameters.environmentSuffix }}psqlserver"
+                  #     DB_NAME="${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}"
+                  #     DB_ROLENAME="psqlserveradmin"
+
+                  #     connectionString="host=$DB_SERVERNAME.postgres.database.azure.com;port=5432;database=$DB_NAME;password=$ADMIN_PASSWORD;username=$DB_ROLENAME@$DB_SERVERNAME;Pooling=true;Ssl Mode=Require;"                      
                   #     docker run \
                   #     -e MartenSettings__ConnectionString="$connectionString" \
                   #     --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
@@ -127,10 +142,22 @@ stages:
                   #     if [[ $? -ne 0 ]] ; then
                   #         exit 1
                   #     fi
+                  #   env:
+                  #     ADMIN_PASSWORD: $(psqlserveradmin-password)                      
                   #   condition: succeeded()
                   #   displayName: "Apply reconciliation views"
                   #   failOnStderr: false
-                                
+
+                  - template: setup-database-permissions.yml
+                    parameters:
+                      environmentPrefix: '${{ parameters.environmentPrefix }}'
+                      environmentSuffix: '${{ parameters.environmentSuffix }}'
+                      environmentName: '${{ parameters.environmentName }}'
+                      environmentNumber: '${{ parameters.environmentNumber }}'
+                      applicationName: '${{ parameters.applicationName }}'
+                      azureDevOpsServiceConnection: '${{ parameters.azureDevOpsServiceConnection }}'
+                      imageTag: '${{ parameters.imageTag }}'
+
                   - template: container-deployment-steps.yml
                     parameters:
                       environmentName: '${{ parameters.environmentName }}'

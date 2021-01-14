@@ -23,7 +23,7 @@ namespace MoE.ECE.Domain.Query
 
         public async Task<Rs7Model> Handle(GetRs7ByIdRevisionNumber query, CancellationToken cancellationToken)
         {
-            Rs7 rs7 = await _documentSession.Query<Rs7>().SingleOrDefaultAsync(r => r.Id == query.Id, cancellationToken);
+            var rs7 = await _documentSession.Query<Rs7>().SingleOrDefaultAsync(r => r.Id == query.Id, cancellationToken);
             
             if (rs7 == null)
             {

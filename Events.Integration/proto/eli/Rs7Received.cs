@@ -25,27 +25,27 @@ namespace Events.Integration.Protobuf.Eli {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChVlbGkvUnM3UmVjZWl2ZWQucHJvdG8aH3NoYXJlZC9GdW5kaW5nUGVyaW9k",
-            "TW9udGgucHJvdG8i6QEKC1JzN1JlY2VpdmVkEhoKEk9yZ2FuaXNhdGlvbk51",
+            "TW9udGgucHJvdG8i+QEKC1JzN1JlY2VpdmVkEhoKEk9yZ2FuaXNhdGlvbk51",
             "bWJlchgBIAEoCRIqCg1GdW5kaW5nUGVyaW9kGAIgASgOMhMuRnVuZGluZ1Bl",
             "cmlvZE1vbnRoEicKDUFkdmFuY2VNb250aHMYAyADKAsyEC5SczdBZHZhbmNl",
             "TW9udGgSLwoRRW50aXRsZW1lbnRNb250aHMYBCADKAsyFC5SczdFbnRpdGxl",
             "bWVudE1vbnRoEiQKC0RlY2xhcmF0aW9uGAUgASgLMg8uUnM3RGVjbGFyYXRp",
-            "b24SEgoKSXNBdHRlc3RlZBgGIAEoCCJqCg9SczdBZHZhbmNlTW9udGgSEwoL",
-            "TW9udGhOdW1iZXIYAiABKAUSDAoEWWVhchgDIAEoBRIOCgZBbGxEYXkYBCAB",
-            "KAUSEQoJU2Vzc2lvbmFsGAUgASgFEhEKCVBhcmVudExlZBgGIAEoBSJmChNS",
-            "czdFbnRpdGxlbWVudE1vbnRoEgoKAklkGAEgASgFEhMKC01vbnRoTnVtYmVy",
-            "GAIgASgFEgwKBFllYXIYAyABKAUSIAoERGF5cxgEIAMoCzISLlJzN0VudGl0",
-            "bGVtZW50RGF5Ik0KDlJzN0RlY2xhcmF0aW9uEhAKCEZ1bGxOYW1lGAIgASgJ",
-            "EhQKDENvbnRhY3RQaG9uZRgDIAEoCRITCgtEZXNpZ25hdGlvbhgEIAEoCSKa",
-            "AQoRUnM3RW50aXRsZW1lbnREYXkSEQoJRGF5TnVtYmVyGAEgASgFEg4KBlVu",
-            "ZGVyMhgCIAEoBRISCgpUd29BbmRPdmVyGAMgASgFEg8KB0hvdXJzMjAYBCAB",
-            "KAUSDgoGUGx1czEwGAUgASgFEhQKDENlcnRpZmljYXRlZBgGIAEoBRIXCg9O",
-            "b25DZXJ0aWZpY2F0ZWQYByABKAVCIqoCH0V2ZW50cy5JbnRlZ3JhdGlvbi5Q",
-            "cm90b2J1Zi5FbGliBnByb3RvMw=="));
+            "b24SEgoKSXNBdHRlc3RlZBgGIAEoCBIOCgZTb3VyY2UYByABKAkiagoPUnM3",
+            "QWR2YW5jZU1vbnRoEhMKC01vbnRoTnVtYmVyGAIgASgFEgwKBFllYXIYAyAB",
+            "KAUSDgoGQWxsRGF5GAQgASgFEhEKCVNlc3Npb25hbBgFIAEoBRIRCglQYXJl",
+            "bnRMZWQYBiABKAUiZgoTUnM3RW50aXRsZW1lbnRNb250aBIKCgJJZBgBIAEo",
+            "BRITCgtNb250aE51bWJlchgCIAEoBRIMCgRZZWFyGAMgASgFEiAKBERheXMY",
+            "BCADKAsyEi5SczdFbnRpdGxlbWVudERheSJNCg5SczdEZWNsYXJhdGlvbhIQ",
+            "CghGdWxsTmFtZRgCIAEoCRIUCgxDb250YWN0UGhvbmUYAyABKAkSEwoLRGVz",
+            "aWduYXRpb24YBCABKAkimgEKEVJzN0VudGl0bGVtZW50RGF5EhEKCURheU51",
+            "bWJlchgBIAEoBRIOCgZVbmRlcjIYAiABKAUSEgoKVHdvQW5kT3ZlchgDIAEo",
+            "BRIPCgdIb3VyczIwGAQgASgFEg4KBlBsdXMxMBgFIAEoBRIUCgxDZXJ0aWZp",
+            "Y2F0ZWQYBiABKAUSFwoPTm9uQ2VydGlmaWNhdGVkGAcgASgFQiKqAh9FdmVu",
+            "dHMuSW50ZWdyYXRpb24uUHJvdG9idWYuRWxpYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Events.Integration.Protobuf.Shared.FundingPeriodMonthReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Eli.Rs7Received), global::Events.Integration.Protobuf.Eli.Rs7Received.Parser, new[]{ "OrganisationNumber", "FundingPeriod", "AdvanceMonths", "EntitlementMonths", "Declaration", "IsAttested" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Eli.Rs7Received), global::Events.Integration.Protobuf.Eli.Rs7Received.Parser, new[]{ "OrganisationNumber", "FundingPeriod", "AdvanceMonths", "EntitlementMonths", "Declaration", "IsAttested", "Source" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Eli.Rs7AdvanceMonth), global::Events.Integration.Protobuf.Eli.Rs7AdvanceMonth.Parser, new[]{ "MonthNumber", "Year", "AllDay", "Sessional", "ParentLed" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Eli.Rs7EntitlementMonth), global::Events.Integration.Protobuf.Eli.Rs7EntitlementMonth.Parser, new[]{ "Id", "MonthNumber", "Year", "Days" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Eli.Rs7Declaration), global::Events.Integration.Protobuf.Eli.Rs7Declaration.Parser, new[]{ "FullName", "ContactPhone", "Designation" }, null, null, null, null),
@@ -91,6 +91,7 @@ namespace Events.Integration.Protobuf.Eli {
       entitlementMonths_ = other.entitlementMonths_.Clone();
       declaration_ = other.declaration_ != null ? other.declaration_.Clone() : null;
       isAttested_ = other.isAttested_;
+      source_ = other.source_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -163,6 +164,17 @@ namespace Events.Integration.Protobuf.Eli {
       }
     }
 
+    /// <summary>Field number for the "Source" field.</summary>
+    public const int SourceFieldNumber = 7;
+    private string source_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Source {
+      get { return source_; }
+      set {
+        source_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as Rs7Received);
@@ -182,6 +194,7 @@ namespace Events.Integration.Protobuf.Eli {
       if(!entitlementMonths_.Equals(other.entitlementMonths_)) return false;
       if (!object.Equals(Declaration, other.Declaration)) return false;
       if (IsAttested != other.IsAttested) return false;
+      if (Source != other.Source) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -194,6 +207,7 @@ namespace Events.Integration.Protobuf.Eli {
       hash ^= entitlementMonths_.GetHashCode();
       if (declaration_ != null) hash ^= Declaration.GetHashCode();
       if (IsAttested != false) hash ^= IsAttested.GetHashCode();
+      if (Source.Length != 0) hash ^= Source.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -228,6 +242,10 @@ namespace Events.Integration.Protobuf.Eli {
         output.WriteRawTag(48);
         output.WriteBool(IsAttested);
       }
+      if (Source.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Source);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -255,6 +273,10 @@ namespace Events.Integration.Protobuf.Eli {
         output.WriteRawTag(48);
         output.WriteBool(IsAttested);
       }
+      if (Source.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Source);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -277,6 +299,9 @@ namespace Events.Integration.Protobuf.Eli {
       }
       if (IsAttested != false) {
         size += 1 + 1;
+      }
+      if (Source.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Source);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -305,6 +330,9 @@ namespace Events.Integration.Protobuf.Eli {
       }
       if (other.IsAttested != false) {
         IsAttested = other.IsAttested;
+      }
+      if (other.Source.Length != 0) {
+        Source = other.Source;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -347,6 +375,10 @@ namespace Events.Integration.Protobuf.Eli {
             IsAttested = input.ReadBool();
             break;
           }
+          case 58: {
+            Source = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -386,6 +418,10 @@ namespace Events.Integration.Protobuf.Eli {
           }
           case 48: {
             IsAttested = input.ReadBool();
+            break;
+          }
+          case 58: {
+            Source = input.ReadString();
             break;
           }
         }

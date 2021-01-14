@@ -28,6 +28,6 @@ namespace MoE.ECE.Domain.Model.OperationalFunding
 
         public decimal? TotalAdvance { get; set; }
 
-        public virtual ICollection<AdvanceFundingComponent> AdvanceFundingComponents { get; set; } = new HashSet<AdvanceFundingComponent>();
+        public virtual ICollection<AdvanceFundingComponent> AdvanceFundingComponents { get; set; } = new List<AdvanceFundingComponent>();
     }
 }

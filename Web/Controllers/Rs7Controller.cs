@@ -123,7 +123,7 @@ namespace MoE.ECE.Web.Controllers
         [Route("{id}")]
         [HttpDelete]
         [RequirePermission(Rs7.Delete)]
-        public async Task<ActionResult> Delete(
+        public async Task<ActionResult> Discard(
             [FromRoute] int id,
                 CancellationToken cancellationToken)
         {

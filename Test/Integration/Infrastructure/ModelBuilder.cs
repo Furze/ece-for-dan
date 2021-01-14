@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
+using Events.Integration.Protobuf.Eli;
 using MoE.ECE.CLI.Data;
 using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Model.ValueObject;
 using MoE.ECE.Domain.Read.Model.Rs7;
-using Moe.ECE.Events.Integration.ELI;
 using Newtonsoft.Json;
 using FundingPeriodMonth = MoE.ECE.Domain.Model.ValueObject.FundingPeriodMonth;
 
@@ -225,53 +225,53 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
             var integrationEvent = new Rs7Received
             {
                 OrganisationNumber = ReferenceData.EceServices.MontessoriLittleHands.OrganisationNumber,
-                FundingPeriod = Moe.ECE.Events.Integration.ELI.FundingPeriodMonth.July,
+                FundingPeriod = Events.Integration.Protobuf.Shared.FundingPeriodMonth.July,
                 IsAttested = true,
                 Source = "Uranus",
-                AdvanceMonths = new[]
+                AdvanceMonths = 
                 {
-                    new Rs7ReceivedAdvanceMonth
+                    new Rs7AdvanceMonth
                     {
                         MonthNumber = 7,
-                        FundingPeriodYear = 2020,
+                        Year = 2020,
                         AllDay = 2,
                         ParentLed = 4,
                         Sessional = 6
                     },
-                    new Rs7ReceivedAdvanceMonth
+                    new Rs7AdvanceMonth
                     {
                         MonthNumber = 8,
-                        FundingPeriodYear = 2020,
+                        Year = 2020,
                         AllDay = 1,
                         ParentLed = 2,
                         Sessional = 4
                     },
-                    new Rs7ReceivedAdvanceMonth
+                    new Rs7AdvanceMonth
                     {
                         MonthNumber = 9,
-                        FundingPeriodYear = 2020,
+                        Year = 2020,
                         AllDay = 3,
                         ParentLed = 5,
                         Sessional = 3
                     },
-                    new Rs7ReceivedAdvanceMonth
+                    new Rs7AdvanceMonth
                     {
                         MonthNumber = 10,
-                        FundingPeriodYear = 2020,
+                        Year = 2020,
                         AllDay = 1,
                         ParentLed = 2,
                         Sessional = 3
                     }
                 },
-                EntitlementMonths = new[]
+                EntitlementMonths = 
                 {
-                    new Rs7ReceivedEntitlementMonth
+                    new Rs7EntitlementMonth
                     {
                         MonthNumber = 2,
-                        FundingPeriodYear = 2020,
-                        Days = new[]
+                        Year = 2020,
+                        Days = 
                         {
-                            new Rs7ReceivedEntitlementDay
+                            new Rs7EntitlementDay
                             {
                                 DayNumber = 1,
                                 Certificated = 5,
@@ -283,13 +283,13 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                             }
                         }
                     },
-                    new Rs7ReceivedEntitlementMonth
+                    new Rs7EntitlementMonth
                     {
                         MonthNumber = 3,
-                        FundingPeriodYear = 2020,
-                        Days = new[]
+                        Year = 2020,
+                        Days = 
                         {
-                            new Rs7ReceivedEntitlementDay
+                            new Rs7EntitlementDay
                             {
                                 DayNumber = 1,
                                 Certificated = 5,
@@ -301,13 +301,13 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                             }
                         }
                     },
-                    new Rs7ReceivedEntitlementMonth
+                    new Rs7EntitlementMonth
                     {
                         MonthNumber = 4,
-                        FundingPeriodYear = 2020,
-                        Days = new[]
+                        Year = 2020,
+                        Days = 
                         {
-                            new Rs7ReceivedEntitlementDay
+                            new Rs7EntitlementDay
                             {
                                 DayNumber = 1,
                                 Certificated = 5,
@@ -319,13 +319,13 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
                             }
                         }
                     },
-                    new Rs7ReceivedEntitlementMonth
+                    new Rs7EntitlementMonth
                     {
                         MonthNumber = 5,
-                        FundingPeriodYear = 2020,
-                        Days = new[]
+                        Year = 2020,
+                        Days = 
                         {
-                            new Rs7ReceivedEntitlementDay
+                            new Rs7EntitlementDay
                             {
                                 DayNumber = 1,
                                 Certificated = 5,

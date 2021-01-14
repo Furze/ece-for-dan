@@ -26,7 +26,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_rs7_with_a_updated_declaratio
         protected override void Arrange()
         {
             Given
-                .A_rs7_skeleton_has_been_created()
+                .A_rs7_skeleton_has_been_created(setup => setup.FundingPeriodYear = 2020)
                 .The_rs7_has_been_submitted_for_peer_approval()
                 .The_rs7_declaration_has_been_updated()
                 .GetResult(storyData => Rs7Model = storyData.Rs7Model);
@@ -44,6 +44,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_rs7_with_a_updated_declaratio
                 .Response
                 .Content<Rs7Model>();
 
+            response.Declaration.ShouldNotBeNull();
             response.Declaration?.Role.ShouldBe("role");
             response.Declaration?.ContactPhone.ShouldBe("123");
             response.Declaration?.FullName.ShouldBe("joe bloggs");

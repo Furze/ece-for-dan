@@ -1,6 +1,4 @@
 using AutoMapper;
-using MoE.ECE.Domain.Model.Rs7;
-using Moe.ECE.Events.Integration.ELI;
 
 namespace MoE.ECE.Domain.Read.Model.Rs7
 {
@@ -8,10 +6,9 @@ namespace MoE.ECE.Domain.Read.Model.Rs7
     {
         public Rs7EntitlementMonthModelMapping()
         {
-            CreateMap<Rs7EntitlementMonth, Rs7EntitlementMonthModel>();
+            CreateMap<Domain.Model.Rs7.Rs7EntitlementMonth, Rs7EntitlementMonthModel>();
 
-            CreateMap<Rs7ReceivedEntitlementMonth, Rs7EntitlementMonthModel>()
-                .ForMember(dest => dest.Year, opt => opt.MapFrom(src => src.FundingPeriodYear));
+            CreateMap<Events.Integration.Protobuf.Eli.Rs7EntitlementMonth, Rs7EntitlementMonthModel>();
         }
     }
 }

@@ -89,8 +89,8 @@ steps:
       failOnStandardError: false
       powerShellErrorActionPreference: 'silentlyContinue'
       inlineScript: |
-        $keyvaultName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentNumber }}secrets"
-        $secretName = "${{ parameters.applicationName }}-sqlpassword"
+        $keyvaultName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentSuffix }}secrets"
+        $secretName = "psqlserveradmin-password" 
         $env:PGPASSWORD = az keyvault secret show --vault-name "$keyvaultName" --name "$secretName" -o tsv --query value
         if ([string]::IsNullOrEmpty($env:PGPASSWORD)) {
           echo "##vso[task.logissue type=warning] Failed to get database credentials. This is not normal."
@@ -101,13 +101,14 @@ steps:
         sudo apt install -y postgresql-client
         psql -V
 
-        $dbServerName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}"
-        $dbName = "${{ parameters.applicationName }}"
+        $dbServerName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentSuffix }}psqlserver".ToLower()
+        $dbName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentnumber }}psql${{ parameters.applicationName }}".ToLower()
         $dbEndpoint = "$dbServerName.postgres.database.azure.com"
         $dbUsername = "psqlserveradmin"
 
-        $dbConnectionString = "host=$dbEndpoint port=5432 user='$dbUsername@$dbServerName' dbname=$dbName sslmode=require"
+        $dbConnectionString = "host=$dbEndpoint port=5432 user='$dbUsername@$dbServerName' dbname=postgres sslmode=require"
         $revokeAccessSqlCommand = @"
+        alter database $dbName allow_connections = off;
         REVOKE CONNECT ON DATABASE $dbName FROM PUBLIC;
         SELECT pg_terminate_backend(pid) 
         FROM pg_stat_activity 
@@ -155,33 +156,11 @@ steps:
         Invoke-Expression ("$dockerCommandBase init")
         Invoke-Expression ("$dockerCommandBase validate")
 
-        # Delete the postgresql database *SERVER* so that terraform doesn't fail on existing connections
-        # TODO: Alternatively, update the CLI to be able to sever/revoke all connections to the database prior to destroy?
-        $pgDbResourceGroupName = "${{ parameters.environmentPrefix }}-ERS-${{ parameters.environmentName }}-${{ parameters.environmentNumber }}-${{ parameters.applicationName }}".ToUpper()  
-        $pgDbResourceName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentNumber }}psql${{ parameters.applicationName }}".ToLower()
-        $dbServerFound = az postgres server list -g $pgDbResourceGroupName --query "[?name=='$pgDbResourceName'].name"
-        if ($dbServerFound) {
-          Write-Output "Deleting database server $pgDbResourceName from $pgDbResourceGroupName.."
-          az postgres server delete -g $pgDbResourceGroupName -n $pgDbResourceName --yes
-        }
-
         $tfArgs = "-var='environment=${{ parameters.environmentName }}-${{ parameters.environmentNumber }}' -var='environment_prefix=${{ parameters.environmentPrefix }}' -var='environment_suffix=${{ parameters.environmentSuffix }}' -var='actiongroup_name=$(actiongroup_name)' -var='actiongroup_resource_group=$(actiongroup_resource_group)'"
         Invoke-Expression ("$dockerCommandBase destroy $tfArgs -auto-approve")
         if ($LASTEXITCODE -ne 0) {
           Write-Output "Error destroying resources."
           exit 1
-        }
-
-        # Post terraform destroy cleanup or additional steps
-        # Purge secrets from AKV otherwise they get recovered as is and are out of sync with new random string
-        # TODO: This could probably be done better with tags if terraform tags the secret (once standards are agreed)
-        $keyvaultName = "${{ parameters.environmentPrefix }}ers${{ parameters.environmentName }}${{ parameters.environmentNumber }}secrets".ToLower()
-        $appSqlSecretName = "${{ parameters.applicationName }}-sqlpassword".ToLower()
-        Write-Output "Looking for deleted secret $appSqlSecretName in $keyvaultName.."
-        $deletedSecretFound = az keyvault secret list-deleted --vault-name $keyvaultName --query "[?name=='$appSqlSecretName'].name" | ConvertFrom-JSON
-        if ($deletedSecretFound) {
-          Write-Output "Purging secret $appSqlSecretName from $keyvaultName.."
-          az keyvault secret purge --subscription $subscriptionId --vault-name $keyvaultName --name $appSqlSecretName
         }
     continueOnError: false
     

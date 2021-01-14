@@ -2,7 +2,10 @@
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using MoE.ECE.Domain.Infrastructure;
+using MoE.ECE.Web.Infrastructure.Extensions;
+using MoE.ECE.Web.Infrastructure.Settings;
 
 namespace MoE.ECE.Web.Bootstrap
 {
@@ -20,7 +23,13 @@ namespace MoE.ECE.Web.Bootstrap
             );
 
             // Add the processing server as IHostedService
-            services.AddHangfireServer();
+            services.AddHangfireServer(options =>
+            {
+                // When developing locally only want one worker
+                options.WorkerCount = Environment.IsDevelopment()
+                    ? 1
+                    : Configuration.BindFor<HangfireSettings>().WorkerCount;
+            });
         }
 
         public override void Configure(IApplicationBuilder app)

@@ -4,22 +4,8 @@ using System.Linq;
 
 namespace MoE.ECE.Domain.Model.ReferenceData
 {
-    public class EceService
+    public class EceService : OrganisationBase
     {
-        public int RefOrganisationId { get; set; }
-        public string OrganisationName { get; set; } = string.Empty;
-        public string OrganisationNumber { get; set; } = string.Empty;
-        public int OrganisationTypeId { get; set; }
-        public string? OrganisationTypeDescription { get; set; }
-        public int? OrganisationSectorRoleId { get; set; }
-        public string? OrganisationSectorRoleDescription { get; set; }
-        public int OrganisationStatusId { get; set; }
-        public string? OrganisationStatusDescription { get; set; }
-        public string? ExternalProviderId { get; set; }
-        public long? Nzbn { get; set; }
-        public int? RegionId { get; set; }
-        public string? RegionDescription { get; set; }
-
         // Fields from LicensedECEService (except those already in Organisation)
         // LocalOfficeId added here rather than in the Organisation section since the other 'LocalOffice' fields are here
         public DateTimeOffset? OpenDate { get; set; }
@@ -75,9 +61,9 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public string? UrbanAreaName { get; set; }
         public int? WardId { get; set; }
         public string? WardName { get; set; }
-        public int? EceServiceProviderId { get; set; }
-        public string? EceServiceProviderNumber { get; set; }
-        public string? EceServiceProviderName { get; set; }
+        public int EceServiceProviderId { get; set; }
+        public string EceServiceProviderNumber { get; set; } = null!;
+        public string EceServiceProviderName { get; set; } = null!;
         public int? LocationShortAddressId { get; set; }
         public string? LocationAddressLine1 { get; set; }
         public string? LocationAddressLine2 { get; set; }
@@ -123,13 +109,10 @@ namespace MoE.ECE.Domain.Model.ReferenceData
         public bool? IsPoIndicator { get; set; }
         public bool? IsNotionalRoleUsed { get; set; }
 
-        // Selective fields from ECEServiceProvider (have added the EceServiceProvider prefix)
-        public int? EceServiceProviderOwnershipTypeId { get; set; }
-        public string? EceServiceProviderOwnershipTypeDescription { get; set; }
-
-        public virtual ICollection<EceOperatingSession> OperatingSessions { get; set; } = new HashSet<EceOperatingSession>();
-        public virtual ICollection<EceServiceDateRangedParameter> EceServiceDateRangedParameters { get; set; } = new HashSet<EceServiceDateRangedParameter>();
-        public virtual ICollection<EceLicencingDetailDateRangedParameter> EceLicencingDetailDateRangedParameters { get; set; } = new HashSet<EceLicencingDetailDateRangedParameter>();
+        public virtual EceServiceProvider EceServiceProvider { get; set; } = null!;
+        public virtual ICollection<EceOperatingSession> OperatingSessions { get; set; } = new List<EceOperatingSession>();
+        public virtual ICollection<EceServiceDateRangedParameter> EceServiceDateRangedParameters { get; set; } = new List<EceServiceDateRangedParameter>();
+        public virtual ICollection<EceLicencingDetailDateRangedParameter> EceLicencingDetailDateRangedParameters { get; set; } = new List<EceLicencingDetailDateRangedParameter>();
 
         public bool IsAttestationRequired =>
             OrganisationTypeId == OrganisationType.CasualEducationAndCare ||

@@ -21,15 +21,17 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
         private readonly string _connectionString;
         private readonly ILogger<ServiceBusConsumer> _logger;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IMessageResolver _messageResolver;
         private readonly Lazy<SubscriptionClient> _subscriptionClient;
 
         protected ServiceBusConsumer(
             IOptions<ConnectionStrings> options,
             ILogger<ServiceBusConsumer> logger,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider, IMessageResolver messageResolver)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
+            _messageResolver = messageResolver;
             _connectionString = options.Value.ServiceBus;
             _subscriptionClient = new Lazy<SubscriptionClient>(CreateSubscriptionClient);
         }
@@ -81,7 +83,7 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
 
         private async Task ProcessMessagesAsync(Message message, CancellationToken token)
         {
-            var incomingMessage = new IncomingMessage(message, new MessageResolver());
+            var incomingMessage = new IncomingMessage(message, _messageResolver);
 
             Log(incomingMessage);
 

@@ -6,7 +6,7 @@ namespace MoE.ECE.Domain.Command.Rs7
 {
     public class SubmitRs7 : ICommand
     {
-        public IEnumerable<Rs7EntitlementMonthModel>? EntitlementMonths { get; set; } = new HashSet<Rs7EntitlementMonthModel>();
+        public IEnumerable<Rs7EntitlementMonthModel>? EntitlementMonths { get; set; } = new List<Rs7EntitlementMonthModel>();
 
         public bool? IsAttested { get; set; }
     }

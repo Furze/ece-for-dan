@@ -22,7 +22,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenUpdatingEntitlementMonth
         protected override void Arrange()
         {
             Given
-                .A_rs7_skeleton_has_been_created()
+                .A_rs7_skeleton_has_been_created(setup => setup.FundingPeriodYear = 2020)
                 .GetResult(storyData => Rs7Model = storyData.Rs7Model);
         }
 

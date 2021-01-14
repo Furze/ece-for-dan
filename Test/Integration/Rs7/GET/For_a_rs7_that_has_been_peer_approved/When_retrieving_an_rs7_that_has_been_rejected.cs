@@ -28,7 +28,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_a_rs7_that_has_been_peer_approve
         protected override void Arrange()
         {
             Given
-                .A_rs7_skeleton_has_been_created()
+                .A_rs7_skeleton_has_been_created(setup => setup.FundingPeriodYear = 2020)
                 .The_rs7_has_been_submitted_for_peer_approval()
                 .The_rs7_has_been_peer_review_rejected()
                 .GetResult(storyData => Rs7Model = storyData.Rs7Model);
