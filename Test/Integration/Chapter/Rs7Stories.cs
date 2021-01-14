@@ -15,7 +15,7 @@ namespace MoE.ECE.Integration.Tests.Chapter
         {
             context.PublishIntegrationEvent(integrationEvent);
 
-            context.StoryData.Rs7Model = context.GetDomainEvent<Rs7CreatedFromExternal>();
+            context.StoryData.Rs7Model = context.GetDomainEvent<FullRs7Created>();
         }
 
         public static void AnRs7IsReadyForInternalMinistryReview(ScenarioContext<ECEStoryData> context,

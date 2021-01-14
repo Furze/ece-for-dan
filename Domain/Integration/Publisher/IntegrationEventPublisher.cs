@@ -18,7 +18,7 @@ namespace MoE.ECE.Domain.Integration.Publisher
     public class IntegrationEventPublisher :
         IDomainEventHandler<Rs7Updated>,
         IDomainEventHandler<Rs7Approved>,
-        IDomainEventHandler<Rs7CreatedFromExternal>,
+        IDomainEventHandler<FullRs7Created>,
         IDomainEventHandler<Rs7ZeroReturnCreated>,
         IDomainEventHandler<Rs7EntitlementMonthUpdated>,
         IDomainEventHandler<Rs7SubmittedForApproval>,
@@ -71,7 +71,7 @@ namespace MoE.ECE.Domain.Integration.Publisher
             return _serviceBus.PublishAsync(integrationEvent, Constants.Topic.ECE, cancellationToken);
         }
 
-        public Task Handle(Rs7CreatedFromExternal domainEvent, CancellationToken cancellationToken)
+        public Task Handle(FullRs7Created domainEvent, CancellationToken cancellationToken)
         {
             var integrationEvent = _mapper.Map<IntegrationEvents.Roll.Rs7Updated>(domainEvent);
 

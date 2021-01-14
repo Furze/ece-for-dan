@@ -62,7 +62,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
         [Fact]
         public void ExpectDomainEventShouldBePublishedUsingThePreExistingId()
         {
-            var domainEvent = A_domain_event_should_be_fired<Rs7CreatedFromExternal>();
+            var domainEvent = A_domain_event_should_be_fired<FullRs7Created>();
 
             domainEvent.ShouldNotBeNull();
             domainEvent.Id.ShouldBe(PreExistingRs7.Id);
@@ -71,7 +71,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
         [Fact]
         public void ExpectDomainEventShouldHavePopulatedAdvanceMonthsFromTheCommand()
         {
-            var domainEvent = A_domain_event_should_be_fired<Rs7CreatedFromExternal>();
+            var domainEvent = A_domain_event_should_be_fired<FullRs7Created>();
 
             domainEvent.AdvanceMonths.ShouldNotBeNull();
             var firstAdvanceMonth = domainEvent.AdvanceMonths?.FirstOrDefault();
@@ -88,7 +88,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
         [Fact]
         public void ExpectDomainEventShouldHavePopulatedEntitlementMonthFromTheCommand()
         {
-            var domainEvent = A_domain_event_should_be_fired<Rs7CreatedFromExternal>();
+            var domainEvent = A_domain_event_should_be_fired<FullRs7Created>();
 
             domainEvent.EntitlementMonths.ShouldNotBeNull();
             var entitlementMonth = domainEvent.EntitlementMonths?.FirstOrDefault();
@@ -113,7 +113,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.GET.For_an_externally_created_rs7
 
         [Fact]
         public void ExpectAnRs7CreatedFromExternalDomainEventWithSource() =>
-            A_domain_event_should_be_fired<Rs7CreatedFromExternal>()
+            A_domain_event_should_be_fired<FullRs7Created>()
                 .Source.ShouldBe("Uranus");
 
         [Fact]

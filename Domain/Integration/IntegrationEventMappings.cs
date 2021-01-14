@@ -23,7 +23,7 @@ namespace MoE.ECE.Domain.Integration
 
             CreateMap<Rs7Updated, IntegrationEvents.Roll.Rs7Updated>();
             CreateMap<Rs7DeclarationUpdated, IntegrationEvents.Roll.Rs7Updated>();
-            CreateMap<Rs7CreatedFromExternal, IntegrationEvents.Roll.Rs7Updated>();
+            CreateMap<FullRs7Created, IntegrationEvents.Roll.Rs7Updated>();
             CreateMap<Rs7Approved, IntegrationEvents.Roll.Rs7Updated>();
             CreateMap<Rs7ZeroReturnCreated, IntegrationEvents.Roll.Rs7Updated>();
             

@@ -8,7 +8,8 @@ using Moe.Library.Cqrs;
 
 namespace MoE.ECE.Domain.Coordinator
 {
-    public class Rs7Coordinator : IDomainEventHandler<Rs7Updated>, IDomainEventHandler<Rs7ZeroReturnCreated>
+    public class Rs7Coordinator : IDomainEventHandler<Rs7Updated>, IDomainEventHandler<Rs7ZeroReturnCreated>,
+        IDomainEventHandler<FullRs7Created>
     {
         private readonly ICqrs _cqrs;
         private readonly IMapper _mapper;
@@ -17,6 +18,15 @@ namespace MoE.ECE.Domain.Coordinator
         {
             _cqrs = cqrs;
             _mapper = mapper;
+        }
+
+        public Task Handle(FullRs7Created domainEvent, CancellationToken cancellationToken)
+        {
+            var createRs7 = _mapper.Map<CreateOperationalFundingRequest>(domainEvent);
+
+            return _cqrs.ExecuteAsync(
+                createRs7,
+                cancellationToken);
         }
 
         public Task Handle(Rs7Updated domainEvent, CancellationToken cancellationToken)

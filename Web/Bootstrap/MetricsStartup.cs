@@ -1,9 +1,7 @@
-﻿using System;
-using App.Metrics.Health;
+﻿using App.Metrics.Health;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
-using Moe.ECE.Events.Integration;
 using MoE.ECE.Web.Infrastructure.Extensions;
 using MoE.ECE.Web.Infrastructure.Settings;
 
@@ -21,7 +19,7 @@ namespace MoE.ECE.Web.Bootstrap
         {
             AllowSynchronousCallsForAppMetricsBug(services);
 
-            var connectionStrings = Configuration.BindFor<ConnectionStrings>();
+            Configuration.BindFor<ConnectionStrings>();
             
             var health = AppMetricsHealth.CreateDefaultBuilder()
                 .HealthChecks.RegisterFromAssembly(services) // configure options and add health checks
