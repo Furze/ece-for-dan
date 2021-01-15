@@ -23,30 +23,23 @@ If you want to learn more about creating good readme files then refer the follow
 
 There are a few steps to this and there are some things you will need to do prior.
 
-#### Pre Reqs ####
+#### Pre Reqs (only required for non-ministry laptop) ####
 - Log onto [Azure Portal](https://portal.azure.com)
-- Go to the keyvault for the required ResourceGroup for dev02 this is **mataersdev02secrets**
-    - Navigate to secrets
-    - Get the **workflows-sqlpassword** and store it somewhere temporarily.
-- Go to the Workflows resource group for the environment eg. **MATA-ERS-DEV-02-WORKFLOWS**
-- Select the PostgreSQL database
+- Go to the DevTest postgres server eg. **mataersdevtestpsqlserver**
 - Navigate to Connection Security page
     - Add your client ip address in as a firewall rule (You may need to be on Green network for this to work within the ministry)
     - Don't forget to save it!!
-- From the Overview page you will need the following values
-    - **Server name**
-    - **Admin username**
 
 ### Connect to DB
-- In pgAdmin create a new Server
+- In pgAdmin create a new Server (or whatever equivalent in your preferred tool)
 - General Tab - specify whatever name you want to be displayed
 - Connection Tab -
   - Host name/address: enter the ***Server name*** you got from Azure Portal
       - e.g. for devtest this would be ***mataersdevtestpsqlserver.postgres.database.azure.com***
   - Port: keep as **5432**
-  - Username: enter **AL PSQL ERS [DEVTEST | PRODUAT] READER@{servername}**
-      - e.g. for DEVTEST this would be **AL PSQL ERS DEVTEST READER@mataersdevtestpsqlserver**
-      - and yes there are spaces in the AD group name..... don't ask!
+  - Username: enter **AL PSQL ERS [DEVTEST | UATPREPROD] [READER | ADMIN]@{servername}**
+      - e.g. for DEVTEST with read only access this would be **AL PSQL ERS DEVTEST READER@mataersdevtestpsqlserver**
+      - ***and yes there are spaces in the AD group name..... don't ask!***
   - Password: see below on obtaining an azure session token
 
   Save and connect...
