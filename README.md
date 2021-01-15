@@ -37,7 +37,7 @@ There are a few steps to this and there are some things you will need to do prio
   - Host name/address: enter the ***Server name*** you got from Azure Portal
       - e.g. for devtest this would be ***mataersdevtestpsqlserver.postgres.database.azure.com***
   - Port: keep as **5432**
-  - Username: enter **AL PSQL ERS [DEVTEST | PRODUAT] [READER | ADMIN]@{servername}**
+  - Username: enter **AL PSQL ERS [DEVTEST | UATPREPROD] [READER | ADMIN]@{servername}**
       - e.g. for DEVTEST with read only access this would be **AL PSQL ERS DEVTEST READER@mataersdevtestpsqlserver**
       - ***and yes there are spaces in the AD group name..... don't ask!***
   - Password: see below on obtaining an azure session token
