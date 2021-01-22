@@ -158,7 +158,7 @@ resource "azurerm_app_service" "app" {
     DOCKER_REGISTRY_SERVER_URL          = "https://${data.azurerm_container_registry.cmn.login_server}"
     DOCKER_REGISTRY_SERVER_USERNAME     = data.azurerm_container_registry.cmn.admin_username
     DOCKER_REGISTRY_SERVER_PASSWORD     = data.azurerm_container_registry.cmn.admin_password
-    ASPNETCORE_ENVIRONMENT              = "${lower(replace(var.environment, "-", ""))}"
+    ASPNETCORE_ENVIRONMENT              = lower(replace(var.environment, "-", ""))
     WEBSITES_ENABLE_APP_SERVICE_STORAGE = "false"
     WEBSITE_TIME_ZONE                   = "New Zealand Standard Time"
     ReleaseDate                         = ""
@@ -167,8 +167,8 @@ resource "azurerm_app_service" "app" {
     OidcSettings__Issuer                = "https://${local.resource_base_name}identity.azurewebsites.net/"
     KeyVault__Vault                     = data.azurerm_key_vault.master.name
     MartenSettings__ConnectionString    = "host=${local.db_server_endpoint};port=5432;database=${local.db_name};password={{PASSWORD_FROM_KEYVAULT}};username=${local.db_username}@${local.db_server_name};Pooling=true;Ssl Mode=Require;"
-    OpaSettings__AuthorisationUrl       = "${local.opa_authorisation_url}"
-    OpaSettings__RuleBaseUrl            = "${local.opa_rulebase_url}"
+    OpaSettings__AuthorisationUrl       = local.opa_authorisation_url
+    OpaSettings__RuleBaseUrl            = local.opa_rulebase_url
     ASPNETCORE_FORWARDEDHEADERS_ENABLED = "true"
   }
 
