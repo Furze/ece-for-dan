@@ -42,7 +42,7 @@ stages:
           inputs:
             azureSubscription: '${{ parameters.azureDevOpsServiceConnection }}'
             keyVaultName: '${{ parameters.azureKeyvaultInstance }}'
-            secretsFilter: '*' # Options: editableOptions
+            secretsFilter: 'OPASettings--UserSecret' # Options: editableOptions
           continueOnError: false
 
         - task: geeklearningio.gl-vsts-tasks-file-patch.json-patch-task.JsonPatch@3

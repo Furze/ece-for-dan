@@ -1,8 +1,3 @@
-# ASP.NET Core (.NET Framework)
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 name: '$(versionMajor).$(versionMinor).$(versionPatch)$(Rev:.r)'
 
 trigger:
@@ -23,9 +18,11 @@ variables:
   versionMajor: 1
   versionMinor: 0
   versionPatch: 0
-  testDevDevOpsServiceConnection: 'DevOps-MOEEDUNZ-ERS-EDU-MOE-ERS-TESTDEV-01-FS'
-  terraformVersion: 'latest'
   decomDate: ''
+
+  containerRegistry: 'mapaerscontainerregistry'
+  prodUatAzureRMServiceConnection: 'DevOps-MOEEDUNZ-ERS-EDU-MOE-ERS-PRODUAT-01-FS'
+  testDevAzureRMServiceConnection: 'DevOps-MOEEDUNZ-ERS-EDU-MOE-ERS-TESTDEV-01-FS'
 
 resources:
   repositories:
@@ -33,53 +30,59 @@ resources:
       type: 'git'
       name: 'environment-shared-infra'
 
+    - repository: 'ERS-Environment-Release'
+      type: 'git'
+      name: 'ERS-Environment-Release'
+
     - repository: 'ece-api' # identifier for this repository resource which can be used further in the yaml for downloads
       type: 'git'
       name: 'ece-api' # name of the source repository
 
-stages:
-  - template: quality-gate.yml
-    parameters:
-      azureDevOpsServiceConnection: '$(testDevDevOpsServiceConnection)'
-      azureKeyvaultInstance: 'mataersdev00secrets' 
-  - template: build-stage.yml
-    parameters:      
-      azureDevOpsServiceConnection: '$(testDevDevOpsServiceConnection)'
-      azureKeyvaultInstance: 'mataersdev00secrets'
-  - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/master') }}:
-    - template: release-stage.yml
+extends:
+  template: devops/approval-check.yml@ERS-Environment-Release
+  parameters:
+    releaseStages:
+    - template: quality-gate.yml
       parameters:
-        environmentPrefix: 'mata'
-        environmentSuffix: 'devtest'
-        environmentName: 'dev'
-        environmentNumber: '00'
-        azureDevOpsServiceConnection: '$(testDevDevOpsServiceConnection)'
-        azureKeyvaultInstance: 'mataersdev00secrets'
-        containerRegistry: 'mapaerscontainerregistry'
-        terraformVersion: '$(terraformVersion)'
-        decomDate: '$(decomDate)'
+        azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
+        azureKeyvaultInstance: 'mataersdev02secrets'
 
-  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
-    - template: release-stage.yml
-      parameters:
+    - template: build-stage.yml    
+      parameters:      
+        azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
+        azureKeyvaultInstance: 'mataersdev02secrets'
+
+    - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+      - template: release-stage.yml
+        parameters:
           environmentPrefix: 'mata'
           environmentSuffix: 'devtest'
           environmentName: 'dev'
-          environmentNumber: '02'
-          azureDevOpsServiceConnection: '$(testDevDevOpsServiceConnection)'
-          azureKeyvaultInstance: 'mataersdev02secrets'
-          containerRegistry: 'mapaerscontainerregistry'
-          terraformVersion: '$(terraformVersion)'
+          environmentNumber: '00'
+          azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
+          azureKeyvaultInstance: 'mataersdev00secrets'
+          containerRegistry: '$(containerRegistry)'
           decomDate: '$(decomDate)'
 
-    - template: release-stage.yml
-      parameters:
-          environmentPrefix: 'mata'
-          environmentSuffix: 'devtest'
-          environmentName: 'tst'
-          environmentNumber: '02'
-          azureDevOpsServiceConnection: '$(testDevDevOpsServiceConnection)'
-          azureKeyvaultInstance: 'mataerstst02secrets'
-          containerRegistry: 'mapaerscontainerregistry'
-          terraformVersion: '$(terraformVersion)'
-          decomDate: '$(decomDate)'
+    - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+      - template: release-stage.yml
+        parameters:
+            environmentPrefix: 'mata'
+            environmentSuffix: 'devtest'
+            environmentName: 'dev'
+            environmentNumber: '02'
+            azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
+            azureKeyvaultInstance: 'mataersdev02secrets'
+            containerRegistry: '$(containerRegistry)'
+            decomDate: '$(decomDate)'
+
+      - template: release-stage.yml
+        parameters:
+            environmentPrefix: 'mata'
+            environmentSuffix: 'devtest'
+            environmentName: 'tst'
+            environmentNumber: '02'
+            azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
+            azureKeyvaultInstance: 'mataerstst02secrets'
+            containerRegistry: '$(containerRegistry)'
+            decomDate: '$(decomDate)'

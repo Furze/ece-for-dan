@@ -2,14 +2,14 @@ parameters:
   azureDevOpsServiceConnection: ''
   azureKeyvaultInstance: ''
   containerRegistry: 'mapaerscontainerregistry'
+  dockerImageRepository: 'eceapi'
+
 stages:
   - stage: Build
     dependsOn: []
     jobs:
       - job: Build
         steps:                   
-          # NOTE: You need to specify 'persistCredentials:true' to allow your build agent to has access to git commands for pull/tag/push
-          # see https://docs.microsoft.com/en-us/azure/devops/pipelines/scripts/git-commands?view=azure-devops&tabs=yaml
           - checkout: self
             persistCredentials: true
             clean: true
@@ -30,7 +30,7 @@ stages:
             inputs:
               azureSubscription: '${{ parameters.azureDevOpsServiceConnection }}'
               keyVaultName: '${{ parameters.azureKeyvaultInstance }}'
-              secretsFilter: '*' # Options: editableOptions
+              secretsFilter: 'OPASettings--UserSecret'
             continueOnError: false
 
           - task: geeklearningio.gl-vsts-tasks-file-patch.json-patch-task.JsonPatch@3
@@ -54,19 +54,6 @@ stages:
               arguments: '--logger:"console;verbosity=detailed"'
               projects: '**/*.Tests.csproj'
               workingDirectory: $(Build.SourcesDirectory)/Test
-            
-          - task: Docker@2
-            condition: succeeded()
-            displayName: Build an image
-            inputs:
-              command: build
-              dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-              containerRegistry:  ${{ parameters.containerRegistry }}
-              repository: 'eceapi'
-              tags: |
-                $(Build.BuildNumber)
-                latest
-              arguments:  --build-arg buildno=$(Build.BuildNumber) --build-arg ERSNUGETFEED_ACCESSTOKEN=$(System.AccessToken)
 
           - task: PublishTestResults@2
             condition: always()
@@ -78,22 +65,81 @@ stages:
               publishRunAttachments: true
               failTaskOnFailedTests: true
 
+          # Use Docker task to add ADO labels used during release
           - task: Docker@2
-            condition: succeeded()
-            displayName: Push an image
+            displayName: 'Build Image'
             inputs:
-              command: push
-              repository: 'eceapi'
+              command: build
+              dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
               containerRegistry:  ${{ parameters.containerRegistry }}
-              ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
-                tags: |
-                  $(Build.BuildNumber)
-                  latest
-              ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/master') }}:
-                tags: |
-                  $(Build.BuildNumber)
+              repository: '${{ parameters.dockerImageRepository }}'
+              tags: |
+                $(Build.BuildNumber)
+                latest
+              arguments:  --build-arg buildno=$(Build.BuildNumber) --build-arg ERSNUGETFEED_ACCESSTOKEN=$(System.AccessToken)
 
-          # tag the current branch with the version number
+          - task: Docker@2
+            displayName: 'Init Docker'
+            inputs:
+              command: login
+              containerRegistry: "${{ parameters.containerRegistry }}"
+
+          # Push image without signing
+          - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+            - task: Docker@2
+              displayName: 'Push an image'
+              inputs:
+                command: push
+                repository: '${{ parameters.dockerImageRepository }}'
+                containerRegistry:  ${{ parameters.containerRegistry }}
+                tags: |
+                  $(Build.BuildNumber)
+  
+          # Sign and Push
+          - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+            - task: AzureKeyVault@1
+              displayName: 'Retrieve Signing Key'
+              inputs:
+                azureSubscription: '$(prodUatAzureRMServiceConnection)'
+                keyVaultName: 'mapaersprodsecrets'
+                secretsFilter: 'acr-repo-ci-signing-key-passphrase, acr-repo-ci-signing-key, acr-repo-ci-signing-key-filename'
+              continueOnError: false
+
+            # Login with Signer credentials
+            - task: AzureCLI@2
+              displayName: 'ACR Image Signer Auth'
+              inputs:
+                azureSubscription: '$(prodUatAzureRMServiceConnection)'
+                scriptType: pscore
+                scriptLocation: inlineScript
+                addSpnToEnvironment: true
+                inlineScript: |
+                  az acr login -n ${{ parameters.containerRegistry }}
+
+            - task: PowerShell@2
+              displayName: 'Docker Sign and Push'
+              inputs:
+                targetType: inline
+                script: |
+                  mkdir -p $(DOCKER_CONFIG)/trust/private
+                  [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($env:KEY_BASE64)) | Out-File -FilePath $(DOCKER_CONFIG)/trust/private/$env:KEY_FILENAME.key
+
+                  # Push image with build number and latest tags off master 
+                  $buildImageName = "{0}.azurecr.io/{1}:{2}" -f $env:ACR_NAME, $env:DOCKER_REPO, $env:DOCKER_TAG
+                  $latestImageName = "{0}.azurecr.io/{1}:latest" -f $env:ACR_NAME, $env:DOCKER_REPO
+
+                  docker push $buildImageName
+                  docker tag $buildImageName $latestImageName
+                  docker push $latestImageName
+              env:
+                DOCKER_CONTENT_TRUST: 1 # Force DCT for all docker commands
+                DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE: $(acr-repo-ci-signing-key-passphrase)
+                KEY_BASE64: $(acr-repo-ci-signing-key)
+                KEY_FILENAME: $(acr-repo-ci-signing-key-filename)
+                ACR_NAME: ${{ parameters.containerRegistry }}
+                DOCKER_REPO: ${{ parameters.dockerImageRepository }}
+                DOCKER_TAG: $(Build.BuildNumber)
+
           - task: PowerShell@2
             condition: succeeded()
             displayName: 'Tag the build'
@@ -102,19 +148,14 @@ stages:
               script: |
                 git tag '$(Build.BuildNumber)'
                 Write-Host "Successfully created tag $(Build.BuildNumber)"
+                git push --tags
+                Write-Host "Successfully pushed tag $(Build.BuildNumber) to origin"
 
-          # push created tag to origin
-          # NOTE: you need to set 'persistCredentials: true' in the checkout task. Otherwise git will fail with error code 1.
-          # NOTE: You cannot run both "git tag xyz" AND "git push --task" in the same powershell command. If you do, git will fail with error code 1
-          # NOTE: IF you get an error from this git command, make sure, that your build user has the required permissions!
-          #       In our case, the build agent needs the additional permissions for "bypass policies when pushing" and "bypass policies when completing pull requests"
-          #       because we have a custom policy in place. (See: https://opti-q.visualstudio.com/<your_project_name>/_settings/repositories)
           - task: PowerShell@2
-            condition: succeeded()
-            displayName: 'Push tags'
+            condition: always()
+            displayName: 'ACR Logout'
             inputs:
               targetType: 'inline'
               script: |
-                git push --tags
-                Write-Host "Successfully pushed tag $(Build.BuildNumber) to origin"
+                docker logout ${{ parameters.containerRegistry }}.azurecr.io
 

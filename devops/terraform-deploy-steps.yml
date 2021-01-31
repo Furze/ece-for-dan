@@ -5,7 +5,6 @@ parameters:
   environmentNumber: ''
   applicationName: ''
   releaseStageDescriptor: ''
-  gitCheckoutTag: ''
   azureDevOpsServiceConnection: ''
   runTerraformDestroy: false
   runTerraformApply: true
@@ -13,24 +12,6 @@ parameters:
   decomDate: ''
        
 steps:
-- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-  - checkout: self
-    persistCredentials: true
-    clean: true  
-
-- ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
-  - checkout: ece-api
-    clean: true
-    
-  - task: PowerShell@2
-    condition: succeeded()
-    displayName: 'Checkout build tag'
-    inputs:
-      workingDirectory: "$(System.DefaultWorkingDirectory)/ece-api"
-      targetType: 'inline'
-      script: |
-        git checkout ${{ parameters.gitCheckoutTag }}           
-
 - pwsh: |
     $stateResourceGroup = "${{ parameters.environmentPrefix }}-ERS-${{ parameters.environmentSuffix }}-TFSTATE".ToUpper()
     $stateStorageAccount = ($stateResourceGroup -replace "\W","").ToLower()

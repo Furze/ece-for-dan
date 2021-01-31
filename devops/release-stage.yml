@@ -5,14 +5,12 @@ parameters:
   environmentNumber: ''
   applicationName: 'ece'
   azureDevOpsServiceConnection: ''
-  azureKeyvaultInstance: ''
   imageTag: '$(Build.BuildNumber)'
   releaseStageDescriptor: ''
   containerRegistry: ''
   stageDependencies: '' # List that overrides dependencies for the stage as oppossed to just previous stage
   runTerraformApply: true
   runTerraformDestroy: false
-  terraformVersion: 'latest'
   decomDate: ''
 
 stages:
@@ -28,8 +26,6 @@ stages:
       - deployment: "release${{ parameters.releaseStageDescriptor }}"
         dependsOn: []
         condition: succeeded()
-        pool:
-          vmImage: "ubuntu-latest"
         displayName: "Release application ${{ parameters.releaseStageDescriptor }}"
         environment: '${{ parameters.environmentName }}${{ parameters.environmentNumber }}'
         timeoutInMinutes: 0 # set to 0 which means it can run for maximum
@@ -56,6 +52,24 @@ stages:
                   displayName: "Extract metadata from image"
                   failOnStderr: true
 
+                - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+                  - checkout: self
+                    clean: true  
+
+                - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+                  - checkout: ece-api
+                    clean: true
+
+                - task: PowerShell@2
+                  condition: succeeded()
+                  displayName: 'Checkout build tag'
+                  inputs:
+                    workingDirectory: "$(System.DefaultWorkingDirectory)/ece-api"
+                    targetType: 'inline'
+                    script: |
+                      echo "Checking out: $(gitCheckoutTag)"
+                      git checkout $(gitCheckoutTag)
+
                 - template: remove-resource-locks-steps.yml
                   parameters:
                     environmentPrefix: '${{ parameters.environmentPrefix }}'
@@ -73,11 +87,9 @@ stages:
                     environmentNumber: '${{ parameters.environmentNumber }}'
                     applicationName: '${{ parameters.applicationName }}'
                     releaseStageDescriptor: '${{ parameters.releaseStageDescriptor }}'
-                    gitCheckoutTag: '$(gitCheckoutTag)'
                     azureDevOpsServiceConnection: '${{ parameters.azureDevOpsServiceConnection }}'
                     runTerraformApply: '${{ parameters.runTerraformApply }}'
                     runTerraformDestroy: '${{ parameters.runTerraformDestroy }}'
-                    terraformVersion: '${{ parameters.terraformVersion }}'
                     decomDate: '${{ parameters.decomDate }}'
 
                 # Continue with post-terraform tasks if we are releasing normally (ie. not a destroy)         
@@ -163,10 +175,10 @@ stages:
                       environmentName: '${{ parameters.environmentName }}'
                       environmentnumber: '${{ parameters.environmentNumber }}'
                       azureDevOpsServiceConnection: ${{ parameters.azureDevOpsServiceConnection }}
-                      containerRegistry: '${{ parameters.containerRegistry }}.azurecr.io'
+                      containerRegistry: '${{ parameters.containerRegistry }}'
                       appResourceGroup: '$(appResourceGroup)'
                       imageRepository: '${{ parameters.applicationName }}api'
                       appName: '$(appName)'
-                      dockerImageName: '$(dockerImageName)'
                       imageTag: '${{ parameters.imageTag }}'
                       imageBuildNumber: '$(imageBuildNumber)'
+

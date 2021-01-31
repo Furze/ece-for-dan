@@ -6,24 +6,90 @@ parameters:
   appResourceGroup: ''
   imageRepository: ''
   appName: ''
-  dockerImageName: ''
   imageTag: ''
   imageBuildNumber: ''
   healthCheckPath: '/health'
 
 steps:
-- task: AzureCLI@2
-  condition: succeeded()
-  displayName: 'Set environment tag on image'
-  inputs:
-    scriptType: bash
-    scriptLocation: 'inlineScript'
-    azureSubscription: ${{ parameters.azureDevOpsServiceConnection }}
-    failOnStandardError: true
-    inlineScript: |
-      docker pull "${{ parameters.dockerImageName }}:${{ parameters.imageTag }}"
-      docker tag "${{ parameters.dockerImageName }}:${{ parameters.imageTag }}" "${{ parameters.dockerImageName }}:latest-${{ parameters.environmentName }}${{ parameters.environmentnumber }}"
-      docker push "${{ parameters.dockerImageName }}:latest-${{ parameters.environmentName }}${{ parameters.environmentnumber }}"
+- ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+  - task: PowerShell@2
+    condition: succeeded()
+    displayName: 'Tag Image as latest and Push'
+    inputs:
+      targetType: inline
+      script: |
+        $oldImageName = "{0}.azurecr.io/{1}:{2}" -f $env:ACR_NAME, $env:DOCKER_REPO, $env:DOCKER_TAG
+        $newImageName = "{0}.azurecr.io/{1}:latest-{2}{3}" -f $env:ACR_NAME, $env:DOCKER_REPO, $env:ENV_NAME, $env:ENV_NUMBER
+        
+        docker pull $oldImageName
+        docker tag $oldImageName $newImageName
+        docker push $newImageName
+
+        Write-Output "Re-tagging [$oldImageName] as [$newImageName] .."
+    env:
+      ACR_NAME: ${{ parameters.containerRegistry }}
+      DOCKER_REPO: ${{ parameters.imageRepository }}
+      DOCKER_TAG: ${{ parameters.imageTag }}
+      ENV_NAME: ${{ parameters.environmentName }}
+      ENV_NUMBER: ${{ parameters.environmentnumber }}
+
+- ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+  - task: AzureKeyVault@1
+    condition: succeeded()
+    displayName: 'Retrieve Signing Key'
+    inputs:
+      azureSubscription: '$(prodUatAzureRMServiceConnection)'
+      keyVaultName: 'mapaersprodsecrets'
+      secretsFilter: 'acr-repo-ci-signing-key-passphrase, acr-repo-ci-signing-key, acr-repo-ci-signing-key-filename, acr-root-key-hash'
+    continueOnError: false
+
+  - task: AzureCLI@2
+    displayName: 'ACR Image Signer Auth'
+    inputs:
+      azureSubscription: '$(prodUatAzureRMServiceConnection)'
+      scriptType: pscore
+      scriptLocation: inlineScript
+      addSpnToEnvironment: true
+      inlineScript: |
+        az acr login -n ${{ parameters.containerRegistry }}
+
+  - task: PowerShell@2
+    condition: succeeded()
+    displayName: 'Tag Image as latest and Push'
+    inputs:
+      targetType: inline
+      script: |
+        mkdir -p $(DOCKER_CONFIG)/trust/private
+        [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($env:KEY_BASE64)) | Out-File -FilePath $(DOCKER_CONFIG)/trust/private/$env:KEY_FILENAME.key
+
+        $oldImageName = "{0}.azurecr.io/{1}:{2}" -f $env:ACR_NAME, $env:DOCKER_REPO, $env:DOCKER_TAG
+        $newImageName = "{0}.azurecr.io/{1}:latest-{2}{3}" -f $env:ACR_NAME, $env:DOCKER_REPO, $env:ENV_NAME, $env:ENV_NUMBER
+
+        Write-Output "Re-tagging [$oldImageName] as [$newImageName] .."
+
+        docker pull $oldImageName
+
+        ## Validate that ACR root key is what we expect it to be
+        $trustResponse = docker trust inspect $oldImageName | ConvertFrom-JSON
+        $rootKeyHash = ($trustResponse.AdministrativeKeys | where {$_.Name -eq "Root" }).Keys.ID
+        if ($rootKeyHash -ne $env:KNOWN_ROOTKEYHASH) {
+          Write-Output "Unexpected ACR Root Key in image."
+          exit 1
+        }
+
+        docker tag $oldImageName $newImageName
+        docker push $newImageName
+    env:
+      DOCKER_CONTENT_TRUST: 1 # Force DCT for all docker commands
+      DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE: $(acr-repo-ci-signing-key-passphrase)
+      KEY_BASE64: $(acr-repo-ci-signing-key)
+      KEY_FILENAME: $(acr-repo-ci-signing-key-filename)
+      KNOWN_ROOTKEYHASH: $(acr-root-key-hash)
+      ACR_NAME: ${{ parameters.containerRegistry }}
+      DOCKER_REPO: ${{ parameters.imageRepository }}
+      DOCKER_TAG: $(Build.BuildNumber)
+      ENV_NAME: ${{ parameters.environmentName }}
+      ENV_NUMBER: ${{ parameters.environmentnumber }}
 
 - bash: |
     export TZ="Pacific/Auckland" 
@@ -33,14 +99,14 @@ steps:
   displayName: 'Get current timestamp'
 
 - task: AzureRMWebAppDeployment@4
-  displayName: 'Deploy latest-${{ parameters.environmentName }}-${{ parameters.environmentNumber }} to App Service' 
+  displayName: 'Deploy Container to App Service' 
   name: WebAppDeployment
   inputs:
     appType: webAppContainer
     ConnectedServiceName: ${{ parameters.azureDevOpsServiceConnection }}
     WebAppName: ${{ parameters.appName }}
     ResourceGroupName: ${{ parameters.appResourceGroup }}
-    DockerNamespace: ${{ parameters.containerRegistry }}
+    DockerNamespace: '${{ parameters.containerRegistry }}.azurecr.io'
     DockerRepository: ${{ parameters.imageRepository }}
     DockerImageTag: latest-${{ parameters.environmentName }}${{ parameters.environmentnumber }}
     AppSettings: -ReleaseDate "$(currentDateTime)"
