@@ -87,7 +87,7 @@ steps:
       KNOWN_SIGNERHASH: $(acr-repo-ci-signing-key-filename)
       ACR_NAME: ${{ parameters.containerRegistry }}
       DOCKER_REPO: ${{ parameters.imageRepository }}
-      DOCKER_TAG: $(Build.BuildNumber)
+      DOCKER_TAG: ${{ parameters.imageTag }}
       ENV_NAME: ${{ parameters.environmentName }}
       ENV_NUMBER: ${{ parameters.environmentnumber }}
 
