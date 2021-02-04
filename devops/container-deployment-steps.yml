@@ -73,7 +73,7 @@ steps:
         $trustResponse = docker trust inspect $oldImageName | ConvertFrom-JSON
         $rootKeyHash = ($trustResponse.Signers | where {$_.Name -eq "ers-ci" }).Keys.ID
         if ($rootKeyHash -ne $env:KNOWN_SIGNERHASH) {
-          Write-Output "Unexpected ACR Root Key in image."
+          Write-Output "Unexpected Signer in image pulled from registry."
           exit 1
         }
 

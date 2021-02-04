@@ -38,7 +38,7 @@ stages:
             
         - task: AzureKeyVault@1
           condition: succeeded()
-          displayName: 'Link keyvault with Azure DevOps'
+          displayName: 'Get OPA Secret from Key Vault'
           inputs:
             azureSubscription: '${{ parameters.azureDevOpsServiceConnection }}'
             keyVaultName: '${{ parameters.azureKeyvaultInstance }}'
@@ -74,8 +74,33 @@ stages:
           continueOnError: true
           displayName: 'Publish Quality Gate Result'
         
-        - task: whitesource.WhiteSource-azure-devops-services.bolt.wss.WhiteSource@20
+        - task: whitesource.WhiteSource-azure-devops-services.bolt.wss.WhiteSource@21
           inputs:
             projectName: $(whiteSourceProjectName)
             configuration: |
               nuget.restoreDependencies=true
+
+        # Can use the CLI as well if needed
+        # - script: 'java -jar wss-unified-agent.jar -c ./devops/whitesource-default-csharp.config -apiKey "$(whitesource-api-key)" -product ERS -project $(whiteSourceProjectName) -d .'
+        #   displayName: 'Whitesource Scan'  
+ 
+        - ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
+          - task: AzureKeyVault@1
+            condition: succeeded()
+            displayName: 'Get Whitesource API Key from Key Vault'
+            inputs:
+              azureSubscription: '$(testDevAzureRMServiceConnection)'
+              keyVaultName: 'mataersdevtestsecrets'
+              secretsFilter: 'whitesource-api-key' # Options: editableOptions
+            continueOnError: false
+
+          - script: 'curl -LJO https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar'
+            displayName: 'Download Whitesource Agent'
+  
+          - script: 'java -jar wss-unified-agent.jar -c ./devops/whitesource-eua-csharp.config -apiKey "$(whitesource-api-key)" -product ERS -project $(whiteSourceProjectName) -appPath ./Web/bin/Debug/netcoreapp3.1/Web.dll -d .'
+            displayName: 'Whitesource EUA Scan Entrypoint'
+            continueOnError: true
+
+          - script: 'java -jar wss-unified-agent.jar -c ./devops/whitesource-eua-csharp.config -apiKey "$(whitesource-api-key)" -product ERS -project $(whiteSourceProjectName) -appPath ./CLI/bin/Debug/netcoreapp3.1/CLI.dll -d .'
+            displayName: 'Whitesource EUA Scan CLI'
+            continueOnError: true 
