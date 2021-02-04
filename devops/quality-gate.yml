@@ -20,6 +20,10 @@ stages:
         - task: NuGetAuthenticate@0
           displayName: 'NuGet Authenticate'
         
+        - script: 
+            docker pull postgres:latest
+          displayName: 'Cache Docker Images for Tests'
+        
         - task: SonarQubePrepare@4
           continueOnError: true
           displayName: 'Prepare analysis on SonarQube'
@@ -35,6 +39,7 @@ stages:
           inputs:
             command: build
             projects: '**/ECE.sln'
+            arguments: '-o $(Build.ArtifactStagingDirectory)'
             
         - task: AzureKeyVault@1
           condition: succeeded()
@@ -96,11 +101,11 @@ stages:
 
           - script: 'curl -LJO https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar'
             displayName: 'Download Whitesource Agent'
-  
-          - script: 'java -jar wss-unified-agent.jar -c ./devops/whitesource-eua-csharp.config -apiKey "$(whitesource-api-key)" -product ERS -project $(whiteSourceProjectName) -appPath ./Web/bin/Debug/netcoreapp3.1/Web.dll -d .'
+
+          - script: 'java -jar wss-unified-agent.jar -c ./devops/whitesource-eua-csharp.config -apiKey "$(whitesource-api-key)" -product ERS -project $(whiteSourceProjectName) -appPath $(Build.ArtifactStagingDirectory)/Web.dll -d .'
             displayName: 'Whitesource EUA Scan Entrypoint'
             continueOnError: true
 
-          - script: 'java -jar wss-unified-agent.jar -c ./devops/whitesource-eua-csharp.config -apiKey "$(whitesource-api-key)" -product ERS -project $(whiteSourceProjectName) -appPath ./CLI/bin/Debug/netcoreapp3.1/CLI.dll -d .'
+          - script: 'java -jar wss-unified-agent.jar -c ./devops/whitesource-eua-csharp.config -apiKey "$(whitesource-api-key)" -product ERS -project $(whiteSourceProjectName) -appPath $(Build.ArtifactStagingDirectory)/CLI.dll -d .'
             displayName: 'Whitesource EUA Scan CLI'
             continueOnError: true 

@@ -23,7 +23,11 @@ stages:
           # Auth to Azure Artifacts where the NuGet feed lives
           - task: NuGetAuthenticate@0
             displayName: 'NuGet Authenticate'
-            
+
+          - script: 
+              docker pull postgres:latest
+            displayName: 'Cache Docker Images for Tests'
+
           - task: AzureKeyVault@1
             condition: succeeded()
             displayName: 'Link keyvault with Azure DevOps'
