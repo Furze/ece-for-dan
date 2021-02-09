@@ -25,16 +25,18 @@ namespace Events.Integration.Protobuf.Workflow {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChZ3b3JrZmxvdy9TdGFydGVkLnByb3RvGhZwcm90b2J1Zi1uZXQvYmNsLnBy",
-            "b3RvGh9nb29nbGUvcHJvdG9idWYvdGltZXN0YW1wLnByb3RvIpEBCgdTdGFy",
-            "dGVkEiMKEEJ1c2luZXNzRW50aXR5SWQYASABKAsyCS5iY2wuR3VpZBIaChJC",
-            "dXNpbmVzc0VudGl0eVR5cGUYAiABKAkSEAoIVXNlcm5hbWUYAyABKAkSMwoP",
-            "QWN0aW9uVGltZXN0YW1wGAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVz",
-            "dGFtcEInqgIkRXZlbnRzLkludGVncmF0aW9uLlByb3RvYnVmLldvcmtmbG93",
-            "YgZwcm90bzM="));
+            "b3RvGh9nb29nbGUvcHJvdG9idWYvdGltZXN0YW1wLnByb3RvGih3b3JrZmxv",
+            "dy9jb21tb24vV29ya2Zsb3dUcmFuc2l0aW9uLnByb3RvItUBCgdTdGFydGVk",
+            "EiMKEEJ1c2luZXNzRW50aXR5SWQYASABKAsyCS5iY2wuR3VpZBIaChJCdXNp",
+            "bmVzc0VudGl0eVR5cGUYAiABKAkSEAoIVXNlcm5hbWUYAyABKAkSMwoPQWN0",
+            "aW9uVGltZXN0YW1wGAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFt",
+            "cBJCChVWYWxpZFN0YXRlVHJhbnNpdGlvbnMYBSADKAsyIy53b3JrZmxvdy5j",
+            "b21tb24uV29ya2Zsb3dUcmFuc2l0aW9uQieqAiRFdmVudHMuSW50ZWdyYXRp",
+            "b24uUHJvdG9idWYuV29ya2Zsb3diBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::ProtoBuf.Bcl.BclReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::ProtoBuf.Bcl.BclReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, global::Events.Integration.Protobuf.Workflow.Common.WorkflowTransitionReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Workflow.Started), global::Events.Integration.Protobuf.Workflow.Started.Parser, new[]{ "BusinessEntityId", "BusinessEntityType", "Username", "ActionTimestamp" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Workflow.Started), global::Events.Integration.Protobuf.Workflow.Started.Parser, new[]{ "BusinessEntityId", "BusinessEntityType", "Username", "ActionTimestamp", "ValidStateTransitions" }, null, null, null, null)
           }));
     }
     #endregion
@@ -74,6 +76,7 @@ namespace Events.Integration.Protobuf.Workflow {
       businessEntityType_ = other.businessEntityType_;
       username_ = other.username_;
       actionTimestamp_ = other.actionTimestamp_ != null ? other.actionTimestamp_.Clone() : null;
+      validStateTransitions_ = other.validStateTransitions_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -126,6 +129,16 @@ namespace Events.Integration.Protobuf.Workflow {
       }
     }
 
+    /// <summary>Field number for the "ValidStateTransitions" field.</summary>
+    public const int ValidStateTransitionsFieldNumber = 5;
+    private static readonly pb::FieldCodec<global::Events.Integration.Protobuf.Workflow.Common.WorkflowTransition> _repeated_validStateTransitions_codec
+        = pb::FieldCodec.ForMessage(42, global::Events.Integration.Protobuf.Workflow.Common.WorkflowTransition.Parser);
+    private readonly pbc::RepeatedField<global::Events.Integration.Protobuf.Workflow.Common.WorkflowTransition> validStateTransitions_ = new pbc::RepeatedField<global::Events.Integration.Protobuf.Workflow.Common.WorkflowTransition>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::Events.Integration.Protobuf.Workflow.Common.WorkflowTransition> ValidStateTransitions {
+      get { return validStateTransitions_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as Started);
@@ -143,6 +156,7 @@ namespace Events.Integration.Protobuf.Workflow {
       if (BusinessEntityType != other.BusinessEntityType) return false;
       if (Username != other.Username) return false;
       if (!object.Equals(ActionTimestamp, other.ActionTimestamp)) return false;
+      if(!validStateTransitions_.Equals(other.validStateTransitions_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -153,6 +167,7 @@ namespace Events.Integration.Protobuf.Workflow {
       if (BusinessEntityType.Length != 0) hash ^= BusinessEntityType.GetHashCode();
       if (Username.Length != 0) hash ^= Username.GetHashCode();
       if (actionTimestamp_ != null) hash ^= ActionTimestamp.GetHashCode();
+      hash ^= validStateTransitions_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -185,6 +200,7 @@ namespace Events.Integration.Protobuf.Workflow {
         output.WriteRawTag(34);
         output.WriteMessage(ActionTimestamp);
       }
+      validStateTransitions_.WriteTo(output, _repeated_validStateTransitions_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -210,6 +226,7 @@ namespace Events.Integration.Protobuf.Workflow {
         output.WriteRawTag(34);
         output.WriteMessage(ActionTimestamp);
       }
+      validStateTransitions_.WriteTo(ref output, _repeated_validStateTransitions_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -231,6 +248,7 @@ namespace Events.Integration.Protobuf.Workflow {
       if (actionTimestamp_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(ActionTimestamp);
       }
+      size += validStateTransitions_.CalculateSize(_repeated_validStateTransitions_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -260,6 +278,7 @@ namespace Events.Integration.Protobuf.Workflow {
         }
         ActionTimestamp.MergeFrom(other.ActionTimestamp);
       }
+      validStateTransitions_.Add(other.validStateTransitions_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -296,6 +315,10 @@ namespace Events.Integration.Protobuf.Workflow {
             input.ReadMessage(ActionTimestamp);
             break;
           }
+          case 42: {
+            validStateTransitions_.AddEntriesFrom(input, _repeated_validStateTransitions_codec);
+            break;
+          }
         }
       }
     #endif
@@ -330,6 +353,10 @@ namespace Events.Integration.Protobuf.Workflow {
               ActionTimestamp = new global::Google.Protobuf.WellKnownTypes.Timestamp();
             }
             input.ReadMessage(ActionTimestamp);
+            break;
+          }
+          case 42: {
+            validStateTransitions_.AddEntriesFrom(ref input, _repeated_validStateTransitions_codec);
             break;
           }
         }
