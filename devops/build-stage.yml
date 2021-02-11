@@ -6,6 +6,8 @@ parameters:
 
 stages:
   - stage: Build
+    variables:
+      whiteSourceProjectName: 'eceapi'  
     dependsOn: []
     jobs:
       - job: Build
@@ -81,6 +83,25 @@ stages:
                 $(Build.BuildNumber)
                 latest
               arguments:  --build-arg buildno=$(Build.BuildNumber) --build-arg ERSNUGETFEED_ACCESSTOKEN=$(System.AccessToken)
+
+          # White source scan docker container before its signed and pushed
+          - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'Schedule')) }}:      
+            - task: AzureKeyVault@1
+              condition: succeeded()
+              displayName: 'Get Whitesource API Key from Key Vault'
+              inputs:
+                azureSubscription: '$(testDevAzureRMServiceConnection)'
+                keyVaultName: 'mataersdevtestsecrets'
+                secretsFilter: 'whitesource-api-key' # Options: editableOptions
+              continueOnError: false
+
+            - script: 'curl -LJO https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar'
+              displayName: 'Download Whitesource Agent'
+
+            - script: |
+                java -jar wss-unified-agent.jar -c ./devops/whitesource-docker.config -apiKey "$(whitesource-api-key)" -product ERS -project $(whiteSourceProjectName)
+              displayName: 'Whitesource Docker Container Scan'
+              continueOnError: true
 
           - task: Docker@2
             displayName: 'Init Docker'
