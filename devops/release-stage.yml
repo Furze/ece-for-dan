@@ -27,8 +27,8 @@ stages:
         dependsOn: []
         condition: succeeded()
         displayName: "Release application ${{ parameters.releaseStageDescriptor }}"
-        environment: '${{ parameters.environmentName }}${{ parameters.environmentNumber }}'
-        timeoutInMinutes: 0 # set to 0 which means it can run for maximum
+        environment:  ${{ lower( format('{0}{1}{2}', parameters.environmentName, parameters.environmentNumber, parameters.applicationName)) }}
+        timeoutInMinutes: 30
         strategy:
           runOnce:
             deploy:
