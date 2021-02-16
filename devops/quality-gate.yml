@@ -79,29 +79,23 @@ stages:
           continueOnError: true
           displayName: 'Publish Quality Gate Result'
         
-        - task: whitesource.WhiteSource-azure-devops-services.bolt.wss.WhiteSource@21
+        - task: AzureKeyVault@1
+          condition: succeeded()
+          displayName: 'Get Whitesource API Key from Key Vault'
           inputs:
-            projectName: $(whiteSourceProjectName)
-            configuration: |
-              nuget.restoreDependencies=true
+            azureSubscription: '${{ parameters.azureDevOpsServiceConnection }}'
+            keyVaultName: 'mataersdevtestsecrets'
+            secretsFilter: 'whitesource-api-key' # Options: editableOptions
+          continueOnError: false
 
-        # Can use the CLI as well if needed
-        # - script: 'java -jar wss-unified-agent.jar -c ./devops/whitesource-default-csharp.config -apiKey "$(whitesource-api-key)" -product ERS -project $(whiteSourceProjectName) -d .'
-        #   displayName: 'Whitesource Scan'  
+        - script: 'curl -LJO https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar'
+          displayName: 'Download Whitesource Agent'
+
+        - script: 'java -jar wss-unified-agent.jar -c ./devops/whitesource-default-csharp.config -apiKey "$(whitesource-api-key)" -product ERS -project $(whiteSourceProjectName) -d .'
+          displayName: 'Whitesource Code Scan'
+          continueOnError: true 
  
         - ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
-          - task: AzureKeyVault@1
-            condition: succeeded()
-            displayName: 'Get Whitesource API Key from Key Vault'
-            inputs:
-              azureSubscription: '$(testDevAzureRMServiceConnection)'
-              keyVaultName: 'mataersdevtestsecrets'
-              secretsFilter: 'whitesource-api-key' # Options: editableOptions
-            continueOnError: false
-
-          - script: 'curl -LJO https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar'
-            displayName: 'Download Whitesource Agent'
-
           - script: 'java -jar wss-unified-agent.jar -c ./devops/whitesource-eua-csharp.config -apiKey "$(whitesource-api-key)" -product ERS -project $(whiteSourceProjectName) -appPath $(Build.ArtifactStagingDirectory)/Web.dll -d .'
             displayName: 'Whitesource EUA Scan Entrypoint'
             continueOnError: true
