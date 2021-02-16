@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
 using MediatR;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MoE.ECE.Web.Infrastructure.Settings;
 using Moe.Library.ServiceBus;
+using Newtonsoft.Json;
 
 namespace MoE.ECE.Web.Infrastructure.ServiceBus
 {
@@ -21,69 +21,61 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
         private readonly string _connectionString;
         private readonly ILogger<ServiceBusConsumer> _logger;
         private readonly IServiceProvider _serviceProvider;
-        private readonly IMessageResolver _messageResolver;
-        private readonly Lazy<SubscriptionClient> _subscriptionClient;
+        private readonly Lazy<ServiceBusProcessor> _subscriptionProcessor;
 
         protected ServiceBusConsumer(
             IOptions<ConnectionStrings> options,
             ILogger<ServiceBusConsumer> logger,
-            IServiceProvider serviceProvider, IMessageResolver messageResolver)
+            IServiceProvider serviceProvider)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
-            _messageResolver = messageResolver;
             _connectionString = options.Value.ServiceBus;
-            _subscriptionClient = new Lazy<SubscriptionClient>(CreateSubscriptionClient);
+            _subscriptionProcessor = new Lazy<ServiceBusProcessor>(CreateSubscriptionClient);
         }
 
         protected abstract string Subscription { get; }
 
         protected abstract string Topic { get; }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation($"Starting Subscription for Topic:{Topic} Subscription:{Subscription}");
-
             RegisterMessageHandler();
-
-            //Do your preparation (e.g. Start code) here
-            while (!stoppingToken.IsCancellationRequested) return Task.CompletedTask;
-
-            return CloseAsync();
+            await _subscriptionProcessor.Value.StartProcessingAsync(stoppingToken);
         }
 
         public void RegisterMessageHandler()
         {
             _logger.LogInformation($"Registering Message Handler for Topic:{Topic} Subscription:{Subscription}");
-
-            var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
-            {
-                MaxConcurrentCalls = 1,
-                AutoComplete = false
-            };
-
-            _subscriptionClient.Value.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
+            _subscriptionProcessor.Value.ProcessMessageAsync += ProcessMessagesAsync;
+            _subscriptionProcessor.Value.ProcessErrorAsync += ExceptionReceivedHandler;
         }
 
-        private Task CloseAsync()
+        private async Task CloseAsync()
         {
             _logger.LogInformation($"Closing Subscription for Topic:{Topic} Subscription:{Subscription}");
-            return _subscriptionClient.Value.CloseAsync();
+            await _subscriptionProcessor.Value.StopProcessingAsync();
+            await _subscriptionProcessor.Value.CloseAsync();
         }
 
-        private SubscriptionClient CreateSubscriptionClient()
+        private ServiceBusProcessor CreateSubscriptionClient()
         {
-            return new SubscriptionClient(
-                _connectionString,
-                Topic,
-                Subscription,
-                ReceiveMode.PeekLock,
-                RetryPolicy.Default);
+            var sbc = new ServiceBusClient(_connectionString);
+
+            var messageHandlerOptions = new ServiceBusProcessorOptions()
+            {
+                MaxConcurrentCalls = 1,
+                AutoCompleteMessages = false
+            };
+
+            var processor = sbc.CreateProcessor(Topic, Subscription, messageHandlerOptions);
+            return processor;
         }
 
-        private async Task ProcessMessagesAsync(Message message, CancellationToken token)
+        private async Task ProcessMessagesAsync(ProcessMessageEventArgs args)
         {
-            var incomingMessage = new IncomingMessage(message, _messageResolver);
+            var incomingMessage = new IncomingMessage(args.Message, new MessageResolver());
 
             Log(incomingMessage);
 
@@ -96,9 +88,9 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
                 // the lifecycle of our handlers is different.
                 using var serviceScope = _serviceProvider.CreateScope();
 
-                var mediator = serviceScope.ServiceProvider.GetService<IMediator>();
+                var mediator = serviceScope.ServiceProvider.GetRequiredService<IMediator>();
 
-                await mediator.Publish(incomingMessage.Payload, token);
+                await mediator.Publish(incomingMessage.Payload, args.CancellationToken);
             }
             else
             {
@@ -106,17 +98,16 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
                     $"Message received {incomingMessage.PayloadType.FullName} does not implement {nameof(INotification)} and cannot be broadcast. ");
             }
 
-            await _subscriptionClient.Value.CompleteAsync(message.SystemProperties.LockToken);
+            await args.CompleteMessageAsync(args.Message);
         }
 
-        private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
+        private Task ExceptionReceivedHandler(ProcessErrorEventArgs processErrorEventArgs)
         {
-            _logger.LogError(exceptionReceivedEventArgs.Exception, "Message handler encountered an exception");
-            var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
+            _logger.LogError(processErrorEventArgs.Exception, "Message handler encountered an exception");
 
-            _logger.LogDebug($"- Endpoint: {context.Endpoint}");
-            _logger.LogDebug($"- Entity Path: {context.EntityPath}");
-            _logger.LogDebug($"- Executing Action: {context.Action}");
+            _logger.LogDebug($"- Endpoint: {processErrorEventArgs.FullyQualifiedNamespace}");
+            _logger.LogDebug($"- Entity Path: {processErrorEventArgs.EntityPath}");
+            _logger.LogDebug($"- Executing Action: {processErrorEventArgs.ErrorSource.ToString()}");
 
             return Task.CompletedTask;
         }
@@ -127,8 +118,7 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
                 "[Service Bus Message Received] [MessageId]:{MessageId} {objectType} {objectJson}";
 
             _logger.LogDebug(formattedMessage, message.PayloadType.Name, message.MessageId,
-                JsonSerializer.Serialize(message.Payload, new JsonSerializerOptions {WriteIndented = true})
-            );
+                JsonConvert.SerializeObject(message.Payload, Formatting.Indented));
         }
     }
 }

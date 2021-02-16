@@ -9,7 +9,7 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
 {
     public class EliTopicConsumer : ServiceBusConsumer
     {
-        public EliTopicConsumer(IOptions<ConnectionStrings> options, ILogger<ServiceBusConsumer> logger, IServiceProvider serviceProvider, IMessageResolver messageResolver) : base(options, logger, serviceProvider, messageResolver)
+        public EliTopicConsumer(IOptions<ConnectionStrings> options, ILogger<ServiceBusConsumer> logger, IServiceProvider serviceProvider) : base(options, logger, serviceProvider)
         {
         }
 

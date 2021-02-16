@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Google.Protobuf;
-using Microsoft.Azure.ServiceBus;
+using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Integration;
 using Moe.ECE.Events.Integration;
 using MoE.ECE.Web.Infrastructure.Settings;
@@ -26,11 +26,7 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
         public async Task PublishAsync<TEvent>(TEvent integrationEvent, string topic,
             CancellationToken cancellationToken) where TEvent : IIntegrationEvent
         {
-            var messageFormat = typeof(IMessage).IsAssignableFrom(typeof(TEvent))
-                ? MessageFormat.Proto
-                : MessageFormat.Json;
-
-            var outgoingMessage = new OutgoingMessage(integrationEvent, topic, messageFormat);
+            var outgoingMessage = new OutgoingMessage(integrationEvent, topic, MessageFormat.Proto);
 
             await SendAsync(outgoingMessage);
 
@@ -39,9 +35,16 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
 
         protected virtual Task SendAsync(OutgoingMessage outgoingMessage)
         {
-            var topicClient = new TopicClient(_serviceBusConnectionString, outgoingMessage.Topic);
+            //TODO: Pull Service Bus Client from IOC to pool connections
+            var serviceBusConnection = new ServiceBusClient(_serviceBusConnectionString);
+            var serviceBusSender = serviceBusConnection.CreateSender(outgoingMessage.Topic);
+            if (serviceBusSender != null)
+            {
+                return serviceBusSender.SendMessageAsync(outgoingMessage.ServiceBusMessage);
 
-            return topicClient.SendAsync(outgoingMessage.ServiceBusMessage);
+            }
+
+            throw new ECEApplicationException("Could not get topic client");
         }
 
         private void Log(IMessageWrapper message)

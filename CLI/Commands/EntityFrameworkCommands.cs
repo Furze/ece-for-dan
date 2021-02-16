@@ -135,7 +135,7 @@ namespace MoE.ECE.CLI.Commands
                 .UseSnakeCaseNamingConvention();
 
             var referenceDataContext = new ReferenceDataContext(optionsBuilder.Options,
-                _serviceProvider.GetService<IEnumerable<IEntityConfiguration>>());
+                _serviceProvider.GetService<IEnumerable<IEntityConfiguration>>()!);
             return referenceDataContext;
         }
     }

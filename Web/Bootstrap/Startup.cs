@@ -26,8 +26,8 @@ namespace MoE.ECE.Web.Bootstrap
                 .Register<ExceptionStartup>()
                 .Register<CorsStartup>()
                 .Register<SwaggerStartup>()
-                .Register<MetricsStartup>()
-                .Register<MvcStartup>();
+                .Register<MvcStartup>()
+                .Register<HealthCheckStartup>();
         }
     }
 }

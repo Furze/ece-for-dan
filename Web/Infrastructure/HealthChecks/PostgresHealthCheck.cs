@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using App.Metrics.Health;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MoE.ECE.Domain.Infrastructure;
 using Npgsql;
 
 namespace MoE.ECE.Web.Infrastructure.HealthChecks
 {
-    public class PostgresHealthCheck : HealthCheck
+    public class PostgresHealthCheck : IHealthCheck
     {
+        public const string HealthCheckName = "Postgres Health Check";
         private readonly IConnectionStringFactory _connectionStringFactory;
-        private const string HealthCheckName = "Postgres Health Check";
 
-        public PostgresHealthCheck(IConnectionStringFactory connectionStringFactory) : base(HealthCheckName)
+        public PostgresHealthCheck(IConnectionStringFactory connectionStringFactory)
         {
             _connectionStringFactory = connectionStringFactory;
         }
 
-        protected override async ValueTask<HealthCheckResult> CheckAsync(CancellationToken cancellationToken = default)
+        public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
+            CancellationToken cancellationToken = new CancellationToken())
         {
             try
             {
@@ -32,7 +33,7 @@ namespace MoE.ECE.Web.Infrastructure.HealthChecks
             }
             catch (Exception ex)
             {
-                return HealthCheckResult.Unhealthy(ex);
+                return HealthCheckResult.Unhealthy(exception: ex);
             }
         }
     }

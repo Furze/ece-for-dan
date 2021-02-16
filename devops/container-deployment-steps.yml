@@ -121,8 +121,8 @@ steps:
     while ($sw.elapsed -lt $timeout){
       try {
         $result = Invoke-RestMethod -Method 'GET' -Uri $healthCheckURL
-        if ( ($result.status -eq "Healthy") -And ($result.healthy.EntryAssemblyVersion -eq $env:webAppVersion) ) {
-          Write-Output "Successfully deployed: $($result.healthy.EntryAssemblyVersion)"
+        if ( ($result.status -eq "Healthy") -And ($result.version -eq $env:webAppVersion) ) {
+          Write-Output "Successfully deployed: $($result.version)"
           exit 0
         }
       }
