@@ -27,18 +27,18 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
             "Ci93b3JrZmxvdy9zY2hvb2xXb3JrZmxvdy9SZXR1cm5lZEZvclJldmlldy5w",
             "cm90bxoWcHJvdG9idWYtbmV0L2JjbC5wcm90bxofZ29vZ2xlL3Byb3RvYnVm",
             "L3RpbWVzdGFtcC5wcm90bxood29ya2Zsb3cvY29tbW9uL1dvcmtmbG93VHJh",
-            "bnNpdGlvbi5wcm90byLwAQoRUmV0dXJuZWRGb3JSZXZpZXcSIwoQQnVzaW5l",
+            "bnNpdGlvbi5wcm90byKSAgoRUmV0dXJuZWRGb3JSZXZpZXcSIwoQQnVzaW5l",
             "c3NFbnRpdHlJZBgBIAEoCzIJLmJjbC5HdWlkEhoKEkJ1c2luZXNzRW50aXR5",
             "VHlwZRgCIAEoCRIQCghVc2VybmFtZRgDIAEoCRIzCg9BY3Rpb25UaW1lc3Rh",
             "bXAYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEkIKFVZhbGlk",
             "U3RhdGVUcmFuc2l0aW9ucxgFIAMoCzIjLndvcmtmbG93LmNvbW1vbi5Xb3Jr",
-            "Zmxvd1RyYW5zaXRpb24SDwoHQ29tbWVudBgGIAEoCUI2qgIzRXZlbnRzLklu",
-            "dGVncmF0aW9uLlByb3RvYnVmLldvcmtmbG93LlNjaG9vbFdvcmtmbG93YgZw",
-            "cm90bzM="));
+            "Zmxvd1RyYW5zaXRpb24SDwoHQ29tbWVudBgGIAEoCRIOCgZSZWFzb24YByAB",
+            "KAkSEAoIUmVhc29uSWQYCCABKAVCNqoCM0V2ZW50cy5JbnRlZ3JhdGlvbi5Q",
+            "cm90b2J1Zi5Xb3JrZmxvdy5TY2hvb2xXb3JrZmxvd2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::ProtoBuf.Bcl.BclReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, global::Events.Integration.Protobuf.Workflow.Common.WorkflowTransitionReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Workflow.SchoolWorkflow.ReturnedForReview), global::Events.Integration.Protobuf.Workflow.SchoolWorkflow.ReturnedForReview.Parser, new[]{ "BusinessEntityId", "BusinessEntityType", "Username", "ActionTimestamp", "ValidStateTransitions", "Comment" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Workflow.SchoolWorkflow.ReturnedForReview), global::Events.Integration.Protobuf.Workflow.SchoolWorkflow.ReturnedForReview.Parser, new[]{ "BusinessEntityId", "BusinessEntityType", "Username", "ActionTimestamp", "ValidStateTransitions", "Comment", "Reason", "ReasonId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -80,6 +80,8 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       actionTimestamp_ = other.actionTimestamp_ != null ? other.actionTimestamp_.Clone() : null;
       validStateTransitions_ = other.validStateTransitions_.Clone();
       comment_ = other.comment_;
+      reason_ = other.reason_;
+      reasonId_ = other.reasonId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -153,6 +155,28 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       }
     }
 
+    /// <summary>Field number for the "Reason" field.</summary>
+    public const int ReasonFieldNumber = 7;
+    private string reason_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Reason {
+      get { return reason_; }
+      set {
+        reason_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "ReasonId" field.</summary>
+    public const int ReasonIdFieldNumber = 8;
+    private int reasonId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int ReasonId {
+      get { return reasonId_; }
+      set {
+        reasonId_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as ReturnedForReview);
@@ -172,6 +196,8 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       if (!object.Equals(ActionTimestamp, other.ActionTimestamp)) return false;
       if(!validStateTransitions_.Equals(other.validStateTransitions_)) return false;
       if (Comment != other.Comment) return false;
+      if (Reason != other.Reason) return false;
+      if (ReasonId != other.ReasonId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -184,6 +210,8 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       if (actionTimestamp_ != null) hash ^= ActionTimestamp.GetHashCode();
       hash ^= validStateTransitions_.GetHashCode();
       if (Comment.Length != 0) hash ^= Comment.GetHashCode();
+      if (Reason.Length != 0) hash ^= Reason.GetHashCode();
+      if (ReasonId != 0) hash ^= ReasonId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -221,6 +249,14 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
         output.WriteRawTag(50);
         output.WriteString(Comment);
       }
+      if (Reason.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Reason);
+      }
+      if (ReasonId != 0) {
+        output.WriteRawTag(64);
+        output.WriteInt32(ReasonId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -251,6 +287,14 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
         output.WriteRawTag(50);
         output.WriteString(Comment);
       }
+      if (Reason.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Reason);
+      }
+      if (ReasonId != 0) {
+        output.WriteRawTag(64);
+        output.WriteInt32(ReasonId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -275,6 +319,12 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       size += validStateTransitions_.CalculateSize(_repeated_validStateTransitions_codec);
       if (Comment.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Comment);
+      }
+      if (Reason.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Reason);
+      }
+      if (ReasonId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ReasonId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -308,6 +358,12 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       validStateTransitions_.Add(other.validStateTransitions_);
       if (other.Comment.Length != 0) {
         Comment = other.Comment;
+      }
+      if (other.Reason.Length != 0) {
+        Reason = other.Reason;
+      }
+      if (other.ReasonId != 0) {
+        ReasonId = other.ReasonId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -353,6 +409,14 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
             Comment = input.ReadString();
             break;
           }
+          case 58: {
+            Reason = input.ReadString();
+            break;
+          }
+          case 64: {
+            ReasonId = input.ReadInt32();
+            break;
+          }
         }
       }
     #endif
@@ -395,6 +459,14 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
           }
           case 50: {
             Comment = input.ReadString();
+            break;
+          }
+          case 58: {
+            Reason = input.ReadString();
+            break;
+          }
+          case 64: {
+            ReasonId = input.ReadInt32();
             break;
           }
         }
