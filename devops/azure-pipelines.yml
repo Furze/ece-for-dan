@@ -30,6 +30,10 @@ resources:
       type: 'git'
       name: 'utilities'
 
+    - repository: 'ece-api'
+      type: 'git'
+      name: 'ece-api'      
+
     - repository: 'ERS-Environment-Release'
       type: 'git'
       name: 'ERS-Environment-Release'
