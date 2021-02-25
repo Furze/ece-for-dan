@@ -37,26 +37,7 @@ steps:
   continueOnError: false
   displayName: 'Initialise Variables'
 
-# Terraform environment common/shared infrastructure resources
-# Note: The following checkout is crucial to keep working paths working correctly.
-# If we only have 1 checkout, the checkout goes into $(System.DefaultWorkingDirectory)
-# directly instead of $(System.DefaultWorkingDirectory)/reponame
-- checkout: environment-shared-infra
-  clean: true 
-
-- template: devops/terraform-lint.yml@environment-shared-infra
-  parameters:
-    terraformVersion: '${{ parameters.terraformVersion }}'
-    terraformDir: $(System.DefaultWorkingDirectory)/ece-api/devops/terraform
-
-- template: devops/terraform-deploy-steps.yml@environment-shared-infra
-  parameters:
-    environmentPrefix: '${{ parameters.environmentPrefix }}'
-    environmentSuffix: '${{ parameters.environmentSuffix }}'
-    environmentName: '${{ parameters.environmentName }}'
-    environmentNumber: '${{ parameters.environmentNumber }}'
-    azureDevOpsServiceConnection: '${{ parameters.azureDevOpsServiceConnection }}'
-    terraformVersion: '${{ parameters.terraformVersion }}'
+- template: terraform/terraform-lint.yml@utilities
 
 - ${{ if eq(parameters.runTerraformDestroy, true) }}:
   # Teardown any active sessions to the database before terraform destroy
@@ -115,7 +96,7 @@ steps:
       scriptType: pscore
       scriptLocation: inlineScript
       addSpnToEnvironment: true
-      workingDirectory: "$(System.DefaultWorkingDirectory)/ece-api/devops/terraform"
+      workingDirectory: "$(Build.SourcesDirectory)/devops/terraform"
       inlineScript: |
         $backendConfig = @"
         terraform {
@@ -154,7 +135,7 @@ steps:
       scriptType: pscore
       scriptLocation: inlineScript
       addSpnToEnvironment: true
-      workingDirectory: "$(System.DefaultWorkingDirectory)/ece-api/devops/terraform"
+      workingDirectory: "$(Build.SourcesDirectory)/devops/terraform"
       inlineScript: |
         $backendConfig = @"
         terraform {

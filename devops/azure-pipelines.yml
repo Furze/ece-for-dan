@@ -26,17 +26,13 @@ variables:
 
 resources:
   repositories:
-    - repository: 'environment-shared-infra'
+    - repository: 'utilities' # repo for terraform, ado and other scripts and tools
       type: 'git'
-      name: 'environment-shared-infra'
+      name: 'utilities'
 
     - repository: 'ERS-Environment-Release'
       type: 'git'
       name: 'ERS-Environment-Release'
-
-    - repository: 'ece-api' # identifier for this repository resource which can be used further in the yaml for downloads
-      type: 'git'
-      name: 'ece-api' # name of the source repository
 
 extends:
   template: devops/approval-check.yml@ERS-Environment-Release

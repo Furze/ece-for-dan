@@ -43,7 +43,7 @@ stages:
                     docker pull "$(dockerImageName):${{ parameters.imageTag }}"                      
                     gitCheckoutTag=`docker inspect --format '{{  index .Config.Labels "com.visualstudio.moeedunz.image.build.sourceversion"}}' $(dockerImageName):${{ parameters.imageTag }}`
                     imageBuildNumber=`docker inspect --format '{{  index .Config.Labels "com.visualstudio.moeedunz.image.build.buildnumber"}}' $(dockerImageName):${{ parameters.imageTag }}`
-                  
+
                     echo "Image Build Number: $imageBuildNumber"
                     echo "Image Commit Hash: $gitCheckoutTag"
                     echo "##vso[task.setvariable variable=imageBuildNumber]$imageBuildNumber"
@@ -54,21 +54,22 @@ stages:
 
                 - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
                   - checkout: self
-                    clean: true  
+                    persistCredentials: true
+                    clean: true
 
                 - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
                   - checkout: ece-api
                     clean: true
 
-                - task: PowerShell@2
-                  condition: succeeded()
-                  displayName: 'Checkout build tag'
-                  inputs:
-                    workingDirectory: "$(System.DefaultWorkingDirectory)/ece-api"
-                    targetType: 'inline'
-                    script: |
-                      echo "Checking out: $(gitCheckoutTag)"
-                      git checkout $(gitCheckoutTag)
+                  - task: PowerShell@2
+                    condition: succeeded()
+                    displayName: 'Checkout build tag'
+                    inputs:
+                      workingDirectory: "$(Build.SourcesDirectory)/devops/terraform"
+                      targetType: 'inline'
+                      script: |
+                        echo "Checking out tag: $(gitCheckoutTag) in $PWD.."
+                        git checkout $(gitCheckoutTag)
 
                 - template: remove-resource-locks-steps.yml
                   parameters:
