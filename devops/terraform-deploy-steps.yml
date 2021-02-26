@@ -176,3 +176,24 @@ steps:
           $terraformApplied = 'Yes'
         }
     continueOnError: false
+
+# If the pipeline is canceled, there is a possibility terraform did not release the state lock 
+# Break the lease on the terraform state blob if its still locked in that odd circumstance
+- task: AzureCLI@2
+  displayName: 'Post Terraform Cleanup'
+  condition: canceled()
+  inputs:
+    azureSubscription: "${{ parameters.azureDevOpsServiceConnection }}"
+    scriptType: pscore
+    scriptLocation: inlineScript
+    addSpnToEnvironment: true
+    inlineScript: |
+      $blob = az storage blob show -c $(stateContainer) --account-name $(stateStorageAccount) --name ${{ parameters.applicationName }} | Out-String |ConvertFrom-JSON
+      
+      if ($blob.properties.lease.status -eq 'locked') {
+        Write-Output "##[warning]Found terraform state blob was still locked, forcefully breaking lease.."
+        az storage blob lease break -b ${{ parameters.applicationName }} -c $(stateContainer) --account-name $(stateStorageAccount)
+        if ($LASTEXITCODE -ne 0) {
+          Write-Output "##[warning]Failed to break lease on blob."
+        }
+      }   
