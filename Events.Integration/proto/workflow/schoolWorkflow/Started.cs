@@ -27,17 +27,18 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
             "CiV3b3JrZmxvdy9zY2hvb2xXb3JrZmxvdy9TdGFydGVkLnByb3RvGhZwcm90",
             "b2J1Zi1uZXQvYmNsLnByb3RvGh9nb29nbGUvcHJvdG9idWYvdGltZXN0YW1w",
             "LnByb3RvGih3b3JrZmxvdy9jb21tb24vV29ya2Zsb3dUcmFuc2l0aW9uLnBy",
-            "b3RvIuYBCgdTdGFydGVkEiMKEEJ1c2luZXNzRW50aXR5SWQYASABKAsyCS5i",
+            "b3RvIvoBCgdTdGFydGVkEiMKEEJ1c2luZXNzRW50aXR5SWQYASABKAsyCS5i",
             "Y2wuR3VpZBIaChJCdXNpbmVzc0VudGl0eVR5cGUYAiABKAkSEAoIVXNlcm5h",
             "bWUYAyABKAkSMwoPQWN0aW9uVGltZXN0YW1wGAQgASgLMhouZ29vZ2xlLnBy",
             "b3RvYnVmLlRpbWVzdGFtcBJCChVWYWxpZFN0YXRlVHJhbnNpdGlvbnMYBSAD",
             "KAsyIy53b3JrZmxvdy5jb21tb24uV29ya2Zsb3dUcmFuc2l0aW9uEg8KB0Nv",
-            "bW1lbnQYBiABKAlCNqoCM0V2ZW50cy5JbnRlZ3JhdGlvbi5Qcm90b2J1Zi5X",
-            "b3JrZmxvdy5TY2hvb2xXb3JrZmxvd2IGcHJvdG8z"));
+            "bW1lbnQYBiABKAkSEgoKV29ya2Zsb3dJZBgHIAEoBUI2qgIzRXZlbnRzLklu",
+            "dGVncmF0aW9uLlByb3RvYnVmLldvcmtmbG93LlNjaG9vbFdvcmtmbG93YgZw",
+            "cm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::ProtoBuf.Bcl.BclReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, global::Events.Integration.Protobuf.Workflow.Common.WorkflowTransitionReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Workflow.SchoolWorkflow.Started), global::Events.Integration.Protobuf.Workflow.SchoolWorkflow.Started.Parser, new[]{ "BusinessEntityId", "BusinessEntityType", "Username", "ActionTimestamp", "ValidStateTransitions", "Comment" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Workflow.SchoolWorkflow.Started), global::Events.Integration.Protobuf.Workflow.SchoolWorkflow.Started.Parser, new[]{ "BusinessEntityId", "BusinessEntityType", "Username", "ActionTimestamp", "ValidStateTransitions", "Comment", "WorkflowId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -79,6 +80,7 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       actionTimestamp_ = other.actionTimestamp_ != null ? other.actionTimestamp_.Clone() : null;
       validStateTransitions_ = other.validStateTransitions_.Clone();
       comment_ = other.comment_;
+      workflowId_ = other.workflowId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -152,6 +154,17 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       }
     }
 
+    /// <summary>Field number for the "WorkflowId" field.</summary>
+    public const int WorkflowIdFieldNumber = 7;
+    private int workflowId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int WorkflowId {
+      get { return workflowId_; }
+      set {
+        workflowId_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as Started);
@@ -171,6 +184,7 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       if (!object.Equals(ActionTimestamp, other.ActionTimestamp)) return false;
       if(!validStateTransitions_.Equals(other.validStateTransitions_)) return false;
       if (Comment != other.Comment) return false;
+      if (WorkflowId != other.WorkflowId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -183,6 +197,7 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       if (actionTimestamp_ != null) hash ^= ActionTimestamp.GetHashCode();
       hash ^= validStateTransitions_.GetHashCode();
       if (Comment.Length != 0) hash ^= Comment.GetHashCode();
+      if (WorkflowId != 0) hash ^= WorkflowId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -220,6 +235,10 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
         output.WriteRawTag(50);
         output.WriteString(Comment);
       }
+      if (WorkflowId != 0) {
+        output.WriteRawTag(56);
+        output.WriteInt32(WorkflowId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -250,6 +269,10 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
         output.WriteRawTag(50);
         output.WriteString(Comment);
       }
+      if (WorkflowId != 0) {
+        output.WriteRawTag(56);
+        output.WriteInt32(WorkflowId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -274,6 +297,9 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       size += validStateTransitions_.CalculateSize(_repeated_validStateTransitions_codec);
       if (Comment.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Comment);
+      }
+      if (WorkflowId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(WorkflowId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -307,6 +333,9 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       validStateTransitions_.Add(other.validStateTransitions_);
       if (other.Comment.Length != 0) {
         Comment = other.Comment;
+      }
+      if (other.WorkflowId != 0) {
+        WorkflowId = other.WorkflowId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -352,6 +381,10 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
             Comment = input.ReadString();
             break;
           }
+          case 56: {
+            WorkflowId = input.ReadInt32();
+            break;
+          }
         }
       }
     #endif
@@ -394,6 +427,10 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
           }
           case 50: {
             Comment = input.ReadString();
+            break;
+          }
+          case 56: {
+            WorkflowId = input.ReadInt32();
             break;
           }
         }

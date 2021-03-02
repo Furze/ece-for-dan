@@ -27,18 +27,19 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
             "Ci93b3JrZmxvdy9zY2hvb2xXb3JrZmxvdy9SZXR1cm5lZEZvclJldmlldy5w",
             "cm90bxoWcHJvdG9idWYtbmV0L2JjbC5wcm90bxofZ29vZ2xlL3Byb3RvYnVm",
             "L3RpbWVzdGFtcC5wcm90bxood29ya2Zsb3cvY29tbW9uL1dvcmtmbG93VHJh",
-            "bnNpdGlvbi5wcm90byKSAgoRUmV0dXJuZWRGb3JSZXZpZXcSIwoQQnVzaW5l",
+            "bnNpdGlvbi5wcm90byKmAgoRUmV0dXJuZWRGb3JSZXZpZXcSIwoQQnVzaW5l",
             "c3NFbnRpdHlJZBgBIAEoCzIJLmJjbC5HdWlkEhoKEkJ1c2luZXNzRW50aXR5",
             "VHlwZRgCIAEoCRIQCghVc2VybmFtZRgDIAEoCRIzCg9BY3Rpb25UaW1lc3Rh",
             "bXAYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEkIKFVZhbGlk",
             "U3RhdGVUcmFuc2l0aW9ucxgFIAMoCzIjLndvcmtmbG93LmNvbW1vbi5Xb3Jr",
             "Zmxvd1RyYW5zaXRpb24SDwoHQ29tbWVudBgGIAEoCRIOCgZSZWFzb24YByAB",
-            "KAkSEAoIUmVhc29uSWQYCCABKAVCNqoCM0V2ZW50cy5JbnRlZ3JhdGlvbi5Q",
-            "cm90b2J1Zi5Xb3JrZmxvdy5TY2hvb2xXb3JrZmxvd2IGcHJvdG8z"));
+            "KAkSEAoIUmVhc29uSWQYCCABKAUSEgoKV29ya2Zsb3dJZBgJIAEoBUI2qgIz",
+            "RXZlbnRzLkludGVncmF0aW9uLlByb3RvYnVmLldvcmtmbG93LlNjaG9vbFdv",
+            "cmtmbG93YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::ProtoBuf.Bcl.BclReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, global::Events.Integration.Protobuf.Workflow.Common.WorkflowTransitionReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Workflow.SchoolWorkflow.ReturnedForReview), global::Events.Integration.Protobuf.Workflow.SchoolWorkflow.ReturnedForReview.Parser, new[]{ "BusinessEntityId", "BusinessEntityType", "Username", "ActionTimestamp", "ValidStateTransitions", "Comment", "Reason", "ReasonId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Workflow.SchoolWorkflow.ReturnedForReview), global::Events.Integration.Protobuf.Workflow.SchoolWorkflow.ReturnedForReview.Parser, new[]{ "BusinessEntityId", "BusinessEntityType", "Username", "ActionTimestamp", "ValidStateTransitions", "Comment", "Reason", "ReasonId", "WorkflowId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -82,6 +83,7 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       comment_ = other.comment_;
       reason_ = other.reason_;
       reasonId_ = other.reasonId_;
+      workflowId_ = other.workflowId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -177,6 +179,17 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       }
     }
 
+    /// <summary>Field number for the "WorkflowId" field.</summary>
+    public const int WorkflowIdFieldNumber = 9;
+    private int workflowId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int WorkflowId {
+      get { return workflowId_; }
+      set {
+        workflowId_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as ReturnedForReview);
@@ -198,6 +211,7 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       if (Comment != other.Comment) return false;
       if (Reason != other.Reason) return false;
       if (ReasonId != other.ReasonId) return false;
+      if (WorkflowId != other.WorkflowId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -212,6 +226,7 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       if (Comment.Length != 0) hash ^= Comment.GetHashCode();
       if (Reason.Length != 0) hash ^= Reason.GetHashCode();
       if (ReasonId != 0) hash ^= ReasonId.GetHashCode();
+      if (WorkflowId != 0) hash ^= WorkflowId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -257,6 +272,10 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
         output.WriteRawTag(64);
         output.WriteInt32(ReasonId);
       }
+      if (WorkflowId != 0) {
+        output.WriteRawTag(72);
+        output.WriteInt32(WorkflowId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -295,6 +314,10 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
         output.WriteRawTag(64);
         output.WriteInt32(ReasonId);
       }
+      if (WorkflowId != 0) {
+        output.WriteRawTag(72);
+        output.WriteInt32(WorkflowId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -325,6 +348,9 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       }
       if (ReasonId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(ReasonId);
+      }
+      if (WorkflowId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(WorkflowId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -364,6 +390,9 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
       }
       if (other.ReasonId != 0) {
         ReasonId = other.ReasonId;
+      }
+      if (other.WorkflowId != 0) {
+        WorkflowId = other.WorkflowId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -417,6 +446,10 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
             ReasonId = input.ReadInt32();
             break;
           }
+          case 72: {
+            WorkflowId = input.ReadInt32();
+            break;
+          }
         }
       }
     #endif
@@ -467,6 +500,10 @@ namespace Events.Integration.Protobuf.Workflow.SchoolWorkflow {
           }
           case 64: {
             ReasonId = input.ReadInt32();
+            break;
+          }
+          case 72: {
+            WorkflowId = input.ReadInt32();
             break;
           }
         }
