@@ -34,12 +34,12 @@ resources:
       type: 'git'
       name: 'ece-api'      
 
-    - repository: 'ERS-Environment-Release'
+    - repository: 'release-management'
       type: 'git'
-      name: 'ERS-Environment-Release'
+      name: 'release-management'
 
 extends:
-  template: devops/approval-check.yml@ERS-Environment-Release
+  template: approval-check.yml@release-management
   parameters:
     releaseStages:
     - template: quality-gate.yml
