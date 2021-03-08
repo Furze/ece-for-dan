@@ -1,6 +1,5 @@
 ﻿using System;
 using AutoMapper;
-using Events.Integration.Protobuf.Entitlement;
 using Google.Protobuf.WellKnownTypes;
 using MoE.ECE.Domain.Event;
 using MoE.ECE.Domain.Event.OperationalFunding;
@@ -21,34 +20,34 @@ namespace MoE.ECE.Domain.Integration
             CreateMap<DateTimeOffset?, Timestamp>().ConvertUsing(offset => Timestamp.FromDateTimeOffset(offset.GetValueOrDefault()));
             CreateMap<DateTimeOffset, Timestamp>().ConvertUsing(offset => Timestamp.FromDateTimeOffset(offset));
 
-            CreateMap<Rs7Updated, IntegrationEvents.Roll.Rs7Updated>();
-            CreateMap<Rs7DeclarationUpdated, IntegrationEvents.Roll.Rs7Updated>();
-            CreateMap<FullRs7Created, IntegrationEvents.Roll.Rs7Updated>();
-            CreateMap<Rs7Approved, IntegrationEvents.Roll.Rs7Updated>();
-            CreateMap<Rs7ZeroReturnCreated, IntegrationEvents.Roll.Rs7Updated>();
+            CreateMap<Rs7Updated, IntegrationEvents.Ece.Rs7Updated>();
+            CreateMap<Rs7DeclarationUpdated, IntegrationEvents.Ece.Rs7Updated>();
+            CreateMap<FullRs7Created, IntegrationEvents.Ece.Rs7Updated>();
+            CreateMap<Rs7Approved, IntegrationEvents.Ece.Rs7Updated>();
+            CreateMap<Rs7ZeroReturnCreated, IntegrationEvents.Ece.Rs7Updated>();
             
-            CreateMap<Rs7EntitlementMonthUpdated, IntegrationEvents.Roll.Rs7Updated>();
+            CreateMap<Rs7EntitlementMonthUpdated, IntegrationEvents.Ece.Rs7Updated>();
 
-            CreateMap<DeclarationModel, IntegrationEvents.Roll.DeclarationModel>()
+            CreateMap<DeclarationModel, IntegrationEvents.Ece.DeclarationModel>()
                 .Ignore(d => d.Id);
             
-            CreateMap<Rs7AdvanceMonthModel, IntegrationEvents.Roll.Rs7AdvanceMonth>()
+            CreateMap<Rs7AdvanceMonthModel, IntegrationEvents.Ece.Rs7AdvanceMonth>()
                 // TODO: Update PROTO files to remove these fields..
                 .Ignore(d => d.Id)
                 .Ignore(d => d.Days);
                             
-            CreateMap<Rs7EntitlementMonthModel, IntegrationEvents.Roll.Rs7EntitlementMonth>()
+            CreateMap<Rs7EntitlementMonthModel, IntegrationEvents.Ece.Rs7EntitlementMonth>()
                 .Ignore(d => d.Id);
             
-            CreateMap<Rs7EntitlementDayModel, IntegrationEvents.Roll.Rs7EntitlementDay>()
+            CreateMap<Rs7EntitlementDayModel, IntegrationEvents.Ece.Rs7EntitlementDay>()
                 .Map(d => d.Over1, s => s.TwoAndOver);
 
-            CreateMap<OperationalFundingRequestCreated, EntitlementCalculated>()
+            CreateMap<OperationalFundingRequestCreated, IntegrationEvents.Ece.EntitlementCalculated>()
                 .Map(d => d.BusinessEntityType, s => Constants.BusinessEntityTypes.Rs7)
                 .Map(d => d.Exceptions, s => s.BusinessExceptions)
                 .Ignore(d => d.FundingPeriodYear);
 
-            CreateMap<BusinessExceptionModel, EntitlementException>();
+            CreateMap<BusinessExceptionModel, IntegrationEvents.Ece.EntitlementException>();
         }
     }
 }

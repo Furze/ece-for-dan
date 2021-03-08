@@ -107,9 +107,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSavingAsDraft
         public void ThenAnIntegrationEventShouldBePublished()
         {
             // Assert
-            var integrationEvent = An_integration_event_should_be_fired<Events.Integration.Protobuf.Roll.Rs7Updated>();
+            var integrationEvent = An_integration_event_should_be_fired<Events.Integration.Protobuf.Ece.Rs7Updated>();
 
-            integrationEvent.RollStatus.ShouldBe(Events.Integration.Protobuf.Roll.RollStatus.ExternalDraft);
+            integrationEvent.RollStatus.ShouldBe(Events.Integration.Protobuf.Ece.RollStatus.ExternalDraft);
             integrationEvent.RevisionNumber.ShouldBe(1);
             integrationEvent.RevisionDate.ShouldNotBeNull();
         }

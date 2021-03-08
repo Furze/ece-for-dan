@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Bard;
-using Events.Integration.Protobuf.Entitlement;
+using Events.Integration.Protobuf.Ece;
 using MoE.ECE.Domain.Event.OperationalFunding;
 using MoE.ECE.Domain.Read.Model.OperationalFunding;
 using Moe.ECE.Events.Integration;

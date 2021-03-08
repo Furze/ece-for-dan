@@ -41,21 +41,21 @@ namespace MoE.ECE.Domain.Integration.Publisher
 
         public Task Handle(Rs7EntitlementMonthUpdated domainEvent, CancellationToken cancellationToken)
         {
-            var integrationEvent = _mapper.Map<IntegrationEvents.Roll.Rs7Updated>(domainEvent);
+            var integrationEvent = _mapper.Map<IntegrationEvents.Ece.Rs7Updated>(domainEvent);
 
             return _serviceBus.PublishAsync(integrationEvent, Constants.Topic.ECE, cancellationToken);
         }
 
         public Task Handle(Rs7Updated domainEvent, CancellationToken cancellationToken)
         {
-            var integrationEvent = _mapper.Map<IntegrationEvents.Roll.Rs7Updated>(domainEvent);
+            var integrationEvent = _mapper.Map<IntegrationEvents.Ece.Rs7Updated>(domainEvent);
 
             return _serviceBus.PublishAsync(integrationEvent, Constants.Topic.ECE, cancellationToken);
         }
 
         public Task Handle(Rs7Approved domainEvent, CancellationToken cancellationToken)
         {
-            var integrationEvent = _mapper.Map<IntegrationEvents.Roll.Rs7Updated>(domainEvent);
+            var integrationEvent = _mapper.Map<IntegrationEvents.Ece.Rs7Updated>(domainEvent);
 
             var rs7UpdatedTask = _serviceBus.PublishAsync(integrationEvent, Constants.Topic.ECE, cancellationToken);
 
@@ -66,42 +66,42 @@ namespace MoE.ECE.Domain.Integration.Publisher
 
         public Task Handle(Rs7PeerRejected domainEvent, CancellationToken cancellationToken)
         {
-            var integrationEvent = _mapper.Map<IntegrationEvents.Roll.Rs7Updated>(domainEvent);
+            var integrationEvent = _mapper.Map<IntegrationEvents.Ece.Rs7Updated>(domainEvent);
 
             return _serviceBus.PublishAsync(integrationEvent, Constants.Topic.ECE, cancellationToken);
         }
 
         public Task Handle(FullRs7Created domainEvent, CancellationToken cancellationToken)
         {
-            var integrationEvent = _mapper.Map<IntegrationEvents.Roll.Rs7Updated>(domainEvent);
+            var integrationEvent = _mapper.Map<IntegrationEvents.Ece.Rs7Updated>(domainEvent);
 
             return _serviceBus.PublishAsync(integrationEvent, Constants.Topic.ECE, cancellationToken);
         }
 
         public Task Handle(Rs7ZeroReturnCreated domainEvent, CancellationToken cancellationToken)
         {
-            var integrationEvent = _mapper.Map<IntegrationEvents.Roll.Rs7Updated>(domainEvent);
+            var integrationEvent = _mapper.Map<IntegrationEvents.Ece.Rs7Updated>(domainEvent);
 
             return _serviceBus.PublishAsync(integrationEvent, Constants.Topic.ECE, cancellationToken);
         }
 
         public Task Handle(Rs7SubmittedForApproval domainEvent, CancellationToken cancellationToken)
         {
-            var integrationEvent = _mapper.Map<IntegrationEvents.Roll.Rs7Updated>(domainEvent);
+            var integrationEvent = _mapper.Map<IntegrationEvents.Ece.Rs7Updated>(domainEvent);
 
             return _serviceBus.PublishAsync(integrationEvent, Constants.Topic.ECE, cancellationToken);
         }
 
         public Task Handle(Rs7PeerApproved domainEvent, CancellationToken cancellationToken)
         {
-            var integrationEvent = _mapper.Map<IntegrationEvents.Roll.Rs7Updated>(domainEvent);
+            var integrationEvent = _mapper.Map<IntegrationEvents.Ece.Rs7Updated>(domainEvent);
 
             return _serviceBus.PublishAsync(integrationEvent, Constants.Topic.ECE, cancellationToken);
         }
         
         public Task Handle(OperationalFundingRequestCreated domainEvent, CancellationToken cancellationToken)
         {
-            var integrationEvent = _mapper.Map<IntegrationEvents.Entitlement.EntitlementCalculated>(domainEvent);
+            var integrationEvent = _mapper.Map<IntegrationEvents.Ece.EntitlementCalculated>(domainEvent);
 
             return _serviceBus.PublishAsync(
                 integrationEvent,

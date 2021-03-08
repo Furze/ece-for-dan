@@ -1,5 +1,4 @@
 ﻿using Bard;
-using Events.Integration.Protobuf.Entitlement;
 using MoE.ECE.CLI.Data;
 using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Event;
@@ -10,6 +9,7 @@ using MoE.ECE.Integration.Tests.Infrastructure;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
+using IntegrationEvents = Events.Integration.Protobuf;
 
 namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
 {
@@ -66,7 +66,7 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void Then_an_entitlementCalculated_integration_event_should_be_published()
         {
             // Assert
-            var integrationEvent = An_integration_event_should_be_fired<EntitlementCalculated>();
+            var integrationEvent = An_integration_event_should_be_fired<IntegrationEvents.Ece.EntitlementCalculated>();
 
             integrationEvent.Exceptions.ShouldNotBeEmpty();
         }
@@ -106,10 +106,10 @@ namespace MoE.ECE.Integration.Tests.Rs7.PUT.WhenSubmittingAnRs7ForTheFirstTime
         public void ThenAnIntegrationEventShouldBePublished()
         {
             // Assert
-            var integrationEvent = An_integration_event_should_be_fired<Events.Integration.Protobuf.Roll.Rs7Updated>();
+            var integrationEvent = An_integration_event_should_be_fired<Events.Integration.Protobuf.Ece.Rs7Updated>();
 
             integrationEvent.ShouldSatisfyAllConditions(
-                () => integrationEvent.RollStatus.ShouldBe(Events.Integration.Protobuf.Roll.RollStatus
+                () => integrationEvent.RollStatus.ShouldBe(Events.Integration.Protobuf.Ece.RollStatus
                     .InternalReadyForReview),
                 () => integrationEvent.RevisionNumber.ShouldBe(1),
                 () => integrationEvent.RevisionDate.ShouldNotBeNull()

@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Events.Integration.Protobuf.Roll {
+namespace Events.Integration.Protobuf.Ece {
 
   /// <summary>Holder for reflection information generated from ece/Submitted.proto</summary>
   public static partial class SubmittedReflection {
@@ -28,12 +28,12 @@ namespace Events.Integration.Protobuf.Roll {
             "IogBCglTdWJtaXR0ZWQSIwoQQnVzaW5lc3NFbnRpdHlJZBgBIAEoCzIJLmJj",
             "bC5HdWlkEhYKDk9yZ2FuaXNhdGlvbklkGAIgASgFEg4KBlVuZGVyMhgDIAEo",
             "BRINCgVPdmVyMhgEIAEoBRIPCgdIb3VyczIwGAUgASgFEg4KBlBsdXMxMBgG",
-            "IAEoBUIjqgIgRXZlbnRzLkludGVncmF0aW9uLlByb3RvYnVmLlJvbGxiBnBy",
-            "b3RvMw=="));
+            "IAEoBUIiqgIfRXZlbnRzLkludGVncmF0aW9uLlByb3RvYnVmLkVjZWIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::ProtoBuf.Bcl.BclReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Roll.Submitted), global::Events.Integration.Protobuf.Roll.Submitted.Parser, new[]{ "BusinessEntityId", "OrganisationId", "Under2", "Over2", "Hours20", "Plus10" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Ece.Submitted), global::Events.Integration.Protobuf.Ece.Submitted.Parser, new[]{ "BusinessEntityId", "OrganisationId", "Under2", "Over2", "Hours20", "Plus10" }, null, null, null, null)
           }));
     }
     #endregion
@@ -55,7 +55,7 @@ namespace Events.Integration.Protobuf.Roll {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Events.Integration.Protobuf.Roll.SubmittedReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Events.Integration.Protobuf.Ece.SubmittedReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

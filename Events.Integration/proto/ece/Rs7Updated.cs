@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Events.Integration.Protobuf.Roll {
+namespace Events.Integration.Protobuf.Ece {
 
   /// <summary>Holder for reflection information generated from ece/Rs7Updated.proto</summary>
   public static partial class Rs7UpdatedReflection {
@@ -51,16 +51,16 @@ namespace Events.Integration.Protobuf.Roll {
             "YWxOZXcQABIRCg1FeHRlcm5hbERyYWZ0EAESGgoWSW50ZXJuYWxSZWFkeUZv",
             "clJldmlldxACEhQKEEludGVybmFsQXBwcm92ZWQQAxIgChxFeHRlcm5hbFN1",
             "Ym1pdHRlZEZvckFwcHJvdmFsEAQSGwoXRXh0ZXJuYWxSZXR1cm5lZEZvckVk",
-            "aXQQBUIjqgIgRXZlbnRzLkludGVncmF0aW9uLlByb3RvYnVmLlJvbGxiBnBy",
-            "b3RvMw=="));
+            "aXQQBUIiqgIfRXZlbnRzLkludGVncmF0aW9uLlByb3RvYnVmLkVjZWIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::ProtoBuf.Bcl.BclReflection.Descriptor, global::Events.Integration.Protobuf.Shared.FundingPeriodMonthReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Events.Integration.Protobuf.Roll.RollStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Roll.Rs7Updated), global::Events.Integration.Protobuf.Roll.Rs7Updated.Parser, new[]{ "Id", "BusinessEntityId", "OrganisationId", "FundingPeriod", "FundingYear", "RevisionNumber", "FundingPeriodYear", "RollStatus", "RevisionDate", "AdvanceMonths", "EntitlementMonths", "IsAttested", "Declaration", "RequestId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Roll.Rs7AdvanceMonth), global::Events.Integration.Protobuf.Roll.Rs7AdvanceMonth.Parser, new[]{ "Id", "MonthNumber", "Year", "AllDay", "Sessional", "ParentLed", "Days" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Roll.Rs7EntitlementMonth), global::Events.Integration.Protobuf.Roll.Rs7EntitlementMonth.Parser, new[]{ "Id", "MonthNumber", "Year" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Roll.DeclarationModel), global::Events.Integration.Protobuf.Roll.DeclarationModel.Parser, new[]{ "Id", "FullName", "ContactPhone", "Role", "IsDeclaredTrue" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Roll.Rs7EntitlementDay), global::Events.Integration.Protobuf.Roll.Rs7EntitlementDay.Parser, new[]{ "DayNumber", "Under2", "Over1", "Hours20", "Plus10", "Certificated", "NonCertificated" }, null, null, null, null)
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Events.Integration.Protobuf.Ece.RollStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Ece.Rs7Updated), global::Events.Integration.Protobuf.Ece.Rs7Updated.Parser, new[]{ "Id", "BusinessEntityId", "OrganisationId", "FundingPeriod", "FundingYear", "RevisionNumber", "FundingPeriodYear", "RollStatus", "RevisionDate", "AdvanceMonths", "EntitlementMonths", "IsAttested", "Declaration", "RequestId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Ece.Rs7AdvanceMonth), global::Events.Integration.Protobuf.Ece.Rs7AdvanceMonth.Parser, new[]{ "Id", "MonthNumber", "Year", "AllDay", "Sessional", "ParentLed", "Days" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Ece.Rs7EntitlementMonth), global::Events.Integration.Protobuf.Ece.Rs7EntitlementMonth.Parser, new[]{ "Id", "MonthNumber", "Year" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Ece.DeclarationModel), global::Events.Integration.Protobuf.Ece.DeclarationModel.Parser, new[]{ "Id", "FullName", "ContactPhone", "Role", "IsDeclaredTrue" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Ece.Rs7EntitlementDay), global::Events.Integration.Protobuf.Ece.Rs7EntitlementDay.Parser, new[]{ "DayNumber", "Under2", "Over1", "Hours20", "Plus10", "Certificated", "NonCertificated" }, null, null, null, null)
           }));
     }
     #endregion
@@ -94,7 +94,7 @@ namespace Events.Integration.Protobuf.Roll {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Events.Integration.Protobuf.Roll.Rs7UpdatedReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Events.Integration.Protobuf.Ece.Rs7UpdatedReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -212,9 +212,9 @@ namespace Events.Integration.Protobuf.Roll {
 
     /// <summary>Field number for the "RollStatus" field.</summary>
     public const int RollStatusFieldNumber = 8;
-    private global::Events.Integration.Protobuf.Roll.RollStatus rollStatus_ = global::Events.Integration.Protobuf.Roll.RollStatus.ExternalNew;
+    private global::Events.Integration.Protobuf.Ece.RollStatus rollStatus_ = global::Events.Integration.Protobuf.Ece.RollStatus.ExternalNew;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Events.Integration.Protobuf.Roll.RollStatus RollStatus {
+    public global::Events.Integration.Protobuf.Ece.RollStatus RollStatus {
       get { return rollStatus_; }
       set {
         rollStatus_ = value;
@@ -234,21 +234,21 @@ namespace Events.Integration.Protobuf.Roll {
 
     /// <summary>Field number for the "AdvanceMonths" field.</summary>
     public const int AdvanceMonthsFieldNumber = 10;
-    private static readonly pb::FieldCodec<global::Events.Integration.Protobuf.Roll.Rs7AdvanceMonth> _repeated_advanceMonths_codec
-        = pb::FieldCodec.ForMessage(82, global::Events.Integration.Protobuf.Roll.Rs7AdvanceMonth.Parser);
-    private readonly pbc::RepeatedField<global::Events.Integration.Protobuf.Roll.Rs7AdvanceMonth> advanceMonths_ = new pbc::RepeatedField<global::Events.Integration.Protobuf.Roll.Rs7AdvanceMonth>();
+    private static readonly pb::FieldCodec<global::Events.Integration.Protobuf.Ece.Rs7AdvanceMonth> _repeated_advanceMonths_codec
+        = pb::FieldCodec.ForMessage(82, global::Events.Integration.Protobuf.Ece.Rs7AdvanceMonth.Parser);
+    private readonly pbc::RepeatedField<global::Events.Integration.Protobuf.Ece.Rs7AdvanceMonth> advanceMonths_ = new pbc::RepeatedField<global::Events.Integration.Protobuf.Ece.Rs7AdvanceMonth>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Events.Integration.Protobuf.Roll.Rs7AdvanceMonth> AdvanceMonths {
+    public pbc::RepeatedField<global::Events.Integration.Protobuf.Ece.Rs7AdvanceMonth> AdvanceMonths {
       get { return advanceMonths_; }
     }
 
     /// <summary>Field number for the "EntitlementMonths" field.</summary>
     public const int EntitlementMonthsFieldNumber = 11;
-    private static readonly pb::FieldCodec<global::Events.Integration.Protobuf.Roll.Rs7EntitlementMonth> _repeated_entitlementMonths_codec
-        = pb::FieldCodec.ForMessage(90, global::Events.Integration.Protobuf.Roll.Rs7EntitlementMonth.Parser);
-    private readonly pbc::RepeatedField<global::Events.Integration.Protobuf.Roll.Rs7EntitlementMonth> entitlementMonths_ = new pbc::RepeatedField<global::Events.Integration.Protobuf.Roll.Rs7EntitlementMonth>();
+    private static readonly pb::FieldCodec<global::Events.Integration.Protobuf.Ece.Rs7EntitlementMonth> _repeated_entitlementMonths_codec
+        = pb::FieldCodec.ForMessage(90, global::Events.Integration.Protobuf.Ece.Rs7EntitlementMonth.Parser);
+    private readonly pbc::RepeatedField<global::Events.Integration.Protobuf.Ece.Rs7EntitlementMonth> entitlementMonths_ = new pbc::RepeatedField<global::Events.Integration.Protobuf.Ece.Rs7EntitlementMonth>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Events.Integration.Protobuf.Roll.Rs7EntitlementMonth> EntitlementMonths {
+    public pbc::RepeatedField<global::Events.Integration.Protobuf.Ece.Rs7EntitlementMonth> EntitlementMonths {
       get { return entitlementMonths_; }
     }
 
@@ -265,9 +265,9 @@ namespace Events.Integration.Protobuf.Roll {
 
     /// <summary>Field number for the "Declaration" field.</summary>
     public const int DeclarationFieldNumber = 13;
-    private global::Events.Integration.Protobuf.Roll.DeclarationModel declaration_;
+    private global::Events.Integration.Protobuf.Ece.DeclarationModel declaration_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Events.Integration.Protobuf.Roll.DeclarationModel Declaration {
+    public global::Events.Integration.Protobuf.Ece.DeclarationModel Declaration {
       get { return declaration_; }
       set {
         declaration_ = value;
@@ -325,7 +325,7 @@ namespace Events.Integration.Protobuf.Roll {
       if (FundingYear != 0) hash ^= FundingYear.GetHashCode();
       if (RevisionNumber != 0) hash ^= RevisionNumber.GetHashCode();
       if (FundingPeriodYear != 0) hash ^= FundingPeriodYear.GetHashCode();
-      if (RollStatus != global::Events.Integration.Protobuf.Roll.RollStatus.ExternalNew) hash ^= RollStatus.GetHashCode();
+      if (RollStatus != global::Events.Integration.Protobuf.Ece.RollStatus.ExternalNew) hash ^= RollStatus.GetHashCode();
       if (revisionDate_ != null) hash ^= RevisionDate.GetHashCode();
       hash ^= advanceMonths_.GetHashCode();
       hash ^= entitlementMonths_.GetHashCode();
@@ -376,7 +376,7 @@ namespace Events.Integration.Protobuf.Roll {
         output.WriteRawTag(56);
         output.WriteInt32(FundingPeriodYear);
       }
-      if (RollStatus != global::Events.Integration.Protobuf.Roll.RollStatus.ExternalNew) {
+      if (RollStatus != global::Events.Integration.Protobuf.Ece.RollStatus.ExternalNew) {
         output.WriteRawTag(64);
         output.WriteEnum((int) RollStatus);
       }
@@ -435,7 +435,7 @@ namespace Events.Integration.Protobuf.Roll {
         output.WriteRawTag(56);
         output.WriteInt32(FundingPeriodYear);
       }
-      if (RollStatus != global::Events.Integration.Protobuf.Roll.RollStatus.ExternalNew) {
+      if (RollStatus != global::Events.Integration.Protobuf.Ece.RollStatus.ExternalNew) {
         output.WriteRawTag(64);
         output.WriteEnum((int) RollStatus);
       }
@@ -487,7 +487,7 @@ namespace Events.Integration.Protobuf.Roll {
       if (FundingPeriodYear != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(FundingPeriodYear);
       }
-      if (RollStatus != global::Events.Integration.Protobuf.Roll.RollStatus.ExternalNew) {
+      if (RollStatus != global::Events.Integration.Protobuf.Ece.RollStatus.ExternalNew) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) RollStatus);
       }
       if (revisionDate_ != null) {
@@ -539,7 +539,7 @@ namespace Events.Integration.Protobuf.Roll {
       if (other.FundingPeriodYear != 0) {
         FundingPeriodYear = other.FundingPeriodYear;
       }
-      if (other.RollStatus != global::Events.Integration.Protobuf.Roll.RollStatus.ExternalNew) {
+      if (other.RollStatus != global::Events.Integration.Protobuf.Ece.RollStatus.ExternalNew) {
         RollStatus = other.RollStatus;
       }
       if (other.revisionDate_ != null) {
@@ -555,7 +555,7 @@ namespace Events.Integration.Protobuf.Roll {
       }
       if (other.declaration_ != null) {
         if (declaration_ == null) {
-          Declaration = new global::Events.Integration.Protobuf.Roll.DeclarationModel();
+          Declaration = new global::Events.Integration.Protobuf.Ece.DeclarationModel();
         }
         Declaration.MergeFrom(other.Declaration);
       }
@@ -608,7 +608,7 @@ namespace Events.Integration.Protobuf.Roll {
             break;
           }
           case 64: {
-            RollStatus = (global::Events.Integration.Protobuf.Roll.RollStatus) input.ReadEnum();
+            RollStatus = (global::Events.Integration.Protobuf.Ece.RollStatus) input.ReadEnum();
             break;
           }
           case 74: {
@@ -632,7 +632,7 @@ namespace Events.Integration.Protobuf.Roll {
           }
           case 106: {
             if (declaration_ == null) {
-              Declaration = new global::Events.Integration.Protobuf.Roll.DeclarationModel();
+              Declaration = new global::Events.Integration.Protobuf.Ece.DeclarationModel();
             }
             input.ReadMessage(Declaration);
             break;
@@ -687,7 +687,7 @@ namespace Events.Integration.Protobuf.Roll {
             break;
           }
           case 64: {
-            RollStatus = (global::Events.Integration.Protobuf.Roll.RollStatus) input.ReadEnum();
+            RollStatus = (global::Events.Integration.Protobuf.Ece.RollStatus) input.ReadEnum();
             break;
           }
           case 74: {
@@ -711,7 +711,7 @@ namespace Events.Integration.Protobuf.Roll {
           }
           case 106: {
             if (declaration_ == null) {
-              Declaration = new global::Events.Integration.Protobuf.Roll.DeclarationModel();
+              Declaration = new global::Events.Integration.Protobuf.Ece.DeclarationModel();
             }
             input.ReadMessage(Declaration);
             break;
@@ -739,7 +739,7 @@ namespace Events.Integration.Protobuf.Roll {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Events.Integration.Protobuf.Roll.Rs7UpdatedReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Events.Integration.Protobuf.Ece.Rs7UpdatedReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -839,11 +839,11 @@ namespace Events.Integration.Protobuf.Roll {
 
     /// <summary>Field number for the "Days" field.</summary>
     public const int DaysFieldNumber = 7;
-    private static readonly pb::FieldCodec<global::Events.Integration.Protobuf.Roll.Rs7EntitlementDay> _repeated_days_codec
-        = pb::FieldCodec.ForMessage(58, global::Events.Integration.Protobuf.Roll.Rs7EntitlementDay.Parser);
-    private readonly pbc::RepeatedField<global::Events.Integration.Protobuf.Roll.Rs7EntitlementDay> days_ = new pbc::RepeatedField<global::Events.Integration.Protobuf.Roll.Rs7EntitlementDay>();
+    private static readonly pb::FieldCodec<global::Events.Integration.Protobuf.Ece.Rs7EntitlementDay> _repeated_days_codec
+        = pb::FieldCodec.ForMessage(58, global::Events.Integration.Protobuf.Ece.Rs7EntitlementDay.Parser);
+    private readonly pbc::RepeatedField<global::Events.Integration.Protobuf.Ece.Rs7EntitlementDay> days_ = new pbc::RepeatedField<global::Events.Integration.Protobuf.Ece.Rs7EntitlementDay>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Events.Integration.Protobuf.Roll.Rs7EntitlementDay> Days {
+    public pbc::RepeatedField<global::Events.Integration.Protobuf.Ece.Rs7EntitlementDay> Days {
       get { return days_; }
     }
 
@@ -1116,7 +1116,7 @@ namespace Events.Integration.Protobuf.Roll {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Events.Integration.Protobuf.Roll.Rs7UpdatedReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Events.Integration.Protobuf.Ece.Rs7UpdatedReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1360,7 +1360,7 @@ namespace Events.Integration.Protobuf.Roll {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Events.Integration.Protobuf.Roll.Rs7UpdatedReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Events.Integration.Protobuf.Ece.Rs7UpdatedReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1676,7 +1676,7 @@ namespace Events.Integration.Protobuf.Roll {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Events.Integration.Protobuf.Roll.Rs7UpdatedReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Events.Integration.Protobuf.Ece.Rs7UpdatedReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

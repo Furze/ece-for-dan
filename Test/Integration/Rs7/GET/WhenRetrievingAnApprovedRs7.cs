@@ -1,5 +1,5 @@
 ﻿using Bard;
-using Events.Integration.Protobuf.Roll;
+using Events.Integration.Protobuf.Ece;
 using Events.Integration.Protobuf.Workflow;
 using MoE.ECE.Domain.Read.Model.Rs7;
 using MoE.ECE.Integration.Tests.Chapter;

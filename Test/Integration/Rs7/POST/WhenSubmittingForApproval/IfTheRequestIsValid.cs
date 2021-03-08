@@ -88,9 +88,9 @@ namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenSubmittingForApproval
         public void ThenAnIntegrationEventShouldBePublished()
         {
             // Assert
-            var integrationEvent = An_integration_event_should_be_fired<Events.Integration.Protobuf.Roll.Rs7Updated>();
+            var integrationEvent = An_integration_event_should_be_fired<Events.Integration.Protobuf.Ece.Rs7Updated>();
 
-            integrationEvent.RollStatus.ShouldBe(Events.Integration.Protobuf.Roll.RollStatus
+            integrationEvent.RollStatus.ShouldBe(Events.Integration.Protobuf.Ece.RollStatus
                 .ExternalSubmittedForApproval);
             integrationEvent.RevisionNumber.ShouldNotBe(0);
             integrationEvent.RevisionDate.ShouldNotBeNull();

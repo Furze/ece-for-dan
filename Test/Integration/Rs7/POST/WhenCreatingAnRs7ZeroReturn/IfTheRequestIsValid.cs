@@ -6,7 +6,7 @@ using MoE.ECE.Integration.Tests.Infrastructure;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
-using Rs7Updated = Events.Integration.Protobuf.Roll.Rs7Updated;
+using Rs7Updated = Events.Integration.Protobuf.Ece.Rs7Updated;
 
 namespace MoE.ECE.Integration.Tests.Rs7.POST.WhenCreatingAnRs7ZeroReturn
 {

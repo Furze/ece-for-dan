@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Events.Integration.Protobuf.Entitlement {
+namespace Events.Integration.Protobuf.Ece {
 
   /// <summary>Holder for reflection information generated from ece/EntitlementCalculated.proto</summary>
   public static partial class EntitlementCalculatedReflection {
@@ -34,13 +34,13 @@ namespace Events.Integration.Protobuf.Entitlement {
             "ASgFEiEKC1RvdGFsV2FzaFVwGAggASgLMgwuYmNsLkRlY2ltYWwSKQoKRXhj",
             "ZXB0aW9ucxgJIAMoCzIVLkVudGl0bGVtZW50RXhjZXB0aW9uEhkKEUZ1bmRp",
             "bmdQZXJpb2RZZWFyGAogASgFIjgKFEVudGl0bGVtZW50RXhjZXB0aW9uEgsK",
-            "A0tleRgBIAEoCRITCgtEZXNjcmlwdGlvbhgCIAEoCUIqqgInRXZlbnRzLklu",
-            "dGVncmF0aW9uLlByb3RvYnVmLkVudGl0bGVtZW50YgZwcm90bzM="));
+            "A0tleRgBIAEoCRITCgtEZXNjcmlwdGlvbhgCIAEoCUIiqgIfRXZlbnRzLklu",
+            "dGVncmF0aW9uLlByb3RvYnVmLkVjZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::ProtoBuf.Bcl.BclReflection.Descriptor, global::Events.Integration.Protobuf.Shared.FundingPeriodMonthReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Entitlement.EntitlementCalculated), global::Events.Integration.Protobuf.Entitlement.EntitlementCalculated.Parser, new[]{ "BusinessEntityId", "OrganisationId", "RequestId", "BusinessEntityType", "FundingPeriodMonth", "FundingYear", "RevisionNumber", "TotalWashUp", "Exceptions", "FundingPeriodYear" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Entitlement.EntitlementException), global::Events.Integration.Protobuf.Entitlement.EntitlementException.Parser, new[]{ "Key", "Description" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Ece.EntitlementCalculated), global::Events.Integration.Protobuf.Ece.EntitlementCalculated.Parser, new[]{ "BusinessEntityId", "OrganisationId", "RequestId", "BusinessEntityType", "FundingPeriodMonth", "FundingYear", "RevisionNumber", "TotalWashUp", "Exceptions", "FundingPeriodYear" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Events.Integration.Protobuf.Ece.EntitlementException), global::Events.Integration.Protobuf.Ece.EntitlementException.Parser, new[]{ "Key", "Description" }, null, null, null, null)
           }));
     }
     #endregion
@@ -62,7 +62,7 @@ namespace Events.Integration.Protobuf.Entitlement {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Events.Integration.Protobuf.Entitlement.EntitlementCalculatedReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Events.Integration.Protobuf.Ece.EntitlementCalculatedReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -187,11 +187,11 @@ namespace Events.Integration.Protobuf.Entitlement {
 
     /// <summary>Field number for the "Exceptions" field.</summary>
     public const int ExceptionsFieldNumber = 9;
-    private static readonly pb::FieldCodec<global::Events.Integration.Protobuf.Entitlement.EntitlementException> _repeated_exceptions_codec
-        = pb::FieldCodec.ForMessage(74, global::Events.Integration.Protobuf.Entitlement.EntitlementException.Parser);
-    private readonly pbc::RepeatedField<global::Events.Integration.Protobuf.Entitlement.EntitlementException> exceptions_ = new pbc::RepeatedField<global::Events.Integration.Protobuf.Entitlement.EntitlementException>();
+    private static readonly pb::FieldCodec<global::Events.Integration.Protobuf.Ece.EntitlementException> _repeated_exceptions_codec
+        = pb::FieldCodec.ForMessage(74, global::Events.Integration.Protobuf.Ece.EntitlementException.Parser);
+    private readonly pbc::RepeatedField<global::Events.Integration.Protobuf.Ece.EntitlementException> exceptions_ = new pbc::RepeatedField<global::Events.Integration.Protobuf.Ece.EntitlementException>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Events.Integration.Protobuf.Entitlement.EntitlementException> Exceptions {
+    public pbc::RepeatedField<global::Events.Integration.Protobuf.Ece.EntitlementException> Exceptions {
       get { return exceptions_; }
     }
 
@@ -565,7 +565,7 @@ namespace Events.Integration.Protobuf.Entitlement {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Events.Integration.Protobuf.Entitlement.EntitlementCalculatedReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Events.Integration.Protobuf.Ece.EntitlementCalculatedReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
