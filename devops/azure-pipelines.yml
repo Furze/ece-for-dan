@@ -86,3 +86,14 @@ extends:
             azureKeyvaultInstance: 'mataerstst02secrets'
             containerRegistry: '$(containerRegistry)'
             decomDate: '$(decomDate)'
+
+      - template: release-stage.yml
+        parameters:
+            environmentPrefix: 'mata'
+            environmentSuffix: 'devtest'
+            environmentName: 'tst'
+            environmentNumber: '03'
+            azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
+            azureKeyvaultInstance: 'mataerstst03secrets'
+            containerRegistry: '$(containerRegistry)'
+            decomDate: '$(decomDate)'            
