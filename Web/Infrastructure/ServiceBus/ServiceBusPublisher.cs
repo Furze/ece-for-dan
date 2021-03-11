@@ -15,12 +15,12 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
     public class ServiceBusPublisher : IServiceBus
     {
         private readonly ILogger<ServiceBusPublisher> _logger;
-        private readonly string _serviceBusConnectionString;
+        private readonly ServiceBusClient _serviceBusClient;
 
         public ServiceBusPublisher(IOptions<ConnectionStrings> options, ILogger<ServiceBusPublisher> logger)
         {
             _logger = logger;
-            _serviceBusConnectionString = options.Value.ServiceBus;
+            _serviceBusClient = new ServiceBusClient(options.Value.ServiceBus);
         }
 
         public async Task PublishAsync<TEvent>(TEvent integrationEvent, string topic,
@@ -35,13 +35,10 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
 
         protected virtual Task SendAsync(OutgoingMessage outgoingMessage)
         {
-            //TODO: Pull Service Bus Client from IOC to pool connections
-            var serviceBusConnection = new ServiceBusClient(_serviceBusConnectionString);
-            var serviceBusSender = serviceBusConnection.CreateSender(outgoingMessage.Topic);
+            var serviceBusSender = _serviceBusClient.CreateSender(outgoingMessage.Topic);
             if (serviceBusSender != null)
             {
                 return serviceBusSender.SendMessageAsync(outgoingMessage.ServiceBusMessage);
-
             }
 
             throw new ECEApplicationException("Could not get topic client");

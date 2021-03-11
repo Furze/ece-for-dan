@@ -35,11 +35,11 @@ namespace MoE.ECE.Web.Bootstrap
             services.AddSingleton(Configuration);
             services.AddSingleton<IConnectionStringFactory, ConnectionStringFactory>();
             services.AddSingleton<IMessageResolver, MessageResolver>();
+            services.AddSingleton<IServiceBus, ServiceBusPublisher>();
 
             // Scoped
 
             services.AddScoped<IValidatorInterceptor, UseErrorCodeInterceptor>();
-            services.AddScoped<IServiceBus, ServiceBusPublisher>();
             services.AddScoped<ServiceFactory>(ctx => ctx.GetService);
             services.AddScoped<ICqrs, MediatorCqrs>();
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehaviour<,>));
