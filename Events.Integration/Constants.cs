@@ -1,4 +1,4 @@
-﻿namespace Moe.ECE.Events.Integration
+﻿namespace Events.Integration
 {
     public static class Constants
     {

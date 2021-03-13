@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Moe.ECE.Events.Integration;
+using Events.Integration;
 
 namespace MoE.ECE.Domain.Integration
 {

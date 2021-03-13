@@ -22,16 +22,19 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
         private readonly ILogger<ServiceBusConsumer> _logger;
         private readonly IServiceProvider _serviceProvider;
         private readonly Lazy<ServiceBusProcessor> _subscriptionProcessor;
+        private readonly MessageFactory _messageFactory;
 
         protected ServiceBusConsumer(
             IOptions<ConnectionStrings> options,
             ILogger<ServiceBusConsumer> logger,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            MessageFactory messageFactory)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
             _connectionString = options.Value.ServiceBus;
             _subscriptionProcessor = new Lazy<ServiceBusProcessor>(CreateSubscriptionClient);
+            _messageFactory = messageFactory;
         }
 
         protected abstract string Subscription { get; }
@@ -75,7 +78,19 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
 
         private async Task ProcessMessagesAsync(ProcessMessageEventArgs args)
         {
-            var incomingMessage = new IncomingMessage(args.Message, new MessageResolver());
+            IncomingMessage incomingMessage;
+            try
+            {
+                incomingMessage = _messageFactory.CreateIncomingMessage(args.Message);
+            }
+            catch (MessageTypeNotSupportedException ex)
+            {
+                // This will only happen if our Protobuf classes are out of date.
+                // There's nothing we can do at this point so log the error and dequeue the message.
+                _logger.LogError(ex.Message);
+                await args.CompleteMessageAsync(args.Message);
+                return;
+            }
 
             Log(incomingMessage);
 

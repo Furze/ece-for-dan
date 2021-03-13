@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Moe.ECE.Events.Integration
+namespace Events.Integration
 {
     public interface IIntegrationEvent : INotification
     {

@@ -2,13 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Events.Integration;
 using Events.Integration.Protobuf.Eli;
 using Events.Integration.Protobuf.Workflow;
 using Marten;
 using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Model.Rs7;
 using MoE.ECE.Domain.Model.ValueObject;
-using Moe.ECE.Events.Integration;
 using Moe.Library.Cqrs;
 
 namespace MoE.ECE.Domain.Integration.Consumer

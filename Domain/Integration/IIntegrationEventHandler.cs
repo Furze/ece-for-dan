@@ -1,5 +1,5 @@
-﻿using MediatR;
-using Moe.ECE.Events.Integration;
+﻿using Events.Integration;
+using MediatR;
 
 namespace MoE.ECE.Domain.Integration
 {

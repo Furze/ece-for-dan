@@ -3,8 +3,8 @@ using System.Dynamic;
 using System.Linq;
 using Bard;
 using Bard.Infrastructure;
+using Events.Integration;
 using Microsoft.Extensions.DependencyInjection;
-using Moe.ECE.Events.Integration;
 using Moe.Library.Cqrs;
 using Shouldly;
 

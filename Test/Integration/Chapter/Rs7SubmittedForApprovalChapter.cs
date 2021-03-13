@@ -1,9 +1,9 @@
 ﻿using System;
 using Bard;
+using Events.Integration;
 using Events.Integration.Protobuf.Workflow;
 using MoE.ECE.Domain.Command.Rs7;
 using MoE.ECE.Domain.Event;
-using Moe.ECE.Events.Integration;
 using Guid = ProtoBuf.Bcl.Guid;
 
 namespace MoE.ECE.Integration.Tests.Chapter

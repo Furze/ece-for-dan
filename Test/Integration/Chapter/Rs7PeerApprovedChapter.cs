@@ -1,7 +1,7 @@
 ﻿using Bard;
+using Events.Integration;
 using Events.Integration.Protobuf.Workflow;
 using MoE.ECE.Domain.Event;
-using Moe.ECE.Events.Integration;
 using ProtoBuf.Bcl;
 
 namespace MoE.ECE.Integration.Tests.Chapter

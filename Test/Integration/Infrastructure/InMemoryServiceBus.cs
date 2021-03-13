@@ -9,8 +9,8 @@ namespace MoE.ECE.Integration.Tests.Infrastructure
 {
     public class InMemoryServiceBus : ServiceBusPublisher
     {
-        public InMemoryServiceBus(IOptions<ConnectionStrings> options, ILogger<ServiceBusPublisher> logger) : base(
-            options, logger)
+        public InMemoryServiceBus(IOptions<ConnectionStrings> options, ILogger<ServiceBusPublisher> logger, MessageFactory messageFactory) 
+            : base(options, logger, messageFactory)
         {
         }
 

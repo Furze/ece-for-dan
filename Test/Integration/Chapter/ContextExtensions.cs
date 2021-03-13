@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using Bard;
+using Events.Integration;
 using Marten;
 using MediatR;
 using MoE.ECE.Domain.Infrastructure;
-using Moe.ECE.Events.Integration;
 using MoE.ECE.Integration.Tests.Infrastructure;
 using Moe.Library.Cqrs;
 using Shouldly;

@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using System.Threading.Tasks;
+using Events.Integration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Moe.ECE.Events.Integration;
 using MoE.ECE.Web.Infrastructure.HealthChecks;
 using Newtonsoft.Json;
 using Moe.Library.ServiceBus;

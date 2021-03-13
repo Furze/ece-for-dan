@@ -2,11 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using Events.Integration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MoE.ECE.Domain.Exceptions;
 using MoE.ECE.Domain.Integration;
-using Moe.ECE.Events.Integration;
 using MoE.ECE.Web.Infrastructure.Settings;
 using Moe.Library.ServiceBus;
 
@@ -16,17 +16,19 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
     {
         private readonly ILogger<ServiceBusPublisher> _logger;
         private readonly ServiceBusClient _serviceBusClient;
+        private readonly MessageFactory _messageFactory;
 
-        public ServiceBusPublisher(IOptions<ConnectionStrings> options, ILogger<ServiceBusPublisher> logger)
+        public ServiceBusPublisher(IOptions<ConnectionStrings> options, ILogger<ServiceBusPublisher> logger, MessageFactory messageFactory)
         {
             _logger = logger;
             _serviceBusClient = new ServiceBusClient(options.Value.ServiceBus);
+            _messageFactory = messageFactory;
         }
 
         public async Task PublishAsync<TEvent>(TEvent integrationEvent, string topic,
             CancellationToken cancellationToken) where TEvent : IIntegrationEvent
         {
-            var outgoingMessage = new OutgoingMessage(integrationEvent, topic, MessageFormat.Proto);
+            var outgoingMessage = _messageFactory.CreateOutgoingMessage(integrationEvent, topic);
 
             await SendAsync(outgoingMessage);
 

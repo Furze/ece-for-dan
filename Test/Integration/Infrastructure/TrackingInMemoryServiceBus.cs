@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Events.Integration;
 using MoE.ECE.Domain.Integration;
-using Moe.ECE.Events.Integration;
 
 namespace MoE.ECE.Integration.Tests.Infrastructure
 {

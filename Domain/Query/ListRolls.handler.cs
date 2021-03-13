@@ -1,12 +1,12 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Events.Integration;
 using Marten;
 using Marten.Pagination;
 using MoE.ECE.Domain.Model.Rs7;
 using MoE.ECE.Domain.Model.ValueObject;
 using MoE.ECE.Domain.Read.Model;
-using Moe.ECE.Events.Integration;
 using Moe.Library.Cqrs;
 
 namespace MoE.ECE.Domain.Query

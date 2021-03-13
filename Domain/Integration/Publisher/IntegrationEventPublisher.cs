@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Events.Integration;
 using Events.Integration.Protobuf.Workflow;
 using Google.Type;
 using Marten;
@@ -9,7 +10,6 @@ using MoE.ECE.Domain.Event.OperationalFunding;
 using MoE.ECE.Domain.Infrastructure.EntityFramework;
 using MoE.ECE.Domain.Model.OperationalFunding;
 using MoE.ECE.Domain.Read.Model.Rs7;
-using Moe.ECE.Events.Integration;
 using Moe.Library.Cqrs;
 using ProtoBuf.Bcl;
 using IntegrationEvents = Events.Integration.Protobuf;

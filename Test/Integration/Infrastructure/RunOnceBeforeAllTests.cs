@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using Events.Integration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
 using MoE.ECE.Domain.Infrastructure.Abstractions;
 using MoE.ECE.Domain.Integration;
-using Moe.ECE.Events.Integration;
 using MoE.ECE.Web.Infrastructure;
 using Moe.Library.Cqrs;
 using Serilog;

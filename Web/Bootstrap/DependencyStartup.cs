@@ -34,8 +34,8 @@ namespace MoE.ECE.Web.Bootstrap
             // Singleton
             services.AddSingleton(Configuration);
             services.AddSingleton<IConnectionStringFactory, ConnectionStringFactory>();
-            services.AddSingleton<IMessageResolver, MessageResolver>();
             services.AddSingleton<IServiceBus, ServiceBusPublisher>();
+            services.AddSingleton(_ => new MessageFactory(typeof(Events.Integration.IAssemblyMarker)));
 
             // Scoped
 
