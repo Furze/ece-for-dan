@@ -48,7 +48,7 @@
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Templating" Version="3.1.4" />
         <PackageReference Include="Moe.Library.Cqrs" Version="1.0.0.101" />
-        <PackageReference Include="Moe.Library.ServiceBus" Version="2.0.0.2" />
+        <PackageReference Include="Moe.Library.ServiceBus" Version="2.0.0.7" />
         <PackageReference Include="Npgsql" Version="4.1.5" />
         <PackageReference Include="Scrutor" Version="3.2.2" />
         <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
