@@ -29,7 +29,7 @@ namespace MoE.ECE.Web.Bootstrap
 
             // Hosted Services
             services.AddHostedService<WorkflowTopicConsumer>();
-            services.AddHostedService<EliTopicConsumer>();
+            services.AddHostedService<IntegrationTopicConsumer>();
 
             // Singleton
             services.AddSingleton(Configuration);

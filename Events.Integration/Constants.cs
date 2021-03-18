@@ -4,10 +4,9 @@
     {
         public static class Topic
         {
+            public const string Integration = "ece_integration";
             public const string ECE = "ece";
-            public const string First = "first";
             public const string Workflow = "workflow";
-            public const string ELI = "eli";
         }
 
         public static class Subscription

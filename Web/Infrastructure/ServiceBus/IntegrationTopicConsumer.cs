@@ -7,9 +7,9 @@ using Moe.Library.ServiceBus;
 
 namespace MoE.ECE.Web.Infrastructure.ServiceBus
 {
-    public class EliTopicConsumer : ServiceBusConsumer
+    public class IntegrationTopicConsumer : ServiceBusConsumer
     {
-        public EliTopicConsumer(IOptions<ConnectionStrings> options, ILogger<ServiceBusConsumer> logger, 
+        public IntegrationTopicConsumer(IOptions<ConnectionStrings> options, ILogger<ServiceBusConsumer> logger, 
             IServiceProvider serviceProvider, MessageFactory messageFactory) 
             : base(options, logger, serviceProvider, messageFactory)
         {
@@ -17,6 +17,6 @@ namespace MoE.ECE.Web.Infrastructure.ServiceBus
 
         protected override string Subscription => Constants.Subscription.ECE;
 
-        protected override string Topic => Constants.Topic.ELI;
+        protected override string Topic => Constants.Topic.Integration;
     }
 }
