@@ -23,7 +23,7 @@ namespace MoE.ECE.CLI.Data
                         Attribute = HistoryAttribute.OrganisationType,
                         Value = OrganisationType.TeKohangaReo.ToString(),
                         ValueDescription = TeKohangaReoTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
+                        EffectiveFromDate = new DateTime(1899, 12, 30, 6, 30, 0).ToNzDateTimeOffSet(),
                         EffectiveToDate = null
                     },
                     new EceServiceDateRangedParameter
@@ -34,7 +34,7 @@ namespace MoE.ECE.CLI.Data
                         Attribute = HistoryAttribute.PrimaryLanguage,
                         Value = "15001",
                         ValueDescription = "English",
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
+                        EffectiveFromDate = new DateTime(1899, 12, 30, 6, 30, 0).ToNzDateTimeOffSet(),
                         EffectiveToDate = null
                     },
                     new EceServiceDateRangedParameter
@@ -45,7 +45,7 @@ namespace MoE.ECE.CLI.Data
                         Attribute = HistoryAttribute.EquityIndex,
                         Value = "19001",
                         ValueDescription = "EQ 1",
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
+                        EffectiveFromDate = new DateTime(1899, 12, 30, 6, 30, 0).ToNzDateTimeOffSet(),
                         EffectiveToDate = null
                     },
                     new EceServiceDateRangedParameter
@@ -56,7 +56,7 @@ namespace MoE.ECE.CLI.Data
                         Attribute = HistoryAttribute.IsolationIndex,
                         Value = "1.93",
                         ValueDescription = null,
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
+                        EffectiveFromDate = new DateTime(1899, 12, 30, 6, 30, 0).ToNzDateTimeOffSet(),
                         EffectiveToDate = null
                     },
                     new EceServiceDateRangedParameter
@@ -67,7 +67,7 @@ namespace MoE.ECE.CLI.Data
                         Attribute = HistoryAttribute.QualityLevel,
                         Value = "21001",
                         ValueDescription = QualityLevel.QualityLevelTKR,
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
+                        EffectiveFromDate = new DateTime(1899, 12, 30, 6, 30, 0).ToNzDateTimeOffSet(),
                         EffectiveToDate = null
                     }
                 };

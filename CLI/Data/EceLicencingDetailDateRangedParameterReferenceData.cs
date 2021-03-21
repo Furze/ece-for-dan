@@ -20,7 +20,7 @@ namespace MoE.ECE.CLI.Data
                         RefOrganisationId = ReferenceData.EceServices.TeKohangaReoOWaikare.RefOrganisationId,
                         ServiceProvisionTypeId = ServiceProvisionType.TeacherLed,
                         ServiceProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
+                        EffectiveFromDate = new DateTime(1899, 12, 30, 6, 30, 0).ToNzDateTimeOffSet(),
                         EffectiveToDate = null,
                         ApplicationStatusId = ApplicationStatus.Withdrawn
                     },
@@ -30,7 +30,7 @@ namespace MoE.ECE.CLI.Data
                         RefOrganisationId = ReferenceData.EceServices.TeKohangaReoOWaikare.RefOrganisationId,
                         ServiceProvisionTypeId = ServiceProvisionType.TeacherLed,
                         ServiceProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
+                        EffectiveFromDate = new DateTime(1899, 12, 30, 6, 30, 0).ToNzDateTimeOffSet(),
                         EffectiveToDate = null,
                         ApplicationStatusId = ApplicationStatus.Endorsed
                     },
@@ -40,7 +40,7 @@ namespace MoE.ECE.CLI.Data
                         RefOrganisationId = ReferenceData.EceServices.TeKohangaReoOWaikare.RefOrganisationId,
                         ServiceProvisionTypeId = ServiceProvisionType.TeacherLed,
                         ServiceProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
+                        EffectiveFromDate = new DateTime(1899, 12, 30, 6, 30, 0).ToNzDateTimeOffSet(),
                         EffectiveToDate = null,
                         ApplicationStatusId = ApplicationStatus.Recommended
                     },
@@ -50,7 +50,7 @@ namespace MoE.ECE.CLI.Data
                         RefOrganisationId = ReferenceData.EceServices.TeKohangaReoOWaikare.RefOrganisationId,
                         ServiceProvisionTypeId = ServiceProvisionType.TeacherLed,
                         ServiceProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
+                        EffectiveFromDate = new DateTime(1899, 12, 30, 6, 30, 0).ToNzDateTimeOffSet(),
                         EffectiveToDate = null,
                         ApplicationStatusId = ApplicationStatus.Received
                     },
@@ -60,7 +60,7 @@ namespace MoE.ECE.CLI.Data
                         RefOrganisationId = ReferenceData.EceServices.TeKohangaReoOWaikare.RefOrganisationId,
                         ServiceProvisionTypeId = ServiceProvisionType.TeacherLed,
                         ServiceProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
+                        EffectiveFromDate = new DateTime(1899, 12, 30, 6, 30, 0).ToNzDateTimeOffSet(),
                         EffectiveToDate = null,
                         ApplicationStatusId = ApplicationStatus.Endorsed
                     },
@@ -70,7 +70,7 @@ namespace MoE.ECE.CLI.Data
                         RefOrganisationId = ReferenceData.EceServices.TeKohangaReoOWaikare.RefOrganisationId,
                         ServiceProvisionTypeId = ServiceProvisionType.TeacherLed,
                         ServiceProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
+                        EffectiveFromDate = new DateTime(1899, 12, 30, 6, 30, 0).ToNzDateTimeOffSet(),
                         EffectiveToDate = null,
                         ApplicationStatusId = ApplicationStatus.Endorsed
                     },
@@ -80,7 +80,7 @@ namespace MoE.ECE.CLI.Data
                         RefOrganisationId = ReferenceData.EceServices.TeKohangaReoOWaikare.RefOrganisationId,
                         ServiceProvisionTypeId = ServiceProvisionType.TeacherLed,
                         ServiceProvisionTypeDescription = ParentLedServiceProvisionTypeDescription,
-                        EffectiveFromDate = new DateTimeOffset(1899, 12, 30, 6, 30, 0, DateHelper.GetNzTimeZone().BaseUtcOffset),
+                        EffectiveFromDate = new DateTime(1899, 12, 30, 6, 30, 0).ToNzDateTimeOffSet(),
                         EffectiveToDate = null,
                         ApplicationStatusId = ApplicationStatus.Endorsed
                     }

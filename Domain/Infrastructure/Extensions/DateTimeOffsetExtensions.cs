@@ -5,11 +5,11 @@ using MoE.ECE.Domain.Model.ValueObject;
 
 namespace MoE.ECE.Domain.Infrastructure.Extensions
 {
-    public static class DateHelper
+    public static class DateTimeOffsetExtensions
     {
         private static TimeZoneInfo? _nzTimeZone;
 
-        public static TimeZoneInfo GetNzTimeZone()
+        private static TimeZoneInfo GetNzTimeZone()
         {
             if (_nzTimeZone != null) return _nzTimeZone;
             // Need to check both IANA and Microsoft timezones for Windows/Linux compatibility        
@@ -25,34 +25,37 @@ namespace MoE.ECE.Domain.Infrastructure.Extensions
 
         public static DateTimeOffset ToNzDateTimeOffSet(this DateTime dateTime)
         {
-            var nzDateTimeOffset = new DateTimeOffset(dateTime, GetNzTimeZone().GetUtcOffset(dateTime));
-         
+            if (dateTime.Kind == DateTimeKind.Unspecified)
+            {
+                return new DateTimeOffset(dateTime, GetNzTimeZone().GetUtcOffset(dateTime));
+            }
+
+            var nzDateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime.ToUniversalTime(), GetNzTimeZone());
+            var nzDateTimeOffset = new DateTimeOffset(nzDateTime, GetNzTimeZone().GetUtcOffset(nzDateTime));
             return nzDateTimeOffset;
         }
 
-        public static DateTimeOffset? ToNzDateTimeOffSet(this DateTimeOffset? dateTimeOffset)
-        {
-            return dateTimeOffset.HasValue
-                ? (DateTimeOffset?)TimeZoneInfo.ConvertTime(dateTimeOffset.Value, GetNzTimeZone())
-                : null;
-        }
-        
         public static DateTimeOffset ToNzDateTimeOffSet(this DateTimeOffset dateTimeOffset)
         {
             return TimeZoneInfo.ConvertTime(dateTimeOffset, GetNzTimeZone());
         }
 
+        public static DateTimeOffset? ToNzDateTimeOffSet(this DateTimeOffset? dateTimeOffset)
+        {
+            return dateTimeOffset == null
+                ? (DateTimeOffset?)null
+                : ToNzDateTimeOffSet(dateTimeOffset.Value);
+        }
+
+        public static DateTimeOffset ToNzDateTimeOffSet(this Date date)
+        {
+            var nzDateTime = new DateTime(date.Year, date.Month, date.Day);
+            return new DateTimeOffset(nzDateTime, GetNzTimeZone().GetUtcOffset(nzDateTime));
+        }
+
         public static Date ToNzDate(this DateTimeOffset dateTime)
         {
             var nzDateTimeOffset = ToNzDateTimeOffSet(dateTime);
-
-            return new Date(nzDateTimeOffset.Day, nzDateTimeOffset.Month, nzDateTimeOffset.Year);
-        }
-
-        public static Date ToNzDate(this DateTime dateTime)
-        {
-            var nzDateTimeOffset = ToNzDateTimeOffSet(dateTime);
-
             return new Date(nzDateTimeOffset.Day, nzDateTimeOffset.Month, nzDateTimeOffset.Year);
         }
     }
