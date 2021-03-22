@@ -12,11 +12,28 @@ locals {
   db_username              = lower("${local.resource_base_name}${var.application_name}")
   db_name                  = lower("${local.resource_base_name}psql${var.application_name}")
 
-  tags = {
-    decomdate    = var.environment_prefix == "MAPA" ? "2999-01-01T00:00:00Z" : var.decom_date == "" ? timeadd(timestamp(), "336h") : "${var.decom_date}T00:00:00Z" # If MAPA sub then never expire. If MATA but no value passed then expire in 2 weeks, else use value passed in. 
-    createdby    = data.azurerm_client_config.current.object_id
-    creationdate = timestamp()
+  tags_mandatory = {
+    agency         = "MOE"
+    application    = "ERS"
+    buscontact     = "Steve.Botica@education.govt.nz"
+    classification = var.tag_data_classification
+    costcode       = "8008"
+    department     = "SE&S"
+    environment    = substr(upper(var.environment), 0, 3) # ie. 'DEV-02' → 'DEV'
+    fundinginfo    = var.tag_contains_funding_information
+    pii            = var.tag_contains_personally_identifiable_information
+    privacyrating  = var.tag_privacy_rating
+    provider       = "Azure"
+    publicfacing   = var.tag_is_public_facing
+    role           = "ERS ECE API"
+    teccontact     = "Graeme.Davies@education.govt.nz"
   }
+  tags_optional = {
+    lastupdatedby = data.azurerm_client_config.current.object_id
+    lastupdated   = timestamp()
+    creationdate  = timestamp()
+  }
+  tags = merge(local.tags_mandatory, local.tags_optional)
 }
 
 # Default provider that is based on the active subscription
@@ -91,7 +108,9 @@ resource "azurerm_resource_group" "app" {
   location = var.location
   tags     = local.tags
   lifecycle {
-    ignore_changes = [tags]
+    ignore_changes = [
+      tags["creationdate"]
+    ]
   }
 }
 
@@ -191,7 +210,7 @@ resource "azurerm_app_service" "app" {
       site_config[0].linux_fx_version,
       app_settings["ReleaseDate"],
       app_settings["DOCKER_CUSTOM_IMAGE_NAME"],
-      tags
+      tags["creationdate"]
     ]
   }
 }

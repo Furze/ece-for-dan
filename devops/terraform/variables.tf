@@ -82,3 +82,33 @@ variable "decom_date" {
   description = "Date for which resource should be deleted. Format is YYYY-MM-DD. ie. 2020-11-21."
   default     = "" # If left empty then default will be set to 2 weeks from creation unless specified. If in MAPA sub then will be set to never expire (date very far in future) 
 }
+
+variable "tag_contains_funding_information" {
+  type        = string
+  description = "Contains funding information?"
+  default     = "false"
+}
+
+variable "tag_contains_personally_identifiable_information" {
+  type        = string
+  description = "Contains personally identifiable information?"
+  default     = "false"
+}
+
+variable "tag_is_public_facing" {
+  type        = string
+  description = "Is this a public facing app?"
+  default     = "false"
+}
+
+variable "tag_data_classification" {
+  type        = string
+  description = "Data classification of the resource"
+  default     = ""
+}
+
+variable "tag_privacy_rating" {
+  type        = string
+  description = "Privacy rating of the resource"
+  default     = ""
+}
