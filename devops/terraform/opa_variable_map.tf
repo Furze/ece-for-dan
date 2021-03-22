@@ -14,8 +14,8 @@ variable "environment_to_opa_rulebase" {
   default = {
     "dev" = "_DT2"
     "tst" = "_IT2"
-    "uat" = "_UT2"
-    "ppr" = "_PP2"
+    "uat" = "_UAT-PPD"
+    "ppd" = "_UAT-PPD"
     "pro" = "_PR2"
   }
 }
@@ -23,10 +23,6 @@ variable "environment_to_opa_rulebase" {
 variable "environment_to_opa_rulebase_overrides" {
   type = map(string)
   default = {
-    "UAT00" = "_UT2",
-    "UAT03" = "_UT3",
-    "UAT04" = "_UT4",
-    "UAT05" = "_UT5",
     "DEV04" = "_IT2"
   }
 }
