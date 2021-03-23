@@ -4,8 +4,8 @@ variable "environment_to_opa_domain" {
     "dev" = "https://moe-opa-test.custhelp.com/"
     "tst" = "https://moe-opa-test.custhelp.com/"
     "uat" = "https://moe-opa-uat.custhelp.com/"
-    "ppr" = "https://moe-opa-uat.custhelp.com/"
-    "prd" = "https://moe-opa.custhelp.com/"
+    "ppd" = "https://moe-opa-uat.custhelp.com/"
+    "pro" = "https://moe-opa.custhelp.com/"
   }
 }
 
