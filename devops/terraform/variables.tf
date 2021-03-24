@@ -7,6 +7,7 @@ variable "location" {
 variable "environment" {
   type        = string
   description = "Environment identifier. Eg. DEV, SIT."
+  default     = "DEV-00"
 }
 
 # POSTGRES DATABASE
@@ -83,32 +84,62 @@ variable "decom_date" {
   default     = "" # If left empty then default will be set to 2 weeks from creation unless specified. If in MAPA sub then will be set to never expire (date very far in future) 
 }
 
-variable "tag_contains_funding_information" {
+variable "TAG_CONTAINS_FUNDING_INFORMATION" {
   type        = string
   description = "Contains funding information?"
-  default     = "false"
+  default     = "true"
 }
 
-variable "tag_contains_personally_identifiable_information" {
+variable "TAG_CONTAINS_PERSONALLY_IDENTIFIABLE_INFORMATION" {
   type        = string
   description = "Contains personally identifiable information?"
-  default     = "false"
+  default     = "true"
 }
 
-variable "tag_is_public_facing" {
+variable "TAG_IS_PUBLIC_FACING" {
   type        = string
   description = "Is this a public facing app?"
-  default     = "false"
+  default     = "true"
 }
 
-variable "tag_data_classification" {
+variable "TAG_DATA_CLASSIFICATION" {
   type        = string
   description = "Data classification of the resource"
-  default     = ""
+  default     = "SENSITIVE"
 }
 
-variable "tag_privacy_rating" {
+variable "TAG_PRIVACY_RATING" {
   type        = string
   description = "Privacy rating of the resource"
   default     = ""
+}
+
+variable "TAG_COSTCODE" {
+  type        = string
+  description = "Tag cost code for resource"
+  default     = "8008"
+}
+
+variable "TAG_DEPARTMENT" {
+  type        = string
+  description = "Department for the application"
+  default     = "SE&S"
+}
+
+variable "TAG_APPLICATION" {
+  type        = string
+  description = "Abbreviation of application"
+  default     = "ERS"
+}
+
+variable "TAG_BUSCONTACT" {
+  type        = string
+  description = "Business Contact/Owner for the product"
+  default     = "Steve.Botica@education.govt.nz"
+}
+
+variable "TAG_TECCONTACT" {
+  type        = string
+  description = "Technical contact for the product"
+  default     = "Graeme.Davies@education.govt.nz"
 }

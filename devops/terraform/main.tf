@@ -14,19 +14,19 @@ locals {
 
   tags_mandatory = {
     agency         = "MOE"
-    application    = "ERS"
-    buscontact     = "Steve.Botica@education.govt.nz"
-    classification = var.tag_data_classification
-    costcode       = "8008"
-    department     = "SE&S"
-    environment    = substr(upper(var.environment), 0, 3) # ie. 'DEV-02' → 'DEV'
-    fundinginfo    = var.tag_contains_funding_information
-    pii            = var.tag_contains_personally_identifiable_information
-    privacyrating  = var.tag_privacy_rating
+    application    = var.TAG_APPLICATION
+    buscontact     = var.TAG_BUSCONTACT
+    classification = var.TAG_DATA_CLASSIFICATION
+    costcode       = var.TAG_COSTCODE
+    department     = var.TAG_DEPARTMENT
+    environment    = upper(regex("^[a-zA-Z]+", var.environment))
+    fundinginfo    = var.TAG_CONTAINS_FUNDING_INFORMATION
+    pii            = var.TAG_CONTAINS_PERSONALLY_IDENTIFIABLE_INFORMATION
+    privacyrating  = var.TAG_PRIVACY_RATING
     provider       = "Azure"
-    publicfacing   = var.tag_is_public_facing
+    publicfacing   = var.TAG_IS_PUBLIC_FACING
     role           = "ERS ECE API"
-    teccontact     = "Graeme.Davies@education.govt.nz"
+    teccontact     = var.TAG_TECCONTACT
   }
   tags_optional = {
     lastupdatedby = data.azurerm_client_config.current.object_id
