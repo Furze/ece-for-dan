@@ -52,7 +52,12 @@ stages:
               ProduceJson5: true
               FailIfNoPatchApplied: true
             continueOnError: false
-            
+
+          - task: UseDotNet@2
+            inputs:
+              packageType: 'sdk'
+              version: '3.x'  
+
           - task: DotNetCoreCLI@2
             displayName: Run All Tests
             inputs:

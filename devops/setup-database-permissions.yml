@@ -8,15 +8,6 @@ parameters:
   imageTag: ''
 
 steps:
-- task: AzureKeyVault@1
-  condition: succeeded()
-  displayName: 'Get App DB Password'
-  inputs:
-      azureSubscription: 'DevOps-MOEEDUNZ-ERS-EDU-MOE-PRODUAT-01-MAPA-MOE-0-0-INIT'
-      keyVaultName: 'mapamoe00init'
-      secretsFilter: 'service-account-srvAzureSQLConfigEducationGovtNzOnMicrosoftCom-userPrincipalName, service-account-srvAzureSQLConfigEducationGovtNzOnMicrosoftCom-password'
-  continueOnError: false   
-
 - task: AzureCLI@2
   displayName: Add App and Users to database
   inputs:
@@ -75,8 +66,6 @@ steps:
       
       echo "Add Data Reader access as AD server admin"
       # Login as the PSQL server AD ADMIN group/user (case sensitive)
-      TENANT_ID=`az account show -o tsv --query tenantId`
-      az login -u "srvAzureSQLConfig@educationgovtnz.onmicrosoft.com" -p $(service-account-srvAzureSQLConfigEducationGovtNzOnMicrosoftCom-password) --allow-no-subscriptions
       PASSWORD=`az account get-access-token --resource-type oss-rdbms | jq -r '.accessToken'`
       DB_USERNAME="AL PSQL ERS ${{ upper(parameters.environmentSuffix) }} ADMIN@$DB_SERVERNAME"
       

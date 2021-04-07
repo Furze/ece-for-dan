@@ -12,7 +12,7 @@ schedules:
     always: 'true'
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 variables:
   versionMajor: 1
