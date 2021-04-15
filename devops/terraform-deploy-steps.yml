@@ -8,36 +8,57 @@ parameters:
   azureDevOpsServiceConnection: ''
   runTerraformDestroy: false
   runTerraformApply: true
-  terraformVersion: 'latest'
+  terraformSourceDir: '$(Build.SourcesDirectory)/devops/terraform'
+  containerImage: ''
   decomDate: ''
        
 steps:
-- pwsh: |
-    $stateResourceGroup = "${{ parameters.environmentPrefix }}-ERS-${{ parameters.environmentSuffix }}-TFSTATE".ToUpper()
-    $stateStorageAccount = ($stateResourceGroup -replace "\W","").ToLower()
-    $stateContainer = "tfstate-${{ parameters.environmentName }}-${{ parameters.environmentNumber }}".ToLower()
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: "${{ parameters.azureDevOpsServiceConnection }}"
+    scriptType: pscore
+    scriptLocation: inlineScript
+    addSpnToEnvironment: true
+    inlineScript: |
+      $environment = "${{ parameters.environmentName }}-${{ parameters.environmentNumber }}".ToUpper()
+      Write-Output "##vso[task.setvariable variable=environment]$environment"
+      Write-Output "Set variable [environment] to [$environment]"
+      $stateResourceGroup = "${{ parameters.environmentPrefix }}-ERS-${{ parameters.environmentSuffix }}-TFSTATE".ToUpper()
+      $stateStorageAccount = ($stateResourceGroup -replace "\W","").ToLower()
+      $stateContainer = "tfstate-$environment".ToLower()
+      $subscriptionId = az account show --query id -o tsv
 
-    $actiongroup_resource_group = "${{ parameters.environmentPrefix }}-ERS-${{ parameters.environmentSuffix }}-MASTER".ToUpper()
-    $actiongroup_name = "${{ parameters.environmentSuffix }}".ToUpper() + "-ActionGroup"
-    
-    Write-Output "##vso[task.setvariable variable=actiongroup_resource_group]$actiongroup_resource_group"
-    Write-Output "Set variable [actiongroup_resource_group] to [$actiongroup_resource_group]"
+      $actiongroup_resource_group = "${{ parameters.environmentPrefix }}-ERS-${{ parameters.environmentSuffix }}-MASTER".ToUpper()
+      $actiongroup_name = "${{ upper(parameters.environmentSuffix) }}-ActionGroup"
 
-    Write-Output "##vso[task.setvariable variable=actiongroup_name]$actiongroup_name"
-    Write-Output "Set variable [actiongroup_name] to [$actiongroup_name]"
-      
-    Write-Output "##vso[task.setvariable variable=stateResourceGroup]$stateResourceGroup"
-    Write-Output "Set variable [stateResourceGroup] to [$stateResourceGroup]"
+      Write-Output "##vso[task.setvariable variable=actiongroup_resource_group]$actiongroup_resource_group"
+      Write-Output "Set variable [actiongroup_resource_group] to [$actiongroup_resource_group]"
 
-    Write-Output "##vso[task.setvariable variable=stateStorageAccount]$stateStorageAccount"
-    Write-Output "Set variable [stateStorageAccount] to [$stateStorageAccount]"
+      Write-Output "##vso[task.setvariable variable=actiongroup_name]$actiongroup_name"
+      Write-Output "Set variable [actiongroup_name] to [$actiongroup_name]"
 
-    Write-Output "##vso[task.setvariable variable=stateContainer]$stateContainer"
-    Write-Output "Set variable [stateContainer] to [$stateContainer]"
+      Write-Output "##vso[task.setvariable variable=stateResourceGroup]$stateResourceGroup"
+      Write-Output "Set variable [stateResourceGroup] to [$stateResourceGroup]"
+
+      Write-Output "##vso[task.setvariable variable=stateStorageAccount]$stateStorageAccount"
+      Write-Output "Set variable [stateStorageAccount] to [$stateStorageAccount]"
+
+      Write-Output "##vso[task.setvariable variable=stateContainer]$stateContainer"
+      Write-Output "Set variable [stateContainer] to [$stateContainer]"
+
+      Write-Output "##vso[task.setvariable variable=ARM_CLIENT_ID;issecret=true]$env:servicePrincipalId"
+      Write-Output "##[command]Set variable [ARM_CLIENT_ID]"
+
+      Write-Output "##vso[task.setvariable variable=ARM_CLIENT_SECRET;issecret=true]$env:servicePrincipalKey"
+      Write-Output "##[command]Set variable [ARM_CLIENT_SECRET]"
+
+      Write-Output "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$subscriptionId"
+      Write-Output "##[command]Set variable [ARM_SUBSCRIPTION_ID]"
+
+      Write-Output "##vso[task.setvariable variable=ARM_TENANT_ID]$env:tenantId"
+      Write-Output "##[command]Set variable [ARM_TENANT_ID]"
   continueOnError: false
-  displayName: 'Initialise Variables'
-
-- template: terraform/terraform-lint.yml@utilities
+  displayName: 'Terraform App: Initialise Variables'
 
 - ${{ if eq(parameters.runTerraformDestroy, true) }}:
   # Teardown any active sessions to the database before terraform destroy
@@ -88,38 +109,23 @@ steps:
         }
     continueOnError: true
 
-  - task: AzureCLI@2
+  - task: PowerShell@2
     condition: succeeded()
-    displayName: 'Terraform destroy ECE App'
+    displayName: 'Terraform App: Destroy ${{ parameters.applicationName }}'
+    env:
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
     inputs:
-      azureSubscription: "${{ parameters.azureDevOpsServiceConnection }}"
-      scriptType: pscore
-      scriptLocation: inlineScript
-      addSpnToEnvironment: true
-      workingDirectory: "$(Build.SourcesDirectory)/devops/terraform"
-      inlineScript: |
-        $backendConfig = @"
-        terraform {
-          backend "azurerm" {
-            resource_group_name  = "$(stateResourceGroup)"
-            storage_account_name = "$(stateStorageAccount)"
-            container_name       = "$(stateContainer)"
-            key                  = "${{ parameters.applicationname }}"
-          }
-        }
-        "@
+      targetType: inline
+      workingDirectory: '${{ parameters.terraformSourceDir }}'
+      script: |
+        terraform init -reconfigure -backend-config=resource_group_name=$(stateResourceGroup) -backend-config=storage_account_name=$(stateStorageAccount) -backend-config=container_name=$(stateContainer) -backend-config=key=${{ parameters.applicationName }}
 
-        # Override the backend.tf in the repository before applying to a real environment
-        $backendConfig | Out-File "backend_override.tf" -Encoding utf8 -Force
-        cat "backend_override.tf"
-
-        $subscriptionId = (az account show --query id).Replace("`"","")
-        $dockerCommandBase = "docker run -e ARM_CLIENT_ID=$env:servicePrincipalId -e ARM_CLIENT_SECRET=$env:servicePrincipalKey -e ARM_SUBSCRIPTION_ID=$subscriptionId -e ARM_TENANT_ID=$env:tenantId -v $(PWD):/workspace -w /workspace hashicorp/terraform:${{ parameters.terraformVersion }}"
-        Invoke-Expression ("$dockerCommandBase init")
-        Invoke-Expression ("$dockerCommandBase validate")
-
-        $tfArgs = "-var='environment=${{ parameters.environmentName }}-${{ parameters.environmentNumber }}' -var='environment_prefix=${{ parameters.environmentPrefix }}' -var='environment_suffix=${{ parameters.environmentSuffix }}' -var='actiongroup_name=$(actiongroup_name)' -var='actiongroup_resource_group=$(actiongroup_resource_group)'"
-        Invoke-Expression ("$dockerCommandBase destroy $tfArgs -auto-approve")
+        $tfVars = "-var=environment=$(environment) -var=environment_prefix=${{ parameters.environmentPrefix }} -var=environment_suffix=${{ parameters.environmentSuffix }} -var=actiongroup_name=$(actiongroup_name) -var=actiongroup_resource_group=$(actiongroup_resource_group) -var=container_image_source=${{ parameters.containerImage }} -var=decom_date=${{ parameters.decomDate }}".Split(' ')
+        Write-Output "##[debug]`$tfVars = [$tfVars]"
+        terraform destroy -auto-approve $tfVars
         if ($LASTEXITCODE -ne 0) {
           Write-Output "Error destroying resources."
           exit 1
@@ -127,40 +133,26 @@ steps:
     continueOnError: false
     
 - ${{ if eq(parameters.runTerraformApply, true) }}:
-  - task: AzureCLI@2
+  - task: PowerShell@2
     condition: succeeded()
-    displayName: 'Generate Plan and Apply for ECE App'
+    displayName: 'Terraform App: Deploy ${{ parameters.applicationName }}'
+    env:
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
     inputs:
-      azureSubscription: "${{ parameters.azureDevOpsServiceConnection }}"
-      scriptType: pscore
-      scriptLocation: inlineScript
-      addSpnToEnvironment: true
-      workingDirectory: "$(Build.SourcesDirectory)/devops/terraform"
-      inlineScript: |
-        $backendConfig = @"
-        terraform {
-          backend "azurerm" {
-            resource_group_name  = "$(stateResourceGroup)"
-            storage_account_name = "$(stateStorageAccount)"
-            container_name       = "$(stateContainer)"
-            key                  = "${{ parameters.applicationname }}"
-          }
-        }
-        "@
-                          
-        # Override the backend.tf in the repository before applying to a real environment
-        $backendConfig | Out-File "backend_override.tf" -Encoding utf8 -Force
-        cat "backend_override.tf"
+      targetType: inline
+      workingDirectory: '${{ parameters.terraformSourceDir }}'
+      script: |
+        terraform init -reconfigure -backend-config=resource_group_name=$(stateResourceGroup) -backend-config=storage_account_name=$(stateStorageAccount) -backend-config=container_name=$(stateContainer) -backend-config=key=${{ parameters.applicationName }}
 
-        $subscriptionId = (az account show --query id -o tsv)
-        $dockerCommandBase = "docker run -e ARM_CLIENT_ID=$env:servicePrincipalId -e ARM_CLIENT_SECRET=$env:servicePrincipalKey -e ARM_SUBSCRIPTION_ID=$subscriptionId -e ARM_TENANT_ID=$env:tenantId -v $(PWD):/workspace -w /workspace hashicorp/terraform:${{ parameters.terraformVersion }}"
-        Invoke-Expression ("$dockerCommandBase init")
-        Invoke-Expression ("$dockerCommandBase validate")
-
-        $terraformApplied = 'No'
-        
         # The below will output the plan (if any changes/additions or removals) while having anything matching the regex pattern with "***"
-        (Invoke-Expression ("$dockerCommandBase plan -detailed-exitcode -out=plan -var='environment=${{ parameters.environmentName }}-${{ parameters.environmentNumber }}' -var='environment_prefix=${{ parameters.environmentPrefix }}' -var='environment_suffix=${{ parameters.environmentSuffix }}' -var='actiongroup_name=$(actiongroup_name)' -var='actiongroup_resource_group=$(actiongroup_resource_group)' -var='decom_date=${{ parameters.decomDate }}'")) -replace "((.*)(docker|password|username|secret|key)([^=]+)= ).*", '$1"***"'
+        $tfVars = "-var=environment=$(environment) -var=environment_prefix=${{ parameters.environmentPrefix }} -var=environment_suffix=${{ parameters.environmentSuffix }} -var=actiongroup_name=$(actiongroup_name) -var=actiongroup_resource_group=$(actiongroup_resource_group) -var=container_image_source=${{ parameters.containerImage }} -var=decom_date=${{ parameters.decomDate }}".Split(' ')
+        Write-Output "##[debug]`$tfVars = [$tfVars]"
+        $terraformOutput = (terraform plan -detailed-exitcode -out=plan $tfVars) -replace "((.*)(docker|password|username|secret|key)([^=]+)= ).*", '$1"***"'
+        $terraformOutput
+        $terraformApplied = 'No'
         if ($LASTEXITCODE -eq 0){
           Write-Output "No change to infrastructure, skipping 'Apply'."
         }elseif($LASTEXITCODE -eq 1){
@@ -168,7 +160,7 @@ steps:
           exit 1
         }else{
           Write-Output "Plan has changes, running 'Apply'."
-          Invoke-Expression ("$dockerCommandBase apply 'plan'")
+          terraform apply 'plan'
           if($LASTEXITCODE -eq 1){
             Write-Host "##vso[task.logissue type=error]Error occurred running terraform apply."
             exit 1

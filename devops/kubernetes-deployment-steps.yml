@@ -1,0 +1,54 @@
+parameters:
+  environmentPrefix: ''
+  environmentSuffix: ''
+  environmentName: ''
+  environmentnumber: ''
+  azureRMServiceConnection: ''
+  containerRegistry: ''
+  imageRepository: ''
+  applicationName: ''
+  imageTag: ''
+  imageBuildNumber: ''
+  healthCheckPath: '/health'
+
+steps:
+- task: Docker@2
+  displayName: 'Init Docker Client'
+  inputs:
+    command: login
+    containerRegistry: "${{ parameters.containerRegistry }}"
+
+- task: PowerShell@2
+  displayName: 'Tag Image as latest and Push'
+  inputs:
+    targetType: inline
+    script: |
+      $oldImageName = "{0}.azurecr.io/{1}:{2}" -f $env:ACR_NAME, $env:DOCKER_REPO, $env:DOCKER_TAG
+      $newImageName = "{0}.azurecr.io/{1}:latest-{2}{3}" -f $env:ACR_NAME, $env:DOCKER_REPO, $env:ENV_NAME, $env:ENV_NUMBER
+      
+      docker pull $oldImageName
+      docker tag $oldImageName $newImageName
+      docker push $newImageName
+
+      Write-Output "Re-tagging [$oldImageName] as [$newImageName] .."
+
+      Write-Output "##vso[task.setvariable variable=containerImage]$newImageName"
+      Write-Output "##[command]Set variable [containerImage] to [$newImageName]"
+  env:
+    ACR_NAME: ${{ parameters.containerRegistry }}
+    DOCKER_REPO: ${{ parameters.imageRepository }}
+    DOCKER_TAG: ${{ parameters.imageTag }}
+    ENV_NAME: ${{ parameters.environmentName }}
+    ENV_NUMBER: ${{ parameters.environmentnumber }}
+
+# Deploy App using terraform (for now)
+- template: terraform-deploy-steps.yml
+  parameters:
+    environmentPrefix: '${{ parameters.environmentPrefix }}'
+    environmentSuffix: '${{ parameters.environmentSuffix }}'
+    environmentName: '${{ parameters.environmentName }}'
+    environmentNumber: '${{ parameters.environmentNumber }}'
+    applicationName: '${{ parameters.applicationName }}-k8s'
+    terraformSourceDir: '$(Build.SourcesDirectory)/devops/kubernetes'
+    azureDevOpsServiceConnection: '${{ parameters.azureRMServiceConnection }}'
+    containerImage: '$(containerImage)'

@@ -22,6 +22,7 @@ stages:
       appResourceGroup: "${{ upper( format('{0}-ERS-{1}-{2}-{3}', parameters.environmentPrefix, parameters.environmentName, parameters.environmentNumber, parameters.applicationName )) }}"
       appName: "${{ lower( format('{0}ers{1}{2}{3}', parameters.environmentPrefix, parameters.environmentName, parameters.environmentNumber, parameters.applicationName )) }}"
       dockerImageName: "${{ parameters.containerRegistry }}.azurecr.io/${{ parameters.applicationName }}api"
+      terraformVersion: '0.14.10'
     jobs: 
       - deployment: "release${{ parameters.releaseStageDescriptor }}"
         dependsOn: []
@@ -59,6 +60,7 @@ stages:
 
                 - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
                   - checkout: ece-api
+                    persistCredentials: true
                     clean: true
 
                   - task: PowerShell@2
@@ -68,8 +70,8 @@ stages:
                       workingDirectory: "$(Build.SourcesDirectory)/devops/terraform"
                       targetType: 'inline'
                       script: |
-                        echo "Checking out tag: $(gitCheckoutTag) in $PWD.."
-                        git checkout $(gitCheckoutTag)
+                        echo "Checking out: ${{ parameters.imageTag }}"
+                        git checkout ${{ parameters.imageTag }}
 
                 - template: remove-resource-locks-steps.yml
                   parameters:
@@ -79,6 +81,13 @@ stages:
                     environmentNumber: '${{ parameters.environmentNumber }}'
                     applicationName: '${{ parameters.applicationName }}'
                     azureDevOpsServiceConnection: '${{ parameters.azureDevOpsServiceConnection }}'
+
+                # This installs the specificied version of Terraform (or used cached install) and checks the version
+                - template: terraform/terraform-install.yml@utilities
+                  parameters:
+                    terraformVersion: '$(terraformVersion)'
+
+                - template: terraform/terraform-lint.yml@utilities                    
 
                 - template: terraform-deploy-steps.yml
                   parameters:
@@ -183,3 +192,31 @@ stages:
                       imageTag: '${{ parameters.imageTag }}'
                       imageBuildNumber: '$(imageBuildNumber)'
 
+                  # Drip feed this AKS deployment into dev environments
+                  # Remove condition below when ready to push into tst environments
+                  - ${{ if and(eq(parameters.environmentName, 'dev'), ne(parameters.environmentNumber, '04')) }}:
+                    - template: kubernetes-deployment-steps.yml
+                      parameters:
+                        environmentPrefix: '${{ parameters.environmentPrefix }}'
+                        environmentSuffix: '${{ parameters.environmentSuffix }}'
+                        environmentName: '${{ parameters.environmentName }}'
+                        environmentnumber: '${{ parameters.environmentNumber }}'
+                        azureRMServiceConnection: ${{ parameters.azureDevOpsServiceConnection }}
+                        containerRegistry: '${{ parameters.containerRegistry }}'
+                        applicationName: '${{ parameters.applicationName }}'
+                        imageRepository: '${{ parameters.applicationName }}api'
+                        imageTag: '${{ parameters.imageTag }}'
+
+                  # On successful release, tag the repo as a marker for the following environment or re-releases
+                  - pwsh: |
+                      $tag = "latest-{0}{1}" -f $env:environmentName, $env:environmentNumber
+
+                      git tag $tag --force
+                      Write-Output "Created tag $tag"
+                      git push --tags --force
+                      Write-Output "Successfully pushed tag to origin"
+                    displayName: 'Set environment tag on repo'
+                    workingDirectory: "$(Build.SourcesDirectory)"
+                    env:
+                      environmentName: "${{ parameters.environmentName }}"
+                      environmentNumber: "${{ parameters.environmentnumber }}"

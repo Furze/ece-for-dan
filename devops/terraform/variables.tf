@@ -143,3 +143,9 @@ variable "TAG_TECCONTACT" {
   description = "Technical contact for the product"
   default     = "Graeme.Davies@education.govt.nz"
 }
+
+variable "container_image_source" {
+  type        = string
+  description = "Container Registry Endpoint"
+  default     = "mapaerscontainerregistry.azurecr.io/eceapi:latest"
+}

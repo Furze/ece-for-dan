@@ -3,8 +3,10 @@ locals {
   resource_base_name         = lower("${var.environment_prefix}ers${replace(var.environment, "-", "")}")
   common_resource_group_name = upper("${var.environment_prefix}-ERS-${var.environment}-COMMON")
   master_resource_group_name = upper("${var.environment_prefix}-ERS-${var.environment_suffix}-MASTER")
-  environment_number         = lower(split("-", var.environment)[1])
-  environment_name           = lower(split("-", var.environment)[0])
+  environmentgroup_base_name = lower("${var.environment_prefix}ers${var.environment_suffix}")
+
+  environment_number = lower(split("-", var.environment)[1])
+  environment_name   = lower(split("-", var.environment)[0])
 
   db_server_resource_group = upper("${var.environment_prefix}-ERS-${var.environment_suffix}-PSQL-DATABASES")
   db_server_name           = lower("${var.environment_prefix}ers${var.environment_suffix}psqlserver")
@@ -92,6 +94,11 @@ data "azurerm_servicebus_namespace" "cmn" {
 data "azurerm_application_insights" "cmn" {
   name                = "${local.resource_base_name}appinsights"
   resource_group_name = local.common_resource_group_name
+}
+
+data "azurerm_kubernetes_cluster" "envgroup" {
+  name                = lower("${local.environmentgroup_base_name}aks")
+  resource_group_name = upper("${var.environment_prefix}-ERS-${var.environment_suffix}-AKS")
 }
 
 #                                                                                                 
@@ -225,6 +232,41 @@ resource "azurerm_key_vault_access_policy" "app" {
   key_vault_id = data.azurerm_key_vault.master.id
   tenant_id    = data.azurerm_subscription.current.tenant_id
   object_id    = local.app_msi_id
+
+  secret_permissions = [
+    "Get",
+    "List"
+  ]
+}
+
+data "azurerm_resource_group" "aks_node_pool" {
+  name = data.azurerm_kubernetes_cluster.envgroup.node_resource_group
+}
+
+# Store managed identity in the AKS Node Pool group
+resource "azurerm_user_assigned_identity" "aks_app" {
+  resource_group_name = data.azurerm_resource_group.aks_node_pool.name
+  location            = data.azurerm_resource_group.aks_node_pool.location
+
+  name = lower("${local.resource_base_name}aks${var.application_name}")
+}
+
+locals {
+  aks_app_msi_id = azurerm_user_assigned_identity.aks_app.principal_id
+}
+
+# Allow the identity to read/validate its own role against the vmss in the aks node pool group
+resource "azurerm_role_assignment" "appmsi_to_aksmc_reader" {
+  scope                = data.azurerm_resource_group.aks_node_pool.id
+  role_definition_name = "Reader"
+  principal_id         = local.aks_app_msi_id
+}
+
+# Add App Service MSI to Key Vault Access Policy
+resource "azurerm_key_vault_access_policy" "aks_app" {
+  key_vault_id = data.azurerm_key_vault.master.id
+  tenant_id    = data.azurerm_subscription.current.tenant_id
+  object_id    = local.aks_app_msi_id
 
   secret_permissions = [
     "Get",
