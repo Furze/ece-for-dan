@@ -65,11 +65,11 @@ stages:
           continueOnError: false
 
         - task: DotNetCoreCLI@2
-          displayName: Run All Tests
+          displayName: Run All Unit Tests (Integ. Tests disabled for now)
           inputs:
             command: test
             arguments: '--collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover'
-            projects: '**/ECE.sln'
+            projects: '**/Unit.Tests.csproj'   
         
         - task: SonarQubeAnalyze@4
           continueOnError: true

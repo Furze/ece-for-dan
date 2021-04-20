@@ -1,5 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using Hangfire;
+using Hangfire.Dashboard;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,17 +36,37 @@ namespace MoE.ECE.Web.Bootstrap
         {
             app.UseRouting();
             app.UseAuthorization();
-            var dashboardOptions = new DashboardOptions();
-            if (!Environment.IsDevelopment())
-                dashboardOptions.Authorization = new[] {new HangfireAuthorizationFilter()};
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
+
+                var hangfireDashboard = endpoints.MapHangfireDashboard(new DashboardOptions
+                {
+                    Authorization = new[] { new HangfireAuthorizationFilter() }
+                });
                 if (Environment.IsDevelopment())
-                    endpoints.MapHangfireDashboard();
+                {
+                    hangfireDashboard.Add(endpointBuilder =>
+                    {
+                        endpointBuilder.Metadata.Add(new AllowAnonymousAttribute());
+                    });
+                }
                 else
-                    endpoints.MapHangfireDashboard(dashboardOptions).RequireAuthorization("Hangfire");
+                {
+                    hangfireDashboard.RequireAuthorization(RequiredPermissionPolicyProvider.HangfirePolicy);
+                }
             });
+        }
+        
+        private class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
+        {
+            public bool Authorize(DashboardContext context)
+            {
+                // This filter is needed to get auth to work.
+                // The permissions are handled in RequiredPermissionPolicyProvider.
+                return true;
+            }
         }
     }
 }

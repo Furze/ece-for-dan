@@ -12,18 +12,10 @@ namespace MoE.ECE.Web.Bootstrap
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Hangfire", builder =>
-                {
-                    // Hangfire auth via AD
-                    builder.AddAuthenticationSchemes(OpenIdConnectDefaults.AuthenticationScheme);
-                    builder.RequireAuthenticatedUser();
-                });
-
-                var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
-                    JwtBearerDefaults.AuthenticationScheme);
-                defaultAuthorizationPolicyBuilder = 
-                    defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
-                options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+                // The default policy is to at least insist the user is authenticated
+                options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser()
+                    .Build();
             });
         }
 

@@ -1,27 +1,21 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MoE.ECE.Web.Infrastructure.Authorisation
 {
-    /// <summary>
-    /// This class will be replaced at some point in the near future with
-    /// the equivalent attribute from Soliance's Policy Server libraries.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method)]
-    public sealed class RequirePermissionAttribute : Attribute, IAuthorizationFilter
+    public sealed class RequirePermissionAttribute : AuthorizeAttribute
     {
-        public const string ForObsoletedAction = "obsolete";
-
         public string Permission { get; }
-        
-        public RequirePermissionAttribute(string permission)
+
+        /// <summary>
+        /// THIS SHOULD BE REMOVED AT SOME POINT AFTER THE DEV "GRACE PERIOD" HAS CONCLUDED
+        /// </summary>
+        public bool AllowAuthorisationGrace { get; }
+
+        public RequirePermissionAttribute(string permission, bool allowAuthorisationGrace = true)
         {
             Permission = permission;
-        }
-        
-        public void OnAuthorization(AuthorizationFilterContext context)
-        {
-            // for now just return - eg everything is authorised. 
+            AllowAuthorisationGrace = allowAuthorisationGrace; // REMOVE once grace period has ended.
+            Policy = $"{PolicyNames.RequirePermissionPolicy}_{permission}_{allowAuthorisationGrace}";
         }
     }
 }

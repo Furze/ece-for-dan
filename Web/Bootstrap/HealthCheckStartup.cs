@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Threading.Tasks;
 using Events.Integration;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
@@ -24,11 +25,11 @@ namespace MoE.ECE.Web.Bootstrap
                 endpoints.MapHealthChecks("/health", new HealthCheckOptions
                 {
                     ResponseWriter = WriteResponse
-                });
+                }).WithMetadata(new AllowAnonymousAttribute());
                 endpoints.MapGet("/ping", async context =>
                 {
                     await context.Response.WriteAsync("pong");
-                });
+                }).WithMetadata(new AllowAnonymousAttribute());
             });
         }
 

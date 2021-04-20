@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Internal;
@@ -9,6 +10,8 @@ using MoE.ECE.Domain.Infrastructure.Abstractions;
 using MoE.ECE.Domain.Infrastructure.Services.Opa;
 using MoE.ECE.Domain.Integration;
 using MoE.ECE.Domain.Services;
+using MoE.ECE.Integration.OpenPolicyAgent;
+using MoE.ECE.Integration.OpenPolicyAgent.Services;
 using MoE.ECE.Web.Infrastructure;
 using MoE.ECE.Web.Infrastructure.Authorisation;
 using MoE.ECE.Web.Infrastructure.Extensions;
@@ -54,6 +57,20 @@ namespace MoE.ECE.Web.Bootstrap
             services.AddMediatR(typeof(Domain.IAssemblyMarker));
 
             services.AddScoped<IOperationalFundingCalculator, OpaOperationalFundingCalculator>();
+            
+            // Authorisation
+            services.AddSingleton<IAuthorizationHandler, RequiredPermissionAuthorisationHandler>();
+            services.AddSingleton<IAuthorizationPolicyProvider, RequiredPermissionPolicyProvider>();
+            
+            if (LocalDevelopment.DisableAuthnAndAuthz(Environment))
+            {
+                services.AddSingleton<IOpenPolicyAgentService, FakeOpenPolicyAgentService>();
+            }
+            else
+            {
+                services.AddOpenPolicyAgentHttpClient();
+                services.AddSingleton<IOpenPolicyAgentService, OpenPolicyAgentService>();
+            }
         }
 
         public override void Configure(IApplicationBuilder app)

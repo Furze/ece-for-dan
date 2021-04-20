@@ -58,67 +58,67 @@ namespace MoE.ECE.Web.Controllers
             return Ok(readModel);
         }
 
-        [HttpPost]
-        [Obsolete("Superseded by methods on Rs7Actions")]
-        [RequirePermission(RequirePermissionAttribute.ForObsoletedAction)]
-        public async Task<ActionResult> Post([FromBody] Rs7Model request, CancellationToken cancellationToken)
-        {
-            IBeginSagaCommand command;
-            if (request.IsZeroReturn.HasValue && request.IsZeroReturn.Value)
-            {
-                command = new CreateRs7ZeroReturn
-                {
-                    OrganisationId = request.OrganisationId,
-                    FundingPeriod = request.FundingPeriod,
-                    FundingPeriodYear = request.FundingPeriodYear
-                };
-            }
-            else
-            {
-                command = new CreateSkeletonRs7
-                {
-                    OrganisationId = request.OrganisationId,
-                    FundingPeriod = request.FundingPeriod,
-                    FundingPeriodYear = request.FundingPeriodYear
-                };
-            }
-
-            var id = await _cqrs.ExecuteAsync(command, cancellationToken);
-            var routeValues = new {id};
-
-            var result = CreatedAtAction(nameof(Get), routeValues, routeValues);
-
-            return result;
-        }
-
-        [Route("{id}")]
-        [HttpPut]
-        [Obsolete("Superseded by methods on Rs7Actions")]
-        [RequirePermission(RequirePermissionAttribute.ForObsoletedAction)]
-        public async Task<ActionResult> Put(
-            [FromRoute] int id,
-            [FromBody] Rs7Model request,
-            CancellationToken cancellationToken)
-        {
-            request.Id = id;
-
-            async Task MapAndExecuteCommand<TCommand>() where TCommand : ICommand
-            {
-                var command = _mapper.Map<TCommand>(request);
-                await _cqrs.ExecuteAsync(command, cancellationToken);
-            }
-
-            if (request.RollStatus == RollStatus.ExternalDraft)
-            {
-                await MapAndExecuteCommand<SaveAsDraft>();
-            }
-            else
-            {
-                await MapAndExecuteCommand<UpdateRs7>();
-            }
-            
-            return NoContent();
-        }
+        // [HttpPost]
+        // [Obsolete("Superseded by methods on Rs7Actions")]
+        // [RequirePermission(RequirePermissionAttribute.ForObsoletedAction)]
+        // public async Task<ActionResult> Post([FromBody] Rs7Model request, CancellationToken cancellationToken)
+        // {
+        //     IBeginSagaCommand command;
+        //     if (request.IsZeroReturn.HasValue && request.IsZeroReturn.Value)
+        //     {
+        //         command = new CreateRs7ZeroReturn
+        //         {
+        //             OrganisationId = request.OrganisationId,
+        //             FundingPeriod = request.FundingPeriod,
+        //             FundingPeriodYear = request.FundingPeriodYear
+        //         };
+        //     }
+        //     else
+        //     {
+        //         command = new CreateSkeletonRs7
+        //         {
+        //             OrganisationId = request.OrganisationId,
+        //             FundingPeriod = request.FundingPeriod,
+        //             FundingPeriodYear = request.FundingPeriodYear
+        //         };
+        //     }
+        //
+        //     var id = await _cqrs.ExecuteAsync(command, cancellationToken);
+        //     var routeValues = new {id};
+        //
+        //     var result = CreatedAtAction(nameof(Get), routeValues, routeValues);
+        //
+        //     return result;
+        // }
+        //
+        // [Route("{id}")]
+        // [HttpPut]
+        // [Obsolete("Superseded by methods on Rs7Actions")]
+        // [RequirePermission(RequirePermissionAttribute.ForObsoletedAction)]
+        // public async Task<ActionResult> Put(
+        //     [FromRoute] int id,
+        //     [FromBody] Rs7Model request,
+        //     CancellationToken cancellationToken)
+        // {
+        //     request.Id = id;
+        //
+        //     async Task MapAndExecuteCommand<TCommand>() where TCommand : ICommand
+        //     {
+        //         var command = _mapper.Map<TCommand>(request);
+        //         await _cqrs.ExecuteAsync(command, cancellationToken);
+        //     }
+        //
+        //     if (request.RollStatus == RollStatus.ExternalDraft)
+        //     {
+        //         await MapAndExecuteCommand<SaveAsDraft>();
+        //     }
+        //     else
+        //     {
+        //         await MapAndExecuteCommand<UpdateRs7>();
+        //     }
+        //     
+        //     return NoContent();
+        // }
         
         [Route("{id}")]
         [HttpDelete]

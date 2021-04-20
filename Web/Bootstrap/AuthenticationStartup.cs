@@ -37,13 +37,7 @@ namespace MoE.ECE.Web.Bootstrap
         public override void ConfigureServices(IServiceCollection services)
         {
             var settings = Configuration.BindFor<OidcSettings>();
-
-            if (Environment.IsDevelopment())
-            {
-                // Disable authentication and authorization.
-                services.TryAddSingleton<IPolicyEvaluator, DisableAuthenticationPolicyEvaluator>();
-            }
-
+            
             services
                 .AddAuthentication(cfg =>
                 {
