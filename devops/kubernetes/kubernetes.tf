@@ -14,10 +14,10 @@ resource "kubernetes_deployment" "app" {
     }
   }
 
-  wait_for_rollout = true # Wait for timeout before failing for visibility
+  wait_for_rollout = true
 
   spec {
-    replicas = 1 # FIXME: Seems to fail when we have more than one
+    replicas = 1
 
     selector {
       match_labels = {
@@ -42,10 +42,10 @@ resource "kubernetes_deployment" "app" {
           resources {
             limits = {
               cpu    = "200m"
-              memory = "300Mi"
+              memory = "500Mi"
             }
             requests = {
-              cpu    = "100m"
+              cpu    = "20m"
               memory = "100Mi"
             }
           }

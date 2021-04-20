@@ -194,7 +194,7 @@ stages:
 
                   # Drip feed this AKS deployment into dev environments
                   # Remove condition below when ready to push into tst environments
-                  - ${{ if and(eq(parameters.environmentName, 'dev'), ne(parameters.environmentNumber, '04')) }}:
+                  - ${{ if or(and(eq(parameters.environmentName, 'dev'), ne(parameters.environmentNumber, '04')), and(eq(parameters.environmentName, 'tst'), eq(parameters.environmentNumber, '03'))) }}:
                     - template: kubernetes-deployment-steps.yml
                       parameters:
                         environmentPrefix: '${{ parameters.environmentPrefix }}'
@@ -213,7 +213,7 @@ stages:
 
                       git tag $tag --force
                       Write-Output "Created tag $tag"
-                      git push --tags --force
+                      git push origin $tag --force
                       Write-Output "Successfully pushed tag to origin"
                     displayName: 'Set environment tag on repo'
                     workingDirectory: "$(Build.SourcesDirectory)"

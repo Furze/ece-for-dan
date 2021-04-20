@@ -170,16 +170,14 @@ stages:
                 DOCKER_REPO: ${{ parameters.dockerImageRepository }}
                 DOCKER_TAG: $(Build.BuildNumber)
 
-          - task: PowerShell@2
+            # Tag the current branch with the version number
+          - script: |
+              git tag '$(Build.BuildNumber)'
+              echo "Created tag $(Build.BuildNumber)"
+              git push origin '$(Build.BuildNumber)'
+              echo "Pushed tag $(Build.BuildNumber) to origin"
             condition: succeeded()
-            displayName: 'Tag the build'
-            inputs:
-              targetType: 'inline'
-              script: |
-                git tag '$(Build.BuildNumber)'
-                Write-Host "Successfully created tag $(Build.BuildNumber)"
-                git push --tags
-                Write-Host "Successfully pushed tag $(Build.BuildNumber) to origin"
+            displayName: 'Create and push build tag'
 
           - task: PowerShell@2
             condition: always()
