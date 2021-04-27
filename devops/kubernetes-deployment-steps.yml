@@ -74,6 +74,10 @@ steps:
         }
         docker tag $oldImageName $newImageName
         docker push $newImageName
+        Write-Output "Re-tagging [$oldImageName] as [$newImageName] .."
+
+        Write-Output "##vso[task.setvariable variable=containerImage]$newImageName"
+        Write-Output "##[command]Set variable [containerImage] to [$newImageName]"
     env:
       DOCKER_CONTENT_TRUST: 1 # Force DCT for all docker commands
       DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE: $(acr-repo-ci-signing-key-passphrase)
