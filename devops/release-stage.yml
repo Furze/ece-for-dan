@@ -11,7 +11,6 @@ parameters:
   stageDependencies: '' # List that overrides dependencies for the stage as oppossed to just previous stage
   runTerraformApply: true
   runTerraformDestroy: false
-  decomDate: ''
 
 stages:
   - stage: "Release_to_${{ parameters.environmentName }}_${{ parameters.environmentnumber }}${{ parameters.releaseStageDescriptor }}"
@@ -19,9 +18,7 @@ stages:
     ${{ if parameters.stageDependencies }}:
       dependsOn: ${{ parameters.stageDependencies }} # Allow this to run concurrently with other release stages
     variables:
-      appResourceGroup: "${{ upper( format('{0}-ERS-{1}-{2}-{3}', parameters.environmentPrefix, parameters.environmentName, parameters.environmentNumber, parameters.applicationName )) }}"
-      appName: "${{ lower( format('{0}ers{1}{2}{3}', parameters.environmentPrefix, parameters.environmentName, parameters.environmentNumber, parameters.applicationName )) }}"
-      dockerImageName: "${{ parameters.containerRegistry }}.azurecr.io/${{ parameters.applicationName }}api"
+      containerRepository: "${{ parameters.containerRegistry }}.azurecr.io/${{ parameters.applicationName }}api"
       terraformVersion: '0.14.10'
     jobs: 
       - deployment: "release${{ parameters.releaseStageDescriptor }}"
@@ -39,19 +36,6 @@ stages:
                   inputs:
                     command: login
                     containerRegistry: "${{ parameters.containerRegistry }}"
-
-                - script: |
-                    docker pull "$(dockerImageName):${{ parameters.imageTag }}"                      
-                    gitCheckoutTag=`docker inspect --format '{{  index .Config.Labels "com.visualstudio.moeedunz.image.build.sourceversion"}}' $(dockerImageName):${{ parameters.imageTag }}`
-                    imageBuildNumber=`docker inspect --format '{{  index .Config.Labels "com.visualstudio.moeedunz.image.build.buildnumber"}}' $(dockerImageName):${{ parameters.imageTag }}`
-
-                    echo "Image Build Number: $imageBuildNumber"
-                    echo "Image Commit Hash: $gitCheckoutTag"
-                    echo "##vso[task.setvariable variable=imageBuildNumber]$imageBuildNumber"
-                    echo "##vso[task.setvariable variable=gitCheckoutTag]$gitCheckoutTag"
-                  condition: succeeded()
-                  displayName: "Extract metadata from image"
-                  failOnStderr: true
 
                 - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
                   - checkout: self
@@ -96,11 +80,9 @@ stages:
                     environmentName: '${{ parameters.environmentName }}'
                     environmentNumber: '${{ parameters.environmentNumber }}'
                     applicationName: '${{ parameters.applicationName }}'
-                    releaseStageDescriptor: '${{ parameters.releaseStageDescriptor }}'
                     azureDevOpsServiceConnection: '${{ parameters.azureDevOpsServiceConnection }}'
                     runTerraformApply: '${{ parameters.runTerraformApply }}'
                     runTerraformDestroy: '${{ parameters.runTerraformDestroy }}'
-                    decomDate: '${{ parameters.decomDate }}'
 
                 # Continue with post-terraform tasks if we are releasing normally (ie. not a destroy)         
                 - ${{ if eq(parameters.runTerraformApply, true) }}:
@@ -121,7 +103,7 @@ stages:
                       connectionString="host=$DB_SERVERNAME.postgres.database.azure.com;port=5432;database=$DB_NAME;password=$ADMIN_PASSWORD;username=$DB_ROLENAME@$DB_SERVERNAME;Pooling=true;Ssl Mode=Require;"                      
                       docker run \
                       -e MartenSettings__ConnectionString="$connectionString" \
-                      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+                      --entrypoint /bin/sh $(containerRepository):${{ parameters.imageTag }} \
                       -c 'cd /cli && chmod +x CLI && ./CLI migrate -md /cli/migrations'
                       if [[ $? -ne 0 ]] ; then
                           exit 1
@@ -140,7 +122,7 @@ stages:
                       connectionString="host=$DB_SERVERNAME.postgres.database.azure.com;port=5432;database=$DB_NAME;password=$ADMIN_PASSWORD;username=$DB_ROLENAME@$DB_SERVERNAME;Pooling=true;Ssl Mode=Require;"                      
                       docker run \
                       -e MartenSettings__ConnectionString="$connectionString" \
-                      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+                      --entrypoint /bin/sh $(containerRepository):${{ parameters.imageTag }} \
                       -c 'cd /cli && chmod +x CLI && ./CLI migrate-reference-data'
                       if [[ $? -ne 0 ]] ; then
                           exit 1
@@ -159,7 +141,7 @@ stages:
                   #     connectionString="host=$DB_SERVERNAME.postgres.database.azure.com;port=5432;database=$DB_NAME;password=$ADMIN_PASSWORD;username=$DB_ROLENAME@$DB_SERVERNAME;Pooling=true;Ssl Mode=Require;"                      
                   #     docker run \
                   #     -e MartenSettings__ConnectionString="$connectionString" \
-                  #     --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+                  #     --entrypoint /bin/sh $(containerRepository):${{ parameters.imageTag }} \
                   #     -c 'cd /cli && chmod +x CLI && ./CLI migrate -md /cli/ReconciliationViews'
                   #     if [[ $? -ne 0 ]] ; then
                   #         exit 1
@@ -180,33 +162,18 @@ stages:
                       azureDevOpsServiceConnection: '${{ parameters.azureDevOpsServiceConnection }}'
                       imageTag: '${{ parameters.imageTag }}'
 
-                  - template: container-deployment-steps.yml
-                    parameters:
-                      environmentName: '${{ parameters.environmentName }}'
-                      environmentnumber: '${{ parameters.environmentNumber }}'
-                      azureDevOpsServiceConnection: ${{ parameters.azureDevOpsServiceConnection }}
-                      containerRegistry: '${{ parameters.containerRegistry }}'
-                      appResourceGroup: '$(appResourceGroup)'
-                      imageRepository: '${{ parameters.applicationName }}api'
-                      appName: '$(appName)'
-                      imageTag: '${{ parameters.imageTag }}'
-                      imageBuildNumber: '$(imageBuildNumber)'
+                - template: kubernetes-deployment-steps.yml
+                  parameters:
+                    environmentPrefix: '${{ parameters.environmentPrefix }}'
+                    environmentSuffix: '${{ parameters.environmentSuffix }}'
+                    environmentName: '${{ parameters.environmentName }}'
+                    environmentnumber: '${{ parameters.environmentNumber }}'
+                    azureRMServiceConnection: ${{ parameters.azureDevOpsServiceConnection }}
+                    containerRepository: '$(containerRepository)'
+                    imageTag: '${{ parameters.imageTag }}'
+                    applicationName: '${{ parameters.applicationName }}'
 
-                  # Drip feed this AKS deployment into dev environments
-                  # Remove condition below when ready to push into tst environments
-                  - ${{ if or(and(eq(parameters.environmentName, 'dev'), ne(parameters.environmentNumber, '04')), and(eq(parameters.environmentName, 'tst'), eq(parameters.environmentNumber, '03'))) }}:
-                    - template: kubernetes-deployment-steps.yml
-                      parameters:
-                        environmentPrefix: '${{ parameters.environmentPrefix }}'
-                        environmentSuffix: '${{ parameters.environmentSuffix }}'
-                        environmentName: '${{ parameters.environmentName }}'
-                        environmentnumber: '${{ parameters.environmentNumber }}'
-                        azureRMServiceConnection: ${{ parameters.azureDevOpsServiceConnection }}
-                        containerRegistry: '${{ parameters.containerRegistry }}'
-                        applicationName: '${{ parameters.applicationName }}'
-                        imageRepository: '${{ parameters.applicationName }}api'
-                        imageTag: '${{ parameters.imageTag }}'
-
+                - ${{ if eq(parameters.runTerraformApply, true) }}:
                   # On successful release, tag the repo as a marker for the following environment or re-releases
                   - pwsh: |
                       $tag = "latest-{0}{1}" -f $env:environmentName, $env:environmentNumber

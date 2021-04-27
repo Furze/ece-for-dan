@@ -4,13 +4,11 @@ parameters:
   environmentName: ''
   environmentNumber: ''
   applicationName: ''
-  releaseStageDescriptor: ''
   azureDevOpsServiceConnection: ''
   runTerraformDestroy: false
   runTerraformApply: true
   terraformSourceDir: '$(Build.SourcesDirectory)/devops/terraform'
   containerImage: ''
-  decomDate: ''
        
 steps:
 - task: AzureCLI@2
@@ -27,15 +25,6 @@ steps:
       $stateStorageAccount = ($stateResourceGroup -replace "\W","").ToLower()
       $stateContainer = "tfstate-$environment".ToLower()
       $subscriptionId = az account show --query id -o tsv
-
-      $actiongroup_resource_group = "${{ parameters.environmentPrefix }}-ERS-${{ parameters.environmentSuffix }}-MASTER".ToUpper()
-      $actiongroup_name = "${{ upper(parameters.environmentSuffix) }}-ActionGroup"
-
-      Write-Output "##vso[task.setvariable variable=actiongroup_resource_group]$actiongroup_resource_group"
-      Write-Output "Set variable [actiongroup_resource_group] to [$actiongroup_resource_group]"
-
-      Write-Output "##vso[task.setvariable variable=actiongroup_name]$actiongroup_name"
-      Write-Output "Set variable [actiongroup_name] to [$actiongroup_name]"
 
       Write-Output "##vso[task.setvariable variable=stateResourceGroup]$stateResourceGroup"
       Write-Output "Set variable [stateResourceGroup] to [$stateResourceGroup]"
@@ -59,6 +48,13 @@ steps:
       Write-Output "##[command]Set variable [ARM_TENANT_ID]"
   continueOnError: false
   displayName: 'Terraform App: Initialise Variables'
+
+- bash: |
+    export TZ="Pacific/Auckland"
+    currentDateTime="$(date '+%a %d %b %Y %T %Z')"
+    echo "Release timestamp: $currentDateTime"
+    echo "##vso[task.setvariable variable=currentDateTime]$currentDateTime"
+  displayName: 'Get current datetime'
 
 - ${{ if eq(parameters.runTerraformDestroy, true) }}:
   # Teardown any active sessions to the database before terraform destroy
@@ -123,7 +119,7 @@ steps:
       script: |
         terraform init -reconfigure -backend-config=resource_group_name=$(stateResourceGroup) -backend-config=storage_account_name=$(stateStorageAccount) -backend-config=container_name=$(stateContainer) -backend-config=key=${{ parameters.applicationName }}
 
-        $tfVars = "-var=environment=$(environment) -var=environment_prefix=${{ parameters.environmentPrefix }} -var=environment_suffix=${{ parameters.environmentSuffix }} -var=actiongroup_name=$(actiongroup_name) -var=actiongroup_resource_group=$(actiongroup_resource_group) -var=container_image_source=${{ parameters.containerImage }} -var=decom_date=${{ parameters.decomDate }}".Split(' ')
+        $tfVars = "-var=environment=$(environment) -var=environment_prefix=${{ parameters.environmentPrefix }} -var=environment_suffix=${{ parameters.environmentSuffix }} -var=container_image_source=${{ parameters.containerImage }} -var=release_timestamp=`"$(currentDateTime)`"".Split(' ')
         Write-Output "##[debug]`$tfVars = [$tfVars]"
         terraform destroy -auto-approve $tfVars
         if ($LASTEXITCODE -ne 0) {
@@ -148,7 +144,7 @@ steps:
         terraform init -reconfigure -backend-config=resource_group_name=$(stateResourceGroup) -backend-config=storage_account_name=$(stateStorageAccount) -backend-config=container_name=$(stateContainer) -backend-config=key=${{ parameters.applicationName }}
 
         # The below will output the plan (if any changes/additions or removals) while having anything matching the regex pattern with "***"
-        $tfVars = "-var=environment=$(environment) -var=environment_prefix=${{ parameters.environmentPrefix }} -var=environment_suffix=${{ parameters.environmentSuffix }} -var=actiongroup_name=$(actiongroup_name) -var=actiongroup_resource_group=$(actiongroup_resource_group) -var=container_image_source=${{ parameters.containerImage }} -var=decom_date=${{ parameters.decomDate }}".Split(' ')
+        $tfVars = "-var=environment=$(environment) -var=environment_prefix=${{ parameters.environmentPrefix }} -var=environment_suffix=${{ parameters.environmentSuffix }} -var=container_image_source=${{ parameters.containerImage }} -var=release_timestamp=`"$(currentDateTime)`"".Split(' ')
         Write-Output "##[debug]`$tfVars = [$tfVars]"
         $terraformOutput = (terraform plan -detailed-exitcode -out=plan $tfVars) -replace "((.*)(docker|password|username|secret|key)([^=]+)= ).*", '$1"***"'
         $terraformOutput

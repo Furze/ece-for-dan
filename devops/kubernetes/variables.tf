@@ -41,20 +41,8 @@ variable "kubernetes_ingress_domain_suffix" {
   default     = "devtest.ers.education.govt.nz"
 }
 
-variable "actiongroup_name" {
+variable "release_timestamp" {
   type        = string
-  description = ""
-  default     = "NonProd-ActionGroup"
-}
-
-variable "actiongroup_resource_group" {
-  type        = string
-  description = ""
-  default     = "MATA-ERS-0-0-COMMON"
-}
-
-variable "decom_date" {
-  type        = string
-  description = "Date for which resource should be deleted. Format is YYYY-MM-DD. ie. 2020-11-21."
-  default     = "" # If left empty then default will be set to 2 weeks from creation unless specified. If in MAPA sub then will be set to never expire (date very far in future) 
+  description = "Release timestamp in the following format: Tue 13 Apr 2021 12:22:56 NZST"
+  default     = ""
 }

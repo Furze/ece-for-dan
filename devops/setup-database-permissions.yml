@@ -48,7 +48,7 @@ steps:
       -e APP_ROLENAME="$APP_ROLENAME" \
       -e POSTGRES_DB_CONNECTION_STRING="$POSTGRES_DB_CONNECTION_STRING" \
       -e DB_NAME="$DB_NAME" \
-      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+      --entrypoint /bin/sh $(containerRepository):${{ parameters.imageTag }} \
       -c 'cd /cli && chmod +x CLI && ./CLI add-app-login -c "$APP_CONNECTION_STRING" -p "$POSTGRES_DB_CONNECTION_STRING" -r "$APP_ROLENAME" --password "$APPLICATION_PASSWORD" --database $DB_NAME --schema public'
       if [[ $? -ne 0 ]] ; then
           exit 1
@@ -58,7 +58,7 @@ steps:
       docker run \
       -e APP_CONNECTION_STRING="$APP_CONNECTION_STRING" \
       -e APP_ROLENAME="$APP_ROLENAME" \
-      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+      --entrypoint /bin/sh $(containerRepository):${{ parameters.imageTag }} \
       -c 'cd /cli && chmod +x CLI && ./CLI add-access-to-schema -c "$APP_CONNECTION_STRING" -n "$APP_ROLENAME" --schema referencedata -g "ALL" -f "ALL PRIVILEGES"'
       if [[ $? -ne 0 ]] ; then
           exit 1
@@ -79,7 +79,7 @@ steps:
       -e POSTGRES_DB_CONNECTION_STRING="$POSTGRES_DB_CONNECTION_STRING" \
       -e USER_ACCESS_GROUP="$USER_ACCESS_GROUP" \
       -e DB_NAME="$DB_NAME" \
-      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+      --entrypoint /bin/sh $(containerRepository):${{ parameters.imageTag }} \
       -c 'cd /cli && chmod +x CLI && ./CLI add-user -c "$APP_CONNECTION_STRING" -p "$POSTGRES_DB_CONNECTION_STRING" --name "$USER_ACCESS_GROUP" --database $DB_NAME --schema public'
       if [[ $? -ne 0 ]] ; then
           exit 1
@@ -89,7 +89,7 @@ steps:
       docker run \
       -e APP_CONNECTION_STRING="$APP_CONNECTION_STRING" \
       -e USER_ACCESS_GROUP="$USER_ACCESS_GROUP" \
-      --entrypoint /bin/sh $(dockerImageName):${{ parameters.imageTag }} \
+      --entrypoint /bin/sh $(containerRepository):${{ parameters.imageTag }} \
       -c 'cd /cli && chmod +x CLI && ./CLI add-access-to-schema -c "$APP_CONNECTION_STRING" -n "$USER_ACCESS_GROUP" --schema referencedata -g "SELECT" -f "SELECT"'
       if [[ $? -ne 0 ]] ; then
           exit 1

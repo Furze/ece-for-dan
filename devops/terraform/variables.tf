@@ -11,12 +11,6 @@ variable "environment" {
 }
 
 # POSTGRES DATABASE
-variable "psql_server_version" {
-  type        = string
-  description = ""
-  default     = "10.0"
-}
-
 variable "sql_charset" {
   type        = string
   description = "View postgres documentation for valid options"
@@ -36,30 +30,6 @@ variable "application_name" {
   default     = "ECE"
 }
 
-variable "azurerm_container_registry_name" {
-  type        = string
-  description = ""
-  default     = "mapaerscontainerregistry"
-}
-
-variable "azurerm_container_registry_resource_group_name" {
-  type        = string
-  description = ""
-  default     = "MAPA-ERS-CONTAINERREGISTRY"
-}
-
-variable "actiongroup_name" {
-  type        = string
-  description = ""
-  default     = "NonProd-ActionGroup"
-}
-
-variable "actiongroup_resource_group" {
-  type        = string
-  description = ""
-  default     = "MATA-ERS-0-0-COMMON"
-}
-
 variable "environment_prefix" {
   type        = string
   description = "MATA or MAPA"
@@ -70,18 +40,6 @@ variable "environment_suffix" {
   type        = string
   description = "DEVTEST, PRODUAT or PROD"
   default     = "DEVTEST"
-}
-
-variable "acr_subscriptionid" {
-  type        = string
-  description = "The subscription ID used to identify where ACR lives"
-  default     = "7a23d165-be95-4e5b-bb55-118372287e9e"
-}
-
-variable "decom_date" {
-  type        = string
-  description = "Date for which resource should be deleted. Format is YYYY-MM-DD. ie. 2020-11-21."
-  default     = "" # If left empty then default will be set to 2 weeks from creation unless specified. If in MAPA sub then will be set to never expire (date very far in future) 
 }
 
 variable "TAG_CONTAINS_FUNDING_INFORMATION" {
@@ -148,4 +106,10 @@ variable "container_image_source" {
   type        = string
   description = "Container Registry Endpoint"
   default     = "mapaerscontainerregistry.azurecr.io/eceapi:latest"
+}
+
+variable "release_timestamp" {
+  type        = string
+  description = "Release timestamp in the following format: Tue 13 Apr 2021 12:22:56 NZST"
+  default     = ""
 }

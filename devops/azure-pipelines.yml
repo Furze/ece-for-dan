@@ -18,7 +18,6 @@ variables:
   versionMajor: 1
   versionMinor: 0
   versionPatch: 0
-  decomDate: ''
 
   containerRegistry: 'mapaerscontainerregistry'
   prodUatAzureRMServiceConnection: 'DevOps-MOEEDUNZ-ERS-EDU-MOE-ERS-PRODUAT-01-FS'
@@ -62,7 +61,6 @@ extends:
           azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
           azureKeyvaultInstance: 'mataersdev00secrets'
           containerRegistry: '$(containerRegistry)'
-          decomDate: '$(decomDate)'
 
     - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
       - template: release-stage.yml
@@ -74,7 +72,6 @@ extends:
             azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
             azureKeyvaultInstance: 'mataersdev02secrets'
             containerRegistry: '$(containerRegistry)'
-            decomDate: '$(decomDate)'
 
       - template: release-stage.yml
         parameters:
@@ -85,7 +82,6 @@ extends:
             azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
             azureKeyvaultInstance: 'mataerstst02secrets'
             containerRegistry: '$(containerRegistry)'
-            decomDate: '$(decomDate)'
 
       - template: release-stage.yml
         parameters:
@@ -96,4 +92,3 @@ extends:
             azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
             azureKeyvaultInstance: 'mataerstst03secrets'
             containerRegistry: '$(containerRegistry)'
-            decomDate: '$(decomDate)'            

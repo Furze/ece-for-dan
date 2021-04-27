@@ -71,14 +71,14 @@ resource "kubernetes_deployment" "app" {
 
           env_from {
             config_map_ref {
-              name = local.k8s_app_name
+              name = kubernetes_config_map.app.metadata.0.name
             }
           }
 
           # Hack to make sure the pods are restarted on config map changes
           env {
             name  = "ReleaseDate"
-            value = timestamp()
+            value = var.release_timestamp
           }
 
           port {
