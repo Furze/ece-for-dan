@@ -169,6 +169,7 @@ stages:
                     environmentName: '${{ parameters.environmentName }}'
                     environmentnumber: '${{ parameters.environmentNumber }}'
                     azureRMServiceConnection: ${{ parameters.azureDevOpsServiceConnection }}
+                    containerRegistry: '${{ parameters.containerRegistry }}'
                     containerRepository: '$(containerRepository)'
                     imageTag: '${{ parameters.imageTag }}'
                     applicationName: '${{ parameters.applicationName }}'

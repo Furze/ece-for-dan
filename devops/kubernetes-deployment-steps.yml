@@ -4,6 +4,7 @@ parameters:
   environmentName: ''
   environmentnumber: ''
   azureRMServiceConnection: ''
+  containerRegistry: ''
   containerRepository:
   imageTag: ''
   applicationName: ''
