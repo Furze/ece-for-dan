@@ -38,7 +38,7 @@ steps:
     condition: succeeded()
     displayName: 'Retrieve Signing Key'
     inputs:
-      azureSubscription: '$(prodUatAzureRMServiceConnection)'
+      azureSubscription: '$(azureServiceConnectionProdUat)'
       keyVaultName: 'mapaersprodsecrets'
       secretsFilter: 'acr-repo-ci-signing-key-passphrase, acr-repo-ci-signing-key, acr-repo-ci-signing-key-filename'
     continueOnError: false
@@ -46,7 +46,7 @@ steps:
   - task: AzureCLI@2
     displayName: 'ACR Image Signer Auth'
     inputs:
-      azureSubscription: '$(prodUatAzureRMServiceConnection)'
+      azureSubscription: '$(azureServiceConnectionProdUat)'
       scriptType: pscore
       scriptLocation: inlineScript
       addSpnToEnvironment: true

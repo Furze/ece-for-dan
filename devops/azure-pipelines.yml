@@ -20,8 +20,6 @@ variables:
   versionPatch: 0
 
   containerRegistry: 'mapaerscontainerregistry'
-  prodUatAzureRMServiceConnection: 'DevOps-MOEEDUNZ-ERS-EDU-MOE-ERS-PRODUAT-01-FS'
-  testDevAzureRMServiceConnection: 'DevOps-MOEEDUNZ-ERS-EDU-MOE-ERS-TESTDEV-01-FS'
 
 resources:
   repositories:
@@ -43,12 +41,12 @@ extends:
     releaseStages:
     - template: quality-gate.yml
       parameters:
-        azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
+        azureDevOpsServiceConnection: '$(azureServiceConnectionTestDev)'
         azureKeyvaultInstance: 'mataersdev02secrets'
 
     - template: build-stage.yml    
       parameters:      
-        azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
+        azureDevOpsServiceConnection: '$(azureServiceConnectionTestDev)'
         azureKeyvaultInstance: 'mataersdev02secrets'
 
     - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/master') }}:
@@ -58,7 +56,7 @@ extends:
           environmentSuffix: 'devtest'
           environmentName: 'dev'
           environmentNumber: '00'
-          azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
+          azureDevOpsServiceConnection: '$(azureServiceConnectionTestDev)'
           azureKeyvaultInstance: 'mataersdev00secrets'
           containerRegistry: '$(containerRegistry)'
 
@@ -69,7 +67,7 @@ extends:
             environmentSuffix: 'devtest'
             environmentName: 'dev'
             environmentNumber: '02'
-            azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
+            azureDevOpsServiceConnection: '$(azureServiceConnectionTestDev)'
             azureKeyvaultInstance: 'mataersdev02secrets'
             containerRegistry: '$(containerRegistry)'
 
@@ -79,7 +77,7 @@ extends:
             environmentSuffix: 'devtest'
             environmentName: 'tst'
             environmentNumber: '02'
-            azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
+            azureDevOpsServiceConnection: '$(azureServiceConnectionTestDev)'
             azureKeyvaultInstance: 'mataerstst02secrets'
             containerRegistry: '$(containerRegistry)'
 
@@ -89,6 +87,6 @@ extends:
             environmentSuffix: 'devtest'
             environmentName: 'tst'
             environmentNumber: '03'
-            azureDevOpsServiceConnection: '$(testDevAzureRMServiceConnection)'
+            azureDevOpsServiceConnection: '$(azureServiceConnectionTestDev)'
             azureKeyvaultInstance: 'mataerstst03secrets'
             containerRegistry: '$(containerRegistry)'

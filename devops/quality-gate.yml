@@ -83,7 +83,7 @@ stages:
           condition: succeeded()
           displayName: 'Get Whitesource API Key from Key Vault'
           inputs:
-            azureSubscription: '${{ parameters.azureDevOpsServiceConnection }}'
+            azureSubscription: '$(azureServiceConnectionTestDev)'
             keyVaultName: 'mataersdevtestsecrets'
             secretsFilter: 'whitesource-api-key' # Options: editableOptions
           continueOnError: false
