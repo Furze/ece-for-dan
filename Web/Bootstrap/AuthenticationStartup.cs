@@ -74,14 +74,15 @@ namespace MoE.ECE.Web.Bootstrap
                     {
                         // Clock skew compensates for server time drift.
                         ClockSkew = TimeSpan.FromMinutes(5),
-                        // Specify the key used to sign the token:
-                        //IssuerSigningKeys = signingKeys,
                         RequireSignedTokens = true,
                         RequireExpirationTime = true,
                         ValidateLifetime = true,
                         ValidateAudience = true,
-                        ValidAudience = settings.Audience,
                         ValidateIssuer = true,
+                        ValidTypes = new []{ "jwt", "at+jwt", "JWT", "AT+JWT" },
+                        ValidAlgorithms = new []{ "RS256" },
+                        ValidateIssuerSigningKey = true,
+                        ValidAudience = settings.Audience,
                         ValidIssuer = settings.Issuer
                     };
                 });
